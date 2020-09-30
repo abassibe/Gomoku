@@ -1,0 +1,86 @@
+from PyQt5 import QtWidgets, QtGui
+
+def setFontShadow(window):
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(209, 168, 101))
+    effect.setOffset(3, -3)
+    window.playersTitle.setGraphicsEffect(effect)
+
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(209, 168, 101))
+    effect.setOffset(3, -3)
+    window.rulesTitle.setGraphicsEffect(effect)
+    
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(60, 17, 3))
+    effect.setOffset(3, -3)
+    window.playerOneLabel.setGraphicsEffect(effect)
+
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(60, 17, 3))
+    effect.setOffset(3, -3)
+    window.playerOneTimer.setGraphicsEffect(effect)
+    
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(60, 17, 3))
+    effect.setOffset(3, -3)
+    window.playerTwoLabel.setGraphicsEffect(effect)
+
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(60, 17, 3))
+    effect.setOffset(3, -3)
+    window.playerTwoTimer.setGraphicsEffect(effect)
+
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(60, 17, 3))
+    effect.setOffset(3, -3)
+    window.ruleOne.setGraphicsEffect(effect)
+
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(60, 17, 3))
+    effect.setOffset(3, -3)
+    window.ruleTwo.setGraphicsEffect(effect)
+
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(0, 0, 0, 90))
+    effect.setOffset(-10, -10)
+    window.hintButton.setGraphicsEffect(effect)
+
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(0, 0, 0, 90))
+    effect.setOffset(-10, -10)
+    window.giveUpButton.setGraphicsEffect(effect)
+
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(0, 0, 0, 90))
+    effect.setOffset(-10, -10)
+    window.newGameButton.setGraphicsEffect(effect)
+
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(0, 0, 0, 170))
+    effect.setOffset(-20, -10)
+    window.infosBackground1.setGraphicsEffect(effect)
+
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(0, 0, 0, 170))
+    effect.setOffset(-20, 54)
+    window.infosBackground2.setGraphicsEffect(effect)
+
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(0, 0, 0, 90))
+    effect.setOffset(10, -10)
+    window.optionsButton.setGraphicsEffect(effect)
