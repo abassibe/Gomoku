@@ -1356,7 +1356,7 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
      <string>60:00</string>
     </property>
    </widget>
-   <widget class="QLabel" name="ruleOne">
+   <widget class="QLabel" name="ruleLabel1">
     <property name="geometry">
      <rect>
       <x>1140</x>
@@ -1377,7 +1377,7 @@ font: 30pt &quot;SF Wasabi&quot;;</string>
      <string>Rule 1</string>
     </property>
    </widget>
-   <widget class="QLabel" name="ruleTwo">
+   <widget class="QLabel" name="ruleLabel2">
     <property name="geometry">
      <rect>
       <x>1140</x>
@@ -1550,6 +1550,90 @@ color:rgb(60, 17, 3);</string>
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="ruleLabel3">
+    <property name="geometry">
+     <rect>
+      <x>1140</x>
+      <y>720</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 0);
+color:rgb(209, 168, 101);
+font: 30pt &quot;SF Wasabi&quot;;</string>
+    </property>
+    <property name="locale">
+     <locale language="English" country="UnitedStates"/>
+    </property>
+    <property name="text">
+     <string>Rule 3</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ruleLabel4">
+    <property name="geometry">
+     <rect>
+      <x>1140</x>
+      <y>790</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 0);
+color:rgb(209, 168, 101);
+font: 30pt &quot;SF Wasabi&quot;;</string>
+    </property>
+    <property name="locale">
+     <locale language="English" country="UnitedStates"/>
+    </property>
+    <property name="text">
+     <string>Rule 4</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="gameTimer">
+    <property name="geometry">
+     <rect>
+      <x>1270</x>
+      <y>440</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 0);
+color:rgb(209, 168, 101);
+font:30pt  &quot;SF Wasabi&quot;;</string>
+    </property>
+    <property name="text">
+     <string>00:00</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="playerTurnEffect">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>440</y>
+      <width>541</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 0);
+color:rgb(60, 17, 3);
+font: 80pt &quot;SF Wasabi&quot;;</string>
+    </property>
+    <property name="locale">
+     <locale language="English" country="UnitedStates"/>
+    </property>
+    <property name="text">
+     <string>Player 1 turn</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
    <zorder>backgroundBoard</zorder>
    <zorder>infosBackground1</zorder>
    <zorder>layoutWidget</zorder>
@@ -1561,12 +1645,16 @@ color:rgb(60, 17, 3);</string>
    <zorder>playerOneTimer</zorder>
    <zorder>playerTwoLabel</zorder>
    <zorder>playerTwoTimer</zorder>
-   <zorder>ruleOne</zorder>
-   <zorder>ruleTwo</zorder>
+   <zorder>ruleLabel1</zorder>
+   <zorder>ruleLabel2</zorder>
    <zorder>optionsButton</zorder>
    <zorder>hintButton</zorder>
    <zorder>giveUpButton</zorder>
    <zorder>newGameButton</zorder>
+   <zorder>ruleLabel3</zorder>
+   <zorder>ruleLabel4</zorder>
+   <zorder>gameTimer</zorder>
+   <zorder>playerTurnEffect</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
