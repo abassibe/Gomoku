@@ -3,7 +3,8 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 
 
 def setFontShadow(window):
-    # window.playerTurnEffect.setVisible(False)
+    window.playerTurnEffect.hide()
+    window.playerTurnEffect.setStyleSheet("background-color:rgba(0, 0, 0, 0)")
 
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)
@@ -135,40 +136,24 @@ def updateTimerGame(window, timer, startGameTimer):
 
 
 def playerTurnEffect(window):
-    # window.playerTurnEffect.setVisible(True)
-    xIncrease = int((460 - 260) / 5)
-    yIncrease = int((490 - 440) / 5)
-    widthIncrease = int((541 - 141) / 5)
-    heightIncrease = int((151 - 51) / 5)
-    i = 1
-    x = 460
-    y = 490
-    width = 141
-    height = 51
-    newfont = QtGui.QFont("SF Wasabi", 20) 
-    QtCore.QTimer.singleShot(i * 100, lambda: window.playerTurnEffect.setFont(newfont))
-    QtCore.QTimer.singleShot(i * 100, lambda: window.playerTurnEffect.setGeometry(460, 490, 141, 51))
-    newfont2 = QtGui.QFont("SF Wasabi", 32) 
-    QtCore.QTimer.singleShot(i * 100, lambda: window.playerTurnEffect.setFont(newfont2))
-    QtCore.QTimer.singleShot(i * 200, lambda: window.playerTurnEffect.setGeometry(420, 480, 221, 71))
-    newfont3 = QtGui.QFont("SF Wasabi", 44) 
-    QtCore.QTimer.singleShot(i * 100, lambda: window.playerTurnEffect.setFont(newfont3))
-    QtCore.QTimer.singleShot(i * 300, lambda: window.playerTurnEffect.setGeometry(380, 470, 301, 91))
-    newfont4 = QtGui.QFont("SF Wasabi", 56) 
-    QtCore.QTimer.singleShot(i * 100, lambda: window.playerTurnEffect.setFont(newfont4))
-    QtCore.QTimer.singleShot(i * 400, lambda: window.playerTurnEffect.setGeometry(340, 460, 381, 111))
-    newfont5 = QtGui.QFont("SF Wasabi", 68) 
-    QtCore.QTimer.singleShot(i * 100, lambda: window.playerTurnEffect.setFont(newfont5))
-    QtCore.QTimer.singleShot(i * 500, lambda: window.playerTurnEffect.setGeometry(300, 450, 461, 131))
-    newfont5 = QtGui.QFont("SF Wasabi", 80) 
-    QtCore.QTimer.singleShot(i * 100, lambda: window.playerTurnEffect.setFont(newfont5))
-    QtCore.QTimer.singleShot(i * 500, lambda: window.playerTurnEffect.setGeometry(260, 440, 541, 151))
-    # while i < 6:
-    #     QtCore.QTimer.singleShot(i * 200, lambda: window.playerTurnEffect.setGeometry(x, y, width, height))
-    #     print("x = " + str(x) + " y = " + str(y) + " width = " + str(width) + " height = " + str(height))
-    #     x -= xIncrease
-    #     y -= yIncrease
-    #     width += widthIncrease
-    #     height += heightIncrease
-    #     i += 1
-    # window.playerTurnEffect.setVisible(False)
+    newfont1 = QtGui.QFont("SF Wasabi", 20)
+    window.playerTurnEffect.setFont(newfont1)
+    QtCore.QTimer.singleShot(50, lambda: window.playerTurnEffect.show())
+    QtCore.QTimer.singleShot(50, lambda: window.playerTurnEffect.setGeometry(460, 120, 141, 51))
+    newfont2 = QtGui.QFont("SF Wasabi", 32)
+    QtCore.QTimer.singleShot(100, lambda: window.playerTurnEffect.setFont(newfont2))
+    QtCore.QTimer.singleShot(100, lambda: window.playerTurnEffect.setGeometry(420, 110, 221, 71))
+    newfont3 = QtGui.QFont("SF Wasabi", 44)
+    QtCore.QTimer.singleShot(150, lambda: window.playerTurnEffect.setFont(newfont3))
+    QtCore.QTimer.singleShot(150, lambda: window.playerTurnEffect.setGeometry(380, 100, 301, 91))
+    newfont4 = QtGui.QFont("SF Wasabi", 56)
+    QtCore.QTimer.singleShot(200, lambda: window.playerTurnEffect.setFont(newfont4))
+    QtCore.QTimer.singleShot(200, lambda: window.playerTurnEffect.setGeometry(340, 90, 381, 111))
+    newfont5 = QtGui.QFont("SF Wasabi", 68)
+    QtCore.QTimer.singleShot(250, lambda: window.playerTurnEffect.setFont(newfont5))
+    QtCore.QTimer.singleShot(250, lambda: window.playerTurnEffect.setGeometry(300, 80, 461, 131))
+    newfont5 = QtGui.QFont("SF Wasabi", 80)
+    QtCore.QTimer.singleShot(300, lambda: window.playerTurnEffect.setFont(newfont5))
+    QtCore.QTimer.singleShot(300, lambda: window.playerTurnEffect.setGeometry(260, 70, 541, 151))
+    QtCore.QTimer.singleShot(1000, lambda: window.playerTurnEffect.hide())
+    

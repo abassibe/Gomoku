@@ -5,15 +5,43 @@ import options
 import windowBuilding
 
 _hintButtonBool = False
-_giveUpButtonBool = False
-_newGameButtonBool = False
 isGameRuning = False
 player1TurnTime = 0.0
 player2TurnTime = 0.0
 isPlayer1Turn = True
+globalTimer = None
+
+
+def translateOptionDialog(dialog, option):
+    if option.langage == "English" or option.langage == "Anglais":
+        dialog.langageLabel.setText('Langage:')
+        dialog.langageCombobox.setCurrentText("French")
+        dialog.langageCombobox.setCurrentText("English")
+        dialog.gameModeLabel.setText('Game mode:')
+        dialog.PVEButton.setText('Player VS Engine')
+        dialog.PVPButton.setText('Player VS Player')
+        dialog.rulesSelectionLabel.setText('Rules set:')
+        dialog.ruleCheckbox1.setText('Rule 1')
+        dialog.ruleCheckbox2.setText('Rule 2')
+        dialog.ruleCheckbox3.setText('Rule 3')
+        dialog.ruleCheckbox4.setText('Rule 4')
+    else:
+        dialog.langageLabel.setText('Langue :')
+        dialog.langageCombobox.setCurrentText("Français")
+        dialog.langageCombobox.setCurrentText("Anglais")
+        dialog.gameModeLabel.setText('Mode de jeu :')
+        dialog.PVEButton.setText('Joueur VS Ordinateur')
+        dialog.PVPButton.setText('Joueur VS Joueur')
+        dialog.rulesSelectionLabel.setText('Set de règles :')
+        dialog.ruleCheckbox1.setText('Règle 1')
+        dialog.ruleCheckbox2.setText('Règle 2')
+        dialog.ruleCheckbox3.setText('Règle 3')
+        dialog.ruleCheckbox4.setText('Règle 4')
 
 
 def optionsEvent(window, option):
+    if isGameRuning:
+        return
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)
     effect.setColor(QtGui.QColor(0, 0, 0, 150))
@@ -22,7 +50,8 @@ def optionsEvent(window, option):
     window.optionsButton.setGeometry(1129, 927, 51, 51)
 
     dialog = uic.loadUi("GUI/dialog.ui")
-    dialog.langageCombobox.setCurrentIndex(dialog.langageCombobox.findText(option.langage))
+    dialog.langageCombobox.setCurrentText(option.langage)
+    translateOptionDialog(dialog, option)
     if option.gameMode == "PVE":
         dialog.PVEButton.setChecked(True)
         dialog.PVPButton.setChecked(False)
@@ -69,24 +98,26 @@ def hintEvent(hintButton):
         _hintButtonBool = False
 
 
-def giveUpEvent(giveUpButton):
-    global _giveUpButtonBool
+def releaseGUButton(window, effect):
+    effect.setColor(QtGui.QColor(0, 0, 0, 90))
+    effect.setOffset(-10, -10)
+    window.giveUpButton.setGraphicsEffect(effect)
+    window.giveUpButton.setGeometry(400, 980, 241, 61)
+
+
+def giveUpEvent(window):
     global isGameRuning
     isGameRuning = False
+    if globalTimer != None:
+        globalTimer.stop()
+
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)
-    if not _giveUpButtonBool:
-        effect.setColor(QtGui.QColor(0, 0, 0, 150))
-        effect.setOffset(-7, -7)
-        giveUpButton.setGraphicsEffect(effect)
-        giveUpButton.setGeometry(400, 980, 235, 55)
-        _giveUpButtonBool = True
-    else:
-        effect.setColor(QtGui.QColor(0, 0, 0, 90))
-        effect.setOffset(-10, -10)
-        giveUpButton.setGraphicsEffect(effect)
-        giveUpButton.setGeometry(400, 980, 241, 61)
-        _giveUpButtonBool = False
+    QtCore.QTimer.singleShot(150, lambda: releaseGUButton(window, effect))
+    effect.setColor(QtGui.QColor(0, 0, 0, 150))
+    effect.setOffset(-7, -7)
+    window.giveUpButton.setGraphicsEffect(effect)
+    window.giveUpButton.setGeometry(400, 980, 235, 55)
 
 
 def releaseNGButton(window, effect):
@@ -94,30 +125,33 @@ def releaseNGButton(window, effect):
     effect.setOffset(-10, -10)
     window.newGameButton.setGraphicsEffect(effect)
     window.newGameButton.setGeometry(750, 980, 241, 61)
-    _newGameButtonBool = False
 
 
 def newGameEvent(window):
-    global _newGameButtonBool
     global isGameRuning
     global player1TurnTime
     global player2TurnTime
     global isPlayer1Turn
+    global globalTimer
     if isGameRuning:
         return
     if randint(0, 1) == 0:
         isPlayer1Turn = True
     else:
         isPlayer1Turn = False
+    if isPlayer1Turn:
+        window.gameBoard.setCursor(QtGui.QCursor(QtGui.QPixmap("ressources/pictures/blackStone.png")))
+    else:
+        window.gameBoard.setCursor(QtGui.QCursor(QtGui.QPixmap("ressources/pictures/whiteStone.png")))
     isGameRuning = True
     player1TurnTime = 0.0
     player2TurnTime = 0.0
 
-    timer = QtCore.QTimer()
+    globalTimer = QtCore.QTimer()
     startGameTimer = time()
-    timer.setInterval(10)
-    timer.timeout.connect(lambda: windowBuilding.updateTimerGame(window, timer, startGameTimer))
-    timer.start()
+    globalTimer.setInterval(10)
+    globalTimer.timeout.connect(lambda: windowBuilding.updateTimerGame(window, globalTimer, startGameTimer))
+    globalTimer.start()
 
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)
@@ -126,5 +160,4 @@ def newGameEvent(window):
     effect.setOffset(-7, -7)
     window.newGameButton.setGraphicsEffect(effect)
     window.newGameButton.setGeometry(750, 980, 235, 55)
-    _newGameButtonBool = True
     windowBuilding.playerTurnEffect(window)
