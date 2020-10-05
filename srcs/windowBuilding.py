@@ -1,6 +1,12 @@
 from time import time
 from PyQt5 import QtWidgets, QtGui, QtCore
 
+mainWindow_en_EN = {}
+dialog_en_EN = {}
+mainWindow_fr_FR = {}
+dialog_fr_FR = {}
+p1Turn = "Player turn"
+p2Turn = ""
 
 def setFontShadow(window):
     window.playerTurnEffect.hide()
@@ -127,33 +133,132 @@ def setRulesList(window, ruleSet):
             window.ruleLabel4.setText(rule)
 
 
-def updateTimerGame(window, timer, startGameTimer):
+def updateTimerGame(window, timer, startGameTimer, toUpdate):
     miliSeconds = time() - startGameTimer
     minutes = int(miliSeconds / 60)
     seconds = int(miliSeconds)
     miliSeconds = (miliSeconds - seconds) * 100
-    window.gameTimer.setText("%02d:%02d:%02d" % (minutes, seconds, miliSeconds))
+    toUpdate.setText("%02d:%02d:%02d" % (minutes, seconds, miliSeconds))
 
 
-def playerTurnEffect(window):
-    newfont1 = QtGui.QFont("SF Wasabi", 20)
+def playerTurnEffect(window, playerTurn):
+    global p1Turn
+    global p2Turn
+
+    if playerTurn == 1:
+        window.playerTurnEffect.setText(p1Turn)
+    else:
+        window.playerTurnEffect.setText(p2Turn)
+    newfont1 = QtGui.QFont("SF Wasabi", 18)
     window.playerTurnEffect.setFont(newfont1)
     QtCore.QTimer.singleShot(50, lambda: window.playerTurnEffect.show())
     QtCore.QTimer.singleShot(50, lambda: window.playerTurnEffect.setGeometry(460, 120, 141, 51))
-    newfont2 = QtGui.QFont("SF Wasabi", 32)
+    newfont2 = QtGui.QFont("SF Wasabi", 30)
     QtCore.QTimer.singleShot(100, lambda: window.playerTurnEffect.setFont(newfont2))
     QtCore.QTimer.singleShot(100, lambda: window.playerTurnEffect.setGeometry(420, 110, 221, 71))
-    newfont3 = QtGui.QFont("SF Wasabi", 44)
+    newfont3 = QtGui.QFont("SF Wasabi", 42)
     QtCore.QTimer.singleShot(150, lambda: window.playerTurnEffect.setFont(newfont3))
     QtCore.QTimer.singleShot(150, lambda: window.playerTurnEffect.setGeometry(380, 100, 301, 91))
-    newfont4 = QtGui.QFont("SF Wasabi", 56)
+    newfont4 = QtGui.QFont("SF Wasabi", 54)
     QtCore.QTimer.singleShot(200, lambda: window.playerTurnEffect.setFont(newfont4))
     QtCore.QTimer.singleShot(200, lambda: window.playerTurnEffect.setGeometry(340, 90, 381, 111))
-    newfont5 = QtGui.QFont("SF Wasabi", 68)
+    newfont5 = QtGui.QFont("SF Wasabi", 66)
     QtCore.QTimer.singleShot(250, lambda: window.playerTurnEffect.setFont(newfont5))
     QtCore.QTimer.singleShot(250, lambda: window.playerTurnEffect.setGeometry(300, 80, 461, 131))
-    newfont5 = QtGui.QFont("SF Wasabi", 80)
+    newfont5 = QtGui.QFont("SF Wasabi", 78)
     QtCore.QTimer.singleShot(300, lambda: window.playerTurnEffect.setFont(newfont5))
     QtCore.QTimer.singleShot(300, lambda: window.playerTurnEffect.setGeometry(260, 70, 541, 151))
     QtCore.QTimer.singleShot(1000, lambda: window.playerTurnEffect.hide())
-    
+
+
+def parseTranslationFile():
+    f = open("local/en_EN")
+    tmp = []
+    toFill = {}
+    for line in f:
+        line = line[:-1]
+        if line == "#mainwindow.ui":
+            toFill = mainWindow_en_EN
+            continue        
+        elif line == "#dialog.ui":
+            toFill = dialog_en_EN
+            continue
+        splited = line.split('=')
+        for arg in splited[1:]:
+            tmp.append(arg)
+        toFill[splited[0]] = tmp
+        tmp = []
+    f = open("local/fr_FR")
+    tmp = []
+    toFill = {}
+    for line in f:
+        line = line[:-1]
+        if line == "#mainwindow.ui":
+            toFill = mainWindow_fr_FR
+            continue        
+        elif line == "#dialog.ui":
+            toFill = dialog_fr_FR
+            continue
+        splited = line.split('=')
+        for arg in splited[1:]:
+            tmp.append(arg)
+        toFill[splited[0]] = tmp
+        tmp = []
+
+
+def mainWindowTranslate(window, option):
+    global p1Turn
+    global p2Turn
+
+    p1Turn = ""
+    p2Turn = ""
+    translationSet = {}
+    if option.langage == "English" or option.langage == "Anglais":
+        translationSet = mainWindow_en_EN
+    else:
+        translationSet = mainWindow_fr_FR
+    for key, value in translationSet.items():
+        try:
+            toTranslate = window.__getattribute__(key)
+            if ";" in value[0]:
+                tmp = value[0].split(";")
+                if len(tmp) == 2:
+                    if option.gameMode == "PVE":
+                        toTranslate.setText(tmp[0])
+                    else:
+                        toTranslate.setText(tmp[1])
+                if key == "playerTurnEffect" and option.gameMode == "PVP":
+                    p1Turn = tmp[1]
+                    p2Turn = tmp[2]
+                elif key == "playerTurnEffect":
+                    p1Turn = tmp[0]
+            else:
+                toTranslate.setText(value[0])
+        except:
+            exit("Translation error")
+    print()
+
+
+def dialogTranslate(dialog, actualLangage):
+    translationSet = {}
+    if actualLangage == "English" or actualLangage == "Anglais":
+        translationSet = dialog_en_EN
+    else:
+        translationSet = dialog_fr_FR
+    for key, value in translationSet.items():
+        try:
+            toTranslate = dialog.__getattribute__(key)
+            if "Combobox" in key:
+                langage = value[0].split(";")
+                toTranslate.setItemText(0, langage[0])
+                toTranslate.setItemText(1, langage[1])
+                if actualLangage == "English" or actualLangage == "Anglais":
+                    toTranslate.setCurrentIndex(0)
+                    dialog.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).setText("Cancel")
+                else:
+                    toTranslate.setCurrentIndex(1)
+                    dialog.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).setText("Annuler")
+            else:
+                toTranslate.setText(value[0])
+        except:
+            exit("Translation error")

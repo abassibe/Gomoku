@@ -1,0 +1,24 @@
+#mainwindow.ui
+playersTitle=Players infos
+playerOneLabel=Player;Player 1
+playerTwoLabel=Computer;Player 2
+rulesTitle=Selected rules
+ruleLabel1=Rule 1
+ruleLabel2=Rule 2
+ruleLabel3=Rule 3
+ruleLabel4=Rule 4
+playerTurnEffect=Player turn;Player 1 turn;Player 2 turn
+hintButton=Hint
+giveUpButton=Give up
+newGameButton=New Game
+#dialog.ui
+langageLabel=Langage:
+langageCombobox=English;French
+gameModeLabel=Game mode:
+PVEButton=Player VS Engine
+PVPButton=Player VS Player
+rulesSelectionLabel=Rules set:
+ruleCheckbox1=Rule 1
+ruleCheckbox2=Rule 2
+ruleCheckbox3=Rule 3
+ruleCheckbox4=Rule 4

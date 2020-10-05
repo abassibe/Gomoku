@@ -1,0 +1,24 @@
+#mainwindow.ui
+playersTitle=Infos joueurs
+playerOneLabel=Joueur;Joueur 1
+playerTwoLabel=Ordinateur;Joueur 2
+rulesTitle=Règles sélectionnées
+ruleLabel1=Règle 1
+ruleLabel2=Règle 2
+ruleLabel3=Règle 3
+ruleLabel4=Règle 4
+playerTurnEffect=Tour Joueur;Tour Joueur 1;Tour Joueur 2
+hintButton=Astuces
+giveUpButton=Abandon
+newGameButton=Nouvelle partie
+#dialog.ui
+langageLabel=Langue :
+langageCombobox=Anglais;Français
+gameModeLabel=Mode de jeu :
+PVEButton=Joueur VS Ordinateur
+PVPButton=Joueur VS Joueur
+rulesSelectionLabel=Set de règles:
+ruleCheckbox1=Règle 1
+ruleCheckbox2=Règle 2
+ruleCheckbox3=Règle 3
+ruleCheckbox4=Règle 4

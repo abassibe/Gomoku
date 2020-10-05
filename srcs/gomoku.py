@@ -5,19 +5,35 @@ from PyQt5 import uic, QtWidgets
 import windowBuilding
 import buttonEventHandler
 import options
+import gameManager
 
-isBlackTurn = True
-app = PyQt5.QtWidgets.QApplication(sys.argv)
-window = uic.loadUi("GUI/mainwindow.ui")
-option = options.Options()
 
-window.optionsButton.clicked.connect(lambda x: buttonEventHandler.optionsEvent(window, option))
-window.hintButton.clicked.connect(lambda x: buttonEventHandler.hintEvent(window.hintButton))
-window.giveUpButton.clicked.connect(lambda x: buttonEventHandler.giveUpEvent(window))
-window.newGameButton.clicked.connect(lambda x: buttonEventHandler.newGameEvent(window))
-window.gameBoard
-windowBuilding.setFontShadow(window)
-windowBuilding.setRulesList(window, option.rulesSet)
+class MainWindow(QtWidgets.QMainWindow):
+    def __init__(self):
+        super(MainWindow, self).__init__()
+
+        self.isBlackTurn = True
+        self.local = "en_EN"
+        uic.loadUi("GUI/mainwindow.ui", self)
+        self.option = options.Options()
+        windowBuilding.parseTranslationFile()
+
+        self.optionsButton.clicked.connect(lambda x: buttonEventHandler.optionsEvent(self, self.option))
+        self.hintButton.clicked.connect(lambda x: buttonEventHandler.hintEvent(self.hintButton))
+        self.giveUpButton.clicked.connect(lambda x: buttonEventHandler.giveUpEvent(self))
+        self.newGameButton.clicked.connect(lambda x: buttonEventHandler.newGameEvent(self, self.option))
+
+        windowBuilding.setFontShadow(self)
+        windowBuilding.setRulesList(self, self.option.rulesSet)
+        
+    def mousePressEvent(self, event):
+        if event.button() == 1:
+            x = event.x()
+            y = event.y()
+            if (x < 150 or x > 911) or (y < 140 or y > 901):
+                return
+            if buttonEventHandler.isGameRuning:
+                gameManager.nextTurn(self, x, y)
 
 
 def getOptionsSet(targetedOption=[]):
@@ -31,7 +47,7 @@ def getOptionsSet(targetedOption=[]):
         Available options: langage, gameMode, rulesSet.
     """
     if targetedOption == []:
-        return option.langage, option.gameMode, option.rulesSet
+        return window.option.langage, window.option.gameMode, window.option.rulesSet
     else:
         toReturn = []
         for item in targetedOption:
@@ -43,9 +59,19 @@ def getOptionsSet(targetedOption=[]):
 
 
 def algoSubscribe(func):
+    """
+        Function used to connect the algo and the GUI.
+
+        Param "func" must be the entrance of algorithm with following signature : func(board, hint)
+
+        Where "board" is a matrix of the actual state of the board and "hint" is a boolean that tells you if it's the algorithm's turn or just a hint you're looking for.
+
+        And the return value must be two integer "x" and "y", representing the position of the move. (0 <= xy <= 19)
+    """
     x, y = func("board", buttonEventHandler._hintButtonBool)
-    return x, y
 
 
+app = PyQt5.QtWidgets.QApplication(sys.argv)
+window = MainWindow()
 window.show()
 app.exec()
