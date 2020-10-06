@@ -105,1089 +105,1450 @@
       <number>0</number>
      </property>
      <item row="0" column="0">
-      <layout class="QGridLayout" name="01x01"/>
+      <widget class="QLabel" name="01x01"/>
      </item>
      <item row="0" column="1">
-      <layout class="QGridLayout" name="02x01"/>
+      <widget class="QLabel" name="02x01"/>
      </item>
      <item row="0" column="2">
-      <layout class="QGridLayout" name="03x01"/>
+      <widget class="QLabel" name="03x01"/>
      </item>
      <item row="0" column="3">
-      <layout class="QGridLayout" name="04x01"/>
+      <widget class="QLabel" name="04x01"/>
      </item>
      <item row="0" column="4">
-      <layout class="QGridLayout" name="05x01"/>
+      <widget class="QLabel" name="05x01"/>
      </item>
      <item row="0" column="5">
-      <layout class="QGridLayout" name="06x01"/>
+      <widget class="QLabel" name="06x01"/>
      </item>
      <item row="0" column="6">
-      <layout class="QGridLayout" name="07x01"/>
+      <widget class="QLabel" name="07x01"/>
      </item>
      <item row="0" column="7">
-      <layout class="QGridLayout" name="08x01"/>
+      <widget class="QLabel" name="08x01"/>
      </item>
      <item row="0" column="8">
-      <layout class="QGridLayout" name="09x01"/>
+      <widget class="QLabel" name="09x01"/>
      </item>
      <item row="0" column="9">
-      <layout class="QGridLayout" name="10x01"/>
+      <widget class="QLabel" name="10x01"/>
      </item>
      <item row="0" column="10">
-      <layout class="QGridLayout" name="11x01"/>
+      <widget class="QLabel" name="11x01"/>
      </item>
      <item row="0" column="11">
-      <layout class="QGridLayout" name="12x01"/>
+      <widget class="QLabel" name="12x01"/>
      </item>
      <item row="0" column="12">
-      <layout class="QGridLayout" name="13x01"/>
+      <widget class="QLabel" name="13x01"/>
      </item>
      <item row="0" column="13">
-      <layout class="QGridLayout" name="14x01"/>
+      <widget class="QLabel" name="14x01"/>
      </item>
      <item row="0" column="14">
-      <layout class="QGridLayout" name="15x01"/>
+      <widget class="QLabel" name="15x01"/>
      </item>
      <item row="0" column="15">
-      <layout class="QGridLayout" name="16x01"/>
+      <widget class="QLabel" name="16x01"/>
      </item>
      <item row="0" column="16">
-      <layout class="QGridLayout" name="17x01"/>
+      <widget class="QLabel" name="17x01"/>
      </item>
      <item row="0" column="17">
-      <layout class="QGridLayout" name="18x01"/>
+      <widget class="QLabel" name="18x01"/>
      </item>
      <item row="0" column="18">
-      <layout class="QGridLayout" name="19x01"/>
+      <widget class="QLabel" name="19x01"/>
      </item>
      <item row="1" column="0">
-      <layout class="QGridLayout" name="01x02"/>
+      <widget class="QLabel" name="01x02"/>
      </item>
      <item row="1" column="1">
-      <layout class="QGridLayout" name="02x02"/>
+      <widget class="QLabel" name="02x02"/>
      </item>
      <item row="1" column="2">
-      <layout class="QGridLayout" name="03x02"/>
+      <widget class="QLabel" name="03x02"/>
      </item>
      <item row="1" column="3">
-      <layout class="QGridLayout" name="04x02"/>
+      <widget class="QLabel" name="04x02"/>
      </item>
      <item row="1" column="4">
-      <layout class="QGridLayout" name="05x02"/>
+      <widget class="QLabel" name="05x02"/>
      </item>
      <item row="1" column="5">
-      <layout class="QGridLayout" name="06x02"/>
+      <widget class="QLabel" name="06x02"/>
      </item>
      <item row="1" column="6">
-      <layout class="QGridLayout" name="07x02"/>
+      <widget class="QLabel" name="07x02"/>
      </item>
      <item row="1" column="7">
-      <layout class="QGridLayout" name="08x02"/>
+      <widget class="QLabel" name="08x02"/>
      </item>
      <item row="1" column="8">
-      <layout class="QGridLayout" name="09x02"/>
+      <widget class="QLabel" name="09x02"/>
      </item>
      <item row="1" column="9">
-      <layout class="QGridLayout" name="10x02"/>
+      <widget class="QLabel" name="10x02"/>
      </item>
      <item row="1" column="10">
-      <layout class="QGridLayout" name="11x02"/>
+      <widget class="QLabel" name="11x02"/>
      </item>
      <item row="1" column="11">
-      <layout class="QGridLayout" name="12x02"/>
+      <widget class="QLabel" name="12x02"/>
      </item>
      <item row="1" column="12">
-      <layout class="QGridLayout" name="13x02"/>
+      <widget class="QLabel" name="13x02"/>
      </item>
      <item row="1" column="13">
-      <layout class="QGridLayout" name="14x02"/>
+      <widget class="QLabel" name="14x02"/>
      </item>
      <item row="1" column="14">
-      <layout class="QGridLayout" name="15x02"/>
+      <widget class="QLabel" name="15x02"/>
      </item>
      <item row="1" column="15">
-      <layout class="QGridLayout" name="16x02"/>
+      <widget class="QLabel" name="16x02"/>
      </item>
      <item row="1" column="16">
-      <layout class="QGridLayout" name="17x02"/>
+      <widget class="QLabel" name="17x02"/>
      </item>
      <item row="1" column="17">
-      <layout class="QGridLayout" name="18x02"/>
+      <widget class="QLabel" name="18x02"/>
      </item>
      <item row="1" column="18">
-      <layout class="QGridLayout" name="19x02"/>
+      <widget class="QLabel" name="19x02"/>
      </item>
      <item row="2" column="0">
-      <layout class="QGridLayout" name="01x03"/>
+      <widget class="QLabel" name="01x03"/>
      </item>
      <item row="2" column="1">
-      <layout class="QGridLayout" name="02x03"/>
+      <widget class="QLabel" name="02x03"/>
      </item>
      <item row="2" column="2">
-      <layout class="QGridLayout" name="03x03"/>
+      <widget class="QLabel" name="03x03"/>
      </item>
      <item row="2" column="3">
-      <layout class="QGridLayout" name="04x03"/>
+      <widget class="QLabel" name="04x03"/>
      </item>
      <item row="2" column="4">
-      <layout class="QGridLayout" name="05x03"/>
+      <widget class="QLabel" name="05x03"/>
      </item>
      <item row="2" column="5">
-      <layout class="QGridLayout" name="06x03"/>
+      <widget class="QLabel" name="06x03"/>
      </item>
      <item row="2" column="6">
-      <layout class="QGridLayout" name="07x03"/>
+      <widget class="QLabel" name="07x03"/>
      </item>
      <item row="2" column="7">
-      <layout class="QGridLayout" name="08x03"/>
+      <widget class="QLabel" name="08x03"/>
      </item>
      <item row="2" column="8">
-      <layout class="QGridLayout" name="09x03"/>
+      <widget class="QLabel" name="09x03"/>
      </item>
      <item row="2" column="9">
-      <layout class="QGridLayout" name="10x03"/>
+      <widget class="QLabel" name="10x03"/>
      </item>
      <item row="2" column="10">
-      <layout class="QGridLayout" name="11x03"/>
+      <widget class="QLabel" name="11x03"/>
      </item>
      <item row="2" column="11">
-      <layout class="QGridLayout" name="12x03"/>
+      <widget class="QLabel" name="12x03"/>
      </item>
      <item row="2" column="12">
-      <layout class="QGridLayout" name="13x03"/>
+      <widget class="QLabel" name="13x03"/>
      </item>
      <item row="2" column="13">
-      <layout class="QGridLayout" name="14x03"/>
+      <widget class="QLabel" name="14x03"/>
      </item>
      <item row="2" column="14">
-      <layout class="QGridLayout" name="15x03"/>
+      <widget class="QLabel" name="15x03"/>
      </item>
      <item row="2" column="15">
-      <layout class="QGridLayout" name="16x03"/>
+      <widget class="QLabel" name="16x03"/>
      </item>
      <item row="2" column="16">
-      <layout class="QGridLayout" name="17x03"/>
+      <widget class="QLabel" name="17x03"/>
      </item>
      <item row="2" column="17">
-      <layout class="QGridLayout" name="18x03"/>
+      <widget class="QLabel" name="18x03"/>
      </item>
      <item row="2" column="18">
-      <layout class="QGridLayout" name="19x03"/>
+      <widget class="QLabel" name="19x03"/>
      </item>
      <item row="3" column="0">
-      <layout class="QGridLayout" name="01x04"/>
+      <widget class="QLabel" name="01x04"/>
      </item>
      <item row="3" column="1">
-      <layout class="QGridLayout" name="02x04"/>
+      <widget class="QLabel" name="02x04"/>
      </item>
      <item row="3" column="2">
-      <layout class="QGridLayout" name="03x04"/>
+      <widget class="QLabel" name="03x04"/>
      </item>
      <item row="3" column="3">
-      <layout class="QGridLayout" name="04x04"/>
+      <widget class="QLabel" name="04x04"/>
      </item>
      <item row="3" column="4">
-      <layout class="QGridLayout" name="05x04"/>
+      <widget class="QLabel" name="05x04"/>
      </item>
      <item row="3" column="5">
-      <layout class="QGridLayout" name="06x04"/>
+      <widget class="QLabel" name="06x04"/>
      </item>
      <item row="3" column="6">
-      <layout class="QGridLayout" name="07x04"/>
+      <widget class="QLabel" name="07x04"/>
      </item>
      <item row="3" column="7">
-      <layout class="QGridLayout" name="08x04"/>
+      <widget class="QLabel" name="08x04"/>
      </item>
      <item row="3" column="8">
-      <layout class="QGridLayout" name="09x04"/>
+      <widget class="QLabel" name="09x04"/>
      </item>
      <item row="3" column="9">
-      <layout class="QGridLayout" name="10x04"/>
+      <widget class="QLabel" name="10x04"/>
      </item>
      <item row="3" column="10">
-      <layout class="QGridLayout" name="11x04"/>
+      <widget class="QLabel" name="11x04"/>
      </item>
      <item row="3" column="11">
-      <layout class="QGridLayout" name="12x04"/>
+      <widget class="QLabel" name="12x04"/>
      </item>
      <item row="3" column="12">
-      <layout class="QGridLayout" name="13x04"/>
+      <widget class="QLabel" name="13x04"/>
      </item>
      <item row="3" column="13">
-      <layout class="QGridLayout" name="14x04"/>
+      <widget class="QLabel" name="14x04"/>
      </item>
      <item row="3" column="14">
-      <layout class="QGridLayout" name="15x04"/>
+      <widget class="QLabel" name="15x04"/>
      </item>
      <item row="3" column="15">
-      <layout class="QGridLayout" name="16x04"/>
+      <widget class="QLabel" name="16x04"/>
      </item>
      <item row="3" column="16">
-      <layout class="QGridLayout" name="17x04"/>
+      <widget class="QLabel" name="17x04"/>
      </item>
      <item row="3" column="17">
-      <layout class="QGridLayout" name="18x04"/>
+      <widget class="QLabel" name="18x04"/>
      </item>
      <item row="3" column="18">
-      <layout class="QGridLayout" name="19x04"/>
+      <widget class="QLabel" name="19x04"/>
      </item>
      <item row="4" column="0">
-      <layout class="QGridLayout" name="01x05"/>
+      <widget class="QLabel" name="01x05"/>
      </item>
      <item row="4" column="1">
-      <layout class="QGridLayout" name="02x05"/>
+      <widget class="QLabel" name="02x05"/>
      </item>
      <item row="4" column="2">
-      <layout class="QGridLayout" name="03x05"/>
+      <widget class="QLabel" name="03x05"/>
      </item>
      <item row="4" column="3">
-      <layout class="QGridLayout" name="04x05"/>
+      <widget class="QLabel" name="04x05"/>
      </item>
      <item row="4" column="4">
-      <layout class="QGridLayout" name="05x05"/>
+      <widget class="QLabel" name="05x05"/>
      </item>
      <item row="4" column="5">
-      <layout class="QGridLayout" name="06x05"/>
+      <widget class="QLabel" name="06x05"/>
      </item>
      <item row="4" column="6">
-      <layout class="QGridLayout" name="07x05"/>
+      <widget class="QLabel" name="07x05"/>
      </item>
      <item row="4" column="7">
-      <layout class="QGridLayout" name="08x05"/>
+      <widget class="QLabel" name="08x05"/>
      </item>
      <item row="4" column="8">
-      <layout class="QGridLayout" name="09x05"/>
+      <widget class="QLabel" name="09x05"/>
      </item>
      <item row="4" column="9">
-      <layout class="QGridLayout" name="10x05"/>
+      <widget class="QLabel" name="10x05"/>
      </item>
      <item row="4" column="10">
-      <layout class="QGridLayout" name="11x05"/>
+      <widget class="QLabel" name="11x05"/>
      </item>
      <item row="4" column="11">
-      <layout class="QGridLayout" name="12x05"/>
+      <widget class="QLabel" name="12x05"/>
      </item>
      <item row="4" column="12">
-      <layout class="QGridLayout" name="13x05"/>
+      <widget class="QLabel" name="13x05"/>
      </item>
      <item row="4" column="13">
-      <layout class="QGridLayout" name="14x05"/>
+      <widget class="QLabel" name="14x05"/>
      </item>
      <item row="4" column="14">
-      <layout class="QGridLayout" name="15x05"/>
+      <widget class="QLabel" name="15x05"/>
      </item>
      <item row="4" column="15">
-      <layout class="QGridLayout" name="16x05"/>
+      <widget class="QLabel" name="16x05"/>
      </item>
      <item row="4" column="16">
-      <layout class="QGridLayout" name="17x05"/>
+      <widget class="QLabel" name="17x05"/>
      </item>
      <item row="4" column="17">
-      <layout class="QGridLayout" name="18x05"/>
+      <widget class="QLabel" name="18x05"/>
      </item>
      <item row="4" column="18">
-      <layout class="QGridLayout" name="19x05"/>
+      <widget class="QLabel" name="19x05"/>
      </item>
      <item row="5" column="0">
-      <layout class="QGridLayout" name="01x06"/>
+      <widget class="QLabel" name="01x06"/>
      </item>
      <item row="5" column="1">
-      <layout class="QGridLayout" name="02x06"/>
+      <widget class="QLabel" name="02x06"/>
      </item>
      <item row="5" column="2">
-      <layout class="QGridLayout" name="03x06"/>
+      <widget class="QLabel" name="03x06"/>
      </item>
      <item row="5" column="3">
-      <layout class="QGridLayout" name="04x06"/>
+      <widget class="QLabel" name="04x06"/>
      </item>
      <item row="5" column="4">
-      <layout class="QGridLayout" name="05x06"/>
+      <widget class="QLabel" name="05x06"/>
      </item>
      <item row="5" column="5">
-      <layout class="QGridLayout" name="06x06"/>
+      <widget class="QLabel" name="06x06"/>
      </item>
      <item row="5" column="6">
-      <layout class="QGridLayout" name="07x06"/>
+      <widget class="QLabel" name="07x06"/>
      </item>
      <item row="5" column="7">
-      <layout class="QGridLayout" name="08x06"/>
+      <widget class="QLabel" name="08x06"/>
      </item>
      <item row="5" column="8">
-      <layout class="QGridLayout" name="09x06"/>
+      <widget class="QLabel" name="09x06"/>
      </item>
      <item row="5" column="9">
-      <layout class="QGridLayout" name="10x06"/>
+      <widget class="QLabel" name="10x06"/>
      </item>
      <item row="5" column="10">
-      <layout class="QGridLayout" name="11x06"/>
+      <widget class="QLabel" name="11x06"/>
      </item>
      <item row="5" column="11">
-      <layout class="QGridLayout" name="12x06"/>
+      <widget class="QLabel" name="12x06"/>
      </item>
      <item row="5" column="12">
-      <layout class="QGridLayout" name="13x06"/>
+      <widget class="QLabel" name="13x06"/>
      </item>
      <item row="5" column="13">
-      <layout class="QGridLayout" name="14x06"/>
+      <widget class="QLabel" name="14x06"/>
      </item>
      <item row="5" column="14">
-      <layout class="QGridLayout" name="15x06"/>
+      <widget class="QLabel" name="15x06"/>
      </item>
      <item row="5" column="15">
-      <layout class="QGridLayout" name="16x06"/>
+      <widget class="QLabel" name="16x06"/>
      </item>
      <item row="5" column="16">
-      <layout class="QGridLayout" name="17x06"/>
+      <widget class="QLabel" name="17x06"/>
      </item>
      <item row="5" column="17">
-      <layout class="QGridLayout" name="18x06"/>
+      <widget class="QLabel" name="18x06"/>
      </item>
      <item row="5" column="18">
-      <layout class="QGridLayout" name="19x06"/>
+      <widget class="QLabel" name="19x06"/>
      </item>
      <item row="6" column="0">
-      <layout class="QGridLayout" name="01x07"/>
+      <widget class="QLabel" name="01x07"/>
      </item>
      <item row="6" column="1">
-      <layout class="QGridLayout" name="02x07"/>
+      <widget class="QLabel" name="02x07"/>
      </item>
      <item row="6" column="2">
-      <layout class="QGridLayout" name="03x07"/>
+      <widget class="QLabel" name="03x07"/>
      </item>
      <item row="6" column="3">
-      <layout class="QGridLayout" name="04x07"/>
+      <widget class="QLabel" name="04x07"/>
      </item>
      <item row="6" column="4">
-      <layout class="QGridLayout" name="05x07"/>
+      <widget class="QLabel" name="05x07"/>
      </item>
      <item row="6" column="5">
-      <layout class="QGridLayout" name="06x07"/>
+      <widget class="QLabel" name="06x07"/>
      </item>
      <item row="6" column="6">
-      <layout class="QGridLayout" name="07x07"/>
+      <widget class="QLabel" name="07x07"/>
      </item>
      <item row="6" column="7">
-      <layout class="QGridLayout" name="08x07"/>
+      <widget class="QLabel" name="08x07"/>
      </item>
      <item row="6" column="8">
-      <layout class="QGridLayout" name="09x07"/>
+      <widget class="QLabel" name="09x07"/>
      </item>
      <item row="6" column="9">
-      <layout class="QGridLayout" name="10x07"/>
+      <widget class="QLabel" name="10x07"/>
      </item>
      <item row="6" column="10">
-      <layout class="QGridLayout" name="11x07"/>
+      <widget class="QLabel" name="11x07"/>
      </item>
      <item row="6" column="11">
-      <layout class="QGridLayout" name="12x07"/>
+      <widget class="QLabel" name="12x07"/>
      </item>
      <item row="6" column="12">
-      <layout class="QGridLayout" name="13x07"/>
+      <widget class="QLabel" name="13x07"/>
      </item>
      <item row="6" column="13">
-      <layout class="QGridLayout" name="14x07"/>
+      <widget class="QLabel" name="14x07"/>
      </item>
      <item row="6" column="14">
-      <layout class="QGridLayout" name="15x07"/>
+      <widget class="QLabel" name="15x07"/>
      </item>
      <item row="6" column="15">
-      <layout class="QGridLayout" name="16x07"/>
+      <widget class="QLabel" name="16x07"/>
      </item>
      <item row="6" column="16">
-      <layout class="QGridLayout" name="17x07"/>
+      <widget class="QLabel" name="17x07"/>
      </item>
      <item row="6" column="17">
-      <layout class="QGridLayout" name="18x07"/>
+      <widget class="QLabel" name="18x07"/>
      </item>
      <item row="6" column="18">
-      <layout class="QGridLayout" name="19x07"/>
+      <widget class="QLabel" name="19x07"/>
      </item>
      <item row="7" column="0">
-      <layout class="QGridLayout" name="01x08"/>
+      <widget class="QLabel" name="01x08"/>
      </item>
      <item row="7" column="1">
-      <layout class="QGridLayout" name="02x08"/>
+      <widget class="QLabel" name="02x08"/>
      </item>
      <item row="7" column="2">
-      <layout class="QGridLayout" name="03x08"/>
+      <widget class="QLabel" name="03x08"/>
      </item>
      <item row="7" column="3">
-      <layout class="QGridLayout" name="04x08"/>
+      <widget class="QLabel" name="04x08"/>
      </item>
      <item row="7" column="4">
-      <layout class="QGridLayout" name="05x08"/>
+      <widget class="QLabel" name="05x08"/>
      </item>
      <item row="7" column="5">
-      <layout class="QGridLayout" name="06x08"/>
+      <widget class="QLabel" name="06x08"/>
      </item>
      <item row="7" column="6">
-      <layout class="QGridLayout" name="07x08"/>
+      <widget class="QLabel" name="07x08"/>
      </item>
      <item row="7" column="7">
-      <layout class="QGridLayout" name="08x08"/>
+      <widget class="QLabel" name="08x08"/>
      </item>
      <item row="7" column="8">
-      <layout class="QGridLayout" name="09x08"/>
+      <widget class="QLabel" name="09x08"/>
      </item>
      <item row="7" column="9">
-      <layout class="QGridLayout" name="10x08"/>
+      <widget class="QLabel" name="10x08"/>
      </item>
      <item row="7" column="10">
-      <layout class="QGridLayout" name="11x08"/>
+      <widget class="QLabel" name="11x08"/>
      </item>
      <item row="7" column="11">
-      <layout class="QGridLayout" name="12x08"/>
+      <widget class="QLabel" name="12x08"/>
      </item>
      <item row="7" column="12">
-      <layout class="QGridLayout" name="13x08"/>
+      <widget class="QLabel" name="13x08"/>
      </item>
      <item row="7" column="13">
-      <layout class="QGridLayout" name="14x08"/>
+      <widget class="QLabel" name="14x08"/>
      </item>
      <item row="7" column="14">
-      <layout class="QGridLayout" name="15x08"/>
+      <widget class="QLabel" name="15x08"/>
      </item>
      <item row="7" column="15">
-      <layout class="QGridLayout" name="16x08"/>
+      <widget class="QLabel" name="16x08"/>
      </item>
      <item row="7" column="16">
-      <layout class="QGridLayout" name="17x08"/>
+      <widget class="QLabel" name="17x08"/>
      </item>
      <item row="7" column="17">
-      <layout class="QGridLayout" name="18x08"/>
+      <widget class="QLabel" name="18x08"/>
      </item>
      <item row="7" column="18">
-      <layout class="QGridLayout" name="19x08"/>
+      <widget class="QLabel" name="19x08"/>
      </item>
      <item row="8" column="0">
-      <layout class="QGridLayout" name="01x09"/>
+      <widget class="QLabel" name="01x09"/>
      </item>
      <item row="8" column="1">
-      <layout class="QGridLayout" name="02x09"/>
+      <widget class="QLabel" name="02x09"/>
      </item>
      <item row="8" column="2">
-      <layout class="QGridLayout" name="03x09"/>
+      <widget class="QLabel" name="03x09"/>
      </item>
      <item row="8" column="3">
-      <layout class="QGridLayout" name="04x09"/>
+      <widget class="QLabel" name="04x09"/>
      </item>
      <item row="8" column="4">
-      <layout class="QGridLayout" name="05x09"/>
+      <widget class="QLabel" name="05x09"/>
      </item>
      <item row="8" column="5">
-      <layout class="QGridLayout" name="06x09"/>
+      <widget class="QLabel" name="06x09"/>
      </item>
      <item row="8" column="6">
-      <layout class="QGridLayout" name="07x09"/>
+      <widget class="QLabel" name="07x09"/>
      </item>
      <item row="8" column="7">
-      <layout class="QGridLayout" name="08x09"/>
+      <widget class="QLabel" name="08x09"/>
      </item>
      <item row="8" column="8">
-      <layout class="QGridLayout" name="09x09"/>
+      <widget class="QLabel" name="09x09"/>
      </item>
      <item row="8" column="9">
-      <layout class="QGridLayout" name="10x09"/>
+      <widget class="QLabel" name="10x09"/>
      </item>
      <item row="8" column="10">
-      <layout class="QGridLayout" name="11x09"/>
+      <widget class="QLabel" name="11x09"/>
      </item>
      <item row="8" column="11">
-      <layout class="QGridLayout" name="12x09"/>
+      <widget class="QLabel" name="12x09"/>
      </item>
      <item row="8" column="12">
-      <layout class="QGridLayout" name="13x09"/>
+      <widget class="QLabel" name="13x09"/>
      </item>
      <item row="8" column="13">
-      <layout class="QGridLayout" name="14x09"/>
+      <widget class="QLabel" name="14x09"/>
      </item>
      <item row="8" column="14">
-      <layout class="QGridLayout" name="15x09"/>
+      <widget class="QLabel" name="15x09"/>
      </item>
      <item row="8" column="15">
-      <layout class="QGridLayout" name="16x09"/>
+      <widget class="QLabel" name="16x09"/>
      </item>
      <item row="8" column="16">
-      <layout class="QGridLayout" name="17x09"/>
+      <widget class="QLabel" name="17x09"/>
      </item>
      <item row="8" column="17">
-      <layout class="QGridLayout" name="18x09"/>
+      <widget class="QLabel" name="18x09"/>
      </item>
      <item row="8" column="18">
-      <layout class="QGridLayout" name="19x09"/>
+      <widget class="QLabel" name="19x09"/>
      </item>
      <item row="9" column="0">
-      <layout class="QGridLayout" name="01x10"/>
+      <widget class="QLabel" name="01x10"/>
      </item>
      <item row="9" column="1">
-      <layout class="QGridLayout" name="02x10"/>
+      <widget class="QLabel" name="02x10"/>
      </item>
      <item row="9" column="2">
-      <layout class="QGridLayout" name="03x10"/>
+      <widget class="QLabel" name="03x10"/>
      </item>
      <item row="9" column="3">
-      <layout class="QGridLayout" name="04x10"/>
+      <widget class="QLabel" name="04x10"/>
      </item>
      <item row="9" column="4">
-      <layout class="QGridLayout" name="05x10"/>
+      <widget class="QLabel" name="05x10"/>
      </item>
      <item row="9" column="5">
-      <layout class="QGridLayout" name="06x10"/>
+      <widget class="QLabel" name="06x10"/>
      </item>
      <item row="9" column="6">
-      <layout class="QGridLayout" name="07x10"/>
+      <widget class="QLabel" name="07x10"/>
      </item>
      <item row="9" column="7">
-      <layout class="QGridLayout" name="08x10"/>
+      <widget class="QLabel" name="08x10"/>
      </item>
      <item row="9" column="8">
-      <layout class="QGridLayout" name="09x10"/>
+      <widget class="QLabel" name="09x10"/>
      </item>
      <item row="9" column="9">
-      <layout class="QGridLayout" name="10x10"/>
+      <widget class="QLabel" name="10x10"/>
      </item>
      <item row="9" column="10">
-      <layout class="QGridLayout" name="11x10"/>
+      <widget class="QLabel" name="11x10"/>
      </item>
      <item row="9" column="11">
-      <layout class="QGridLayout" name="12x10"/>
+      <widget class="QLabel" name="12x10"/>
      </item>
      <item row="9" column="12">
-      <layout class="QGridLayout" name="13x10"/>
+      <widget class="QLabel" name="13x10"/>
      </item>
      <item row="9" column="13">
-      <layout class="QGridLayout" name="14x10"/>
+      <widget class="QLabel" name="14x10"/>
      </item>
      <item row="9" column="14">
-      <layout class="QGridLayout" name="15x10"/>
+      <widget class="QLabel" name="15x10"/>
      </item>
      <item row="9" column="15">
-      <layout class="QGridLayout" name="16x10"/>
+      <widget class="QLabel" name="16x10"/>
      </item>
      <item row="9" column="16">
-      <layout class="QGridLayout" name="17x10"/>
+      <widget class="QLabel" name="17x10"/>
      </item>
      <item row="9" column="17">
-      <layout class="QGridLayout" name="18x10"/>
+      <widget class="QLabel" name="18x10"/>
      </item>
      <item row="9" column="18">
-      <layout class="QGridLayout" name="19x10"/>
+      <widget class="QLabel" name="19x10"/>
      </item>
      <item row="10" column="0">
-      <layout class="QGridLayout" name="01x11"/>
+      <widget class="QLabel" name="01x11"/>
      </item>
      <item row="10" column="1">
-      <layout class="QGridLayout" name="02x11"/>
+      <widget class="QLabel" name="02x11"/>
      </item>
      <item row="10" column="2">
-      <layout class="QGridLayout" name="03x11"/>
+      <widget class="QLabel" name="03x11"/>
      </item>
      <item row="10" column="3">
-      <layout class="QGridLayout" name="04x11"/>
+      <widget class="QLabel" name="04x11"/>
      </item>
      <item row="10" column="4">
-      <layout class="QGridLayout" name="05x11"/>
+      <widget class="QLabel" name="05x11"/>
      </item>
      <item row="10" column="5">
-      <layout class="QGridLayout" name="06x11"/>
+      <widget class="QLabel" name="06x11"/>
      </item>
      <item row="10" column="6">
-      <layout class="QGridLayout" name="07x11"/>
+      <widget class="QLabel" name="07x11"/>
      </item>
      <item row="10" column="7">
-      <layout class="QGridLayout" name="08x11"/>
+      <widget class="QLabel" name="08x11"/>
      </item>
      <item row="10" column="8">
-      <layout class="QGridLayout" name="09x11"/>
+      <widget class="QLabel" name="09x11"/>
      </item>
      <item row="10" column="9">
-      <layout class="QGridLayout" name="10x11"/>
+      <widget class="QLabel" name="10x11"/>
      </item>
      <item row="10" column="10">
-      <layout class="QGridLayout" name="11x11"/>
+      <widget class="QLabel" name="11x11"/>
      </item>
      <item row="10" column="11">
-      <layout class="QGridLayout" name="12x11"/>
+      <widget class="QLabel" name="12x11"/>
      </item>
      <item row="10" column="12">
-      <layout class="QGridLayout" name="13x11"/>
+      <widget class="QLabel" name="13x11"/>
      </item>
      <item row="10" column="13">
-      <layout class="QGridLayout" name="14x11"/>
+      <widget class="QLabel" name="14x11"/>
      </item>
      <item row="10" column="14">
-      <layout class="QGridLayout" name="15x11"/>
+      <widget class="QLabel" name="15x11"/>
      </item>
      <item row="10" column="15">
-      <layout class="QGridLayout" name="16x11"/>
+      <widget class="QLabel" name="16x11"/>
      </item>
      <item row="10" column="16">
-      <layout class="QGridLayout" name="17x11"/>
+      <widget class="QLabel" name="17x11"/>
      </item>
      <item row="10" column="17">
-      <layout class="QGridLayout" name="18x11"/>
+      <widget class="QLabel" name="18x11"/>
      </item>
      <item row="10" column="18">
-      <layout class="QGridLayout" name="19x11"/>
+      <widget class="QLabel" name="19x11"/>
      </item>
      <item row="11" column="0">
-      <layout class="QGridLayout" name="01x12"/>
+      <widget class="QLabel" name="01x12"/>
      </item>
      <item row="11" column="1">
-      <layout class="QGridLayout" name="02x12"/>
+      <widget class="QLabel" name="02x12"/>
      </item>
      <item row="11" column="2">
-      <layout class="QGridLayout" name="03x12"/>
+      <widget class="QLabel" name="03x12"/>
      </item>
      <item row="11" column="3">
-      <layout class="QGridLayout" name="04x12"/>
+      <widget class="QLabel" name="04x12"/>
      </item>
      <item row="11" column="4">
-      <layout class="QGridLayout" name="05x12"/>
+      <widget class="QLabel" name="05x12"/>
      </item>
      <item row="11" column="5">
-      <layout class="QGridLayout" name="06x12"/>
+      <widget class="QLabel" name="06x12"/>
      </item>
      <item row="11" column="6">
-      <layout class="QGridLayout" name="07x12"/>
+      <widget class="QLabel" name="07x12"/>
      </item>
      <item row="11" column="7">
-      <layout class="QGridLayout" name="08x12"/>
+      <widget class="QLabel" name="08x12"/>
      </item>
      <item row="11" column="8">
-      <layout class="QGridLayout" name="09x12"/>
+      <widget class="QLabel" name="09x12"/>
      </item>
      <item row="11" column="9">
-      <layout class="QGridLayout" name="10x12"/>
+      <widget class="QLabel" name="10x12"/>
      </item>
      <item row="11" column="10">
-      <layout class="QGridLayout" name="11x12"/>
+      <widget class="QLabel" name="11x12"/>
      </item>
      <item row="11" column="11">
-      <layout class="QGridLayout" name="12x12"/>
+      <widget class="QLabel" name="12x12"/>
      </item>
      <item row="11" column="12">
-      <layout class="QGridLayout" name="13x12"/>
+      <widget class="QLabel" name="13x12"/>
      </item>
      <item row="11" column="13">
-      <layout class="QGridLayout" name="14x12"/>
+      <widget class="QLabel" name="14x12"/>
      </item>
      <item row="11" column="14">
-      <layout class="QGridLayout" name="15x12"/>
+      <widget class="QLabel" name="15x12"/>
      </item>
      <item row="11" column="15">
-      <layout class="QGridLayout" name="16x12"/>
+      <widget class="QLabel" name="16x12"/>
      </item>
      <item row="11" column="16">
-      <layout class="QGridLayout" name="17x12"/>
+      <widget class="QLabel" name="17x12"/>
      </item>
      <item row="11" column="17">
-      <layout class="QGridLayout" name="18x12"/>
+      <widget class="QLabel" name="18x12"/>
      </item>
      <item row="11" column="18">
-      <layout class="QGridLayout" name="19x12"/>
+      <widget class="QLabel" name="19x12"/>
      </item>
      <item row="12" column="0">
-      <layout class="QGridLayout" name="01x13"/>
+      <widget class="QLabel" name="01x13"/>
      </item>
      <item row="12" column="1">
-      <layout class="QGridLayout" name="02x13"/>
+      <widget class="QLabel" name="02x13"/>
      </item>
      <item row="12" column="2">
-      <layout class="QGridLayout" name="03x13"/>
+      <widget class="QLabel" name="03x13"/>
      </item>
      <item row="12" column="3">
-      <layout class="QGridLayout" name="04x13"/>
+      <widget class="QLabel" name="04x13"/>
      </item>
      <item row="12" column="4">
-      <layout class="QGridLayout" name="05x13"/>
+      <widget class="QLabel" name="05x13"/>
      </item>
      <item row="12" column="5">
-      <layout class="QGridLayout" name="06x13"/>
+      <widget class="QLabel" name="06x13"/>
      </item>
      <item row="12" column="6">
-      <layout class="QGridLayout" name="07x13"/>
+      <widget class="QLabel" name="07x13"/>
      </item>
      <item row="12" column="7">
-      <layout class="QGridLayout" name="08x13"/>
+      <widget class="QLabel" name="08x13"/>
      </item>
      <item row="12" column="8">
-      <layout class="QGridLayout" name="09x13"/>
+      <widget class="QLabel" name="09x13"/>
      </item>
      <item row="12" column="9">
-      <layout class="QGridLayout" name="10x13"/>
+      <widget class="QLabel" name="10x13"/>
      </item>
      <item row="12" column="10">
-      <layout class="QGridLayout" name="11x13"/>
+      <widget class="QLabel" name="11x13"/>
      </item>
      <item row="12" column="11">
-      <layout class="QGridLayout" name="12x13"/>
+      <widget class="QLabel" name="12x13"/>
      </item>
      <item row="12" column="12">
-      <layout class="QGridLayout" name="13x13"/>
+      <widget class="QLabel" name="13x13"/>
      </item>
      <item row="12" column="13">
-      <layout class="QGridLayout" name="14x13"/>
+      <widget class="QLabel" name="14x13"/>
      </item>
      <item row="12" column="14">
-      <layout class="QGridLayout" name="15x13"/>
+      <widget class="QLabel" name="15x13"/>
      </item>
      <item row="12" column="15">
-      <layout class="QGridLayout" name="16x13"/>
+      <widget class="QLabel" name="16x13"/>
      </item>
      <item row="12" column="16">
-      <layout class="QGridLayout" name="17x13"/>
+      <widget class="QLabel" name="17x13"/>
      </item>
      <item row="12" column="17">
-      <layout class="QGridLayout" name="18x13"/>
+      <widget class="QLabel" name="18x13"/>
      </item>
      <item row="12" column="18">
-      <layout class="QGridLayout" name="19x13"/>
+      <widget class="QLabel" name="19x13"/>
      </item>
      <item row="13" column="0">
-      <layout class="QGridLayout" name="01x14"/>
+      <widget class="QLabel" name="01x14"/>
      </item>
      <item row="13" column="1">
-      <layout class="QGridLayout" name="02x14"/>
+      <widget class="QLabel" name="02x14"/>
      </item>
      <item row="13" column="2">
-      <layout class="QGridLayout" name="03x14"/>
+      <widget class="QLabel" name="03x14"/>
      </item>
      <item row="13" column="3">
-      <layout class="QGridLayout" name="04x14"/>
+      <widget class="QLabel" name="04x14"/>
      </item>
      <item row="13" column="4">
-      <layout class="QGridLayout" name="05x14"/>
+      <widget class="QLabel" name="05x14"/>
      </item>
      <item row="13" column="5">
-      <layout class="QGridLayout" name="06x14"/>
+      <widget class="QLabel" name="06x14"/>
      </item>
      <item row="13" column="6">
-      <layout class="QGridLayout" name="07x14"/>
+      <widget class="QLabel" name="07x14"/>
      </item>
      <item row="13" column="7">
-      <layout class="QGridLayout" name="08x14"/>
+      <widget class="QLabel" name="08x14"/>
      </item>
      <item row="13" column="8">
-      <layout class="QGridLayout" name="09x14"/>
+      <widget class="QLabel" name="09x14"/>
      </item>
      <item row="13" column="9">
-      <layout class="QGridLayout" name="10x14"/>
+      <widget class="QLabel" name="10x14"/>
      </item>
      <item row="13" column="10">
-      <layout class="QGridLayout" name="11x14"/>
+      <widget class="QLabel" name="11x14"/>
      </item>
      <item row="13" column="11">
-      <layout class="QGridLayout" name="12x14"/>
+      <widget class="QLabel" name="12x14"/>
      </item>
      <item row="13" column="12">
-      <layout class="QGridLayout" name="13x14"/>
+      <widget class="QLabel" name="13x14"/>
      </item>
      <item row="13" column="13">
-      <layout class="QGridLayout" name="14x14"/>
+      <widget class="QLabel" name="14x14"/>
      </item>
      <item row="13" column="14">
-      <layout class="QGridLayout" name="15x14"/>
+      <widget class="QLabel" name="15x14"/>
      </item>
      <item row="13" column="15">
-      <layout class="QGridLayout" name="16x14"/>
+      <widget class="QLabel" name="16x14"/>
      </item>
      <item row="13" column="16">
-      <layout class="QGridLayout" name="17x14"/>
+      <widget class="QLabel" name="17x14"/>
      </item>
      <item row="13" column="17">
-      <layout class="QGridLayout" name="18x14"/>
+      <widget class="QLabel" name="18x14"/>
      </item>
      <item row="13" column="18">
-      <layout class="QGridLayout" name="19x14"/>
+      <widget class="QLabel" name="19x14"/>
      </item>
      <item row="14" column="0">
-      <layout class="QGridLayout" name="01x15"/>
+      <widget class="QLabel" name="01x15"/>
      </item>
      <item row="14" column="1">
-      <layout class="QGridLayout" name="02x15"/>
+      <widget class="QLabel" name="02x15"/>
      </item>
      <item row="14" column="2">
-      <layout class="QGridLayout" name="03x15"/>
+      <widget class="QLabel" name="03x15"/>
      </item>
      <item row="14" column="3">
-      <layout class="QGridLayout" name="04x15"/>
+      <widget class="QLabel" name="04x15"/>
      </item>
      <item row="14" column="4">
-      <layout class="QGridLayout" name="05x15"/>
+      <widget class="QLabel" name="05x15"/>
      </item>
      <item row="14" column="5">
-      <layout class="QGridLayout" name="06x15"/>
+      <widget class="QLabel" name="06x15"/>
      </item>
      <item row="14" column="6">
-      <layout class="QGridLayout" name="07x15"/>
+      <widget class="QLabel" name="07x15"/>
      </item>
      <item row="14" column="7">
-      <layout class="QGridLayout" name="08x15"/>
+      <widget class="QLabel" name="08x15"/>
      </item>
      <item row="14" column="8">
-      <layout class="QGridLayout" name="09x15"/>
+      <widget class="QLabel" name="09x15"/>
      </item>
      <item row="14" column="9">
-      <layout class="QGridLayout" name="10x15"/>
+      <widget class="QLabel" name="10x15"/>
      </item>
      <item row="14" column="10">
-      <layout class="QGridLayout" name="11x15"/>
+      <widget class="QLabel" name="11x15"/>
      </item>
      <item row="14" column="11">
-      <layout class="QGridLayout" name="12x15"/>
+      <widget class="QLabel" name="12x15"/>
      </item>
      <item row="14" column="12">
-      <layout class="QGridLayout" name="13x15"/>
+      <widget class="QLabel" name="13x15"/>
      </item>
      <item row="14" column="13">
-      <layout class="QGridLayout" name="14x15"/>
+      <widget class="QLabel" name="14x15"/>
      </item>
      <item row="14" column="14">
-      <layout class="QGridLayout" name="15x15"/>
+      <widget class="QLabel" name="15x15"/>
      </item>
      <item row="14" column="15">
-      <layout class="QGridLayout" name="16x15"/>
+      <widget class="QLabel" name="16x15"/>
      </item>
      <item row="14" column="16">
-      <layout class="QGridLayout" name="17x15"/>
+      <widget class="QLabel" name="17x15"/>
      </item>
      <item row="14" column="17">
-      <layout class="QGridLayout" name="18x15"/>
+      <widget class="QLabel" name="18x15"/>
      </item>
      <item row="14" column="18">
-      <layout class="QGridLayout" name="19x15"/>
+      <widget class="QLabel" name="19x15"/>
      </item>
      <item row="15" column="0">
-      <layout class="QGridLayout" name="01x16"/>
+      <widget class="QLabel" name="01x16"/>
      </item>
      <item row="15" column="1">
-      <layout class="QGridLayout" name="02x16"/>
+      <widget class="QLabel" name="02x16"/>
      </item>
      <item row="15" column="2">
-      <layout class="QGridLayout" name="03x16"/>
+      <widget class="QLabel" name="03x16"/>
      </item>
      <item row="15" column="3">
-      <layout class="QGridLayout" name="04x16"/>
+      <widget class="QLabel" name="04x16"/>
      </item>
      <item row="15" column="4">
-      <layout class="QGridLayout" name="05x16"/>
+      <widget class="QLabel" name="05x16"/>
      </item>
      <item row="15" column="5">
-      <layout class="QGridLayout" name="06x16"/>
+      <widget class="QLabel" name="06x16"/>
      </item>
      <item row="15" column="6">
-      <layout class="QGridLayout" name="07x16"/>
+      <widget class="QLabel" name="07x16"/>
      </item>
      <item row="15" column="7">
-      <layout class="QGridLayout" name="08x16"/>
+      <widget class="QLabel" name="08x16"/>
      </item>
      <item row="15" column="8">
-      <layout class="QGridLayout" name="09x16"/>
+      <widget class="QLabel" name="09x16"/>
      </item>
      <item row="15" column="9">
-      <layout class="QGridLayout" name="10x16"/>
+      <widget class="QLabel" name="10x16"/>
      </item>
      <item row="15" column="10">
-      <layout class="QGridLayout" name="11x16"/>
+      <widget class="QLabel" name="11x16"/>
      </item>
      <item row="15" column="11">
-      <layout class="QGridLayout" name="12x16"/>
+      <widget class="QLabel" name="12x16"/>
      </item>
      <item row="15" column="12">
-      <layout class="QGridLayout" name="13x16"/>
+      <widget class="QLabel" name="13x16"/>
      </item>
      <item row="15" column="13">
-      <layout class="QGridLayout" name="14x16"/>
+      <widget class="QLabel" name="14x16"/>
      </item>
      <item row="15" column="14">
-      <layout class="QGridLayout" name="15x16"/>
+      <widget class="QLabel" name="15x16"/>
      </item>
      <item row="15" column="15">
-      <layout class="QGridLayout" name="16x16"/>
+      <widget class="QLabel" name="16x16"/>
      </item>
      <item row="15" column="16">
-      <layout class="QGridLayout" name="17x16"/>
+      <widget class="QLabel" name="17x16"/>
      </item>
      <item row="15" column="17">
-      <layout class="QGridLayout" name="18x16"/>
+      <widget class="QLabel" name="18x16"/>
      </item>
      <item row="15" column="18">
-      <layout class="QGridLayout" name="19x16"/>
+      <widget class="QLabel" name="19x16"/>
      </item>
      <item row="16" column="0">
-      <layout class="QGridLayout" name="01x17"/>
+      <widget class="QLabel" name="01x17"/>
      </item>
      <item row="16" column="1">
-      <layout class="QGridLayout" name="02x17"/>
+      <widget class="QLabel" name="02x17"/>
      </item>
      <item row="16" column="2">
-      <layout class="QGridLayout" name="03x17"/>
+      <widget class="QLabel" name="03x17"/>
      </item>
      <item row="16" column="3">
-      <layout class="QGridLayout" name="04x17"/>
+      <widget class="QLabel" name="04x17"/>
      </item>
      <item row="16" column="4">
-      <layout class="QGridLayout" name="05x17"/>
+      <widget class="QLabel" name="05x17"/>
      </item>
      <item row="16" column="5">
-      <layout class="QGridLayout" name="06x17"/>
+      <widget class="QLabel" name="06x17"/>
      </item>
      <item row="16" column="6">
-      <layout class="QGridLayout" name="07x17"/>
+      <widget class="QLabel" name="07x17"/>
      </item>
      <item row="16" column="7">
-      <layout class="QGridLayout" name="08x17"/>
+      <widget class="QLabel" name="08x17"/>
      </item>
      <item row="16" column="8">
-      <layout class="QGridLayout" name="09x17"/>
+      <widget class="QLabel" name="09x17"/>
      </item>
      <item row="16" column="9">
-      <layout class="QGridLayout" name="10x17"/>
+      <widget class="QLabel" name="10x17"/>
      </item>
      <item row="16" column="10">
-      <layout class="QGridLayout" name="11x17"/>
+      <widget class="QLabel" name="11x17"/>
      </item>
      <item row="16" column="11">
-      <layout class="QGridLayout" name="12x17"/>
+      <widget class="QLabel" name="12x17"/>
      </item>
      <item row="16" column="12">
-      <layout class="QGridLayout" name="13x17"/>
+      <widget class="QLabel" name="13x17"/>
      </item>
      <item row="16" column="13">
-      <layout class="QGridLayout" name="14x17"/>
+      <widget class="QLabel" name="14x17"/>
      </item>
      <item row="16" column="14">
-      <layout class="QGridLayout" name="15x17"/>
+      <widget class="QLabel" name="15x17"/>
      </item>
      <item row="16" column="15">
-      <layout class="QGridLayout" name="16x17"/>
+      <widget class="QLabel" name="16x17"/>
      </item>
      <item row="16" column="16">
-      <layout class="QGridLayout" name="17x17"/>
+      <widget class="QLabel" name="17x17"/>
      </item>
      <item row="16" column="17">
-      <layout class="QGridLayout" name="18x17"/>
+      <widget class="QLabel" name="18x17"/>
      </item>
      <item row="16" column="18">
-      <layout class="QGridLayout" name="19x17"/>
+      <widget class="QLabel" name="19x17"/>
      </item>
      <item row="17" column="0">
-      <layout class="QGridLayout" name="01x18"/>
+      <widget class="QLabel" name="01x18"/>
      </item>
      <item row="17" column="1">
-      <layout class="QGridLayout" name="02x18"/>
+      <widget class="QLabel" name="02x18"/>
      </item>
      <item row="17" column="2">
-      <layout class="QGridLayout" name="03x18"/>
+      <widget class="QLabel" name="03x18"/>
      </item>
      <item row="17" column="3">
-      <layout class="QGridLayout" name="04x18"/>
+      <widget class="QLabel" name="04x18"/>
      </item>
      <item row="17" column="4">
-      <layout class="QGridLayout" name="05x18"/>
+      <widget class="QLabel" name="05x18"/>
      </item>
      <item row="17" column="5">
-      <layout class="QGridLayout" name="06x18"/>
+      <widget class="QLabel" name="06x18"/>
      </item>
      <item row="17" column="6">
-      <layout class="QGridLayout" name="07x18"/>
+      <widget class="QLabel" name="07x18"/>
      </item>
      <item row="17" column="7">
-      <layout class="QGridLayout" name="08x18"/>
+      <widget class="QLabel" name="08x18"/>
      </item>
      <item row="17" column="8">
-      <layout class="QGridLayout" name="09x18"/>
+      <widget class="QLabel" name="09x18"/>
      </item>
      <item row="17" column="9">
-      <layout class="QGridLayout" name="10x18"/>
+      <widget class="QLabel" name="10x18"/>
      </item>
      <item row="17" column="10">
-      <layout class="QGridLayout" name="11x18"/>
+      <widget class="QLabel" name="11x18"/>
      </item>
      <item row="17" column="11">
-      <layout class="QGridLayout" name="12x18"/>
+      <widget class="QLabel" name="12x18"/>
      </item>
      <item row="17" column="12">
-      <layout class="QGridLayout" name="13x18"/>
+      <widget class="QLabel" name="13x18"/>
      </item>
      <item row="17" column="13">
-      <layout class="QGridLayout" name="14x18"/>
+      <widget class="QLabel" name="14x18"/>
      </item>
      <item row="17" column="14">
-      <layout class="QGridLayout" name="15x18"/>
+      <widget class="QLabel" name="15x18"/>
      </item>
      <item row="17" column="15">
-      <layout class="QGridLayout" name="16x18"/>
+      <widget class="QLabel" name="16x18"/>
      </item>
      <item row="17" column="16">
-      <layout class="QGridLayout" name="17x18"/>
+      <widget class="QLabel" name="17x18"/>
      </item>
      <item row="17" column="17">
-      <layout class="QGridLayout" name="18x18"/>
+      <widget class="QLabel" name="18x18"/>
      </item>
      <item row="17" column="18">
-      <layout class="QGridLayout" name="19x18"/>
+      <widget class="QLabel" name="19x18"/>
      </item>
      <item row="18" column="0">
-      <layout class="QGridLayout" name="01x19"/>
+      <widget class="QLabel" name="01x19"/>
      </item>
      <item row="18" column="1">
-      <layout class="QGridLayout" name="02x19"/>
+      <widget class="QLabel" name="02x19"/>
      </item>
      <item row="18" column="2">
-      <layout class="QGridLayout" name="03x19"/>
+      <widget class="QLabel" name="03x19"/>
      </item>
      <item row="18" column="3">
-      <layout class="QGridLayout" name="04x19"/>
+      <widget class="QLabel" name="04x19"/>
      </item>
      <item row="18" column="4">
-      <layout class="QGridLayout" name="05x19"/>
+      <widget class="QLabel" name="05x19"/>
      </item>
      <item row="18" column="5">
-      <layout class="QGridLayout" name="06x19"/>
+      <widget class="QLabel" name="06x19"/>
      </item>
      <item row="18" column="6">
-      <layout class="QGridLayout" name="07x19"/>
+      <widget class="QLabel" name="07x19"/>
      </item>
      <item row="18" column="7">
-      <layout class="QGridLayout" name="08x19"/>
+      <widget class="QLabel" name="08x19"/>
      </item>
      <item row="18" column="8">
-      <layout class="QGridLayout" name="09x19"/>
+      <widget class="QLabel" name="09x19"/>
      </item>
      <item row="18" column="9">
-      <layout class="QGridLayout" name="10x19"/>
+      <widget class="QLabel" name="10x19"/>
      </item>
      <item row="18" column="11">
-      <layout class="QGridLayout" name="12x19"/>
+      <widget class="QLabel" name="12x19"/>
      </item>
      <item row="18" column="12">
-      <layout class="QGridLayout" name="13x19"/>
+      <widget class="QLabel" name="13x19"/>
      </item>
      <item row="18" column="13">
-      <layout class="QGridLayout" name="14x19"/>
+      <widget class="QLabel" name="14x19"/>
      </item>
      <item row="18" column="14">
-      <layout class="QGridLayout" name="15x19"/>
+      <widget class="QLabel" name="15x19"/>
      </item>
      <item row="18" column="15">
-      <layout class="QGridLayout" name="16x19"/>
+      <widget class="QLabel" name="16x19"/>
      </item>
      <item row="18" column="16">
-      <layout class="QGridLayout" name="17x19"/>
+      <widget class="QLabel" name="17x19"/>
      </item>
      <item row="18" column="17">
-      <layout class="QGridLayout" name="18x19"/>
+      <widget class="QLabel" name="18x19"/>
      </item>
      <item row="18" column="18">
-      <layout class="QGridLayout" name="19x19"/>
+      <widget class="QLabel" name="19x19"/>
      </item>
      <item row="18" column="10">
-      <layout class="QGridLayout" name="11x19"/>
+      <widget class="QLabel" name="11x19"/>
      </item>
     </layout>
+    <zorder>02x01</zorder>
+    <zorder>03x01</zorder>
+    <zorder>04x01</zorder>
+    <zorder>05x01</zorder>
+    <zorder>06x01</zorder>
+    <zorder>07x01</zorder>
+    <zorder>08x01</zorder>
+    <zorder>09x01</zorder>
+    <zorder>10x01</zorder>
+    <zorder>11x01</zorder>
+    <zorder>12x01</zorder>
+    <zorder>13x01</zorder>
+    <zorder>14x01</zorder>
+    <zorder>15x01</zorder>
+    <zorder>16x01</zorder>
+    <zorder>17x01</zorder>
+    <zorder>18x01</zorder>
+    <zorder>19x01</zorder>
+    <zorder>01x02</zorder>
+    <zorder>02x02</zorder>
+    <zorder>03x02</zorder>
+    <zorder>04x02</zorder>
+    <zorder>05x02</zorder>
+    <zorder>06x02</zorder>
+    <zorder>07x02</zorder>
+    <zorder>08x02</zorder>
+    <zorder>09x02</zorder>
+    <zorder>10x02</zorder>
+    <zorder>11x02</zorder>
+    <zorder>12x02</zorder>
+    <zorder>13x02</zorder>
+    <zorder>14x02</zorder>
+    <zorder>15x02</zorder>
+    <zorder>16x02</zorder>
+    <zorder>17x02</zorder>
+    <zorder>18x02</zorder>
+    <zorder>19x02</zorder>
+    <zorder>01x03</zorder>
+    <zorder>02x03</zorder>
+    <zorder>03x03</zorder>
+    <zorder>04x03</zorder>
+    <zorder>05x03</zorder>
+    <zorder>06x03</zorder>
+    <zorder>07x03</zorder>
+    <zorder>08x03</zorder>
+    <zorder>09x03</zorder>
+    <zorder>10x03</zorder>
+    <zorder>11x03</zorder>
+    <zorder>12x03</zorder>
+    <zorder>13x03</zorder>
+    <zorder>14x03</zorder>
+    <zorder>15x03</zorder>
+    <zorder>16x03</zorder>
+    <zorder>17x03</zorder>
+    <zorder>18x03</zorder>
+    <zorder>19x03</zorder>
+    <zorder>01x04</zorder>
+    <zorder>02x04</zorder>
+    <zorder>03x04</zorder>
+    <zorder>04x04</zorder>
+    <zorder>05x04</zorder>
+    <zorder>06x04</zorder>
+    <zorder>07x04</zorder>
+    <zorder>08x04</zorder>
+    <zorder>09x04</zorder>
+    <zorder>10x04</zorder>
+    <zorder>11x04</zorder>
+    <zorder>12x04</zorder>
+    <zorder>13x04</zorder>
+    <zorder>14x04</zorder>
+    <zorder>15x04</zorder>
+    <zorder>16x04</zorder>
+    <zorder>17x04</zorder>
+    <zorder>18x04</zorder>
+    <zorder>19x04</zorder>
+    <zorder>01x05</zorder>
+    <zorder>02x05</zorder>
+    <zorder>03x05</zorder>
+    <zorder>04x05</zorder>
+    <zorder>05x05</zorder>
+    <zorder>06x05</zorder>
+    <zorder>07x05</zorder>
+    <zorder>08x05</zorder>
+    <zorder>09x05</zorder>
+    <zorder>10x05</zorder>
+    <zorder>11x05</zorder>
+    <zorder>12x05</zorder>
+    <zorder>13x05</zorder>
+    <zorder>14x05</zorder>
+    <zorder>15x05</zorder>
+    <zorder>16x05</zorder>
+    <zorder>17x05</zorder>
+    <zorder>18x05</zorder>
+    <zorder>19x05</zorder>
+    <zorder>01x06</zorder>
+    <zorder>02x06</zorder>
+    <zorder>03x06</zorder>
+    <zorder>04x06</zorder>
+    <zorder>05x06</zorder>
+    <zorder>06x06</zorder>
+    <zorder>07x06</zorder>
+    <zorder>08x06</zorder>
+    <zorder>09x06</zorder>
+    <zorder>10x06</zorder>
+    <zorder>11x06</zorder>
+    <zorder>12x06</zorder>
+    <zorder>13x06</zorder>
+    <zorder>14x06</zorder>
+    <zorder>15x06</zorder>
+    <zorder>16x06</zorder>
+    <zorder>17x06</zorder>
+    <zorder>18x06</zorder>
+    <zorder>19x06</zorder>
+    <zorder>01x07</zorder>
+    <zorder>02x07</zorder>
+    <zorder>03x07</zorder>
+    <zorder>04x07</zorder>
+    <zorder>05x07</zorder>
+    <zorder>06x07</zorder>
+    <zorder>07x07</zorder>
+    <zorder>08x07</zorder>
+    <zorder>09x07</zorder>
+    <zorder>10x07</zorder>
+    <zorder>11x07</zorder>
+    <zorder>12x07</zorder>
+    <zorder>13x07</zorder>
+    <zorder>14x07</zorder>
+    <zorder>15x07</zorder>
+    <zorder>16x07</zorder>
+    <zorder>17x07</zorder>
+    <zorder>18x07</zorder>
+    <zorder>19x07</zorder>
+    <zorder>01x08</zorder>
+    <zorder>02x08</zorder>
+    <zorder>03x08</zorder>
+    <zorder>04x08</zorder>
+    <zorder>05x08</zorder>
+    <zorder>06x08</zorder>
+    <zorder>07x08</zorder>
+    <zorder>08x08</zorder>
+    <zorder>09x08</zorder>
+    <zorder>10x08</zorder>
+    <zorder>11x08</zorder>
+    <zorder>12x08</zorder>
+    <zorder>13x08</zorder>
+    <zorder>14x08</zorder>
+    <zorder>15x08</zorder>
+    <zorder>16x08</zorder>
+    <zorder>17x08</zorder>
+    <zorder>18x08</zorder>
+    <zorder>19x08</zorder>
+    <zorder>01x09</zorder>
+    <zorder>02x09</zorder>
+    <zorder>03x09</zorder>
+    <zorder>04x09</zorder>
+    <zorder>05x09</zorder>
+    <zorder>06x09</zorder>
+    <zorder>07x09</zorder>
+    <zorder>08x09</zorder>
+    <zorder>09x09</zorder>
+    <zorder>10x09</zorder>
+    <zorder>11x09</zorder>
+    <zorder>12x09</zorder>
+    <zorder>13x09</zorder>
+    <zorder>14x09</zorder>
+    <zorder>15x09</zorder>
+    <zorder>16x09</zorder>
+    <zorder>17x09</zorder>
+    <zorder>18x09</zorder>
+    <zorder>19x09</zorder>
+    <zorder>01x10</zorder>
+    <zorder>02x10</zorder>
+    <zorder>03x10</zorder>
+    <zorder>04x10</zorder>
+    <zorder>05x10</zorder>
+    <zorder>06x10</zorder>
+    <zorder>07x10</zorder>
+    <zorder>08x10</zorder>
+    <zorder>09x10</zorder>
+    <zorder>10x10</zorder>
+    <zorder>11x10</zorder>
+    <zorder>12x10</zorder>
+    <zorder>13x10</zorder>
+    <zorder>14x10</zorder>
+    <zorder>15x10</zorder>
+    <zorder>16x10</zorder>
+    <zorder>17x10</zorder>
+    <zorder>18x10</zorder>
+    <zorder>19x10</zorder>
+    <zorder>01x11</zorder>
+    <zorder>02x11</zorder>
+    <zorder>03x11</zorder>
+    <zorder>04x11</zorder>
+    <zorder>05x11</zorder>
+    <zorder>06x11</zorder>
+    <zorder>07x11</zorder>
+    <zorder>08x11</zorder>
+    <zorder>09x11</zorder>
+    <zorder>10x11</zorder>
+    <zorder>11x11</zorder>
+    <zorder>12x11</zorder>
+    <zorder>13x11</zorder>
+    <zorder>14x11</zorder>
+    <zorder>15x11</zorder>
+    <zorder>16x11</zorder>
+    <zorder>17x11</zorder>
+    <zorder>18x11</zorder>
+    <zorder>19x11</zorder>
+    <zorder>01x12</zorder>
+    <zorder>02x12</zorder>
+    <zorder>03x12</zorder>
+    <zorder>04x12</zorder>
+    <zorder>05x12</zorder>
+    <zorder>06x12</zorder>
+    <zorder>07x12</zorder>
+    <zorder>08x12</zorder>
+    <zorder>09x12</zorder>
+    <zorder>10x12</zorder>
+    <zorder>11x12</zorder>
+    <zorder>12x12</zorder>
+    <zorder>13x12</zorder>
+    <zorder>14x12</zorder>
+    <zorder>15x12</zorder>
+    <zorder>16x12</zorder>
+    <zorder>17x12</zorder>
+    <zorder>18x12</zorder>
+    <zorder>19x12</zorder>
+    <zorder>01x13</zorder>
+    <zorder>02x13</zorder>
+    <zorder>03x13</zorder>
+    <zorder>04x13</zorder>
+    <zorder>05x13</zorder>
+    <zorder>06x13</zorder>
+    <zorder>07x13</zorder>
+    <zorder>08x13</zorder>
+    <zorder>09x13</zorder>
+    <zorder>10x13</zorder>
+    <zorder>11x13</zorder>
+    <zorder>12x13</zorder>
+    <zorder>13x13</zorder>
+    <zorder>14x13</zorder>
+    <zorder>15x13</zorder>
+    <zorder>16x13</zorder>
+    <zorder>17x13</zorder>
+    <zorder>18x13</zorder>
+    <zorder>19x13</zorder>
+    <zorder>01x14</zorder>
+    <zorder>02x14</zorder>
+    <zorder>03x14</zorder>
+    <zorder>04x14</zorder>
+    <zorder>05x14</zorder>
+    <zorder>06x14</zorder>
+    <zorder>07x14</zorder>
+    <zorder>08x14</zorder>
+    <zorder>09x14</zorder>
+    <zorder>10x14</zorder>
+    <zorder>11x14</zorder>
+    <zorder>12x14</zorder>
+    <zorder>13x14</zorder>
+    <zorder>14x14</zorder>
+    <zorder>15x14</zorder>
+    <zorder>16x14</zorder>
+    <zorder>17x14</zorder>
+    <zorder>18x14</zorder>
+    <zorder>19x14</zorder>
+    <zorder>01x15</zorder>
+    <zorder>02x15</zorder>
+    <zorder>03x15</zorder>
+    <zorder>04x15</zorder>
+    <zorder>05x15</zorder>
+    <zorder>06x15</zorder>
+    <zorder>07x15</zorder>
+    <zorder>08x15</zorder>
+    <zorder>09x15</zorder>
+    <zorder>10x15</zorder>
+    <zorder>11x15</zorder>
+    <zorder>12x15</zorder>
+    <zorder>13x15</zorder>
+    <zorder>14x15</zorder>
+    <zorder>15x15</zorder>
+    <zorder>16x15</zorder>
+    <zorder>17x15</zorder>
+    <zorder>18x15</zorder>
+    <zorder>19x15</zorder>
+    <zorder>01x16</zorder>
+    <zorder>02x16</zorder>
+    <zorder>03x16</zorder>
+    <zorder>04x16</zorder>
+    <zorder>05x16</zorder>
+    <zorder>06x16</zorder>
+    <zorder>07x16</zorder>
+    <zorder>08x16</zorder>
+    <zorder>09x16</zorder>
+    <zorder>10x16</zorder>
+    <zorder>11x16</zorder>
+    <zorder>12x16</zorder>
+    <zorder>13x16</zorder>
+    <zorder>14x16</zorder>
+    <zorder>15x16</zorder>
+    <zorder>16x16</zorder>
+    <zorder>17x16</zorder>
+    <zorder>18x16</zorder>
+    <zorder>19x16</zorder>
+    <zorder>01x17</zorder>
+    <zorder>02x17</zorder>
+    <zorder>03x17</zorder>
+    <zorder>04x17</zorder>
+    <zorder>05x17</zorder>
+    <zorder>06x17</zorder>
+    <zorder>07x17</zorder>
+    <zorder>08x17</zorder>
+    <zorder>09x17</zorder>
+    <zorder>10x17</zorder>
+    <zorder>11x17</zorder>
+    <zorder>12x17</zorder>
+    <zorder>13x17</zorder>
+    <zorder>14x17</zorder>
+    <zorder>15x17</zorder>
+    <zorder>16x17</zorder>
+    <zorder>17x17</zorder>
+    <zorder>18x17</zorder>
+    <zorder>19x17</zorder>
+    <zorder>01x18</zorder>
+    <zorder>02x18</zorder>
+    <zorder>03x18</zorder>
+    <zorder>04x18</zorder>
+    <zorder>05x18</zorder>
+    <zorder>06x18</zorder>
+    <zorder>07x18</zorder>
+    <zorder>08x18</zorder>
+    <zorder>09x18</zorder>
+    <zorder>10x18</zorder>
+    <zorder>11x18</zorder>
+    <zorder>12x18</zorder>
+    <zorder>13x18</zorder>
+    <zorder>14x18</zorder>
+    <zorder>15x18</zorder>
+    <zorder>16x18</zorder>
+    <zorder>17x18</zorder>
+    <zorder>18x18</zorder>
+    <zorder>19x18</zorder>
+    <zorder>01x19</zorder>
+    <zorder>02x19</zorder>
+    <zorder>03x19</zorder>
+    <zorder>04x19</zorder>
+    <zorder>05x19</zorder>
+    <zorder>06x19</zorder>
+    <zorder>07x19</zorder>
+    <zorder>08x19</zorder>
+    <zorder>09x19</zorder>
+    <zorder>10x19</zorder>
+    <zorder>12x19</zorder>
+    <zorder>13x19</zorder>
+    <zorder>14x19</zorder>
+    <zorder>15x19</zorder>
+    <zorder>16x19</zorder>
+    <zorder>17x19</zorder>
+    <zorder>18x19</zorder>
+    <zorder>19x19</zorder>
+    <zorder>11x19</zorder>
+    <zorder>01x01</zorder>
    </widget>
    <widget class="QLabel" name="infosBackground1">
     <property name="geometry">
@@ -1198,11 +1559,14 @@
       <height>561</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+    </property>
     <property name="text">
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../ressources/pictures/wood_background.jpg</pixmap>
+     <pixmap>../ressources/pictures/wood_background copie.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -1217,11 +1581,14 @@
       <height>561</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+    </property>
     <property name="text">
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../ressources/pictures/wood_background.jpg</pixmap>
+     <pixmap>../ressources/pictures/wood_background copie.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -1639,9 +2006,9 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
     </property>
    </widget>
    <zorder>backgroundBoard</zorder>
+   <zorder>gameBoard</zorder>
    <zorder>infosBackground1</zorder>
    <zorder>layoutWidget</zorder>
-   <zorder>gameBoard</zorder>
    <zorder>infosBackground2</zorder>
    <zorder>rulesTitle</zorder>
    <zorder>playersTitle</zorder>

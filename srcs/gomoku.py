@@ -6,7 +6,10 @@ import windowBuilding
 import buttonEventHandler
 import options
 import gameManager
+from random import randint
+import time
 
+window = None
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -22,6 +25,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.hintButton.clicked.connect(lambda x: buttonEventHandler.hintEvent(self.hintButton))
         self.giveUpButton.clicked.connect(lambda x: buttonEventHandler.giveUpEvent(self))
         self.newGameButton.clicked.connect(lambda x: buttonEventHandler.newGameEvent(self, self.option))
+        self.algoPointer = None
 
         windowBuilding.setFontShadow(self)
         windowBuilding.setRulesList(self, self.option.rulesSet)
@@ -33,7 +37,9 @@ class MainWindow(QtWidgets.QMainWindow):
             if (x < 150 or x > 911) or (y < 140 or y > 901):
                 return
             if buttonEventHandler.isGameRuning:
-                gameManager.nextTurn(self, x, y)
+                if gameManager.nextTurn(self, x, y, False, buttonEventHandler._hintButtonBool) == 1:
+                    x, y = self.algoPointer(gameManager.grid, buttonEventHandler._hintButtonBool)
+                    gameManager.nextTurn(self, x, y, True, buttonEventHandler._hintButtonBool)
 
 
 def getOptionsSet(targetedOption=[]):
@@ -68,10 +74,21 @@ def algoSubscribe(func):
 
         And the return value must be two integer "x" and "y", representing the position of the move. (0 <= xy <= 19)
     """
-    x, y = func("board", buttonEventHandler._hintButtonBool)
+    global window
 
+    window.algoPointer = func
+
+
+def tmpAlgo(board, hint):
+    x = 0
+    y = 0
+    while board[x, y] != 0:
+        x = randint(0, 18)
+        y = randint(0, 18)
+    return x, y
 
 app = PyQt5.QtWidgets.QApplication(sys.argv)
 window = MainWindow()
+algoSubscribe(tmpAlgo)
 window.show()
 app.exec()
