@@ -4,13 +4,6 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 import windowBuilding
 import numpy as np
 
-player1TurnTime = QtCore.QTimer()
-player2TurnTime = QtCore.QTimer()
-player1TurnTime.setInterval(10)
-player2TurnTime.setInterval(10)
-isPlayer1Turn = None
-optins = None
-turnCount = 0
 grid = np.zeros(shape=(19, 19))
 isBlack = True
 savedPlacedPoint = []
@@ -20,16 +13,27 @@ def dropHint(window, x, y):
     global isBlack
     global grid
 
-    # if grid[scaledY, scaledX] != 0 or not isValidMove():
     if grid[y, x] != 0:
         return None
     dropPoint = window.boardGrid.itemAtPosition(y, x)
     if isBlack:
         grid[y, x] = 1
-        dropPoint.widget().setPixmap(QtGui.QPixmap("ressources/pictures/blackStone.png"))
+        img = QtGui.QPixmap("ressources/pictures/blackStone.png")
+        p = QtGui.QPainter()
+        p.begin(img)
+        p.setCompositionMode(QtGui.QPainter.CompositionMode_DestinationIn)
+        p.fillRect(img.rect(), QtGui.QColor(0, 0, 0, 100))
+        p.end()
+        dropPoint.widget().setPixmap(img)
     else:
         grid[y, x] = 2
-        dropPoint.widget().setPixmap(QtGui.QPixmap("ressources/pictures/whiteStone.png"))
+        img = QtGui.QPixmap("ressources/pictures/whiteStone.png")
+        p = QtGui.QPainter()
+        p.begin(img)
+        p.setCompositionMode(QtGui.QPainter.CompositionMode_DestinationIn)
+        p.fillRect(img.rect(), QtGui.QColor(0, 0, 0, 100))
+        p.end()
+        dropPoint.widget().setPixmap(img)
     isBlack = not isBlack
     savedPlacedPoint.append(dropPoint)
     window.update()
@@ -65,73 +69,138 @@ def dropStone(window, x, y, computerMove):
     else:
         grid[scaledY, scaledX] = 2
         dropPoint.widget().setPixmap(QtGui.QPixmap("ressources/pictures/whiteStone.png"))
-    img = dropPoint.widget().pixmap().createMaskFromColor(QtGui.QColor(0, 0, 0, 255))
     isBlack = not isBlack
     savedPlacedPoint.append(dropPoint)
     # if isWinner():
     #     winner()
     window.update()
+    window.gameManager.playerTurn = not window.gameManager.playerTurn
     return 1
 
 
-def nextTurn(window, x, y, computerMove, hint):
-    global isPlayer1Turn
-    global player1TurnTime
-    global player2TurnTime
-    global options
-    global turnCount
-    global grid
+class HumanPlayer():
+    def __init__(self, window, color):
+        self.turnTime = QtCore.QTimer()
+        self.turnTime.setInterval(10)
+        self.color = color
+        self.window = window
+        self.timerText = None
+        self.startTime = 0.0
+        if color == 1:
+            self.cursor = QtGui.QCursor(QtGui.QPixmap("ressources/pictures/blackStone.png"))
+        else:
+            self.cursor = QtGui.QCursor(QtGui.QPixmap("ressources/pictures/whiteStone.png"))
+        self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.timerText))
+    
+    def start(self):
+        self.timerText.setText("00:00:00")
+        self.window.layoutWidget.setCursor(self.cursor)
 
-    if isPlayer1Turn:
-        if dropStone(window, x, y, computerMove) == None:
-            return None
-        player1TurnTime.stop()
-        windowBuilding.playerTurnEffect(window, 2)
-        player2TurnTime.start()
-        startTurnTimer = time()
-        player2TurnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(window, player2TurnTime, startTurnTimer, window.playerTwoTimer))
-    else:
-        if dropStone(window, x, y, computerMove) == None:
-            return None
-        player2TurnTime.stop()
-        windowBuilding.playerTurnEffect(window, 1)
-        player1TurnTime.start()
-        startTurnTimer = time()
-        player1TurnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(window, player1TurnTime, startTurnTimer, window.playerOneTimer))
-    if hint:
-        x, y = window.algoPointer(grid, hint)
-        dropHint(window, x, y)
-    turnCount += 1
-    if options.gameMode == "PVP" and turnCount % 2 == 1:
-        window.layoutWidget.setCursor(QtGui.QCursor(QtGui.QPixmap("ressources/pictures/whiteStone.png")))
-    elif options.gameMode == "PVP":
-        window.layoutWidget.setCursor(QtGui.QCursor(QtGui.QPixmap("ressources/pictures/blackStone.png")))
-    isPlayer1Turn = not isPlayer1Turn
-    if not isPlayer1Turn and options.gameMode == "PVE":
-        return 1
+    def startTurn(self):
+        self.window.layoutWidget.setCursor(self.cursor)
+        windowBuilding.playerTurnEffect(self.window, self.color)
+        self.turnTime.start()
+        self.startTime = time()
+
+    def endTurn(self, x, y):
+        self.turnTime.stop()
+        dropStone(self.window, x, y, False)
+
+    def end(self):
+        self.turnTime.stop()
 
 
-def gameManager(window, option, _hintButtonBool):
-    global player1TurnTime
-    global player2TurnTime
-    global isPlayer1Turn
-    global options
-    global isBlack
+class ComputerPlayer():
+    def __init__(self, window, color):
+        self.turnTime = QtCore.QTimer()
+        self.turnTime.setInterval(10)
+        self.color = color
+        self.window = window
+        self.startTime = 0.0
+        self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.window.playerTwoTimer))
 
-    isBlack = True
-    turnCount = 0
-    options = option
-    if randint(0, 1) == 0:
-        isPlayer1Turn = True
-        windowBuilding.playerTurnEffect(window, 1)
-        player1TurnTime.start()
-    else:
-        isPlayer1Turn = False
-        windowBuilding.playerTurnEffect(window, 2)
-        player2TurnTime.start()
-    if options.gameMode == "PVE" and not isPlayer1Turn:
-        window.layoutWidget.setCursor(QtGui.QCursor(QtGui.QPixmap("ressources/pictures/whiteStone.png")))
-        x, y = window.algoPointer(grid, _hintButtonBool)
-        nextTurn(window, x, y, True, _hintButtonBool)
-    else:
-        window.layoutWidget.setCursor(QtGui.QCursor(QtGui.QPixmap("ressources/pictures/blackStone.png")))
+    def start(self):
+        self.window.playerTwoTimer.setText("00:00:00")
+
+    def startTurn(self):
+        self.turnTime.start()
+        self.startTime = time()
+        x, y = self.window.algoPointer(grid, self.color, False)
+        self.turnTime.stop()
+        dropStone(self.window, x, y, True)
+
+    def end(self):
+        self.turnTime.stop()
+
+
+class GameBoard():
+    def __init__(self):
+        self.grid = np.zeros(shape=(19, 19))
+        self.placedPoint = []
+
+    def placeStone(self, stone):
+        self.placedPoint.append(stone)
+
+    def clear(self):
+        for stone in self.placedPoint:
+            stone.widget().clear()
+
+
+class GameManager():
+    def __init__(self, window, option, hintButtonBool):
+        self.isPlayer1Turn = True if randint(0, 1) == 0 else False
+        self.player1 = HumanPlayer(window, 1 if self.isPlayer1Turn == True else 2)
+        self.player1.timerText = window.playerOneTimer
+        self.options = option
+        if self.options.gameMode == "PVE":
+            self.player2 = ComputerPlayer(window, 1 if self.isPlayer1Turn == False else 2)
+        else:
+            self.player2 = HumanPlayer(window, 1 if self.isPlayer1Turn == False else 2)
+            self.player2.timerText = window.playerTwoTimer
+        self.hintButtonBool = hintButtonBool
+        self.window = window
+        self.window.playerOneTimer.setText("00:00:00")
+        self.window.playerTwoTimer.setText("00:00:00")
+        self.gameBoard = GameBoard()
+        self.turnCount = 0
+        self.gameRuning = False
+        self.globalTimer = QtCore.QTimer()
+        self.globalTimer.setInterval(10)
+        self.startGameTimer = 0.0
+        self.globalTimer.timeout.connect(lambda: windowBuilding.updateTimerGame(window,
+            self.globalTimer, self.startGameTimer, self.window.gameTimer))
+        self._observers = [self.nextTurn]
+
+    @property
+    def playerTurn(self):
+        return self.isPlayer1Turn
+
+    @playerTurn.setter
+    def playerTurn(self, value):
+        self.isPlayer1Turn = value
+        for callback in self._observers:
+            callback(self.isPlayer1Turn)
+
+    def start(self):
+        self.startGameTimer = time()
+        self.globalTimer.start()
+        self.gameRuning = True
+        if self.isPlayer1Turn:
+            self.player1.start()
+            self.player1.startTurn()
+        else:
+            self.player2.start()
+            self.player2.startTurn()
+        self.turnCount += 1
+
+    def nextTurn(self, isPlayer1Turn):
+        if isPlayer1Turn:
+            self.player1.startTurn()
+        else:
+            self.player2.startTurn()
+
+    def end(self):
+        self.gameRuning = False
+        self.globalTimer.stop()
+        self.player1.end()
+        self.player2.end()

@@ -20,26 +20,29 @@ class MainWindow(QtWidgets.QMainWindow):
         uic.loadUi("GUI/mainwindow.ui", self)
         self.option = options.Options()
         windowBuilding.parseTranslationFile()
+        self.gameManager = None
 
         self.optionsButton.clicked.connect(lambda x: buttonEventHandler.optionsEvent(self, self.option))
-        self.hintButton.clicked.connect(lambda x: buttonEventHandler.hintEvent(self.hintButton))
+        self.hintButton.clicked.connect(lambda x: buttonEventHandler.hintEvent(self.hintButton, window))
         self.giveUpButton.clicked.connect(lambda x: buttonEventHandler.giveUpEvent(self))
         self.newGameButton.clicked.connect(lambda x: buttonEventHandler.newGameEvent(self, self.option))
         self.algoPointer = None
 
         windowBuilding.setFontShadow(self)
         windowBuilding.setRulesList(self, self.option.rulesSet)
-        
+
     def mousePressEvent(self, event):
+        if self.gameManager == None or (self.option.gameMode == "PVE" and not self.gameManager.isPlayer1Turn):
+            return
         if event.button() == 1:
             x = event.x()
             y = event.y()
             if (x < 150 or x > 911) or (y < 140 or y > 901):
                 return
-            if buttonEventHandler.isGameRuning:
-                if gameManager.nextTurn(self, x, y, False, buttonEventHandler._hintButtonBool) == 1:
-                    x, y = self.algoPointer(gameManager.grid, buttonEventHandler._hintButtonBool)
-                    gameManager.nextTurn(self, x, y, True, buttonEventHandler._hintButtonBool)
+            if self.gameManager.playerTurn:
+                self.gameManager.player1.endTurn(x, y)
+            else:
+                self.gameManager.player2.endTurn(x, y)
 
 
 def getOptionsSet(targetedOption=[]):
@@ -68,9 +71,9 @@ def algoSubscribe(func):
     """
         Function used to connect the algo and the GUI.
 
-        Param "func" must be the entrance of algorithm with following signature : func(board, hint)
+        Param "func" must be the entrance of algorithm with following signature : func(board, playerColor, hint)
 
-        Where "board" is a matrix of the actual state of the board and "hint" is a boolean that tells you if it's the algorithm's turn or just a hint you're looking for.
+        Where "board" is a matrix of the actual state of the board, "playerColor" tell you if he's black(1) or white(2) and "hint" is a boolean that tells you if it's the algorithm's turn or just a hint you're looking for.
 
         And the return value must be two integer "x" and "y", representing the position of the move. (0 <= xy <= 19)
     """
@@ -79,7 +82,7 @@ def algoSubscribe(func):
     window.algoPointer = func
 
 
-def tmpAlgo(board, hint):
+def tmpAlgo(board, color, hint):
     x = 0
     y = 0
     while board[x, y] != 0:

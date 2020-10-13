@@ -6,12 +6,10 @@ import gameManager
 import numpy as np
 
 _hintButtonBool = False
-isGameRuning = False
-globalTimer = None
 
 
 def optionsEvent(window, option):
-    if isGameRuning:
+    if window.gameManager != None and window.gameManager.gameRuning:
         return
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)
@@ -49,7 +47,7 @@ def optionsEvent(window, option):
     window.optionsButton.setGeometry(1129, 927, 61, 61)
 
 
-def hintEvent(hintButton):
+def hintEvent(hintButton, window):
     global _hintButtonBool
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)
@@ -66,6 +64,8 @@ def hintEvent(hintButton):
         hintButton.setGraphicsEffect(effect)
         hintButton.setGeometry(60, 980, 241, 61)
         _hintButtonBool = False
+    if window.gameManager != None:
+        window.gameManager.hintButtonBool = _hintButtonBool
 
 
 def releaseGUButton(window, effect):
@@ -76,17 +76,12 @@ def releaseGUButton(window, effect):
 
 
 def giveUpEvent(window):
-    global isGameRuning
-    isGameRuning = False
-    if globalTimer != None:
-        globalTimer.stop()
+    if window.gameManager == None or window.gameManager.gameRuning == False:
+        return
 
-    gameManager.player1TurnTime.stop()
-    gameManager.player2TurnTime.stop()
     window.layoutWidget.unsetCursor()
-    for point in gameManager.savedPlacedPoint:
-        point.widget().clear()
-    gameManager.grid = np.zeros(shape=(19, 19))
+    window.gameManager.gameBoard.clear()
+    window.gameManager.end()
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)
     QtCore.QTimer.singleShot(150, lambda: releaseGUButton(window, effect))
@@ -104,20 +99,11 @@ def releaseNGButton(window, effect):
 
 
 def newGameEvent(window, option):
-    global isGameRuning
-    global globalTimer
     global _hintButtonBool
-    if isGameRuning:
+    if window.gameManager != None and window.gameManager.gameRuning == True:
         return
-    isGameRuning = True
 
-    globalTimer = QtCore.QTimer()
-    window.playerTwoTimer.setText("00:00:00")
-    window.playerOneTimer.setText("00:00:00")
-    startGameTimer = time()
-    globalTimer.setInterval(10)
-    globalTimer.timeout.connect(lambda: windowBuilding.updateTimerGame(window, globalTimer, startGameTimer, window.gameTimer))
-    globalTimer.start()
+    window.gameManager = gameManager.GameManager(window, option, _hintButtonBool)
 
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)
@@ -126,4 +112,4 @@ def newGameEvent(window, option):
     effect.setOffset(-7, -7)
     window.newGameButton.setGraphicsEffect(effect)
     window.newGameButton.setGeometry(750, 980, 235, 55)
-    gameManager.gameManager(window, option, _hintButtonBool)
+    window.gameManager.start()

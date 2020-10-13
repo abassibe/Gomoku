@@ -238,7 +238,6 @@ def mainWindowTranslate(window, option):
                 toTranslate.setText(value[0])
         except:
             exit("Translation error")
-    print()
 
 
 def dialogTranslate(dialog, actualLangage):
