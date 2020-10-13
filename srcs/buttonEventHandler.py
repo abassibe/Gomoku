@@ -5,6 +5,7 @@ import windowBuilding
 import gameManager
 import numpy as np
 
+
 _hintButtonBool = False
 
 
@@ -57,13 +58,22 @@ def hintEvent(hintButton, window):
         hintButton.setGraphicsEffect(effect)
         hintButton.setGeometry(60, 980, 235, 55)
         _hintButtonBool = True
-
+        color = None
+        if window.gameManager:
+            if window.gameManager.isPlayer1Turn:
+                color = window.gameManager.player1.color
+            else:
+                color = window.gameManager.player2.color
+            x, y = window.algoPointer(window.gameManager.gameBoard.grid, color, True)
+            window.gameManager.gameBoard.dropHint(x, y, color)
     else:
         effect.setColor(QtGui.QColor(0, 0, 0, 90))
         effect.setOffset(-10, -10)
         hintButton.setGraphicsEffect(effect)
         hintButton.setGeometry(60, 980, 241, 61)
         _hintButtonBool = False
+        if window.gameManager:
+            window.gameManager.gameBoard.clearHint()
     if window.gameManager != None:
         window.gameManager.hintButtonBool = _hintButtonBool
 
@@ -80,8 +90,9 @@ def giveUpEvent(window):
         return
 
     window.layoutWidget.unsetCursor()
-    window.gameManager.gameBoard.clear()
     window.gameManager.end()
+    window.gameManager.gameBoard.clear()
+    window.gameManager.gameBoard.clearHint()
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)
     QtCore.QTimer.singleShot(150, lambda: releaseGUButton(window, effect))

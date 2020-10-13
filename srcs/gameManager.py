@@ -4,78 +4,36 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 import windowBuilding
 import numpy as np
 
-grid = np.zeros(shape=(19, 19))
-isBlack = True
-savedPlacedPoint = []
 
+# def dropHint(window, x, y):
+#     global isBlack
+#     global grid
 
-def dropHint(window, x, y):
-    global isBlack
-    global grid
-
-    if grid[y, x] != 0:
-        return None
-    dropPoint = window.boardGrid.itemAtPosition(y, x)
-    if isBlack:
-        grid[y, x] = 1
-        img = QtGui.QPixmap("ressources/pictures/blackStone.png")
-        p = QtGui.QPainter()
-        p.begin(img)
-        p.setCompositionMode(QtGui.QPainter.CompositionMode_DestinationIn)
-        p.fillRect(img.rect(), QtGui.QColor(0, 0, 0, 100))
-        p.end()
-        dropPoint.widget().setPixmap(img)
-    else:
-        grid[y, x] = 2
-        img = QtGui.QPixmap("ressources/pictures/whiteStone.png")
-        p = QtGui.QPainter()
-        p.begin(img)
-        p.setCompositionMode(QtGui.QPainter.CompositionMode_DestinationIn)
-        p.fillRect(img.rect(), QtGui.QColor(0, 0, 0, 100))
-        p.end()
-        dropPoint.widget().setPixmap(img)
-    isBlack = not isBlack
-    savedPlacedPoint.append(dropPoint)
-    window.update()
-    return 1
-
-
-def dropStone(window, x, y, computerMove):
-    global isBlack
-    global grid
-    global savedPlacedPoint
-
-    scaledX = 0
-    scaledY = 0
-    if computerMove:
-        scaledX = x
-        scaledY = y
-    else:
-        boardWidth = window.boardGrid.contentsRect().width()
-        scaledX = x - window.layoutWidget.geometry().x()
-        blockWidth = (boardWidth / 19)
-        scaledX = int(scaledX / blockWidth)
-        boardHeight = window.boardGrid.contentsRect().height()
-        scaledY = y - window.layoutWidget.geometry().y()
-        blockHeight = (boardHeight / 19)
-        scaledY = int(scaledY / blockHeight)
-    # if grid[scaledY, scaledX] != 0 or not isValidMove():
-    if grid[scaledY, scaledX] != 0:
-        return None
-    dropPoint = window.boardGrid.itemAtPosition(scaledY, scaledX)
-    if isBlack:
-        grid[scaledY, scaledX] = 1
-        dropPoint.widget().setPixmap(QtGui.QPixmap("ressources/pictures/blackStone.png"))
-    else:
-        grid[scaledY, scaledX] = 2
-        dropPoint.widget().setPixmap(QtGui.QPixmap("ressources/pictures/whiteStone.png"))
-    isBlack = not isBlack
-    savedPlacedPoint.append(dropPoint)
-    # if isWinner():
-    #     winner()
-    window.update()
-    window.gameManager.playerTurn = not window.gameManager.playerTurn
-    return 1
+#     if grid[y, x] != 0:
+#         return None
+#     dropPoint = window.boardGrid.itemAtPosition(y, x)
+#     if isBlack:
+#         grid[y, x] = 1
+#         img = QtGui.QPixmap("ressources/pictures/blackStone.png")
+#         p = QtGui.QPainter()
+#         p.begin(img)
+#         p.setCompositionMode(QtGui.QPainter.CompositionMode_DestinationIn)
+#         p.fillRect(img.rect(), QtGui.QColor(0, 0, 0, 100))
+#         p.end()
+#         dropPoint.widget().setPixmap(img)
+#     else:
+#         grid[y, x] = 2
+#         img = QtGui.QPixmap("ressources/pictures/whiteStone.png")
+#         p = QtGui.QPainter()
+#         p.begin(img)
+#         p.setCompositionMode(QtGui.QPainter.CompositionMode_DestinationIn)
+#         p.fillRect(img.rect(), QtGui.QColor(0, 0, 0, 100))
+#         p.end()
+#         dropPoint.widget().setPixmap(img)
+#     isBlack = not isBlack
+#     savedPlacedPoint.append(dropPoint)
+#     window.update()
+#     return 1
 
 
 class HumanPlayer():
@@ -97,6 +55,9 @@ class HumanPlayer():
         self.window.layoutWidget.setCursor(self.cursor)
 
     def startTurn(self):
+        if self.window.gameManager.hintButtonBool:
+            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True)
+            self.window.gameManager.gameBoard.dropHint(x, y, self.color)
         self.window.layoutWidget.setCursor(self.cursor)
         windowBuilding.playerTurnEffect(self.window, self.color)
         self.turnTime.start()
@@ -104,7 +65,8 @@ class HumanPlayer():
 
     def endTurn(self, x, y):
         self.turnTime.stop()
-        dropStone(self.window, x, y, False)
+        self.window.gameManager.gameBoard.clearHint()
+        self.window.gameManager.gameBoard.placeStone(x, y, self.color, False)
 
     def end(self):
         self.turnTime.stop()
@@ -125,25 +87,85 @@ class ComputerPlayer():
     def startTurn(self):
         self.turnTime.start()
         self.startTime = time()
-        x, y = self.window.algoPointer(grid, self.color, False)
+        x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False)
         self.turnTime.stop()
-        dropStone(self.window, x, y, True)
+        self.window.gameManager.gameBoard.placeStone(x, y, self.color, True)
 
     def end(self):
         self.turnTime.stop()
 
 
 class GameBoard():
-    def __init__(self):
+    def __init__(self, window):
+        self.window = window
         self.grid = np.zeros(shape=(19, 19))
         self.placedPoint = []
+        self.placedHint = []
 
-    def placeStone(self, stone):
-        self.placedPoint.append(stone)
+    def placeStone(self, x, y, color, computerMove):
+        scaledX = 0
+        scaledY = 0
+        if computerMove:
+            scaledX = x
+            scaledY = y
+        else:
+            boardWidth = 761
+            scaledX = x - self.window.layoutWidget.geometry().x()
+            blockWidth = (boardWidth / 19)
+            scaledX = int(scaledX / blockWidth)
+            boardHeight = 761
+            scaledY = y - self.window.layoutWidget.geometry().y()
+            blockHeight = (boardHeight / 19)
+            scaledY = int(scaledY / blockHeight)
+        if self.grid[scaledY, scaledX] != 0 or not self.isValidMove(scaledY, scaledX):
+            return None
+        dropPoint = self.window.boardGrid.itemAtPosition(scaledY, scaledX)
+        if color == 1:
+            self.grid[scaledY, scaledX] = 1
+            dropPoint.widget().setPixmap(QtGui.QPixmap("ressources/pictures/blackStone.png"))
+        else:
+            self.grid[scaledY, scaledX] = 2
+            dropPoint.widget().setPixmap(QtGui.QPixmap("ressources/pictures/whiteStone.png"))
+        self.placedPoint.append(dropPoint)
+        if self.isWinner():
+            pass
+        self.window.update()
+        self.window.gameManager.playerTurn = not self.window.gameManager.playerTurn
+
+    def dropHint(self, x, y, color):
+        if self.grid[y, x] != 0:
+            return None
+        dropPoint = self.window.boardGrid.itemAtPosition(y, x)
+        img = None
+        if color == 1:
+            img = QtGui.QPixmap("ressources/pictures/blackStone.png")
+        else:
+            img = QtGui.QPixmap("ressources/pictures/whiteStone.png")
+        p = QtGui.QPainter()
+        p.begin(img)
+        p.setCompositionMode(QtGui.QPainter.CompositionMode_DestinationIn)
+        p.fillRect(img.rect(), QtGui.QColor(0, 0, 0, 100))
+        p.end()
+        dropPoint.widget().setPixmap(img)
+        self.placedHint.append(dropPoint)
+        self.window.update()
 
     def clear(self):
+        self.grid = np.zeros(shape=(19, 19))
         for stone in self.placedPoint:
             stone.widget().clear()
+        self.placedPoint = []
+
+    def clearHint(self):
+        for stone in self.placedHint:
+            stone.widget().clear()
+        self.placedHint = []
+
+    def isValidMove(self, x, y):
+        return True
+
+    def isWinner(self):
+        return False
 
 
 class GameManager():
@@ -161,7 +183,7 @@ class GameManager():
         self.window = window
         self.window.playerOneTimer.setText("00:00:00")
         self.window.playerTwoTimer.setText("00:00:00")
-        self.gameBoard = GameBoard()
+        self.gameBoard = GameBoard(window)
         self.turnCount = 0
         self.gameRuning = False
         self.globalTimer = QtCore.QTimer()

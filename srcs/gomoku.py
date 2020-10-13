@@ -85,7 +85,7 @@ def algoSubscribe(func):
 def tmpAlgo(board, color, hint):
     x = 0
     y = 0
-    while board[x, y] != 0:
+    while board[y, x] != 0:
         x = randint(0, 18)
         y = randint(0, 18)
     return x, y
