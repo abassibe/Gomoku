@@ -17,7 +17,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.isBlackTurn = True
         self.local = "en_EN"
-        uic.loadUi("GUI/mainwindow.ui", self)
+        uic.loadUi("../GUI/mainwindow.ui", self)
         self.option = options.Options()
         windowBuilding.parseTranslationFile()
         self.gameManager = None

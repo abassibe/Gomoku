@@ -186,7 +186,7 @@ def playerTurnEffect(window, playerTurn):
 
 
 def parseTranslationFile():
-    f = open("local/en_EN")
+    f = open("../local/en_EN")
     tmp = []
     toFill = {}
     for line in f:
@@ -202,7 +202,7 @@ def parseTranslationFile():
             tmp.append(arg)
         toFill[splited[0]] = tmp
         tmp = []
-    f = open("local/fr_FR")
+    f = open("../local/fr_FR")
     tmp = []
     toFill = {}
     for line in f:

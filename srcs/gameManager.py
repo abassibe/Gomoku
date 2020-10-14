@@ -45,9 +45,9 @@ class HumanPlayer():
         self.timerText = None
         self.startTime = 0.0
         if color == 1:
-            self.cursor = QtGui.QCursor(QtGui.QPixmap("ressources/pictures/blackStone.png"))
+            self.cursor = QtGui.QCursor(QtGui.QPixmap("../ressources/pictures/blackStone.png"))
         else:
-            self.cursor = QtGui.QCursor(QtGui.QPixmap("ressources/pictures/whiteStone.png"))
+            self.cursor = QtGui.QCursor(QtGui.QPixmap("../ressources/pictures/whiteStone.png"))
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.timerText))
         self.stonePlacedLabel = None
         self.stonePlacedCount = 0
@@ -136,10 +136,10 @@ class GameBoard():
         dropPoint = self.window.boardGrid.itemAtPosition(scaledY, scaledX)
         if color == 1:
             self.grid[scaledY, scaledX] = 1
-            dropPoint.widget().setPixmap(QtGui.QPixmap("ressources/pictures/blackStone.png"))
+            dropPoint.widget().setPixmap(QtGui.QPixmap("../ressources/pictures/blackStone.png"))
         else:
             self.grid[scaledY, scaledX] = 2
-            dropPoint.widget().setPixmap(QtGui.QPixmap("ressources/pictures/whiteStone.png"))
+            dropPoint.widget().setPixmap(QtGui.QPixmap("../ressources/pictures/whiteStone.png"))
         self.placedPoint.append(dropPoint)
         if self.isWinner():
             pass
@@ -155,9 +155,9 @@ class GameBoard():
         dropPoint = self.window.boardGrid.itemAtPosition(y, x)
         img = None
         if color == 1:
-            img = QtGui.QPixmap("ressources/pictures/blackStone.png")
+            img = QtGui.QPixmap("../ressources/pictures/blackStone.png")
         else:
-            img = QtGui.QPixmap("ressources/pictures/whiteStone.png")
+            img = QtGui.QPixmap("../ressources/pictures/whiteStone.png")
         p = QtGui.QPainter()
         p.begin(img)
         p.setCompositionMode(QtGui.QPainter.CompositionMode_DestinationIn)

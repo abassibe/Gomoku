@@ -42,7 +42,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-image:url(&quot;ressources/pictures/wood_border.jpg&quot;);</string>
+     <string notr="true">border-image:url(&quot;../ressources/pictures/wood_border.jpg&quot;);</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
@@ -1835,7 +1835,7 @@ font: 30pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
-border-image: url(&quot;ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
+border-image: url(&quot;../ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
 background-repeat: no-repeat;
 background-position: center center;
 font: 30pt &quot;SF Wasabi&quot;;
@@ -1871,7 +1871,7 @@ color:rgb(60, 17, 3);</string>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
-border-image: url(&quot;ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
+border-image: url(&quot;../ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
 background-repeat: no-repeat;
 background-position: center center;
 font: 30pt &quot;SF Wasabi&quot;;
@@ -1907,7 +1907,7 @@ color:rgb(60, 17, 3);</string>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
-border-image: url(&quot;ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
+border-image: url(&quot;../ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
 background-repeat: no-repeat;
 background-position: center center;
 font: 30pt &quot;SF Wasabi&quot;;
