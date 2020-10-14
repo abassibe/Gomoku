@@ -2,6 +2,7 @@ from time import time
 from random import randint
 from PyQt5 import QtGui, QtCore, QtWidgets
 import windowBuilding
+import rulesSet
 import numpy as np
 
 
@@ -112,7 +113,7 @@ class ComputerPlayer():
 class GameBoard():
     def __init__(self, window):
         self.window = window
-        self.grid = np.zeros(shape=(19, 19))
+        self.grid = np.zeros(shape=(19, 19), dtype=int)
         self.placedPoint = []
         self.placedHint = []
 
@@ -131,15 +132,16 @@ class GameBoard():
             scaledY = y - self.window.layoutWidget.geometry().y()
             blockHeight = (boardHeight / 19)
             scaledY = int(scaledY / blockHeight)
-        if self.grid[scaledY, scaledX] != 0 or not self.isValidMove(scaledY, scaledX):
+        if self.grid[scaledX, scaledY] != 0 or not self.isValidMove(scaledX, scaledY, color):
             return None
-        dropPoint = self.window.boardGrid.itemAtPosition(scaledY, scaledX)
+        dropPoint = self.window.boardGrid.itemAtPosition(scaledX, scaledY)
         if color == 1:
-            self.grid[scaledY, scaledX] = 1
+            self.grid[scaledX, scaledY] = 1
             dropPoint.widget().setPixmap(QtGui.QPixmap("ressources/pictures/blackStone.png"))
         else:
-            self.grid[scaledY, scaledX] = 2
+            self.grid[scaledX, scaledY] = 2
             dropPoint.widget().setPixmap(QtGui.QPixmap("ressources/pictures/whiteStone.png"))
+        self.window.gameManager.turnCount += 1
         self.placedPoint.append(dropPoint)
         if self.isWinner():
             pass
@@ -168,7 +170,7 @@ class GameBoard():
         self.window.update()
 
     def clear(self):
-        self.grid = np.zeros(shape=(19, 19))
+        self.grid = np.zeros(shape=(19, 19), dtype=int)
         for stone in self.placedPoint:
             stone.widget().clear()
         self.placedPoint = []
@@ -178,10 +180,28 @@ class GameBoard():
             stone.widget().clear()
         self.placedHint = []
 
-    def isValidMove(self, x, y):
-        return True
+    def isValidMove(self, x, y, color):
+        if self.window.gameManager.turnCount == 0:
+            if x == 9 and y == 9:
+                return True
+            return False
+        return self.window.gameManager.rules.checkBasicRule(self.grid, x, y, color)
 
     def isWinner(self):
+        test1 = [1, 1, 1, 1, 1]
+        # test2 = [2, 2, 2, 2, 2]
+        # test3 = [[1][1][1][1][1]]
+        # test4 = [[2][2][2][2][2]]
+        # ret = tmp[0,(tmp[1:] == test1[:,None]).all(0)]
+        ret = np.where(self.grid == test1[0])[0]
+        solns = []
+        N = len(test1)
+        for p in ret:
+            check = self.grid[p:p+N]
+            if np.all(check == test1):
+                solns.append(p)
+
+        print(solns)
         return False
 
     def isDraw(self):
@@ -215,6 +235,7 @@ class GameManager():
         self.globalTimer.timeout.connect(lambda: windowBuilding.updateTimerGame(window,
             self.globalTimer, self.startGameTimer, self.window.gameTimer))
         self._observers = [self.nextTurn]
+        self.rules = rulesSet.Rules(self.options)
 
     @property
     def playerTurn(self):
@@ -236,7 +257,6 @@ class GameManager():
         else:
             self.player2.start()
             self.player2.startTurn()
-        self.turnCount += 1
 
     def nextTurn(self, isPlayer1Turn):
         if isPlayer1Turn:

@@ -1734,7 +1734,7 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
      <rect>
       <x>1140</x>
       <y>580</y>
-      <width>151</width>
+      <width>301</width>
       <height>41</height>
      </rect>
     </property>
@@ -1747,7 +1747,7 @@ font: 30pt &quot;SF Wasabi&quot;;</string>
      <locale language="English" country="UnitedStates"/>
     </property>
     <property name="text">
-     <string>Rule 1</string>
+     <string>Basic Rule</string>
     </property>
    </widget>
    <widget class="QLabel" name="ruleLabel2">
@@ -1755,7 +1755,7 @@ font: 30pt &quot;SF Wasabi&quot;;</string>
      <rect>
       <x>1140</x>
       <y>650</y>
-      <width>151</width>
+      <width>301</width>
       <height>41</height>
      </rect>
     </property>
@@ -1928,7 +1928,7 @@ color:rgb(60, 17, 3);</string>
      <rect>
       <x>1140</x>
       <y>720</y>
-      <width>151</width>
+      <width>301</width>
       <height>41</height>
      </rect>
     </property>
@@ -1949,7 +1949,7 @@ font: 30pt &quot;SF Wasabi&quot;;</string>
      <rect>
       <x>1140</x>
       <y>790</y>
-      <width>151</width>
+      <width>301</width>
       <height>41</height>
      </rect>
     </property>

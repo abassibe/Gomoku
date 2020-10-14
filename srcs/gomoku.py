@@ -8,6 +8,7 @@ import options
 import gameManager
 from random import randint
 import time
+import rulesSet
 
 window = None
 
@@ -35,8 +36,8 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.gameManager == None or (self.option.gameMode == "PVE" and not self.gameManager.isPlayer1Turn):
             return
         if event.button() == 1:
-            x = event.x()
-            y = event.y()
+            y = event.x()
+            x = event.y()
             if (x < 150 or x > 911) or (y < 140 or y > 901):
                 return
             if self.gameManager.playerTurn:
@@ -83,12 +84,11 @@ def algoSubscribe(func):
 
 
 def tmpAlgo(board, color, hint):
-    x = 0
-    y = 0
-    while board[y, x] != 0:
-        x = randint(0, 18)
-        y = randint(0, 18)
-    return x, y
+    tmp = window.gameManager.rules.getBasicRule(board, color)
+    if tmp == None:
+        return 9, 9
+    return tmp[randint(0, len(tmp) - 1)]
+
 
 app = PyQt5.QtWidgets.QApplication(sys.argv)
 window = MainWindow()

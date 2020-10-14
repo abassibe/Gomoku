@@ -142,7 +142,13 @@
     </rect>
    </property>
    <property name="text">
-    <string>Rule 1</string>
+    <string>Basic Rule</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QCheckBox" name="ruleCheckbox2">
