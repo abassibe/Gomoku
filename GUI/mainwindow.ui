@@ -1694,7 +1694,7 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
     <property name="geometry">
      <rect>
       <x>1120</x>
-      <y>160</y>
+      <y>230</y>
       <width>181</width>
       <height>41</height>
      </rect>
@@ -1714,8 +1714,8 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="playerTwoTimer">
     <property name="geometry">
      <rect>
-      <x>1310</x>
-      <y>160</y>
+      <x>1300</x>
+      <y>230</y>
       <width>161</width>
       <height>41</height>
      </rect>
@@ -2005,6 +2005,42 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QLabel" name="player1StoneCount">
+    <property name="geometry">
+     <rect>
+      <x>1360</x>
+      <y>155</y>
+      <width>101</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 0);
+color:rgb(209, 168, 101);
+font:30pt  &quot;SF Wasabi&quot;;</string>
+    </property>
+    <property name="text">
+     <string>0/60</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="player2StoneCount">
+    <property name="geometry">
+     <rect>
+      <x>1360</x>
+      <y>300</y>
+      <width>101</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 0);
+color:rgb(209, 168, 101);
+font:30pt  &quot;SF Wasabi&quot;;</string>
+    </property>
+    <property name="text">
+     <string>0/60</string>
+    </property>
+   </widget>
    <zorder>backgroundBoard</zorder>
    <zorder>gameBoard</zorder>
    <zorder>infosBackground1</zorder>
@@ -2026,6 +2062,8 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
    <zorder>ruleLabel4</zorder>
    <zorder>gameTimer</zorder>
    <zorder>playerTurnEffect</zorder>
+   <zorder>player1StoneCount</zorder>
+   <zorder>player2StoneCount</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

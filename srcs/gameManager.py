@@ -49,6 +49,8 @@ class HumanPlayer():
         else:
             self.cursor = QtGui.QCursor(QtGui.QPixmap("ressources/pictures/whiteStone.png"))
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.timerText))
+        self.stonePlacedLabel = None
+        self.stonePlacedCount = 0
     
     def start(self):
         self.timerText.setText("00:00:00")
@@ -64,9 +66,14 @@ class HumanPlayer():
         self.startTime = time()
 
     def endTurn(self, x, y):
+        if self.stonePlacedCount >= 60:
+            return
         self.turnTime.stop()
         self.window.gameManager.gameBoard.clearHint()
-        self.window.gameManager.gameBoard.placeStone(x, y, self.color, False)
+        if self.window.gameManager.gameBoard.placeStone(x, y, self.color, False) == None:
+            return
+        self.stonePlacedCount += 1
+        self.stonePlacedLabel.setText(str(self.stonePlacedCount) + "/60")
 
     def end(self):
         self.turnTime.stop()
@@ -80,16 +87,23 @@ class ComputerPlayer():
         self.window = window
         self.startTime = 0.0
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.window.playerTwoTimer))
+        self.stonePlacedLabel = None
+        self.stonePlacedCount = 0
 
     def start(self):
         self.window.playerTwoTimer.setText("00:00:00")
 
     def startTurn(self):
+        if self.stonePlacedCount >= 60:
+            return
         self.turnTime.start()
         self.startTime = time()
         x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False)
         self.turnTime.stop()
-        self.window.gameManager.gameBoard.placeStone(x, y, self.color, True)
+        if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) == None:
+            return
+        self.stonePlacedCount += 1
+        self.stonePlacedLabel.setText(str(self.stonePlacedCount) + "/60")
 
     def end(self):
         self.turnTime.stop()
@@ -129,8 +143,11 @@ class GameBoard():
         self.placedPoint.append(dropPoint)
         if self.isWinner():
             pass
+        if self.isDraw():
+            pass
         self.window.update()
         self.window.gameManager.playerTurn = not self.window.gameManager.playerTurn
+        return True
 
     def dropHint(self, x, y, color):
         if self.grid[y, x] != 0:
@@ -167,22 +184,28 @@ class GameBoard():
     def isWinner(self):
         return False
 
+    def isDraw(self):
+        pass
 
 class GameManager():
     def __init__(self, window, option, hintButtonBool):
         self.isPlayer1Turn = True if randint(0, 1) == 0 else False
         self.player1 = HumanPlayer(window, 1 if self.isPlayer1Turn == True else 2)
         self.player1.timerText = window.playerOneTimer
+        self.player1.stonePlacedLabel = window.player1StoneCount
         self.options = option
         if self.options.gameMode == "PVE":
             self.player2 = ComputerPlayer(window, 1 if self.isPlayer1Turn == False else 2)
         else:
             self.player2 = HumanPlayer(window, 1 if self.isPlayer1Turn == False else 2)
             self.player2.timerText = window.playerTwoTimer
+        self.player2.stonePlacedLabel = window.player2StoneCount
         self.hintButtonBool = hintButtonBool
         self.window = window
         self.window.playerOneTimer.setText("00:00:00")
         self.window.playerTwoTimer.setText("00:00:00")
+        self.window.player1StoneCount.setText("0/60")
+        self.window.player2StoneCount.setText("0/60")
         self.gameBoard = GameBoard(window)
         self.turnCount = 0
         self.gameRuning = False
