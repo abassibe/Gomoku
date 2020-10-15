@@ -1,15 +1,27 @@
-use numpy::{IntoPyArray, PyArray2, PyArray1};
+mod goban;
+
+use numpy::{PyArray2};
 use pyo3::prelude::{pymodule, Py, PyModule, PyResult, Python};
-use pyo3::IntoPy;
+use pyo3::{IntoPy, exceptions};
+use pyo3::types::{PyTuple, PyBool, PyLong};
+
+const EMPTY: u8 = 0;
+const WHITE: u8 = 2;
+const BLACK: u8 = 1;
+const BWIDTH: u8 = 19;
+const BHEIGHT: u8 = 19;
+const BSIZE: u16 = 361;
 
 #[pymodule]
 fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
-    #[pyfn(m, "read_board")]
-    fn read_board(py: Python<'_>, x: &PyArray2<i32>) -> PyResult<Py<PyArray2<i32>>> {
-        let board = x.to_vec().unwrap();
-        let test = board.clone().into_pyarray(py);
+    #[pyfn(m, "ret_coord")]
+    fn ret_coord(py: Python<'_>, goban: &PyArray2<u8>, p_color: &PyLong, hint: &PyBool) -> PyResult<Py<PyTuple>> {
+        let board = goban.to_vec()?;
+        if board.len() != 361 {
+            return Err(exceptions::PyTypeError::new_err(format!("Fatal Rust Error: Invalid board size (Expected 361, got {})", board.len())));
+        }
         // Do my stuff
-	    let ret : &PyArray2<i32> = PyArray1::from_vec(py, board).reshape([19,19]).unwrap();
+        let ret: &PyTuple = PyTuple::new(py, [2, 1].iter()); //placeholder
         Ok(ret.into_py(py))
     }
     Ok(())
