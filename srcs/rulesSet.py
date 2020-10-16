@@ -52,6 +52,39 @@ class Rules():
                 ret.append((x + 1, y + 1))
         return ret
 
+    def captureRule(self, board, x, y, color):
+        target = 1 if color == 2 else 2
+        removedStone = []
+        if board[x][y - 3] == color and (board[x][y - 2] == target and board[x][y - 1] == target):
+            removedStone.append((x, y - 2))
+            removedStone.append((x, y - 1))
+        if board[x - 3][y - 3] == color and (board[x - 2][y - 2] == target and board[x - 1][y - 1] == target):
+            removedStone.append((x - 2, y - 2))
+            removedStone.append((x - 1, y - 1))
+        if board[x - 3][y] == color and (board[x - 2][y] == target and board[x - 1][y] == target):
+            removedStone.append((x - 2, y))
+            removedStone.append((x - 1, y))
+        if board[x - 3][y + 3] == color and (board[x - 2][y + 2] == target and board[x - 1][y + 1] == target):
+            removedStone.append((x - 2, y + 2))
+            removedStone.append((x - 1, y + 1))
+        if board[x][y + 3] == color and (board[x][y + 2] == target and board[x][y + 1] == target):
+            removedStone.append((x, y + 2))
+            removedStone.append((x, y + 1))
+        if board[x + 3][y + 3] == color and (board[x + 2][y + 2] == target and board[x + 1][y + 1] == target):
+            removedStone.append((x + 2, y + 2))
+            removedStone.append((x + 1, y + 1))
+        if board[x + 3][y] == color and (board[x + 2][y] == target and board[x + 1][y] == target):
+            removedStone.append((x + 2, y))
+            removedStone.append((x + 1, y))
+        if board[x + 3][y - 3] == color and (board[x + 2][y - 2] == target and board[x + 1][y - 1] == target):
+            removedStone.append((x + 2, y - 2))
+            removedStone.append((x + 1, y - 1))
+        return removedStone
+
+    def gameEndingCaputreRule(self, board, v1, v2, color):
+        #Regarder pour chaque point de la ligne si ils peuvent etre capturer au prochaine tour
+        return ()
+
     def getValidPoints(self, board, color):
         return self.getBasicRule(board, color)
         # validsPoint = []

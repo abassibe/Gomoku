@@ -4,7 +4,7 @@ class Options():
     def __init__(self):
         self.langage = "English"
         self.gameMode = "PVE"
-        self.rulesSet = ['']
+        self.rulesSet = ['Basic Rule']
 
 
     def _onAccept(self, window, dialog):

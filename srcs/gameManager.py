@@ -6,42 +6,12 @@ import rulesSet
 import numpy as np
 
 
-# def dropHint(window, x, y):
-#     global isBlack
-#     global grid
-
-#     if grid[y, x] != 0:
-#         return None
-#     dropPoint = window.boardGrid.itemAtPosition(y, x)
-#     if isBlack:
-#         grid[y, x] = 1
-#         img = QtGui.QPixmap("ressources/pictures/blackStone.png")
-#         p = QtGui.QPainter()
-#         p.begin(img)
-#         p.setCompositionMode(QtGui.QPainter.CompositionMode_DestinationIn)
-#         p.fillRect(img.rect(), QtGui.QColor(0, 0, 0, 100))
-#         p.end()
-#         dropPoint.widget().setPixmap(img)
-#     else:
-#         grid[y, x] = 2
-#         img = QtGui.QPixmap("ressources/pictures/whiteStone.png")
-#         p = QtGui.QPainter()
-#         p.begin(img)
-#         p.setCompositionMode(QtGui.QPainter.CompositionMode_DestinationIn)
-#         p.fillRect(img.rect(), QtGui.QColor(0, 0, 0, 100))
-#         p.end()
-#         dropPoint.widget().setPixmap(img)
-#     isBlack = not isBlack
-#     savedPlacedPoint.append(dropPoint)
-#     window.update()
-#     return 1
-
-
 class HumanPlayer():
     def __init__(self, window, color):
         self.turnTime = QtCore.QTimer()
         self.turnTime.setInterval(10)
         self.color = color
+        self.colorLabel = None
         self.window = window
         self.timerText = None
         self.startTime = 0.0
@@ -52,12 +22,18 @@ class HumanPlayer():
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.timerText))
         self.stonePlacedLabel = None
         self.stonePlacedCount = 0
-    
+        self.playerCapture = None
+        self.stoneRemovedCount = 0
+
     def start(self):
         self.timerText.setText("00:00:00")
-        self.window.layoutWidget.setCursor(self.cursor)
+        if self.color == 1:
+            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 30pt \"SF Wasabi\";")
+        else:
+            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 30pt \"SF Wasabi\";")
 
     def startTurn(self):
+        self.window.layoutWidget.setCursor(self.cursor)
         if self.window.gameManager.hintButtonBool:
             x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True)
             self.window.gameManager.gameBoard.dropHint(x, y, self.color)
@@ -69,12 +45,14 @@ class HumanPlayer():
     def endTurn(self, x, y):
         if self.stonePlacedCount >= 60:
             return
-        self.turnTime.stop()
-        self.window.gameManager.gameBoard.clearHint()
         if self.window.gameManager.gameBoard.placeStone(x, y, self.color, False) == None:
             return
+        self.turnTime.stop()
+        self.window.gameManager.gameBoard.clearHint()
         self.stonePlacedCount += 1
         self.stonePlacedLabel.setText(str(self.stonePlacedCount) + "/60")
+        self.playerCapture.setText(str(self.stoneRemovedCount) + "/10")
+        self.window.gameManager.playerTurn = not self.window.gameManager.playerTurn
 
     def end(self):
         self.turnTime.stop()
@@ -85,11 +63,18 @@ class ComputerPlayer():
         self.turnTime = QtCore.QTimer()
         self.turnTime.setInterval(10)
         self.color = color
+        self.colorLabel = window.playerTwoLabel
         self.window = window
         self.startTime = 0.0
+        if self.color == 1:
+            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 30pt \"SF Wasabi\";")
+        else:
+            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 30pt \"SF Wasabi\";")
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.window.playerTwoTimer))
         self.stonePlacedLabel = None
         self.stonePlacedCount = 0
+        self.playerCapture = None
+        self.stoneRemovedCount = 0
 
     def start(self):
         self.window.playerTwoTimer.setText("00:00:00")
@@ -105,6 +90,8 @@ class ComputerPlayer():
             return
         self.stonePlacedCount += 1
         self.stonePlacedLabel.setText(str(self.stonePlacedCount) + "/60")
+        self.playerCapture.setText(str(self.stoneRemovedCount) + "/10")
+        self.window.gameManager.playerTurn = not self.window.gameManager.playerTurn
 
     def end(self):
         self.turnTime.stop()
@@ -143,12 +130,32 @@ class GameBoard():
             dropPoint.widget().setPixmap(QtGui.QPixmap("ressources/pictures/whiteStone.png"))
         self.window.gameManager.turnCount += 1
         self.placedPoint.append(dropPoint)
-        if self.isWinner():
-            pass
+        if 'Capture' in self.window.option.rulesSet:
+            removedStone = self.window.gameManager.rules.captureRule(self.grid, scaledX, scaledY, color)
+            for stone in removedStone:
+                dropPoint = self.window.boardGrid.itemAtPosition(stone[0], stone[1])
+                dropPoint.widget().clear()
+                self.grid[stone[0]][stone[1]] = 0
+                removedStonePlayer = self.window.gameManager.player1 if color == self.window.gameManager.player1.color else self.window.gameManager.player2
+                removedStonePlayer.stoneRemovedCount += 1
+        winStart, winEnd = self.isWinner()
+        if winStart and ('Game-ending capture' in self.window.option.rulesSet or 'Capture de fin de partie' in self.window.option.rulesSet):
+            counterCapture = self.window.gameManager.rules.gameEndingCaputreRule(self.grid, winStart, winEnd, color)
+            if len(counterCapture) > 0:
+                return True
+        if winStart:
+            self.window.gameManager.gameBoard.clearHint()
+            self.window.gameManager.end()
+            self.window.layoutWidget.unsetCursor()
+            windowBuilding.winDraw(self.window, 1, color)
+            return True
         if self.isDraw():
-            pass
+            self.window.gameManager.gameBoard.clearHint()
+            self.window.gameManager.end()
+            self.window.layoutWidget.unsetCursor()
+            windowBuilding.winDraw(self.window, 0, color)
+            return True
         self.window.update()
-        self.window.gameManager.playerTurn = not self.window.gameManager.playerTurn
         return True
 
     def dropHint(self, x, y, color):
@@ -188,44 +195,71 @@ class GameBoard():
         return self.window.gameManager.rules.checkBasicRule(self.grid, x, y, color)
 
     def isWinner(self):
-        test1 = [1, 1, 1, 1, 1]
-        # test2 = [2, 2, 2, 2, 2]
-        # test3 = [[1][1][1][1][1]]
-        # test4 = [[2][2][2][2][2]]
-        # ret = tmp[0,(tmp[1:] == test1[:,None]).all(0)]
-        ret = np.where(self.grid == test1[0])[0]
-        solns = []
-        N = len(test1)
-        for p in ret:
-            check = self.grid[p:p+N]
-            if np.all(check == test1):
-                solns.append(p)
+        if self.window.gameManager.player1.stoneRemovedCount >= 10:
+            return self.window.gameManager.player1.color
+        elif self.window.gameManager.player2.stoneRemovedCount >= 10:
+            return self.window.gameManager.player2.color
 
-        print(solns)
-        return False
+        for x in range(19):
+            for y in range(19):
+                if self.grid[x][y] != 0:
+                    toCompare = self.grid[x][y]
+                    if x < 14:
+                        for n in range(1, 5):
+                            if self.grid[x + n][y] != toCompare:
+                                break
+                            if n + 1 == 5:
+                                return (x, y), (x + n, y)
+                    if y < 14:
+                        for n in range(1, 5):
+                            if self.grid[x][y + n] != toCompare:
+                                break
+                            if n + 1 == 5:
+                                return (x, y), (x, y + n)
+                    if x < 14 and y < 14:
+                        for n in range(1, 5):
+                            if self.grid[x + n][y + n] != toCompare:
+                                break
+                            if n + 1 == 5:
+                                return (x, y), (x + n, y + n)
+                    if x < 14 and y > 3:
+                        for n in range(1, 5):
+                            if self.grid[x + n][y - n] != toCompare:
+                                break
+                            if n + 1 == 5:
+                                return (x, y), (x + n, y - n)
+        return None, None
 
     def isDraw(self):
-        pass
+        if self.window.gameManager.player1.stonePlacedCount >= 60 or self.window.gameManager.player2.stonePlacedCount >= 60:
+            return True
+        return False
 
 class GameManager():
     def __init__(self, window, option, hintButtonBool):
         self.isPlayer1Turn = True if randint(0, 1) == 0 else False
         self.player1 = HumanPlayer(window, 1 if self.isPlayer1Turn == True else 2)
         self.player1.timerText = window.playerOneTimer
+        self.player1.colorLabel = window.playerOneLabel
         self.player1.stonePlacedLabel = window.player1StoneCount
+        self.player1.playerCapture = window.player1Capture
         self.options = option
         if self.options.gameMode == "PVE":
             self.player2 = ComputerPlayer(window, 1 if self.isPlayer1Turn == False else 2)
         else:
             self.player2 = HumanPlayer(window, 1 if self.isPlayer1Turn == False else 2)
             self.player2.timerText = window.playerTwoTimer
+            self.player2.colorLabel = window.playerTwoLabel
         self.player2.stonePlacedLabel = window.player2StoneCount
+        self.player2.playerCapture = window.player2Capture
         self.hintButtonBool = hintButtonBool
         self.window = window
         self.window.playerOneTimer.setText("00:00:00")
         self.window.playerTwoTimer.setText("00:00:00")
         self.window.player1StoneCount.setText("0/60")
         self.window.player2StoneCount.setText("0/60")
+        self.window.player1Capture.setText("0/10")
+        self.window.player1Capture.setText("0/10")
         self.gameBoard = GameBoard(window)
         self.turnCount = 0
         self.gameRuning = False
@@ -251,11 +285,11 @@ class GameManager():
         self.startGameTimer = time()
         self.globalTimer.start()
         self.gameRuning = True
+        self.player1.start()
+        self.player2.start()
         if self.isPlayer1Turn:
-            self.player1.start()
             self.player1.startTurn()
         else:
-            self.player2.start()
             self.player2.startTurn()
 
     def nextTurn(self, isPlayer1Turn):

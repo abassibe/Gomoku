@@ -33,7 +33,7 @@ class MainWindow(QtWidgets.QMainWindow):
         windowBuilding.setRulesList(self, self.option.rulesSet)
 
     def mousePressEvent(self, event):
-        if self.gameManager == None or (self.option.gameMode == "PVE" and not self.gameManager.isPlayer1Turn):
+        if self.gameManager == None or self.gameManager.gameRuning == False or (self.option.gameMode == "PVE" and not self.gameManager.isPlayer1Turn):
             return
         if event.button() == 1:
             y = event.x()
