@@ -20,6 +20,7 @@ def optionsEvent(window, option):
     window.optionsButton.setGeometry(1129, 927, 51, 51)
 
     dialog = uic.loadUi("GUI/dialog.ui")
+    dialog.ruleCheckbox1.setEnabled(False)
     windowBuilding.dialogTranslate(dialog, option.langage)
     if option.gameMode == "PVE":
         dialog.PVEButton.setChecked(True)
@@ -59,7 +60,7 @@ def hintEvent(hintButton, window):
         hintButton.setGeometry(60, 980, 235, 55)
         _hintButtonBool = True
         color = None
-        if window.gameManager:
+        if window.gameManager and window.gameManager.gameRuning == True:
             if window.gameManager.isPlayer1Turn:
                 color = window.gameManager.player1.color
             else:
@@ -91,7 +92,6 @@ def giveUpEvent(window):
 
     window.layoutWidget.unsetCursor()
     window.gameManager.end()
-    window.gameManager.gameBoard.clear()
     window.gameManager.gameBoard.clearHint()
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)
@@ -114,7 +114,10 @@ def newGameEvent(window, option):
     if window.gameManager != None and window.gameManager.gameRuning == True:
         return
 
+    if window.gameManager:
+        window.gameManager.gameBoard.clear()
     window.gameManager = gameManager.GameManager(window, option, _hintButtonBool)
+    window.winOrDrawLabel.hide()
 
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)

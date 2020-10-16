@@ -42,7 +42,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-image:url(&quot;../ressources/pictures/wood_border.jpg&quot;);</string>
+     <string notr="true">border-image:url(&quot;ressources/pictures/wood_border.jpg&quot;);</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
@@ -1606,7 +1606,7 @@
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(60, 17, 3);
-font: 40pt &quot;SF Wasabi&quot;;</string>
+font: 38pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1732,37 +1732,37 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="ruleLabel1">
     <property name="geometry">
      <rect>
-      <x>1140</x>
+      <x>1120</x>
       <y>580</y>
-      <width>151</width>
+      <width>301</width>
       <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font: 30pt &quot;SF Wasabi&quot;;</string>
+font: 25pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
     </property>
     <property name="text">
-     <string>Rule 1</string>
+     <string>Basic Rule</string>
     </property>
    </widget>
    <widget class="QLabel" name="ruleLabel2">
     <property name="geometry">
      <rect>
-      <x>1140</x>
-      <y>650</y>
-      <width>151</width>
+      <x>1120</x>
+      <y>652</y>
+      <width>321</width>
       <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font: 30pt &quot;SF Wasabi&quot;;</string>
+font: 25pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1835,7 +1835,7 @@ font: 30pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
-border-image: url(&quot;../ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
+border-image: url(&quot;ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
 background-repeat: no-repeat;
 background-position: center center;
 font: 30pt &quot;SF Wasabi&quot;;
@@ -1871,7 +1871,7 @@ color:rgb(60, 17, 3);</string>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
-border-image: url(&quot;../ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
+border-image: url(&quot;ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
 background-repeat: no-repeat;
 background-position: center center;
 font: 30pt &quot;SF Wasabi&quot;;
@@ -1907,7 +1907,7 @@ color:rgb(60, 17, 3);</string>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
-border-image: url(&quot;../ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
+border-image: url(&quot;ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
 background-repeat: no-repeat;
 background-position: center center;
 font: 30pt &quot;SF Wasabi&quot;;
@@ -1926,16 +1926,16 @@ color:rgb(60, 17, 3);</string>
    <widget class="QLabel" name="ruleLabel3">
     <property name="geometry">
      <rect>
-      <x>1140</x>
-      <y>720</y>
-      <width>151</width>
+      <x>1120</x>
+      <y>724</y>
+      <width>321</width>
       <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font: 30pt &quot;SF Wasabi&quot;;</string>
+font: 25pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1947,16 +1947,16 @@ font: 30pt &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="ruleLabel4">
     <property name="geometry">
      <rect>
-      <x>1140</x>
-      <y>790</y>
-      <width>151</width>
+      <x>1120</x>
+      <y>794</y>
+      <width>321</width>
       <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font: 30pt &quot;SF Wasabi&quot;;</string>
+font: 25pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -2041,6 +2041,64 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
      <string>0/60</string>
     </property>
    </widget>
+   <widget class="QLabel" name="winOrDrawLabel">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>30</y>
+      <width>991</width>
+      <height>951</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="locale">
+     <locale language="English" country="UnitedStates"/>
+    </property>
+    <property name="text">
+     <string>Player Win</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="player1Capture">
+    <property name="geometry">
+     <rect>
+      <x>1120</x>
+      <y>155</y>
+      <width>101</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 0);
+color:rgb(209, 168, 101);
+font:30pt  &quot;SF Wasabi&quot;;</string>
+    </property>
+    <property name="text">
+     <string>0/10</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="player2Capture">
+    <property name="geometry">
+     <rect>
+      <x>1120</x>
+      <y>300</y>
+      <width>101</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 0);
+color:rgb(209, 168, 101);
+font:30pt  &quot;SF Wasabi&quot;;</string>
+    </property>
+    <property name="text">
+     <string>0/10</string>
+    </property>
+   </widget>
    <zorder>backgroundBoard</zorder>
    <zorder>gameBoard</zorder>
    <zorder>infosBackground1</zorder>
@@ -2064,6 +2122,9 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
    <zorder>playerTurnEffect</zorder>
    <zorder>player1StoneCount</zorder>
    <zorder>player2StoneCount</zorder>
+   <zorder>winOrDrawLabel</zorder>
+   <zorder>player1Capture</zorder>
+   <zorder>player2Capture</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

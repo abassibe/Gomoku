@@ -137,12 +137,18 @@
     <rect>
      <x>30</x>
      <y>200</y>
-     <width>87</width>
+     <width>171</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>Rule 1</string>
+    <string>Basic Rule</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QCheckBox" name="ruleCheckbox2">
@@ -150,7 +156,7 @@
     <rect>
      <x>210</x>
      <y>200</y>
-     <width>87</width>
+     <width>161</width>
      <height>20</height>
     </rect>
    </property>
@@ -163,7 +169,7 @@
     <rect>
      <x>30</x>
      <y>230</y>
-     <width>87</width>
+     <width>171</width>
      <height>20</height>
     </rect>
    </property>
@@ -176,7 +182,7 @@
     <rect>
      <x>210</x>
      <y>230</y>
-     <width>87</width>
+     <width>161</width>
      <height>20</height>
     </rect>
    </property>
