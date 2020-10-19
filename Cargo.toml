@@ -12,6 +12,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 numpy = "*"
+rayon = "1.4.1"
 
 [dependencies.pyo3]
 version = "*"

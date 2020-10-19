@@ -6,6 +6,7 @@ use std::fmt::Formatter;
 pub struct Goban
 {
     grid: Vec<u8>,
+    p_color:u8,
 }
 
 impl fmt::Display for Goban {
@@ -32,13 +33,26 @@ impl std::ops::Index<(usize, usize)> for Goban {
 
 impl Goban
 {
-    pub fn new(grid: Vec<u8>) -> Self
+    pub fn new(grid: Vec<u8>, p_color: u8) -> Self
     {
         Self
         {
-            grid
+            grid,
+            p_color
         }
     }
+}
+
+pub enum Move
+{
+    Up,
+    UpLeft,
+    UpRight,
+    Left,
+    Right,
+    DownLeft,
+    DownRight,
+    Down
 }
 
 #[cfg(test)]
