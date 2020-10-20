@@ -72,6 +72,8 @@ impl Goban
     {
         self.grid.iter().filter(|i| **i == self.p_color).fold(0, |acc, x| acc + x);
 
+        // TODO Iterator or for loop like check surroundings and deduce direction then check if several aligned to optimize the amount of reads.
+        // TODO Node shit
         unimplemented!()
     }
 }
