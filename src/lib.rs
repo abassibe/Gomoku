@@ -1,4 +1,5 @@
 mod goban;
+mod nodes;
 
 use numpy::{PyArray2};
 use pyo3::prelude::{pymodule, Py, PyModule, PyResult, Python};

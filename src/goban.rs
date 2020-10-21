@@ -49,35 +49,55 @@ impl Goban
         }
     }
 
-    pub fn get_move(&self, pos: (usize, usize), dir: Move) -> u8
+    pub fn get_pos(&self, pos: (usize, usize), dir: Move) -> Option<(usize, usize)>
     {
         match dir {
-            Move::Up => self[(pos.0, pos.1 - 1)],
-            Move::UpLeft => self[(pos.0 - 1, pos.1 - 1)],
-            Move::UpRight => self[(pos.0 + 1, pos.1 - 1)],
-            Move::Left => self[(pos.0 - 1, pos.1)],
-            Move::Right => self[(pos.0 + 1, pos.1)],
-            Move::DownLeft => self[(pos.0 - 1, pos.1 + 1)],
-            Move::DownRight => self[(pos.0 + 1, pos.1 + 1)],
-            Move::Down => self[(pos.0, pos.1 + 1)],
+            Move::Up => if pos.1 > 0 { Some((pos.0, pos.1 - 1)) } else { None },
+            Move::UpLeft => if pos.1 > 0 && pos.0 > 0 { Some((pos.0 - 1, pos.1 - 1)) } else { None },
+            Move::UpRight => if pos.1 > 0 && pos.0 < 19 { Some((pos.0 + 1, pos.1 - 1)) } else { None },
+            Move::Left => if pos.0 > 0 { Some((pos.0 - 1, pos.1)) } else { None },
+            Move::Right => if pos.0 < 19 { Some((pos.0 + 1, pos.1)) } else { None },
+            Move::DownLeft => if pos.1 < 19 && pos.0 > 0 { Some((pos.0 - 1, pos.1 + 1)) } else { None },
+            Move::DownRight => if pos.1 < 19 && pos.0 < 19 { Some((pos.0 + 1, pos.1 + 1)) } else { None },
+            Move::Down => if pos.1 < 19 { Some((pos.0, pos.1 + 1)) } else { None },
         }
     }
 
-    pub fn list_pawns(&self) -> Vec<(u8, u8)>
+    pub fn check_pos(&self, pos: (usize, usize)) -> u8
     {
-        self.grid.iter().enumerate().filter(|(_, i)| **i == self.p_color).map(|(pc, _)| ((pc % 19) as u8, (pc / 19) as u8)).collect()
+
     }
 
-    pub fn heuristics(self) -> u32
+    fn list_pawns(&self) -> Vec<(usize, usize)>
     {
-        self.grid.iter().filter(|i| **i == self.p_color).fold(0, |acc, x| acc + x);
+        self.grid.iter().enumerate().filter(|(_, i)| **i == self.p_color).map(|(pc, _)| (pc % 19, pc / 19)).collect()
+    }
 
+    fn check_alignment(&self, pos: (usize, usize), dir: Move) -> u32
+    {
+        let ret : u32 = 0;
+
+        unimplemented!()
+    }
+
+    pub fn heuristics(&self) -> u32
+    {
+        let mut ret: u32 = 0;
+        let pawns: Vec<(usize, usize)> = self.list_pawns();
+
+        for (x, y) in pawns {
+            for val in [Move::Down, Move::DownRight, Move::DownLeft, Move::Right, Move::Left, Move::Up, Move::UpRight, Move::UpLeft].iter().filter_map(|m| self.get_pos((x, y), *m))
+            {
+                ret += self.check_alignment()
+            }
+        }
         // TODO Iterator or for loop like check surroundings and deduce direction then check if several aligned to optimize the amount of reads.
         // TODO Node shit
         unimplemented!()
     }
 }
 
+#[derive(Copy, Clone)]
 pub enum Move
 {
     Up,
