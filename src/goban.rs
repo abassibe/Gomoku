@@ -68,7 +68,7 @@ impl Goban
         self.grid.iter().enumerate().filter(|(_, i)| **i == self.p_color).map(|(pc, _)| (pc % 19, pc / 19)).collect()
     }
 
-    fn check_alignment(&self, mut pos: (usize, usize), dir: Move) -> u32
+    fn check_line(&self, mut pos: (usize, usize), dir: Move) -> u32
     {
         let mut ret : u32 = 1;
         let mut next = self.get_pos(pos, dir);
@@ -89,10 +89,10 @@ impl Goban
 
         for (x, y) in pawns {
             for val in [Move::Down, Move::DownRight, Move::DownLeft, Move::Right,
-                                        Move::Left, Move::Up, Move::UpRight, Move::UpLeft].iter().filter_map(|m| self.get_pos((x, y), *m))
+                                        Move::Left, Move::Up, Move::UpRight, Move::UpLeft].iter()
             {
                 println!("Pos: {:?} dir:{:?}", (x, y), m);
-                ret += self.check_alignment(val, m)
+                ret += self.check_line((x, y), m)
             }
         }
         ret
