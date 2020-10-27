@@ -5,3 +5,13 @@
 .idea/vcs.xml
 venv/
 srcs/__pycache__
+
+#Added by cargo
+
+/target
+Cargo.lock
+/.idea/encodings.xml
+/rust_ext.pyd
+/.idea/workspace.xml
+rust_ext.so
+src/__pycache__/
