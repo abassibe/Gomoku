@@ -63,6 +63,7 @@ impl Goban
         }
     }
 
+    ///Lists all the player's pawns on the board. Returns a vector of all the positions of the board.
     fn list_pawns(&self) -> Vec<(usize, usize)>
     {
         self.grid.iter().enumerate().filter(|(_, i)| **i == self.p_color).map(|(pc, _)| (pc % 19, pc / 19)).collect()
@@ -77,20 +78,20 @@ impl Goban
         while next.is_some() && self[next.unwrap()] == self.p_color
         {
             next = self.get_pos(next.unwrap(), dir);
-            ret *= 10;
+            ret += 10;
             println!("In align ret= {:?}, pos= {:?}", ret, pos);
         }
 	    ret
     }
 
-    pub fn heuristics(&self) -> u32
+    pub fn find_alignments(&self) -> u32
     {
         let mut ret: u32 = 0;
         let pawns: Vec<(usize, usize)> = self.list_pawns();
 
         for (x, y) in pawns {
-            for val in [Move::Down, Move::DownRight, Move::DownLeft, Move::Right,
-                                        Move::Left, Move::Up, Move::UpRight, Move::UpLeft].iter()
+            for val in [Move::Down, Move::DownRight, Move::Right, Move::DownLeft
+                                        ].iter()
             {
                 println!("Pos: {:?} dir:{:?}", (x, y), val);
                 ret += self.check_line((x, y), *val)
@@ -101,7 +102,7 @@ impl Goban
     }
 }
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum Move
 {
     Up,
@@ -138,7 +139,7 @@ mod tests {
     }
 
     #[test]
-    fn heuristics_diag() {
+    fn heuristics_horizontal_line() {
         let mut input: Vec<u8> = vec![0; 361];
 
         input[0] = BLACK;
@@ -147,8 +148,38 @@ mod tests {
         input[3] = BLACK;
         input[4] = BLACK;
         let go: Goban = Goban::new(input, BLACK);
-	    let ret = go.heuristics();
+	    let ret = go.find_alignments();
+        // println!("{}\n{:?}", go, ret);
+	    assert_eq!(ret, 100);
+    }
+
+    #[test]
+    fn heuristics_diagonal_downright() {
+        let mut input: Vec<u8> = vec![0; 361];
+
+        input[1] = BLACK;
+        input[21] = BLACK;
+        input[41] = BLACK;
+        input[61] = BLACK;
+        input[81] = BLACK;
+        let go: Goban = Goban::new(input, BLACK);
+        let ret = go.find_alignments();
+        // println!("{}\n{:?}", go, ret);
+        assert_eq!(ret, 100);
+    }
+
+    #[test]
+    fn heuristics_diagonal_downleft() {
+        let mut input: Vec<u8> = vec![0; 361];
+
+        input[15] = BLACK;
+        input[33] = BLACK;
+        input[51] = BLACK;
+        input[69] = BLACK;
+        input[87] = BLACK;
+        let go: Goban = Goban::new(input, BLACK);
+        let ret = go.find_alignments();
         println!("{}\n{:?}", go, ret);
-	    assert_eq!(ret, 10000);
+        assert_eq!(ret, 100);
     }
 }
