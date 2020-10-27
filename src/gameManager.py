@@ -48,7 +48,6 @@ class HumanPlayer():
         if self.window.gameManager.gameBoard.placeStone(x, y, self.color, False) == None:
             return
         self.turnTime.stop()
-        self.window.gameManager.gameBoard.clearHint()
         self.stonePlacedCount += 1
         self.stonePlacedLabel.setText(str(self.stonePlacedCount) + "/60")
         self.playerCapture.setText(str(self.stoneRemovedCount) + "/10")
@@ -121,6 +120,7 @@ class GameBoard():
             scaledY = int(scaledY / blockHeight)
         if self.grid[scaledX, scaledY] != 0 or not self.isValidMove(scaledX, scaledY, color):
             return None
+        self.window.gameManager.gameBoard.clearHint()
         dropPoint = self.window.boardGrid.itemAtPosition(scaledX, scaledY)
         if color == 1:
             self.grid[scaledX, scaledY] = 1
@@ -139,8 +139,8 @@ class GameBoard():
                 removedStonePlayer = self.window.gameManager.player1 if color == self.window.gameManager.player1.color else self.window.gameManager.player2
                 removedStonePlayer.stoneRemovedCount += 1
         winStart, winEnd = self.isWinner()
-        if winStart and ('Game-ending capture' in self.window.option.rulesSet or 'Capture de fin de partie' in self.window.option.rulesSet):
-            counterCapture = self.window.gameManager.rules.gameEndingCaputreRule(self.grid, winStart, winEnd, color)
+        if winStart and winStart is tuple and ('Game-ending capture' in self.window.option.rulesSet or 'Capture de fin de partie' in self.window.option.rulesSet):
+            counterCapture = self.window.gameManager.rules.gameEndingCaptureRule(self.grid, winStart, winEnd, color)
             if len(counterCapture) > 0:
                 return True
         if winStart:
@@ -159,9 +159,9 @@ class GameBoard():
         return True
 
     def dropHint(self, x, y, color):
-        if self.grid[y, x] != 0:
+        if self.grid[x, y] != 0:
             return None
-        dropPoint = self.window.boardGrid.itemAtPosition(y, x)
+        dropPoint = self.window.boardGrid.itemAtPosition(x, y)
         img = None
         if color == 1:
             img = QtGui.QPixmap("ressources/pictures/blackStone.png")
@@ -192,14 +192,22 @@ class GameBoard():
             if x == 9 and y == 9:
                 return True
             return False
+        if self.window.gameManager.rules.isWinner != 0:
+            ret = self.window.gameManager.rules.getValidPoints(self.grid, color)
+            for validX, validY in ret:
+                if x == validX and y == validY:
+                    self.window.gameManager.rules.isWinner = False
+                    self.winStart = None
+                    self.winEnd = None
+                    return True
+            return False
         return self.window.gameManager.rules.checkBasicRule(self.grid, x, y, color)
 
     def isWinner(self):
-        #mauvais joueur declare vainqueur
         if self.window.gameManager.player1.stoneRemovedCount >= 10:
-            return self.window.gameManager.player1.color
+            return self.window.gameManager.player1.color, self.window.gameManager.player1.color
         elif self.window.gameManager.player2.stoneRemovedCount >= 10:
-            return self.window.gameManager.player2.color
+            return self.window.gameManager.player2.color, self.window.gameManager.player2.color
 
         for x in range(19):
             for y in range(19):
@@ -294,6 +302,8 @@ class GameManager():
             self.player2.startTurn()
 
     def nextTurn(self, isPlayer1Turn):
+        if not self.gameRuning:
+            return
         if isPlayer1Turn:
             self.player1.startTurn()
         else:

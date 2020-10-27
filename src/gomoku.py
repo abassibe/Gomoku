@@ -84,7 +84,7 @@ def algoSubscribe(func):
 
 
 def tmpAlgo(board, color, hint):
-    tmp = window.gameManager.rules.getBasicRule(board, color)
+    tmp = window.gameManager.rules.getValidPoints(board, color)
     if tmp == None:
         return 9, 9
     return tmp[randint(0, len(tmp) - 1)]
