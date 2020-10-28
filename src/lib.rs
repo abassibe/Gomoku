@@ -1,5 +1,6 @@
 mod goban;
 mod nodes;
+mod bitboard;
 
 use numpy::{PyArray2};
 use pyo3::prelude::{pymodule, Py, PyModule, PyResult, Python};
