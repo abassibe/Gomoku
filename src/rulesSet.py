@@ -148,6 +148,25 @@ class Rules():
             self.isWinner = color
         return result
 
+    def searchThreePoint(self, board, x, y, color):
+        pattern = [(0, 1, 1, 1, 0),
+                   (0, 1, 1, 0, 1, 0)]
+
+    def doubleThreeRule(self, board, x, y, color):
+        lst = []
+        yMin = y if y < 3 else 3
+        yMax = (19 - y) if y > 16 else 4
+        for x1 in range(-3, 4):
+            if x + x1 < 0 or x + x1 > 18:
+                continue
+            lst.append(board[x + x1][y - yMin:y + yMax].tolist())
+        capture = np.vstack((lst[:]))
+
+        if self.searchThreePoint(board, x, y, color):
+            pass
+        print(capture)
+        print()
+
     def getValidPoints(self, board, color):
         if self.isWinner != 0:
             return self.gameEndingCaptureRule(board, self.winStart, self.winEnd, self.isWinner)
