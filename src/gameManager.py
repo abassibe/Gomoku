@@ -20,8 +20,6 @@ class HumanPlayer():
         else:
             self.cursor = QtGui.QCursor(QtGui.QPixmap("ressources/pictures/whiteStone.png"))
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.timerText))
-        self.stonePlacedLabel = None
-        self.stonePlacedCount = 0
         self.playerCapture = None
         self.stoneRemovedCount = 0
 
@@ -43,13 +41,9 @@ class HumanPlayer():
         self.startTime = time()
 
     def endTurn(self, x, y):
-        if self.stonePlacedCount >= 60:
-            return
         if self.window.gameManager.gameBoard.placeStone(x, y, self.color, False) == None:
             return
         self.turnTime.stop()
-        self.stonePlacedCount += 1
-        self.stonePlacedLabel.setText(str(self.stonePlacedCount) + "/60")
         self.playerCapture.setText(str(self.stoneRemovedCount) + "/10")
         self.window.gameManager.playerTurn = not self.window.gameManager.playerTurn
 
@@ -70,8 +64,6 @@ class ComputerPlayer():
         else:
             self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 30pt \"SF Wasabi\";")
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.window.playerTwoTimer))
-        self.stonePlacedLabel = None
-        self.stonePlacedCount = 0
         self.playerCapture = None
         self.stoneRemovedCount = 0
 
@@ -79,16 +71,12 @@ class ComputerPlayer():
         self.window.playerTwoTimer.setText("00:00:00")
 
     def startTurn(self):
-        if self.stonePlacedCount >= 60:
-            return
         self.turnTime.start()
         self.startTime = time()
         x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False)
         self.turnTime.stop()
         if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) == None:
             return
-        self.stonePlacedCount += 1
-        self.stonePlacedLabel.setText(str(self.stonePlacedCount) + "/60")
         self.playerCapture.setText(str(self.stoneRemovedCount) + "/10")
         self.window.gameManager.playerTurn = not self.window.gameManager.playerTurn
 
@@ -149,12 +137,6 @@ class GameBoard():
             self.window.layoutWidget.unsetCursor()
             windowBuilding.winDraw(self.window, 1, color)
             return True
-        if self.isDraw():
-            self.window.gameManager.gameBoard.clearHint()
-            self.window.gameManager.end()
-            self.window.layoutWidget.unsetCursor()
-            windowBuilding.winDraw(self.window, 0, color)
-            return True
         self.window.update()
         return True
 
@@ -188,10 +170,10 @@ class GameBoard():
         self.placedHint = []
 
     def isValidMove(self, x, y, color):
-        if self.window.gameManager.turnCount == 0:
-            if x == 9 and y == 9:
-                return True
-            return False
+        # if self.window.gameManager.turnCount == 0:
+        #     if x == 9 and y == 9:
+        #         return True
+        #     return False
         if self.window.gameManager.rules.isWinner != 0:
             ret = self.window.gameManager.rules.getValidPoints(self.grid, color)
             for validX, validY in ret:
@@ -239,18 +221,12 @@ class GameBoard():
                                 return (x, y), (x + n, y - n)
         return None, None
 
-    def isDraw(self):
-        if self.window.gameManager.player1.stonePlacedCount >= 60 or self.window.gameManager.player2.stonePlacedCount >= 60:
-            return True
-        return False
-
 class GameManager():
     def __init__(self, window, option, hintButtonBool):
         self.isPlayer1Turn = True if randint(0, 1) == 0 else False
         self.player1 = HumanPlayer(window, 1 if self.isPlayer1Turn == True else 2)
         self.player1.timerText = window.playerOneTimer
         self.player1.colorLabel = window.playerOneLabel
-        self.player1.stonePlacedLabel = window.player1StoneCount
         self.player1.playerCapture = window.player1Capture
         self.options = option
         if self.options.gameMode == "PVE":
@@ -259,14 +235,11 @@ class GameManager():
             self.player2 = HumanPlayer(window, 1 if self.isPlayer1Turn == False else 2)
             self.player2.timerText = window.playerTwoTimer
             self.player2.colorLabel = window.playerTwoLabel
-        self.player2.stonePlacedLabel = window.player2StoneCount
         self.player2.playerCapture = window.player2Capture
         self.hintButtonBool = hintButtonBool
         self.window = window
         self.window.playerOneTimer.setText("00:00:00")
         self.window.playerTwoTimer.setText("00:00:00")
-        self.window.player1StoneCount.setText("0/60")
-        self.window.player2StoneCount.setText("0/60")
         self.window.player1Capture.setText("0/10")
         self.window.player1Capture.setText("0/10")
         self.gameBoard = GameBoard(window)
