@@ -48,12 +48,6 @@ def setFontShadow(window):
     effect.setBlurRadius(0)
     effect.setColor(QtGui.QColor(60, 17, 3))
     effect.setOffset(3, -3)
-    window.player1StoneCount.setGraphicsEffect(effect)
-
-    effect = QtWidgets.QGraphicsDropShadowEffect()
-    effect.setBlurRadius(0)
-    effect.setColor(QtGui.QColor(60, 17, 3))
-    effect.setOffset(3, -3)
     window.player1Capture.setGraphicsEffect(effect)
     window.player1Capture.hide()
     
@@ -68,12 +62,6 @@ def setFontShadow(window):
     effect.setColor(QtGui.QColor(60, 17, 3))
     effect.setOffset(3, -3)
     window.playerTwoTimer.setGraphicsEffect(effect)
-
-    effect = QtWidgets.QGraphicsDropShadowEffect()
-    effect.setBlurRadius(0)
-    effect.setColor(QtGui.QColor(60, 17, 3))
-    effect.setOffset(3, -3)
-    window.player2StoneCount.setGraphicsEffect(effect)
 
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)

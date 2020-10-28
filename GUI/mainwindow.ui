@@ -2005,42 +2005,6 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="player1StoneCount">
-    <property name="geometry">
-     <rect>
-      <x>1360</x>
-      <y>155</y>
-      <width>101</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 255, 0);
-color:rgb(209, 168, 101);
-font:30pt  &quot;SF Wasabi&quot;;</string>
-    </property>
-    <property name="text">
-     <string>0/60</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="player2StoneCount">
-    <property name="geometry">
-     <rect>
-      <x>1360</x>
-      <y>300</y>
-      <width>101</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 255, 0);
-color:rgb(209, 168, 101);
-font:30pt  &quot;SF Wasabi&quot;;</string>
-    </property>
-    <property name="text">
-     <string>0/60</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="winOrDrawLabel">
     <property name="geometry">
      <rect>
@@ -2120,8 +2084,6 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
    <zorder>ruleLabel4</zorder>
    <zorder>gameTimer</zorder>
    <zorder>playerTurnEffect</zorder>
-   <zorder>player1StoneCount</zorder>
-   <zorder>player2StoneCount</zorder>
    <zorder>winOrDrawLabel</zorder>
    <zorder>player1Capture</zorder>
    <zorder>player2Capture</zorder>
