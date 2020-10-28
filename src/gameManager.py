@@ -174,6 +174,7 @@ class GameBoard():
         #     if x == 9 and y == 9:
         #         return True
         #     return False
+        self.window.gameManager.rules.doubleThreeRule(self.grid, x, y, color)
         if self.window.gameManager.rules.isWinner != 0:
             ret = self.window.gameManager.rules.getValidPoints(self.grid, color)
             for validX, validY in ret:
