@@ -1,3 +1,4 @@
+import pathlib
 from time import time
 from random import randint
 from PyQt5 import QtGui, QtCore, QtWidgets
@@ -16,9 +17,9 @@ class HumanPlayer():
         self.timerText = None
         self.startTime = 0.0
         if color == 1:
-            self.cursor = QtGui.QCursor(QtGui.QPixmap("ressources/pictures/blackStone.png"))
+            self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/blackStone.png"))))
         else:
-            self.cursor = QtGui.QCursor(QtGui.QPixmap("ressources/pictures/whiteStone.png"))
+            self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/whiteStone.png"))))
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.timerText))
         self.playerCapture = None
         self.stoneRemovedCount = 0
@@ -112,10 +113,10 @@ class GameBoard():
         dropPoint = self.window.boardGrid.itemAtPosition(scaledX, scaledY)
         if color == 1:
             self.grid[scaledX, scaledY] = 1
-            dropPoint.widget().setPixmap(QtGui.QPixmap("ressources/pictures/blackStone.png"))
+            dropPoint.widget().setPixmap(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/blackStone.png"))))
         else:
             self.grid[scaledX, scaledY] = 2
-            dropPoint.widget().setPixmap(QtGui.QPixmap("ressources/pictures/whiteStone.png"))
+            dropPoint.widget().setPixmap(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/whiteStone.png"))))
         self.window.gameManager.turnCount += 1
         self.placedPoint.append(dropPoint)
         if 'Capture' in self.window.option.rulesSet:
@@ -146,9 +147,9 @@ class GameBoard():
         dropPoint = self.window.boardGrid.itemAtPosition(x, y)
         img = None
         if color == 1:
-            img = QtGui.QPixmap("ressources/pictures/blackStone.png")
+            img = QtGui.QPixmap(str(pathlib.Path("ressources/pictures/blackStone.png")))
         else:
-            img = QtGui.QPixmap("ressources/pictures/whiteStone.png")
+            img = QtGui.QPixmap(str(pathlib.Path("ressources/pictures/whiteStone.png")))
         p = QtGui.QPainter()
         p.begin(img)
         p.setCompositionMode(QtGui.QPainter.CompositionMode_DestinationIn)

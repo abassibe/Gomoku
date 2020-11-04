@@ -1,3 +1,4 @@
+import pathlib
 import sys
 import PyQt5
 from PyQt5.QtGui import *
@@ -18,7 +19,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.isBlackTurn = True
         self.local = "en_EN"
-        uic.loadUi("GUI/mainwindow.ui", self)
+        uic.loadUi(str(pathlib.Path("GUI/mainwindow.ui")), self)
         self.option = options.Options()
         windowBuilding.parseTranslationFile()
         self.gameManager = None
@@ -62,7 +63,7 @@ def getOptionsSet(targetedOption=[]):
         toReturn = []
         for item in targetedOption:
             try:
-                toReturn.append(option.__getattribute__(item))
+                toReturn.append(window.option.__getattribute__(item))
             except:
                 exit("Unknown option: " + item)
         return toReturn
