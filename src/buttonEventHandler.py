@@ -1,3 +1,4 @@
+import pathlib
 from time import time
 from PyQt5 import uic, QtWidgets, QtGui, QtCore
 import options
@@ -19,7 +20,7 @@ def optionsEvent(window, option):
     window.optionsButton.setGraphicsEffect(effect)
     window.optionsButton.setGeometry(1129, 927, 51, 51)
 
-    dialog = uic.loadUi("GUI/dialog.ui")
+    dialog = uic.loadUi(str(pathlib.Path("GUI/dialog.ui")))
     dialog.ruleCheckbox1.setEnabled(False)
     windowBuilding.dialogTranslate(dialog, option.langage)
     if option.gameMode == "PVE":

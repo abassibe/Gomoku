@@ -1,3 +1,4 @@
+import pathlib
 from time import time
 from PyQt5 import QtWidgets, QtGui, QtCore
 import buttonEventHandler
@@ -13,6 +14,8 @@ p2Win = "White Win"
 draw = "Draw"
 
 def setFontShadow(window):
+    fontDB = QtGui.QFontDatabase()
+    fontDB.addApplicationFont(str(pathlib.Path("ressources/font/SFWasabi.ttf")))
     window.playerTurnEffect.hide()
     window.playerTurnEffect.setStyleSheet("background-color:rgba(0, 0, 0, 0)")
     window.winOrDrawLabel.hide()
@@ -240,7 +243,7 @@ def winDraw(window, isWin, player):
 
 
 def parseTranslationFile():
-    f = open("local/en_EN")
+    f = open(str(pathlib.Path("local/en_EN")))
     tmp = []
     toFill = {}
     for line in f:
@@ -256,7 +259,7 @@ def parseTranslationFile():
             tmp.append(arg)
         toFill[splited[0]] = tmp
         tmp = []
-    f = open("local/fr_FR")
+    f = open(str(pathlib.Path("local/fr_FR")))
     tmp = []
     toFill = {}
     for line in f:
