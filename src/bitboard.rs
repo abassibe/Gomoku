@@ -19,8 +19,24 @@ pub enum Direction {
     SW,
     All
 }
+
+// TODO: Implement trait IntoIterator/Iterator
+// Should lead to one of the for Direction:
+//  - Direction::W
+//  - Direction::N
+//  - Direction::NE
+//  - Direction::NW
+// repectively.
+pub enum Axis {
+    Horizontal,
+    Vertical,
+    DiagUpRight,
+    DiagUpLeft
+}
+
 // TODO: Implement trait std::fmt::Display
 // TODO: Implement trait Index
+// TODO: Implement trait Eq/PartialEq
 // TODO: Implement method to get/set one or several bits by index
 // TODO: Implement method to get/set one or several bits by coordonate (X, Y flatten to index then call previous method above)
 #[derive(Debug, Copy, Clone)]
