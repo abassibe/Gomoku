@@ -1,4 +1,7 @@
-use std::mem::size_of;
+use std::{
+    mem::size_of,
+    ops::{BitAnd, BitOr, BitXor, Shl, Shr}
+};
 
 const BITS_IN_U128: usize = size_of::<u128>() * 8;
 
@@ -15,7 +18,70 @@ impl Default for BitBoard {
 }
 
 impl Shl<u32> for BitBoard {
-    
+    type Output = Self;
+
+    fn shl(self, rhs: u32) -> Self::Output {
+        self.shift_left(rhs as usize)
+    }
+}
+
+impl Shl<i32> for BitBoard {
+    type Output = Self;
+
+    fn shl(self, rhs: i32) -> Self::Output {
+        if rhs.is_negative() {
+            self.shift_right(rhs.abs() as usize)
+        } else {
+            self.shift_left(rhs as usize)
+        }
+    }
+}
+
+impl Shr<u32> for BitBoard {
+    type Output = Self;
+
+    fn shr(self, rhs: u32) -> Self::Output {
+        self.shift_right(rhs as usize)
+    }
+}
+
+impl Shr<i32> for BitBoard {
+    type Output = Self;
+
+    fn shr(self, rhs: i32) -> Self::Output {
+        if rhs.is_negative() {
+            self.shift_left(rhs.abs() as usize)
+        } else {
+            self.shift_right(rhs as usize)
+        }
+    }
+}
+
+impl BitOr for BitBoard {
+    type Output = Self;
+
+    #[allow(unused)]
+    fn bitor(self, rhs: Self) -> Self::Output {
+        unimplemented!();
+    }
+}
+
+impl BitXor for BitBoard {
+    type Output = Self;
+
+    #[allow(unused)]
+    fn bitxor(self, rhs: Self) -> Self::Output {
+        unimplemented!();
+    }
+}
+
+impl BitAnd for BitBoard {
+    type Output = Self;
+
+    #[allow(unused)]
+    fn bitand(self, rhs: Self) -> Self::Output {
+        unimplemented!();
+    }
 }
 
 impl BitBoard {
@@ -187,6 +253,8 @@ mod tests {
         // Assert
         assert_eq!(expected.b, result.b);
     }
+
+    
 
     #[test]
     fn test_bitshift_right_by_4_on_bitboard() {
