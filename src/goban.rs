@@ -31,6 +31,12 @@ impl Goban
 
     pub fn list_moves(&self) -> BitBoard
     {
+        !(self.enemy | self.player)
+    }
+
+    // TODO: Neighbour layering
+    pub fn list_neighbours(&self) -> BitBoard
+    {
         (self.enemy | self.player).dilate(Direction::All) & BitBoard::empty()
     }
 
