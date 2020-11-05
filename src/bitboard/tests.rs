@@ -197,3 +197,5 @@ fn test_bitshift_right_by_max_on_bitboard() {
     // Assert
     assert_eq!(expected.b, result.b);
 }
+
+// TODO: Add tests for AxisIterator here
