@@ -8,6 +8,7 @@ use std::{
 
 const BITS_IN_U128: usize = size_of::<u128>() * 8;
 
+#[derive(Debug, Copy, Clone)]
 pub enum Direction {
     N,
     S,
