@@ -12,17 +12,9 @@ const BSIZE: u16 = 361;
 #[derive(Clone, Debug)]
 pub struct Goban
 {
-    white: BitBoard,
-    black: BitBoard,
+    player: BitBoard,
+    enemy: BitBoard,
     p_color:u8,
-}
-
-impl std::ops::Index<(usize, usize)> for Goban {
-    type Output = u8;
-
-    fn index(&self, (x, y): (usize, usize)) -> &Self::Output {
-        &self.grid[BWIDTH as usize * y + x]
-    }
 }
 
 impl Goban
@@ -31,16 +23,44 @@ impl Goban
     {
         Self
         {
-            white,
-            black,
+            player: white,
+            enemy: black,
             p_color
         }
     }
 
     pub fn list_moves(&self) -> BitBoard
     {
+        (self.enemy | self.player).dilate(Direction::All) & BitBoard::empty()
+    }
 
-        unimplemented!()
+    pub fn line_detection(&self) -> u16
+    {
+        let mut bits: BitBoard;
+        let mut total: u16 = 0;
+        let mut len: u16;
+
+        for dir in [Direction::NE, Direction::N, Direction::W, Direction::NW].iter()
+        {
+	        bits = self.player;
+            len = 0;
+            while !bits.is_empty()
+            {
+                bits = bits.erode(*dir);
+                len += 1;
+                if len == 5 {
+                    len = 5000;
+                    break;
+                }
+            }
+            total += len;
+        }
+	    total
+    }
+
+    pub fn get_heuristic(&self) -> i64
+    {
+       unimplemented!()
     }
 }
 
