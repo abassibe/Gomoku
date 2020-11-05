@@ -220,6 +220,26 @@ impl BitBoard {
 
     // TODO: Missing doc here
     pub fn shift_direction(&self, direction: Direction) -> Self {
-        unimplemented!()
+        match direction {
+            // TODO: Finish this implementation.
+            Direction::N => {}
+            Direction::S => {}
+            Direction::E => {}
+            Direction::W => {}
+            Direction::NE => {}
+            Direction::NW => {}
+            Direction::SE => {}
+            Direction::SW => self.shift_left(by)
+            Direction::All => {
+                let mut result = Self::default();
+
+                for d in DirectionIterator::new() {
+                    // TODO: Replace this `= result` with a `|=` when OrAssign will be implemented
+                    result = result | self.shift_direction(d);
+                }
+
+                result
+            }
+        }
     }
 }
