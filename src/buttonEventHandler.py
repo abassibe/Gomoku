@@ -18,7 +18,7 @@ def optionsEvent(window, option):
     effect.setColor(QtGui.QColor(0, 0, 0, 150))
     effect.setOffset(-5, -5)
     window.optionsButton.setGraphicsEffect(effect)
-    window.optionsButton.setGeometry(1129, 927, 51, 51)
+    window.optionsButton.setGeometry(880, 740, 30, 30)
 
     dialog = uic.loadUi(str(pathlib.Path("GUI/dialog.ui")))
     dialog.ruleCheckbox1.setEnabled(False)
@@ -47,7 +47,7 @@ def optionsEvent(window, option):
     effect.setColor(QtGui.QColor(0, 0, 0, 90))
     effect.setOffset(-10, -10)
     window.optionsButton.setGraphicsEffect(effect)
-    window.optionsButton.setGeometry(1129, 927, 61, 61)
+    window.optionsButton.setGeometry(880, 740, 40, 40)
 
 
 def hintEvent(hintButton, window):
@@ -58,7 +58,7 @@ def hintEvent(hintButton, window):
         effect.setColor(QtGui.QColor(0, 0, 0, 120))
         effect.setOffset(-7, -7)
         hintButton.setGraphicsEffect(effect)
-        hintButton.setGeometry(60, 980, 235, 55)
+        hintButton.setGeometry(40, 770, 180, 45)
         _hintButtonBool = True
         color = None
         if window.gameManager and window.gameManager.gameRuning == True:
@@ -72,7 +72,7 @@ def hintEvent(hintButton, window):
         effect.setColor(QtGui.QColor(0, 0, 0, 90))
         effect.setOffset(-10, -10)
         hintButton.setGraphicsEffect(effect)
-        hintButton.setGeometry(60, 980, 241, 61)
+        hintButton.setGeometry(40, 770, 200, 50)
         _hintButtonBool = False
         if window.gameManager:
             window.gameManager.gameBoard.clearHint()
@@ -84,7 +84,7 @@ def releaseGUButton(window, effect):
     effect.setColor(QtGui.QColor(0, 0, 0, 90))
     effect.setOffset(-10, -10)
     window.giveUpButton.setGraphicsEffect(effect)
-    window.giveUpButton.setGeometry(400, 980, 241, 61)
+    window.giveUpButton.setGeometry(310, 770, 200, 50)
 
 
 def giveUpEvent(window):
@@ -100,14 +100,14 @@ def giveUpEvent(window):
     effect.setColor(QtGui.QColor(0, 0, 0, 150))
     effect.setOffset(-7, -7)
     window.giveUpButton.setGraphicsEffect(effect)
-    window.giveUpButton.setGeometry(400, 980, 235, 55)
+    window.giveUpButton.setGeometry(310, 770, 180, 45)
 
 
 def releaseNGButton(window, effect):
     effect.setColor(QtGui.QColor(0, 0, 0, 90))
     effect.setOffset(-10, -10)
     window.newGameButton.setGraphicsEffect(effect)
-    window.newGameButton.setGeometry(750, 980, 241, 61)
+    window.newGameButton.setGeometry(580, 770, 200, 50)
 
 
 def newGameEvent(window, option):
@@ -126,5 +126,5 @@ def newGameEvent(window, option):
     effect.setColor(QtGui.QColor(0, 0, 0, 150))
     effect.setOffset(-7, -7)
     window.newGameButton.setGraphicsEffect(effect)
-    window.newGameButton.setGeometry(750, 980, 235, 55)
+    window.newGameButton.setGeometry(580, 770, 180, 45)
     window.gameManager.start()
