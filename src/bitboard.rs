@@ -212,4 +212,28 @@ impl BitBoard {
     pub fn erode(&self, dir: Direction) -> Self {
         unimplemented!()
     }
+
+    /// Returns `true` if **no** bits are set to 1 in the bitboard.
+    /// Returns `false` otherwise.
+    pub fn is_empty(&self) -> bool {
+        for x in &self.b {
+            if *x != 0 {
+                return false;
+            }
+        }
+
+        true
+    }
+
+    /// Returns `true` if **every** bits are set to 1 in the bitboard.
+    /// Returns `false` otherwise.
+    pub fn is_full(&self) -> bool {
+        for x in &self.b {
+            if *x != u128::MAX {
+                return false
+            }
+        }
+
+        true
+    }
 }
