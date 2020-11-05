@@ -188,12 +188,12 @@ impl BitBoard {
     }
 
     // Methods for dilation
-    pub fn dilation(&self, dir: Direction) -> Self {
+    pub fn dilate(&self, dir: Direction) -> Self {
         unimplemented!()
     }
 
     // Methods for erosion
-    pub fn erosion(&self, dir: Direction) -> Self {
+    pub fn erode(&self, dir: Direction) -> Self {
         unimplemented!()
     }
 }
