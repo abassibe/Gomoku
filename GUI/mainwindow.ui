@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1500</width>
-    <height>1050</height>
+    <width>1199</width>
+    <height>839</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1500</width>
-    <height>1050</height>
+    <width>750</width>
+    <height>525</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -35,10 +35,10 @@
    <widget class="QLabel" name="gameBoard">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>140</y>
-      <width>760</width>
-      <height>760</height>
+      <x>100</x>
+      <y>87</y>
+      <width>620</width>
+      <height>620</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -77,8 +77,8 @@
      <rect>
       <x>-30</x>
       <y>-50</y>
-      <width>1101</width>
-      <height>1141</height>
+      <width>880</width>
+      <height>901</height>
      </rect>
     </property>
     <property name="text">
@@ -94,16 +94,46 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>140</y>
-      <width>761</width>
-      <height>761</height>
+      <x>100</x>
+      <y>87</y>
+      <width>620</width>
+      <height>620</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="boardGrid">
      <property name="spacing">
       <number>0</number>
      </property>
+     <item row="10" column="4">
+      <widget class="QLabel" name="05x11"/>
+     </item>
+     <item row="10" column="2">
+      <widget class="QLabel" name="03x11"/>
+     </item>
+     <item row="10" column="3">
+      <widget class="QLabel" name="04x11"/>
+     </item>
+     <item row="1" column="13">
+      <widget class="QLabel" name="14x02"/>
+     </item>
+     <item row="1" column="14">
+      <widget class="QLabel" name="15x02"/>
+     </item>
+     <item row="1" column="15">
+      <widget class="QLabel" name="16x02"/>
+     </item>
+     <item row="1" column="16">
+      <widget class="QLabel" name="17x02"/>
+     </item>
+     <item row="1" column="18">
+      <widget class="QLabel" name="19x02"/>
+     </item>
+     <item row="1" column="17">
+      <widget class="QLabel" name="18x02"/>
+     </item>
+     <item row="0" column="13">
+      <widget class="QLabel" name="14x01"/>
+     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="01x01"/>
      </item>
@@ -116,11 +146,11 @@
      <item row="0" column="3">
       <widget class="QLabel" name="04x01"/>
      </item>
-     <item row="0" column="4">
-      <widget class="QLabel" name="05x01"/>
-     </item>
      <item row="0" column="5">
       <widget class="QLabel" name="06x01"/>
+     </item>
+     <item row="0" column="4">
+      <widget class="QLabel" name="05x01"/>
      </item>
      <item row="0" column="6">
       <widget class="QLabel" name="07x01"/>
@@ -128,23 +158,20 @@
      <item row="0" column="7">
       <widget class="QLabel" name="08x01"/>
      </item>
-     <item row="0" column="8">
-      <widget class="QLabel" name="09x01"/>
-     </item>
      <item row="0" column="9">
       <widget class="QLabel" name="10x01"/>
+     </item>
+     <item row="0" column="8">
+      <widget class="QLabel" name="09x01"/>
      </item>
      <item row="0" column="10">
       <widget class="QLabel" name="11x01"/>
      </item>
-     <item row="0" column="11">
-      <widget class="QLabel" name="12x01"/>
-     </item>
      <item row="0" column="12">
       <widget class="QLabel" name="13x01"/>
      </item>
-     <item row="0" column="13">
-      <widget class="QLabel" name="14x01"/>
+     <item row="0" column="11">
+      <widget class="QLabel" name="12x01"/>
      </item>
      <item row="0" column="14">
       <widget class="QLabel" name="15x01"/>
@@ -179,11 +206,11 @@
      <item row="1" column="5">
       <widget class="QLabel" name="06x02"/>
      </item>
-     <item row="1" column="6">
-      <widget class="QLabel" name="07x02"/>
-     </item>
      <item row="1" column="7">
       <widget class="QLabel" name="08x02"/>
+     </item>
+     <item row="1" column="6">
+      <widget class="QLabel" name="07x02"/>
      </item>
      <item row="1" column="8">
       <widget class="QLabel" name="09x02"/>
@@ -194,365 +221,32 @@
      <item row="1" column="10">
       <widget class="QLabel" name="11x02"/>
      </item>
-     <item row="1" column="11">
-      <widget class="QLabel" name="12x02"/>
-     </item>
      <item row="1" column="12">
       <widget class="QLabel" name="13x02"/>
      </item>
-     <item row="1" column="13">
-      <widget class="QLabel" name="14x02"/>
+     <item row="1" column="11">
+      <widget class="QLabel" name="12x02"/>
      </item>
-     <item row="1" column="14">
-      <widget class="QLabel" name="15x02"/>
+     <item row="10" column="0">
+      <widget class="QLabel" name="01x11"/>
      </item>
-     <item row="1" column="15">
-      <widget class="QLabel" name="16x02"/>
+     <item row="10" column="1">
+      <widget class="QLabel" name="02x11"/>
      </item>
-     <item row="1" column="16">
-      <widget class="QLabel" name="17x02"/>
+     <item row="9" column="14">
+      <widget class="QLabel" name="15x10"/>
      </item>
-     <item row="1" column="17">
-      <widget class="QLabel" name="18x02"/>
+     <item row="9" column="15">
+      <widget class="QLabel" name="16x10"/>
      </item>
-     <item row="1" column="18">
-      <widget class="QLabel" name="19x02"/>
+     <item row="9" column="16">
+      <widget class="QLabel" name="17x10"/>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="01x03"/>
+     <item row="9" column="17">
+      <widget class="QLabel" name="18x10"/>
      </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="02x03"/>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="03x03"/>
-     </item>
-     <item row="2" column="3">
-      <widget class="QLabel" name="04x03"/>
-     </item>
-     <item row="2" column="4">
-      <widget class="QLabel" name="05x03"/>
-     </item>
-     <item row="2" column="5">
-      <widget class="QLabel" name="06x03"/>
-     </item>
-     <item row="2" column="6">
-      <widget class="QLabel" name="07x03"/>
-     </item>
-     <item row="2" column="7">
-      <widget class="QLabel" name="08x03"/>
-     </item>
-     <item row="2" column="8">
-      <widget class="QLabel" name="09x03"/>
-     </item>
-     <item row="2" column="9">
-      <widget class="QLabel" name="10x03"/>
-     </item>
-     <item row="2" column="10">
-      <widget class="QLabel" name="11x03"/>
-     </item>
-     <item row="2" column="11">
-      <widget class="QLabel" name="12x03"/>
-     </item>
-     <item row="2" column="12">
-      <widget class="QLabel" name="13x03"/>
-     </item>
-     <item row="2" column="13">
-      <widget class="QLabel" name="14x03"/>
-     </item>
-     <item row="2" column="14">
-      <widget class="QLabel" name="15x03"/>
-     </item>
-     <item row="2" column="15">
-      <widget class="QLabel" name="16x03"/>
-     </item>
-     <item row="2" column="16">
-      <widget class="QLabel" name="17x03"/>
-     </item>
-     <item row="2" column="17">
-      <widget class="QLabel" name="18x03"/>
-     </item>
-     <item row="2" column="18">
-      <widget class="QLabel" name="19x03"/>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="01x04"/>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLabel" name="02x04"/>
-     </item>
-     <item row="3" column="2">
-      <widget class="QLabel" name="03x04"/>
-     </item>
-     <item row="3" column="3">
-      <widget class="QLabel" name="04x04"/>
-     </item>
-     <item row="3" column="4">
-      <widget class="QLabel" name="05x04"/>
-     </item>
-     <item row="3" column="5">
-      <widget class="QLabel" name="06x04"/>
-     </item>
-     <item row="3" column="6">
-      <widget class="QLabel" name="07x04"/>
-     </item>
-     <item row="3" column="7">
-      <widget class="QLabel" name="08x04"/>
-     </item>
-     <item row="3" column="8">
-      <widget class="QLabel" name="09x04"/>
-     </item>
-     <item row="3" column="9">
-      <widget class="QLabel" name="10x04"/>
-     </item>
-     <item row="3" column="10">
-      <widget class="QLabel" name="11x04"/>
-     </item>
-     <item row="3" column="11">
-      <widget class="QLabel" name="12x04"/>
-     </item>
-     <item row="3" column="12">
-      <widget class="QLabel" name="13x04"/>
-     </item>
-     <item row="3" column="13">
-      <widget class="QLabel" name="14x04"/>
-     </item>
-     <item row="3" column="14">
-      <widget class="QLabel" name="15x04"/>
-     </item>
-     <item row="3" column="15">
-      <widget class="QLabel" name="16x04"/>
-     </item>
-     <item row="3" column="16">
-      <widget class="QLabel" name="17x04"/>
-     </item>
-     <item row="3" column="17">
-      <widget class="QLabel" name="18x04"/>
-     </item>
-     <item row="3" column="18">
-      <widget class="QLabel" name="19x04"/>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="01x05"/>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLabel" name="02x05"/>
-     </item>
-     <item row="4" column="2">
-      <widget class="QLabel" name="03x05"/>
-     </item>
-     <item row="4" column="3">
-      <widget class="QLabel" name="04x05"/>
-     </item>
-     <item row="4" column="4">
-      <widget class="QLabel" name="05x05"/>
-     </item>
-     <item row="4" column="5">
-      <widget class="QLabel" name="06x05"/>
-     </item>
-     <item row="4" column="6">
-      <widget class="QLabel" name="07x05"/>
-     </item>
-     <item row="4" column="7">
-      <widget class="QLabel" name="08x05"/>
-     </item>
-     <item row="4" column="8">
-      <widget class="QLabel" name="09x05"/>
-     </item>
-     <item row="4" column="9">
-      <widget class="QLabel" name="10x05"/>
-     </item>
-     <item row="4" column="10">
-      <widget class="QLabel" name="11x05"/>
-     </item>
-     <item row="4" column="11">
-      <widget class="QLabel" name="12x05"/>
-     </item>
-     <item row="4" column="12">
-      <widget class="QLabel" name="13x05"/>
-     </item>
-     <item row="4" column="13">
-      <widget class="QLabel" name="14x05"/>
-     </item>
-     <item row="4" column="14">
-      <widget class="QLabel" name="15x05"/>
-     </item>
-     <item row="4" column="15">
-      <widget class="QLabel" name="16x05"/>
-     </item>
-     <item row="4" column="16">
-      <widget class="QLabel" name="17x05"/>
-     </item>
-     <item row="4" column="17">
-      <widget class="QLabel" name="18x05"/>
-     </item>
-     <item row="4" column="18">
-      <widget class="QLabel" name="19x05"/>
-     </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="01x06"/>
-     </item>
-     <item row="5" column="1">
-      <widget class="QLabel" name="02x06"/>
-     </item>
-     <item row="5" column="2">
-      <widget class="QLabel" name="03x06"/>
-     </item>
-     <item row="5" column="3">
-      <widget class="QLabel" name="04x06"/>
-     </item>
-     <item row="5" column="4">
-      <widget class="QLabel" name="05x06"/>
-     </item>
-     <item row="5" column="5">
-      <widget class="QLabel" name="06x06"/>
-     </item>
-     <item row="5" column="6">
-      <widget class="QLabel" name="07x06"/>
-     </item>
-     <item row="5" column="7">
-      <widget class="QLabel" name="08x06"/>
-     </item>
-     <item row="5" column="8">
-      <widget class="QLabel" name="09x06"/>
-     </item>
-     <item row="5" column="9">
-      <widget class="QLabel" name="10x06"/>
-     </item>
-     <item row="5" column="10">
-      <widget class="QLabel" name="11x06"/>
-     </item>
-     <item row="5" column="11">
-      <widget class="QLabel" name="12x06"/>
-     </item>
-     <item row="5" column="12">
-      <widget class="QLabel" name="13x06"/>
-     </item>
-     <item row="5" column="13">
-      <widget class="QLabel" name="14x06"/>
-     </item>
-     <item row="5" column="14">
-      <widget class="QLabel" name="15x06"/>
-     </item>
-     <item row="5" column="15">
-      <widget class="QLabel" name="16x06"/>
-     </item>
-     <item row="5" column="16">
-      <widget class="QLabel" name="17x06"/>
-     </item>
-     <item row="5" column="17">
-      <widget class="QLabel" name="18x06"/>
-     </item>
-     <item row="5" column="18">
-      <widget class="QLabel" name="19x06"/>
-     </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="01x07"/>
-     </item>
-     <item row="6" column="1">
-      <widget class="QLabel" name="02x07"/>
-     </item>
-     <item row="6" column="2">
-      <widget class="QLabel" name="03x07"/>
-     </item>
-     <item row="6" column="3">
-      <widget class="QLabel" name="04x07"/>
-     </item>
-     <item row="6" column="4">
-      <widget class="QLabel" name="05x07"/>
-     </item>
-     <item row="6" column="5">
-      <widget class="QLabel" name="06x07"/>
-     </item>
-     <item row="6" column="6">
-      <widget class="QLabel" name="07x07"/>
-     </item>
-     <item row="6" column="7">
-      <widget class="QLabel" name="08x07"/>
-     </item>
-     <item row="6" column="8">
-      <widget class="QLabel" name="09x07"/>
-     </item>
-     <item row="6" column="9">
-      <widget class="QLabel" name="10x07"/>
-     </item>
-     <item row="6" column="10">
-      <widget class="QLabel" name="11x07"/>
-     </item>
-     <item row="6" column="11">
-      <widget class="QLabel" name="12x07"/>
-     </item>
-     <item row="6" column="12">
-      <widget class="QLabel" name="13x07"/>
-     </item>
-     <item row="6" column="13">
-      <widget class="QLabel" name="14x07"/>
-     </item>
-     <item row="6" column="14">
-      <widget class="QLabel" name="15x07"/>
-     </item>
-     <item row="6" column="15">
-      <widget class="QLabel" name="16x07"/>
-     </item>
-     <item row="6" column="16">
-      <widget class="QLabel" name="17x07"/>
-     </item>
-     <item row="6" column="17">
-      <widget class="QLabel" name="18x07"/>
-     </item>
-     <item row="6" column="18">
-      <widget class="QLabel" name="19x07"/>
-     </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="01x08"/>
-     </item>
-     <item row="7" column="1">
-      <widget class="QLabel" name="02x08"/>
-     </item>
-     <item row="7" column="2">
-      <widget class="QLabel" name="03x08"/>
-     </item>
-     <item row="7" column="3">
-      <widget class="QLabel" name="04x08"/>
-     </item>
-     <item row="7" column="4">
-      <widget class="QLabel" name="05x08"/>
-     </item>
-     <item row="7" column="5">
-      <widget class="QLabel" name="06x08"/>
-     </item>
-     <item row="7" column="6">
-      <widget class="QLabel" name="07x08"/>
-     </item>
-     <item row="7" column="7">
-      <widget class="QLabel" name="08x08"/>
-     </item>
-     <item row="7" column="8">
-      <widget class="QLabel" name="09x08"/>
-     </item>
-     <item row="7" column="9">
-      <widget class="QLabel" name="10x08"/>
-     </item>
-     <item row="7" column="10">
-      <widget class="QLabel" name="11x08"/>
-     </item>
-     <item row="7" column="11">
-      <widget class="QLabel" name="12x08"/>
-     </item>
-     <item row="7" column="12">
-      <widget class="QLabel" name="13x08"/>
-     </item>
-     <item row="7" column="13">
-      <widget class="QLabel" name="14x08"/>
-     </item>
-     <item row="7" column="14">
-      <widget class="QLabel" name="15x08"/>
-     </item>
-     <item row="7" column="15">
-      <widget class="QLabel" name="16x08"/>
-     </item>
-     <item row="7" column="16">
-      <widget class="QLabel" name="17x08"/>
+     <item row="9" column="18">
+      <widget class="QLabel" name="19x10"/>
      </item>
      <item row="7" column="17">
       <widget class="QLabel" name="18x08"/>
@@ -659,35 +353,353 @@
      <item row="9" column="13">
       <widget class="QLabel" name="14x10"/>
      </item>
-     <item row="9" column="14">
-      <widget class="QLabel" name="15x10"/>
+     <item row="7" column="14">
+      <widget class="QLabel" name="15x08"/>
      </item>
-     <item row="9" column="15">
-      <widget class="QLabel" name="16x10"/>
+     <item row="7" column="15">
+      <widget class="QLabel" name="16x08"/>
      </item>
-     <item row="9" column="16">
-      <widget class="QLabel" name="17x10"/>
+     <item row="7" column="16">
+      <widget class="QLabel" name="17x08"/>
      </item>
-     <item row="9" column="17">
-      <widget class="QLabel" name="18x10"/>
+     <item row="5" column="12">
+      <widget class="QLabel" name="13x06"/>
      </item>
-     <item row="9" column="18">
-      <widget class="QLabel" name="19x10"/>
+     <item row="5" column="10">
+      <widget class="QLabel" name="11x06"/>
      </item>
-     <item row="10" column="0">
-      <widget class="QLabel" name="01x11"/>
+     <item row="5" column="11">
+      <widget class="QLabel" name="12x06"/>
      </item>
-     <item row="10" column="1">
-      <widget class="QLabel" name="02x11"/>
+     <item row="5" column="13">
+      <widget class="QLabel" name="14x06"/>
      </item>
-     <item row="10" column="2">
-      <widget class="QLabel" name="03x11"/>
+     <item row="5" column="14">
+      <widget class="QLabel" name="15x06"/>
      </item>
-     <item row="10" column="3">
-      <widget class="QLabel" name="04x11"/>
+     <item row="5" column="15">
+      <widget class="QLabel" name="16x06"/>
      </item>
-     <item row="10" column="4">
-      <widget class="QLabel" name="05x11"/>
+     <item row="5" column="16">
+      <widget class="QLabel" name="17x06"/>
+     </item>
+     <item row="5" column="17">
+      <widget class="QLabel" name="18x06"/>
+     </item>
+     <item row="5" column="18">
+      <widget class="QLabel" name="19x06"/>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="01x07"/>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLabel" name="02x07"/>
+     </item>
+     <item row="6" column="2">
+      <widget class="QLabel" name="03x07"/>
+     </item>
+     <item row="6" column="4">
+      <widget class="QLabel" name="05x07"/>
+     </item>
+     <item row="6" column="3">
+      <widget class="QLabel" name="04x07"/>
+     </item>
+     <item row="6" column="5">
+      <widget class="QLabel" name="06x07"/>
+     </item>
+     <item row="6" column="6">
+      <widget class="QLabel" name="07x07"/>
+     </item>
+     <item row="6" column="8">
+      <widget class="QLabel" name="09x07"/>
+     </item>
+     <item row="6" column="7">
+      <widget class="QLabel" name="08x07"/>
+     </item>
+     <item row="6" column="9">
+      <widget class="QLabel" name="10x07"/>
+     </item>
+     <item row="6" column="10">
+      <widget class="QLabel" name="11x07"/>
+     </item>
+     <item row="6" column="11">
+      <widget class="QLabel" name="12x07"/>
+     </item>
+     <item row="6" column="12">
+      <widget class="QLabel" name="13x07"/>
+     </item>
+     <item row="6" column="13">
+      <widget class="QLabel" name="14x07"/>
+     </item>
+     <item row="6" column="14">
+      <widget class="QLabel" name="15x07"/>
+     </item>
+     <item row="6" column="15">
+      <widget class="QLabel" name="16x07"/>
+     </item>
+     <item row="6" column="17">
+      <widget class="QLabel" name="18x07"/>
+     </item>
+     <item row="6" column="16">
+      <widget class="QLabel" name="17x07"/>
+     </item>
+     <item row="6" column="18">
+      <widget class="QLabel" name="19x07"/>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="01x08"/>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLabel" name="02x08"/>
+     </item>
+     <item row="7" column="3">
+      <widget class="QLabel" name="04x08"/>
+     </item>
+     <item row="7" column="2">
+      <widget class="QLabel" name="03x08"/>
+     </item>
+     <item row="7" column="4">
+      <widget class="QLabel" name="05x08"/>
+     </item>
+     <item row="7" column="5">
+      <widget class="QLabel" name="06x08"/>
+     </item>
+     <item row="7" column="6">
+      <widget class="QLabel" name="07x08"/>
+     </item>
+     <item row="7" column="7">
+      <widget class="QLabel" name="08x08"/>
+     </item>
+     <item row="7" column="8">
+      <widget class="QLabel" name="09x08"/>
+     </item>
+     <item row="7" column="9">
+      <widget class="QLabel" name="10x08"/>
+     </item>
+     <item row="7" column="10">
+      <widget class="QLabel" name="11x08"/>
+     </item>
+     <item row="7" column="12">
+      <widget class="QLabel" name="13x08"/>
+     </item>
+     <item row="7" column="11">
+      <widget class="QLabel" name="12x08"/>
+     </item>
+     <item row="7" column="13">
+      <widget class="QLabel" name="14x08"/>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="02x03"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="01x03"/>
+     </item>
+     <item row="2" column="3">
+      <widget class="QLabel" name="04x03"/>
+     </item>
+     <item row="2" column="5">
+      <widget class="QLabel" name="06x03"/>
+     </item>
+     <item row="2" column="4">
+      <widget class="QLabel" name="05x03"/>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLabel" name="03x03"/>
+     </item>
+     <item row="2" column="8">
+      <widget class="QLabel" name="09x03"/>
+     </item>
+     <item row="2" column="7">
+      <widget class="QLabel" name="08x03"/>
+     </item>
+     <item row="2" column="6">
+      <widget class="QLabel" name="07x03"/>
+     </item>
+     <item row="2" column="11">
+      <widget class="QLabel" name="12x03"/>
+     </item>
+     <item row="2" column="9">
+      <widget class="QLabel" name="10x03"/>
+     </item>
+     <item row="2" column="10">
+      <widget class="QLabel" name="11x03"/>
+     </item>
+     <item row="2" column="12">
+      <widget class="QLabel" name="13x03"/>
+     </item>
+     <item row="2" column="14">
+      <widget class="QLabel" name="15x03"/>
+     </item>
+     <item row="2" column="13">
+      <widget class="QLabel" name="14x03"/>
+     </item>
+     <item row="2" column="15">
+      <widget class="QLabel" name="16x03"/>
+     </item>
+     <item row="2" column="17">
+      <widget class="QLabel" name="18x03"/>
+     </item>
+     <item row="2" column="16">
+      <widget class="QLabel" name="17x03"/>
+     </item>
+     <item row="3" column="2">
+      <widget class="QLabel" name="03x04"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="01x04"/>
+     </item>
+     <item row="2" column="18">
+      <widget class="QLabel" name="19x03"/>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLabel" name="02x04"/>
+     </item>
+     <item row="3" column="4">
+      <widget class="QLabel" name="05x04"/>
+     </item>
+     <item row="3" column="5">
+      <widget class="QLabel" name="06x04"/>
+     </item>
+     <item row="3" column="3">
+      <widget class="QLabel" name="04x04"/>
+     </item>
+     <item row="3" column="7">
+      <widget class="QLabel" name="08x04"/>
+     </item>
+     <item row="3" column="6">
+      <widget class="QLabel" name="07x04"/>
+     </item>
+     <item row="3" column="8">
+      <widget class="QLabel" name="09x04"/>
+     </item>
+     <item row="3" column="10">
+      <widget class="QLabel" name="11x04"/>
+     </item>
+     <item row="3" column="11">
+      <widget class="QLabel" name="12x04"/>
+     </item>
+     <item row="3" column="9">
+      <widget class="QLabel" name="10x04"/>
+     </item>
+     <item row="3" column="14">
+      <widget class="QLabel" name="15x04"/>
+     </item>
+     <item row="3" column="13">
+      <widget class="QLabel" name="14x04"/>
+     </item>
+     <item row="3" column="12">
+      <widget class="QLabel" name="13x04"/>
+     </item>
+     <item row="3" column="15">
+      <widget class="QLabel" name="16x04"/>
+     </item>
+     <item row="3" column="17">
+      <widget class="QLabel" name="18x04"/>
+     </item>
+     <item row="3" column="18">
+      <widget class="QLabel" name="19x04"/>
+     </item>
+     <item row="3" column="16">
+      <widget class="QLabel" name="17x04"/>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="02x05"/>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="01x05"/>
+     </item>
+     <item row="4" column="2">
+      <widget class="QLabel" name="03x05"/>
+     </item>
+     <item row="4" column="4">
+      <widget class="QLabel" name="05x05"/>
+     </item>
+     <item row="4" column="3">
+      <widget class="QLabel" name="04x05"/>
+     </item>
+     <item row="4" column="5">
+      <widget class="QLabel" name="06x05"/>
+     </item>
+     <item row="4" column="7">
+      <widget class="QLabel" name="08x05"/>
+     </item>
+     <item row="4" column="8">
+      <widget class="QLabel" name="09x05"/>
+     </item>
+     <item row="4" column="6">
+      <widget class="QLabel" name="07x05"/>
+     </item>
+     <item row="4" column="11">
+      <widget class="QLabel" name="12x05"/>
+     </item>
+     <item row="4" column="10">
+      <widget class="QLabel" name="11x05"/>
+     </item>
+     <item row="4" column="9">
+      <widget class="QLabel" name="10x05"/>
+     </item>
+     <item row="4" column="12">
+      <widget class="QLabel" name="13x05"/>
+     </item>
+     <item row="4" column="13">
+      <widget class="QLabel" name="14x05"/>
+     </item>
+     <item row="4" column="15">
+      <widget class="QLabel" name="16x05"/>
+     </item>
+     <item row="4" column="14">
+      <widget class="QLabel" name="15x05"/>
+     </item>
+     <item row="4" column="16">
+      <widget class="QLabel" name="17x05"/>
+     </item>
+     <item row="4" column="18">
+      <widget class="QLabel" name="19x05"/>
+     </item>
+     <item row="4" column="17">
+      <widget class="QLabel" name="18x05"/>
+     </item>
+     <item row="5" column="2">
+      <widget class="QLabel" name="03x06"/>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLabel" name="02x06"/>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="01x06"/>
+     </item>
+     <item row="5" column="3">
+      <widget class="QLabel" name="04x06"/>
+     </item>
+     <item row="5" column="5">
+      <widget class="QLabel" name="06x06"/>
+     </item>
+     <item row="5" column="4">
+      <widget class="QLabel" name="05x06"/>
+     </item>
+     <item row="5" column="7">
+      <widget class="QLabel" name="08x06"/>
+     </item>
+     <item row="5" column="6">
+      <widget class="QLabel" name="07x06"/>
+     </item>
+     <item row="5" column="9">
+      <widget class="QLabel" name="10x06"/>
+     </item>
+     <item row="5" column="8">
+      <widget class="QLabel" name="09x06"/>
+     </item>
+     <item row="18" column="18">
+      <widget class="QLabel" name="19x19"/>
+     </item>
+     <item row="18" column="16">
+      <widget class="QLabel" name="17x19"/>
+     </item>
+     <item row="18" column="17">
+      <widget class="QLabel" name="18x19"/>
+     </item>
+     <item row="18" column="10">
+      <widget class="QLabel" name="11x19"/>
      </item>
      <item row="10" column="5">
       <widget class="QLabel" name="06x11"/>
@@ -698,20 +710,20 @@
      <item row="10" column="7">
       <widget class="QLabel" name="08x11"/>
      </item>
+     <item row="10" column="10">
+      <widget class="QLabel" name="11x11"/>
+     </item>
      <item row="10" column="8">
       <widget class="QLabel" name="09x11"/>
      </item>
      <item row="10" column="9">
       <widget class="QLabel" name="10x11"/>
      </item>
-     <item row="10" column="10">
-      <widget class="QLabel" name="11x11"/>
+     <item row="10" column="12">
+      <widget class="QLabel" name="13x11"/>
      </item>
      <item row="10" column="11">
       <widget class="QLabel" name="12x11"/>
-     </item>
-     <item row="10" column="12">
-      <widget class="QLabel" name="13x11"/>
      </item>
      <item row="10" column="13">
       <widget class="QLabel" name="14x11"/>
@@ -722,20 +734,20 @@
      <item row="10" column="15">
       <widget class="QLabel" name="16x11"/>
      </item>
-     <item row="10" column="16">
-      <widget class="QLabel" name="17x11"/>
-     </item>
      <item row="10" column="17">
       <widget class="QLabel" name="18x11"/>
      </item>
-     <item row="10" column="18">
-      <widget class="QLabel" name="19x11"/>
+     <item row="10" column="16">
+      <widget class="QLabel" name="17x11"/>
      </item>
      <item row="11" column="0">
       <widget class="QLabel" name="01x12"/>
      </item>
      <item row="11" column="1">
       <widget class="QLabel" name="02x12"/>
+     </item>
+     <item row="10" column="18">
+      <widget class="QLabel" name="19x11"/>
      </item>
      <item row="11" column="2">
       <widget class="QLabel" name="03x12"/>
@@ -755,8 +767,8 @@
      <item row="11" column="7">
       <widget class="QLabel" name="08x12"/>
      </item>
-     <item row="11" column="8">
-      <widget class="QLabel" name="09x12"/>
+     <item row="11" column="11">
+      <widget class="QLabel" name="12x12"/>
      </item>
      <item row="11" column="9">
       <widget class="QLabel" name="10x12"/>
@@ -764,8 +776,8 @@
      <item row="11" column="10">
       <widget class="QLabel" name="11x12"/>
      </item>
-     <item row="11" column="11">
-      <widget class="QLabel" name="12x12"/>
+     <item row="11" column="8">
+      <widget class="QLabel" name="09x12"/>
      </item>
      <item row="11" column="12">
       <widget class="QLabel" name="13x12"/>
@@ -776,35 +788,32 @@
      <item row="11" column="14">
       <widget class="QLabel" name="15x12"/>
      </item>
-     <item row="11" column="15">
-      <widget class="QLabel" name="16x12"/>
-     </item>
      <item row="11" column="16">
       <widget class="QLabel" name="17x12"/>
      </item>
      <item row="11" column="17">
       <widget class="QLabel" name="18x12"/>
      </item>
-     <item row="11" column="18">
-      <widget class="QLabel" name="19x12"/>
-     </item>
-     <item row="12" column="0">
-      <widget class="QLabel" name="01x13"/>
+     <item row="11" column="15">
+      <widget class="QLabel" name="16x12"/>
      </item>
      <item row="12" column="1">
       <widget class="QLabel" name="02x13"/>
      </item>
-     <item row="12" column="2">
-      <widget class="QLabel" name="03x13"/>
+     <item row="12" column="0">
+      <widget class="QLabel" name="01x13"/>
      </item>
-     <item row="12" column="3">
-      <widget class="QLabel" name="04x13"/>
+     <item row="11" column="18">
+      <widget class="QLabel" name="19x12"/>
      </item>
      <item row="12" column="4">
       <widget class="QLabel" name="05x13"/>
      </item>
-     <item row="12" column="5">
-      <widget class="QLabel" name="06x13"/>
+     <item row="12" column="3">
+      <widget class="QLabel" name="04x13"/>
+     </item>
+     <item row="12" column="2">
+      <widget class="QLabel" name="03x13"/>
      </item>
      <item row="12" column="6">
       <widget class="QLabel" name="07x13"/>
@@ -815,14 +824,17 @@
      <item row="12" column="8">
       <widget class="QLabel" name="09x13"/>
      </item>
-     <item row="12" column="9">
-      <widget class="QLabel" name="10x13"/>
+     <item row="12" column="5">
+      <widget class="QLabel" name="06x13"/>
      </item>
      <item row="12" column="10">
       <widget class="QLabel" name="11x13"/>
      </item>
      <item row="12" column="11">
       <widget class="QLabel" name="12x13"/>
+     </item>
+     <item row="12" column="9">
+      <widget class="QLabel" name="10x13"/>
      </item>
      <item row="12" column="12">
       <widget class="QLabel" name="13x13"/>
@@ -833,23 +845,23 @@
      <item row="12" column="14">
       <widget class="QLabel" name="15x13"/>
      </item>
-     <item row="12" column="15">
-      <widget class="QLabel" name="16x13"/>
-     </item>
      <item row="12" column="16">
       <widget class="QLabel" name="17x13"/>
      </item>
      <item row="12" column="17">
       <widget class="QLabel" name="18x13"/>
      </item>
-     <item row="12" column="18">
-      <widget class="QLabel" name="19x13"/>
+     <item row="12" column="15">
+      <widget class="QLabel" name="16x13"/>
+     </item>
+     <item row="13" column="1">
+      <widget class="QLabel" name="02x14"/>
      </item>
      <item row="13" column="0">
       <widget class="QLabel" name="01x14"/>
      </item>
-     <item row="13" column="1">
-      <widget class="QLabel" name="02x14"/>
+     <item row="12" column="18">
+      <widget class="QLabel" name="19x13"/>
      </item>
      <item row="13" column="2">
       <widget class="QLabel" name="03x14"/>
@@ -863,29 +875,29 @@
      <item row="13" column="5">
       <widget class="QLabel" name="06x14"/>
      </item>
-     <item row="13" column="6">
-      <widget class="QLabel" name="07x14"/>
-     </item>
      <item row="13" column="7">
       <widget class="QLabel" name="08x14"/>
      </item>
      <item row="13" column="8">
       <widget class="QLabel" name="09x14"/>
      </item>
+     <item row="13" column="6">
+      <widget class="QLabel" name="07x14"/>
+     </item>
      <item row="13" column="9">
       <widget class="QLabel" name="10x14"/>
-     </item>
-     <item row="13" column="10">
-      <widget class="QLabel" name="11x14"/>
      </item>
      <item row="13" column="11">
       <widget class="QLabel" name="12x14"/>
      </item>
-     <item row="13" column="12">
-      <widget class="QLabel" name="13x14"/>
+     <item row="13" column="10">
+      <widget class="QLabel" name="11x14"/>
      </item>
      <item row="13" column="13">
       <widget class="QLabel" name="14x14"/>
+     </item>
+     <item row="13" column="12">
+      <widget class="QLabel" name="13x14"/>
      </item>
      <item row="13" column="14">
       <widget class="QLabel" name="15x14"/>
@@ -893,23 +905,23 @@
      <item row="13" column="15">
       <widget class="QLabel" name="16x14"/>
      </item>
-     <item row="13" column="16">
-      <widget class="QLabel" name="17x14"/>
-     </item>
      <item row="13" column="17">
       <widget class="QLabel" name="18x14"/>
      </item>
-     <item row="13" column="18">
-      <widget class="QLabel" name="19x14"/>
+     <item row="13" column="16">
+      <widget class="QLabel" name="17x14"/>
      </item>
-     <item row="14" column="0">
-      <widget class="QLabel" name="01x15"/>
+     <item row="14" column="2">
+      <widget class="QLabel" name="03x15"/>
      </item>
      <item row="14" column="1">
       <widget class="QLabel" name="02x15"/>
      </item>
-     <item row="14" column="2">
-      <widget class="QLabel" name="03x15"/>
+     <item row="14" column="0">
+      <widget class="QLabel" name="01x15"/>
+     </item>
+     <item row="13" column="18">
+      <widget class="QLabel" name="19x14"/>
      </item>
      <item row="14" column="3">
       <widget class="QLabel" name="04x15"/>
@@ -920,20 +932,20 @@
      <item row="14" column="5">
       <widget class="QLabel" name="06x15"/>
      </item>
-     <item row="14" column="6">
-      <widget class="QLabel" name="07x15"/>
-     </item>
      <item row="14" column="7">
       <widget class="QLabel" name="08x15"/>
      </item>
      <item row="14" column="8">
       <widget class="QLabel" name="09x15"/>
      </item>
-     <item row="14" column="9">
-      <widget class="QLabel" name="10x15"/>
+     <item row="14" column="6">
+      <widget class="QLabel" name="07x15"/>
      </item>
      <item row="14" column="10">
       <widget class="QLabel" name="11x15"/>
+     </item>
+     <item row="14" column="9">
+      <widget class="QLabel" name="10x15"/>
      </item>
      <item row="14" column="11">
       <widget class="QLabel" name="12x15"/>
@@ -941,14 +953,11 @@
      <item row="14" column="12">
       <widget class="QLabel" name="13x15"/>
      </item>
-     <item row="14" column="13">
-      <widget class="QLabel" name="14x15"/>
-     </item>
      <item row="14" column="14">
       <widget class="QLabel" name="15x15"/>
      </item>
-     <item row="14" column="15">
-      <widget class="QLabel" name="16x15"/>
+     <item row="14" column="13">
+      <widget class="QLabel" name="14x15"/>
      </item>
      <item row="14" column="16">
       <widget class="QLabel" name="17x15"/>
@@ -958,6 +967,9 @@
      </item>
      <item row="14" column="18">
       <widget class="QLabel" name="19x15"/>
+     </item>
+     <item row="14" column="15">
+      <widget class="QLabel" name="16x15"/>
      </item>
      <item row="15" column="0">
       <widget class="QLabel" name="01x16"/>
@@ -986,11 +998,11 @@
      <item row="15" column="8">
       <widget class="QLabel" name="09x16"/>
      </item>
-     <item row="15" column="9">
-      <widget class="QLabel" name="10x16"/>
-     </item>
      <item row="15" column="10">
       <widget class="QLabel" name="11x16"/>
+     </item>
+     <item row="15" column="9">
+      <widget class="QLabel" name="10x16"/>
      </item>
      <item row="15" column="11">
       <widget class="QLabel" name="12x16"/>
@@ -998,14 +1010,14 @@
      <item row="15" column="12">
       <widget class="QLabel" name="13x16"/>
      </item>
+     <item row="15" column="15">
+      <widget class="QLabel" name="16x16"/>
+     </item>
      <item row="15" column="13">
       <widget class="QLabel" name="14x16"/>
      </item>
      <item row="15" column="14">
       <widget class="QLabel" name="15x16"/>
-     </item>
-     <item row="15" column="15">
-      <widget class="QLabel" name="16x16"/>
      </item>
      <item row="15" column="16">
       <widget class="QLabel" name="17x16"/>
@@ -1016,32 +1028,32 @@
      <item row="15" column="18">
       <widget class="QLabel" name="19x16"/>
      </item>
+     <item row="16" column="2">
+      <widget class="QLabel" name="03x17"/>
+     </item>
      <item row="16" column="0">
       <widget class="QLabel" name="01x17"/>
      </item>
      <item row="16" column="1">
       <widget class="QLabel" name="02x17"/>
      </item>
-     <item row="16" column="2">
-      <widget class="QLabel" name="03x17"/>
+     <item row="16" column="4">
+      <widget class="QLabel" name="05x17"/>
      </item>
      <item row="16" column="3">
       <widget class="QLabel" name="04x17"/>
      </item>
-     <item row="16" column="4">
-      <widget class="QLabel" name="05x17"/>
-     </item>
      <item row="16" column="5">
       <widget class="QLabel" name="06x17"/>
      </item>
-     <item row="16" column="6">
-      <widget class="QLabel" name="07x17"/>
+     <item row="16" column="8">
+      <widget class="QLabel" name="09x17"/>
      </item>
      <item row="16" column="7">
       <widget class="QLabel" name="08x17"/>
      </item>
-     <item row="16" column="8">
-      <widget class="QLabel" name="09x17"/>
+     <item row="16" column="6">
+      <widget class="QLabel" name="07x17"/>
      </item>
      <item row="16" column="9">
       <widget class="QLabel" name="10x17"/>
@@ -1055,41 +1067,41 @@
      <item row="16" column="12">
       <widget class="QLabel" name="13x17"/>
      </item>
+     <item row="16" column="15">
+      <widget class="QLabel" name="16x17"/>
+     </item>
      <item row="16" column="13">
       <widget class="QLabel" name="14x17"/>
      </item>
      <item row="16" column="14">
       <widget class="QLabel" name="15x17"/>
      </item>
-     <item row="16" column="15">
-      <widget class="QLabel" name="16x17"/>
+     <item row="16" column="17">
+      <widget class="QLabel" name="18x17"/>
      </item>
      <item row="16" column="16">
       <widget class="QLabel" name="17x17"/>
      </item>
-     <item row="16" column="17">
-      <widget class="QLabel" name="18x17"/>
-     </item>
      <item row="16" column="18">
       <widget class="QLabel" name="19x17"/>
-     </item>
-     <item row="17" column="0">
-      <widget class="QLabel" name="01x18"/>
-     </item>
-     <item row="17" column="1">
-      <widget class="QLabel" name="02x18"/>
      </item>
      <item row="17" column="2">
       <widget class="QLabel" name="03x18"/>
      </item>
-     <item row="17" column="3">
-      <widget class="QLabel" name="04x18"/>
+     <item row="17" column="1">
+      <widget class="QLabel" name="02x18"/>
+     </item>
+     <item row="17" column="0">
+      <widget class="QLabel" name="01x18"/>
+     </item>
+     <item row="17" column="5">
+      <widget class="QLabel" name="06x18"/>
      </item>
      <item row="17" column="4">
       <widget class="QLabel" name="05x18"/>
      </item>
-     <item row="17" column="5">
-      <widget class="QLabel" name="06x18"/>
+     <item row="17" column="3">
+      <widget class="QLabel" name="04x18"/>
      </item>
      <item row="17" column="6">
       <widget class="QLabel" name="07x18"/>
@@ -1097,20 +1109,20 @@
      <item row="17" column="7">
       <widget class="QLabel" name="08x18"/>
      </item>
+     <item row="17" column="9">
+      <widget class="QLabel" name="10x18"/>
+     </item>
      <item row="17" column="8">
       <widget class="QLabel" name="09x18"/>
      </item>
-     <item row="17" column="9">
-      <widget class="QLabel" name="10x18"/>
+     <item row="17" column="12">
+      <widget class="QLabel" name="13x18"/>
      </item>
      <item row="17" column="10">
       <widget class="QLabel" name="11x18"/>
      </item>
      <item row="17" column="11">
       <widget class="QLabel" name="12x18"/>
-     </item>
-     <item row="17" column="12">
-      <widget class="QLabel" name="13x18"/>
      </item>
      <item row="17" column="13">
       <widget class="QLabel" name="14x18"/>
@@ -1124,11 +1136,14 @@
      <item row="17" column="16">
       <widget class="QLabel" name="17x18"/>
      </item>
+     <item row="17" column="18">
+      <widget class="QLabel" name="19x18"/>
+     </item>
      <item row="17" column="17">
       <widget class="QLabel" name="18x18"/>
      </item>
-     <item row="17" column="18">
-      <widget class="QLabel" name="19x18"/>
+     <item row="18" column="2">
+      <widget class="QLabel" name="03x19"/>
      </item>
      <item row="18" column="0">
       <widget class="QLabel" name="01x19"/>
@@ -1136,23 +1151,17 @@
      <item row="18" column="1">
       <widget class="QLabel" name="02x19"/>
      </item>
-     <item row="18" column="2">
-      <widget class="QLabel" name="03x19"/>
-     </item>
-     <item row="18" column="3">
-      <widget class="QLabel" name="04x19"/>
-     </item>
-     <item row="18" column="4">
-      <widget class="QLabel" name="05x19"/>
-     </item>
      <item row="18" column="5">
       <widget class="QLabel" name="06x19"/>
      </item>
      <item row="18" column="6">
       <widget class="QLabel" name="07x19"/>
      </item>
-     <item row="18" column="7">
-      <widget class="QLabel" name="08x19"/>
+     <item row="18" column="4">
+      <widget class="QLabel" name="05x19"/>
+     </item>
+     <item row="18" column="3">
+      <widget class="QLabel" name="04x19"/>
      </item>
      <item row="18" column="8">
       <widget class="QLabel" name="09x19"/>
@@ -1160,32 +1169,23 @@
      <item row="18" column="9">
       <widget class="QLabel" name="10x19"/>
      </item>
-     <item row="18" column="11">
-      <widget class="QLabel" name="12x19"/>
+     <item row="18" column="7">
+      <widget class="QLabel" name="08x19"/>
+     </item>
+     <item row="18" column="13">
+      <widget class="QLabel" name="14x19"/>
      </item>
      <item row="18" column="12">
       <widget class="QLabel" name="13x19"/>
      </item>
-     <item row="18" column="13">
-      <widget class="QLabel" name="14x19"/>
+     <item row="18" column="11">
+      <widget class="QLabel" name="12x19"/>
      </item>
      <item row="18" column="14">
       <widget class="QLabel" name="15x19"/>
      </item>
      <item row="18" column="15">
       <widget class="QLabel" name="16x19"/>
-     </item>
-     <item row="18" column="16">
-      <widget class="QLabel" name="17x19"/>
-     </item>
-     <item row="18" column="17">
-      <widget class="QLabel" name="18x19"/>
-     </item>
-     <item row="18" column="18">
-      <widget class="QLabel" name="19x19"/>
-     </item>
-     <item row="18" column="10">
-      <widget class="QLabel" name="11x19"/>
      </item>
     </layout>
     <zorder>02x01</zorder>
@@ -1553,10 +1553,10 @@
    <widget class="QLabel" name="infosBackground1">
     <property name="geometry">
      <rect>
-      <x>1060</x>
+      <x>820</x>
       <y>0</y>
-      <width>451</width>
-      <height>561</height>
+      <width>381</width>
+      <height>431</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -1575,10 +1575,10 @@
    <widget class="QLabel" name="infosBackground2">
     <property name="geometry">
      <rect>
-      <x>1060</x>
-      <y>497</y>
-      <width>451</width>
-      <height>561</height>
+      <x>820</x>
+      <y>380</y>
+      <width>381</width>
+      <height>471</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -1597,16 +1597,16 @@
    <widget class="QLabel" name="rulesTitle">
     <property name="geometry">
      <rect>
-      <x>1060</x>
-      <y>504</y>
-      <width>441</width>
+      <x>850</x>
+      <y>380</y>
+      <width>301</width>
       <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(60, 17, 3);
-font: 38pt &quot;SF Wasabi&quot;;</string>
+font: 22pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1621,16 +1621,16 @@ font: 38pt &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="playersTitle">
     <property name="geometry">
      <rect>
-      <x>1060</x>
+      <x>850</x>
       <y>10</y>
-      <width>441</width>
-      <height>51</height>
+      <width>301</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>SF Wasabi</family>
-      <pointsize>40</pointsize>
+      <pointsize>22</pointsize>
       <weight>50</weight>
       <italic>false</italic>
       <bold>false</bold>
@@ -1639,7 +1639,7 @@ font: 38pt &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(60, 17, 3);
-font: 40pt &quot;SF Wasabi&quot;;</string>
+font: 22pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1654,8 +1654,8 @@ font: 40pt &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="playerOneLabel">
     <property name="geometry">
      <rect>
-      <x>1120</x>
-      <y>80</y>
+      <x>870</x>
+      <y>60</y>
       <width>181</width>
       <height>41</height>
      </rect>
@@ -1663,7 +1663,7 @@ font: 40pt &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font: 30pt &quot;SF Wasabi&quot;;</string>
+font: 18pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1675,16 +1675,16 @@ font: 30pt &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="playerOneTimer">
     <property name="geometry">
      <rect>
-      <x>1310</x>
-      <y>80</y>
-      <width>161</width>
+      <x>1050</x>
+      <y>60</y>
+      <width>121</width>
       <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font:30pt  &quot;SF Wasabi&quot;;</string>
+font:18pt  &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="text">
      <string>00:00:00</string>
@@ -1693,8 +1693,8 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="playerTwoLabel">
     <property name="geometry">
      <rect>
-      <x>1120</x>
-      <y>230</y>
+      <x>870</x>
+      <y>220</y>
       <width>181</width>
       <height>41</height>
      </rect>
@@ -1702,7 +1702,7 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font:30pt  &quot;SF Wasabi&quot;;</string>
+font:18pt  &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1714,8 +1714,8 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="playerTwoTimer">
     <property name="geometry">
      <rect>
-      <x>1300</x>
-      <y>230</y>
+      <x>1050</x>
+      <y>220</y>
       <width>161</width>
       <height>41</height>
      </rect>
@@ -1723,7 +1723,7 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font:30pt  &quot;SF Wasabi&quot;;</string>
+font:18pt  &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="text">
      <string>00:00:00</string>
@@ -1732,8 +1732,8 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="ruleLabel1">
     <property name="geometry">
      <rect>
-      <x>1120</x>
-      <y>580</y>
+      <x>870</x>
+      <y>446</y>
       <width>301</width>
       <height>41</height>
      </rect>
@@ -1741,7 +1741,7 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font: 25pt &quot;SF Wasabi&quot;;</string>
+font: 18pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1753,8 +1753,8 @@ font: 25pt &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="ruleLabel2">
     <property name="geometry">
      <rect>
-      <x>1120</x>
-      <y>652</y>
+      <x>870</x>
+      <y>504</y>
       <width>321</width>
       <height>41</height>
      </rect>
@@ -1762,7 +1762,7 @@ font: 25pt &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font: 25pt &quot;SF Wasabi&quot;;</string>
+font: 18pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1774,10 +1774,10 @@ font: 25pt &quot;SF Wasabi&quot;;</string>
    <widget class="QPushButton" name="optionsButton">
     <property name="geometry">
      <rect>
-      <x>1129</x>
-      <y>927</y>
-      <width>61</width>
-      <height>61</height>
+      <x>880</x>
+      <y>740</y>
+      <width>40</width>
+      <height>40</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -1795,8 +1795,8 @@ font: 25pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="iconSize">
      <size>
-      <width>50</width>
-      <height>50</height>
+      <width>40</width>
+      <height>40</height>
      </size>
     </property>
     <property name="checkable">
@@ -1818,16 +1818,16 @@ font: 25pt &quot;SF Wasabi&quot;;</string>
    <widget class="QPushButton" name="hintButton">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>980</y>
-      <width>241</width>
-      <height>61</height>
+      <x>40</x>
+      <y>770</y>
+      <width>200</width>
+      <height>50</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>SF Wasabi</family>
-      <pointsize>30</pointsize>
+      <pointsize>20</pointsize>
       <weight>50</weight>
       <italic>false</italic>
       <bold>false</bold>
@@ -1838,8 +1838,8 @@ font: 25pt &quot;SF Wasabi&quot;;</string>
 border-image: url(&quot;ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
 background-repeat: no-repeat;
 background-position: center center;
-font: 30pt &quot;SF Wasabi&quot;;
-color:rgb(60, 17, 3);</string>
+font: 20pt &quot;SF Wasabi&quot;;
+color:rgb(0,0,0);</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1854,16 +1854,16 @@ color:rgb(60, 17, 3);</string>
    <widget class="QPushButton" name="giveUpButton">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>980</y>
-      <width>241</width>
-      <height>61</height>
+      <x>310</x>
+      <y>770</y>
+      <width>200</width>
+      <height>50</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>SF Wasabi</family>
-      <pointsize>30</pointsize>
+      <pointsize>20</pointsize>
       <weight>50</weight>
       <italic>false</italic>
       <bold>false</bold>
@@ -1874,8 +1874,8 @@ color:rgb(60, 17, 3);</string>
 border-image: url(&quot;ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
 background-repeat: no-repeat;
 background-position: center center;
-font: 30pt &quot;SF Wasabi&quot;;
-color:rgb(60, 17, 3);</string>
+font: 20pt &quot;SF Wasabi&quot;;
+color:rgb(0,0, 0);</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1890,16 +1890,16 @@ color:rgb(60, 17, 3);</string>
    <widget class="QPushButton" name="newGameButton">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>980</y>
-      <width>241</width>
-      <height>61</height>
+      <x>580</x>
+      <y>770</y>
+      <width>200</width>
+      <height>50</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>SF Wasabi</family>
-      <pointsize>30</pointsize>
+      <pointsize>20</pointsize>
       <weight>50</weight>
       <italic>false</italic>
       <bold>false</bold>
@@ -1910,8 +1910,8 @@ color:rgb(60, 17, 3);</string>
 border-image: url(&quot;ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
 background-repeat: no-repeat;
 background-position: center center;
-font: 30pt &quot;SF Wasabi&quot;;
-color:rgb(60, 17, 3);</string>
+font: 20pt &quot;SF Wasabi&quot;;
+color:rgb(0, 0, 0);</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1926,8 +1926,8 @@ color:rgb(60, 17, 3);</string>
    <widget class="QLabel" name="ruleLabel3">
     <property name="geometry">
      <rect>
-      <x>1120</x>
-      <y>724</y>
+      <x>870</x>
+      <y>566</y>
       <width>321</width>
       <height>41</height>
      </rect>
@@ -1935,7 +1935,7 @@ color:rgb(60, 17, 3);</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font: 25pt &quot;SF Wasabi&quot;;</string>
+font: 18pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1947,8 +1947,8 @@ font: 25pt &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="ruleLabel4">
     <property name="geometry">
      <rect>
-      <x>1120</x>
-      <y>794</y>
+      <x>870</x>
+      <y>624</y>
       <width>321</width>
       <height>41</height>
      </rect>
@@ -1956,7 +1956,7 @@ font: 25pt &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font: 25pt &quot;SF Wasabi&quot;;</string>
+font: 18pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1968,8 +1968,8 @@ font: 25pt &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="gameTimer">
     <property name="geometry">
      <rect>
-      <x>1270</x>
-      <y>440</y>
+      <x>960</x>
+      <y>330</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -1977,7 +1977,7 @@ font: 25pt &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font:30pt  &quot;SF Wasabi&quot;;</string>
+font:20pt  &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="text">
      <string>00:00</string>
@@ -1986,10 +1986,10 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="playerTurnEffect">
     <property name="geometry">
      <rect>
-      <x>260</x>
-      <y>70</y>
-      <width>541</width>
-      <height>151</height>
+      <x>190</x>
+      <y>0</y>
+      <width>441</width>
+      <height>111</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -2008,10 +2008,10 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="winOrDrawLabel">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>30</y>
-      <width>991</width>
-      <height>951</height>
+      <x>95</x>
+      <y>85</y>
+      <width>630</width>
+      <height>620</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -2030,8 +2030,8 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="player1Capture">
     <property name="geometry">
      <rect>
-      <x>1120</x>
-      <y>155</y>
+      <x>870</x>
+      <y>110</y>
       <width>101</width>
       <height>41</height>
      </rect>
@@ -2039,7 +2039,7 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font:30pt  &quot;SF Wasabi&quot;;</string>
+font:18pt  &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="text">
      <string>0/10</string>
@@ -2048,8 +2048,8 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="player2Capture">
     <property name="geometry">
      <rect>
-      <x>1120</x>
-      <y>300</y>
+      <x>870</x>
+      <y>280</y>
       <width>101</width>
       <height>41</height>
      </rect>
@@ -2057,7 +2057,7 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font:30pt  &quot;SF Wasabi&quot;;</string>
+font:18pt  &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="text">
      <string>0/10</string>
@@ -2084,9 +2084,9 @@ font:30pt  &quot;SF Wasabi&quot;;</string>
    <zorder>ruleLabel4</zorder>
    <zorder>gameTimer</zorder>
    <zorder>playerTurnEffect</zorder>
-   <zorder>winOrDrawLabel</zorder>
    <zorder>player1Capture</zorder>
    <zorder>player2Capture</zorder>
+   <zorder>winOrDrawLabel</zorder>
   </widget>
  </widget>
  <resources/>

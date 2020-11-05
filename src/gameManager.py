@@ -27,9 +27,9 @@ class HumanPlayer():
     def start(self):
         self.timerText.setText("00:00:00")
         if self.color == 1:
-            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 30pt \"SF Wasabi\";")
+            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 18pt \"SF Wasabi\";")
         else:
-            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 30pt \"SF Wasabi\";")
+            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 18pt \"SF Wasabi\";")
 
     def startTurn(self):
         self.window.layoutWidget.setCursor(self.cursor)
@@ -61,9 +61,9 @@ class ComputerPlayer():
         self.window = window
         self.startTime = 0.0
         if self.color == 1:
-            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 30pt \"SF Wasabi\";")
+            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 18pt \"SF Wasabi\";")
         else:
-            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 30pt \"SF Wasabi\";")
+            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 18pt \"SF Wasabi\";")
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.window.playerTwoTimer))
         self.playerCapture = None
         self.stoneRemovedCount = 0
@@ -99,11 +99,11 @@ class GameBoard():
             scaledX = x
             scaledY = y
         else:
-            boardWidth = 761
+            boardWidth = 620
             scaledX = x - self.window.layoutWidget.geometry().x()
             blockWidth = (boardWidth / 19)
             scaledX = int(scaledX / blockWidth)
-            boardHeight = 761
+            boardHeight = 620
             scaledY = y - self.window.layoutWidget.geometry().y()
             blockHeight = (boardHeight / 19)
             scaledY = int(scaledY / blockHeight)
@@ -128,7 +128,7 @@ class GameBoard():
                 removedStonePlayer = self.window.gameManager.player1 if color == self.window.gameManager.player1.color else self.window.gameManager.player2
                 removedStonePlayer.stoneRemovedCount += 1
         winStart, winEnd = self.isWinner()
-        if winStart and winStart is tuple and ('Game-ending capture' in self.window.option.rulesSet or 'Capture de fin de partie' in self.window.option.rulesSet):
+        if winStart and winStart is tuple and ('Game-ending capture' in self.window.option.rulesSet or 'Capture fin de partie' in self.window.option.rulesSet):
             counterCapture = self.window.gameManager.rules.gameEndingCaptureRule(self.grid, winStart, winEnd, color)
             if len(counterCapture) > 0:
                 return True
