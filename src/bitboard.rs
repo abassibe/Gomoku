@@ -23,7 +23,7 @@ pub enum Direction {
 // TODO: Implement trait Index
 // TODO: Implement method to get/set one or several bits by index
 // TODO: Implement method to get/set one or several bits by coordonate (X, Y flatten to index then call previous method above)
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct BitBoard {
     b: [u128; 3]
 }
