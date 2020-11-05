@@ -13,10 +13,10 @@ pub enum Direction {
     S,
     E,
     W,
-    Ne,
-    No,
-    Se,
-    So,
+    NE,
+    NW,
+    SE,
+    SW,
     All
 }
 // TODO: Implement trait std::fmt::Display
