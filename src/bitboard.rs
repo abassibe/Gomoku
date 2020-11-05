@@ -236,4 +236,8 @@ impl BitBoard {
 
         true
     }
+
+    pub fn shift_direction(&self, direction: Direction) -> Self {
+        unimplemented!()
+    }
 }
