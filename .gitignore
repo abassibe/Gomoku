@@ -15,3 +15,5 @@ Cargo.lock
 /.idea/workspace.xml
 rust_ext.so
 src/__pycache__/
+/.idea/shelf/Uncommitted_changes_before_Checkout_at_30_10_2020_12_48_[Default_Changelist]1/shelved.patch
+.idea/shelf/
