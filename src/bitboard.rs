@@ -1,3 +1,6 @@
+mod axis;
+mod direction;
+
 #[cfg(test)]
 mod tests;
 
@@ -5,35 +8,10 @@ use std::{
     mem::size_of,
     ops::{BitAnd, BitOr, BitXor, Not, Shl, Shr}
 };
+use direction::*;
+use axis::*;
 
 const BITS_IN_U128: usize = size_of::<u128>() * 8;
-
-#[derive(Debug, Copy, Clone)]
-pub enum Direction {
-    N,
-    S,
-    E,
-    W,
-    NE,
-    NW,
-    SE,
-    SW,
-    All
-}
-
-// TODO: Implement trait IntoIterator/Iterator
-// Should lead to one of the for Direction:
-//  - Direction::W
-//  - Direction::N
-//  - Direction::NE
-//  - Direction::NW
-// repectively.
-pub enum Axis {
-    Horizontal,
-    Vertical,
-    DiagUpRight,
-    DiagUpLeft
-}
 
 // TODO: Implement trait std::fmt::Display
 // TODO: Implement trait Index
