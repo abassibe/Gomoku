@@ -13,9 +13,11 @@ use axis::*;
 
 const BITS_IN_U128: usize = size_of::<u128>() * 8;
 
+// TODO: Implement trait {Or,Xor,And}Assign
 // TODO: Implement trait std::fmt::Display
 // TODO: Implement trait Index
 // TODO: Implement trait Eq/PartialEq
+// TODO: Implement trait Shl/Shr<Direction>
 // TODO: Implement method to get/set one or several bits by index
 // TODO: Implement method to get/set one or several bits by coordonate (X, Y flatten to index then call previous method above)
 #[derive(Debug, Copy, Clone)]
@@ -216,6 +218,7 @@ impl BitBoard {
         true
     }
 
+    // TODO: Missing doc here
     pub fn shift_direction(&self, direction: Direction) -> Self {
         unimplemented!()
     }
