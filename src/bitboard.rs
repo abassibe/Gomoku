@@ -313,10 +313,9 @@ impl BitBoard {
     }
 
     // TODO: Missing doc here
-    pub fn shift_direction(&self, direction: Direction) -> Self {
+    fn shift_direction(&self, direction: Direction) -> Self {
         let board = *self;
         match direction {
-            // TODO: Finish this implementation.
             Direction::N => board << Self::MOVE_UP_DOWN_SHIFT_VALUE,
             Direction::S => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE,
             Direction::E => board >> 1,
@@ -325,8 +324,9 @@ impl BitBoard {
             Direction::NW => board << Self::MOVE_UP_DOWN_SHIFT_VALUE + 1,
             Direction::SE => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE + 1,
             Direction::SW => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE - 1,
-            Direction::All => {
-                let mut result = Self::default();
+            Direction::All => unimplemented!("You MUST not use Direction::All with this method")
+        }
+    }
 
                 for d in DirectionIterator::new() {
                     // TODO: Replace this `= result` with a `|=` when OrAssign will be implemented
