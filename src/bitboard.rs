@@ -15,7 +15,6 @@ use axis::*;
 const BITS_IN_U128: usize = size_of::<u128>() * 8;
 
 // TODO: Implement trait {Or,Xor,And}Assign
-// TODO: Implement trait std::fmt::Display
 // TODO: Implement trait Index
 // TODO: Implement method to get/set one or several bits by index
 // TODO: Implement trait Index<(u32, u32)>?
