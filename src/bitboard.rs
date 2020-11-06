@@ -6,7 +6,7 @@ mod tests;
 
 use std::{
     mem::size_of,
-    ops::{BitAnd, BitOr, BitXor, Not, Shl, Shr}
+    ops::{Add, BitAnd, BitOr, BitXor, Not, Shl, Shr, Sub}
 };
 use direction::*;
 use axis::*;
@@ -404,7 +404,38 @@ impl Not for &BitBoard {
     }
 }
 
-// Perform a dilation on a `BitBoard` using the provided `Direction`
-// impl Add for BitBoard {
+impl Add<Direction> for BitBoard {
+    type Output = Self;
 
-// }
+    /// Perform a dilation on a `BitBoard` using the provided `Direction`
+    fn add(self, rhs: Direction) -> Self::Output {
+        self.dilate(rhs)
+    }
+}
+
+impl Add<Direction> for &BitBoard {
+    type Output = BitBoard;
+
+    /// Perform a dilation on a `BitBoard`'s reference using the provided `Direction`
+    fn add(self, rhs: Direction) -> Self::Output {
+        self.dilate(rhs)
+    }
+}
+
+impl Sub<Direction> for BitBoard {
+    type Output = Self;
+
+    /// Perform an erosion on a `BitBoard` using the provided `Direction`
+    fn sub(self, rhs: Direction) -> Self::Output {
+        self.erode(rhs)
+    }
+}
+
+impl Sub<Direction> for &BitBoard {
+    type Output = BitBoard;
+
+    /// Perform an erosion on a `BitBoard`'s reference using the provided `Direction`
+    fn sub(self, rhs: Direction) -> Self::Output {
+        self.erode(rhs)
+    }
+}
