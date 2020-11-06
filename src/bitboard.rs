@@ -25,7 +25,9 @@ pub struct BitBoard {
     b: [u128; 3]
 }
 
-// Implementation of trait's methods on BitBoard
+// ----------------------------------------------
+// Implementation of trait's methods on BitBoard.
+// ----------------------------------------------
 impl Default for BitBoard {
     fn default() -> Self {
         Self {
@@ -109,7 +111,9 @@ impl Not for BitBoard {
     }
 }
 
+// ----------------------------------------
 // Homemade methods implemented on BitBoard
+// ----------------------------------------
 impl BitBoard {
     const MOVE_UP_DOWN_SHIFT_VALUE: u32 = 19;
 
