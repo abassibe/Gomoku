@@ -18,7 +18,7 @@ const BITS_IN_U128: usize = size_of::<u128>() * 8;
 // TODO: Implement method to get/set one or several bits by index
 // TODO: Implement trait Index<(u32, u32)>?!
 // TODO: Implement method to get/set one or several bits by coordonate (X, Y flatten to index then call previous method above)
-// TODO: Implement mehtod to perform pattern matching.
+// TODO: Implement mehtod to perform pattern matching!
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct BitBoard {
     b: [u128; 3]
