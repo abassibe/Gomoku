@@ -41,7 +41,7 @@ impl Goban
         (self.enemy | self.player).dilate(Direction::All) & BitBoard::empty()
     }
 
-    pub fn line_detection(&self) -> u16
+    fn line_detection(&self) -> u16
     {
         let mut bits: BitBoard;
         let mut total: u16 = 0;
@@ -67,21 +67,11 @@ impl Goban
 
     pub fn get_heuristic(&self) -> i64
     {
-       unimplemented!()
-    }
-}
+        let mut ret: i64 = 0;
 
-#[derive(Debug, Clone, Copy)]
-pub enum Move
-{
-    Up,
-    UpLeft,
-    UpRight,
-    Left,
-    Right,
-    DownLeft,
-    DownRight,
-    Down
+        ret += self.line_detection() as i64;
+	    ret
+    }
 }
 
 #[cfg(test)]
