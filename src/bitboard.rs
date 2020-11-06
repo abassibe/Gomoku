@@ -1,5 +1,5 @@
-mod axis;
-mod direction;
+pub(crate) mod axis;
+pub(crate) mod direction;
 
 #[cfg(test)]
 mod tests;
