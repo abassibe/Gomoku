@@ -1,6 +1,7 @@
 use std::fmt;
 use std::fmt::Formatter;
 use super::bitboard::*;
+use crate::bitboard::axis::AxisIterator;
 
 const EMPTY: u8 = 0;
 const BLACK: u8 = 1;
@@ -46,13 +47,13 @@ impl Goban
         let mut total: u16 = 0;
         let mut len: u16;
 
-        for dir in [Direction::NE, Direction::N, Direction::W, Direction::NW].iter()
+        for dir in AxisIterator::new()
         {
 	        bits = self.player;
             len = 0;
             while !bits.is_empty()
             {
-                bits = bits.erode(*dir);
+                bits = bits.erode(dir);
                 len += 1;
                 if len == 5 {
                     len = 5000;
