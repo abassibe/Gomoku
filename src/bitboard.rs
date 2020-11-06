@@ -15,7 +15,6 @@ const BITS_IN_U128: usize = size_of::<u128>() * 8;
 
 // TODO: Implement trait {Or,Xor,And}Assign
 // TODO: Implement trait std::fmt::Display
-// TODO: Implement trait Shl/Shr<Direction>
 // TODO: Implement trait Index
 // TODO: Implement method to get/set one or several bits by index
 // TODO: Implement trait Index<(u32, u32)>?
@@ -165,11 +164,11 @@ impl BitBoard {
                 let mut result = *self;
                 for d in DirectionIterator::new() {
                     // TODO: Replace this `= result` with a `|=` when OrAssign will be implemented
-                    result = result | self.shift_direction(d);
+                    result = result | (self << d);
                 }
                 result
             },
-            d => *self | self.shift_direction(d)
+            d => *self | (self << d)
         }
     }
 
@@ -185,11 +184,11 @@ impl BitBoard {
                 let mut result = *self;
                 for d in DirectionIterator::new() {
                     // TODO: Replace this `= result` with a `&=` when OrAssign will be implemented
-                    result = result & self.shift_direction(d);
+                    result = result & (self << d);
                 }
                 result
             },
-            d => *self & self.shift_direction(d)
+            d => *self & (self << d)
         }
     }
 }
@@ -206,6 +205,7 @@ impl Default for BitBoard {
     }
 }
 
+// Bitshift on the left
 impl Shl<u32> for BitBoard {
     type Output = Self;
 
@@ -250,6 +250,25 @@ impl Shl<i32> for &BitBoard {
     }
 }
 
+impl Shl<Direction> for BitBoard {
+    type Output = Self;
+
+    /// Perform bitshift operation to the left on a `BitBoard` using a `Direction`.
+    fn shl(self, rhs: Direction) -> Self::Output {
+        self.shift_direction(rhs)
+    }
+}
+
+impl Shl<Direction> for &BitBoard {
+    type Output = BitBoard;
+
+    /// Perform bitshift operation to the left on a `BitBoard`'s reference using a `Direction`.
+    fn shl(self, rhs: Direction) -> Self::Output {
+        self.shift_direction(rhs)
+    }
+}
+
+// Bitshift on the right
 impl Shr<u32> for BitBoard {
     type Output = Self;
 
@@ -291,6 +310,24 @@ impl Shr<i32> for &BitBoard {
         } else {
             self.shift_right(rhs as usize)
         }
+    }
+}
+
+impl Shr<Direction> for BitBoard {
+    type Output = Self;
+
+    /// Perform bitshift operation to the right on a `BitBoard` using a `Direction`.
+    fn shr(self, rhs: Direction) -> Self::Output {
+        self.shift_direction(rhs)
+    }
+}
+
+impl Shr<Direction> for &BitBoard {
+    type Output = BitBoard;
+
+    /// Perform bitshift operation to the right on a `BitBoard`'s reference using a `Direction`.
+    fn shr(self, rhs: Direction) -> Self::Output {
+        self.shift_direction(rhs)
     }
 }
 
@@ -365,7 +402,6 @@ impl Not for &BitBoard {
         Self::Output { b: [!self.b[0], !self.b[1], !self.b[2]] }
     }
 }
-
 
 // Perform a dilation on a `BitBoard` using the provided `Direction`
 // impl Add for BitBoard {
