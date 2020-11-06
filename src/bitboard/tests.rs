@@ -1,5 +1,6 @@
-use super::*;
+use super::{*, axis::*, direction::*};
 
+// Tests for struct BitBoard
 #[test]
 fn test_bitshift_left_by_4_on_bitboard() {
     // Arrange
@@ -98,7 +99,24 @@ fn test_bitshift_left_by_max_on_bitboard() {
     assert_eq!(expected.b, result.b);
 }
 
+// The following test perform no assertion because we just want to verify
+// that no panic occurs regardeless the value passed to the function.
+#[test]
+fn test_bitshift_left_by_any_value() {
+    // Arrange
+    let original = BitBoard::from_array([
+        0b11001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+        0b01011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+        0b10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001
+    ]);
 
+    // Act
+    for x in 0..(size_of::<u128>() * 3) {
+        original.shift_left(x);
+    }
+
+    // No assert
+}
 
 #[test]
 fn test_bitshift_right_by_4_on_bitboard() {
@@ -198,4 +216,54 @@ fn test_bitshift_right_by_max_on_bitboard() {
     assert_eq!(expected.b, result.b);
 }
 
-// TODO: Add tests for AxisIterator here
+// The following test perform no assertion because we just want to verify
+// that no panic occurs regardeless the value passed to the function.
+#[test]
+fn test_bitshift_right_by_any_value() {
+    // Arrange
+    let original = BitBoard::from_array([
+        0b11001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+        0b01011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+        0b10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001
+    ]);
+
+    // Act
+    for x in 0..(size_of::<u128>() * 3) {
+        original.shift_right(x);
+    }
+
+    // No assert
+}
+
+// Tests for struct AxisIterator
+#[test]
+fn test_iterate_on_axis_iterator() {
+    // Arrange
+    let axises = AxisIterator::new();
+    let expect = vec![Direction::W, Direction::N, Direction::NW, Direction::NE];
+
+    // Act
+    let result: Vec<Direction> = axises.collect();
+
+    // Assert
+    assert_eq!(expect, result);
+}
+
+// Tests for struct DirectionIterator
+#[test]
+fn test_iterate_on_direction_iterator() {
+    // Arrange
+    let expect = vec![Direction::N, Direction::S, Direction::E, Direction::W, Direction::NE, Direction::NW, Direction::SE, Direction::SW];
+
+    // Act
+    let result: Vec<&Direction> = directions.collect();
+
+    // Assert
+    assert_eq!(expect, result);
+}
+
+// TODO: Add tests for Not (trait implementation)
+// TODO: Add tests for BitOr (trait implementation)
+// TODO: Add tests for BitXor (trait implementation)
+// TODO: Add tests for BitAnd (trait implementation)
+// TODO: Add tests for Eq/PartialEq (derived trait)
