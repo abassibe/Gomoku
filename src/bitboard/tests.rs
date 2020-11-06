@@ -253,10 +253,11 @@ fn test_iterate_on_axis_iterator() {
 #[test]
 fn test_iterate_on_direction_iterator() {
     // Arrange
+    let directions = DirectionIterator::new();
     let expect = vec![Direction::N, Direction::S, Direction::E, Direction::W, Direction::NE, Direction::NW, Direction::SE, Direction::SW];
 
     // Act
-    let result: Vec<&Direction> = directions.collect();
+    let result: Vec<Direction> = directions.collect();
 
     // Assert
     assert_eq!(expect, result);
