@@ -279,4 +279,7 @@ fn test_display_on_a_bitboard() {
 // TODO: Add tests for BitOr (trait implementation)
 // TODO: Add tests for BitXor (trait implementation)
 // TODO: Add tests for BitAnd (trait implementation)
+// TODO: Add tests for BitOrAssign (trait implementation)
+// TODO: Add tests for BitXorAssign (trait implementation)
+// TODO: Add tests for BitAndAssign (trait implementation)
 // TODO: Add tests for Eq/PartialEq (derived trait)

@@ -7,19 +7,18 @@ mod tests;
 use std::{
     mem::size_of,
     fmt,
-    ops::{Add, BitAnd, BitOr, BitXor, Not, Shl, Shr, Sub}
+    ops::{Add, BitAnd, BitOr, BitXor, Not, Shl, Shr, Sub, BitOrAssign, BitXorAssign, BitAndAssign}
 };
 use direction::*;
 use axis::*;
 
 const BITS_IN_U128: usize = size_of::<u128>() * 8;
 
-// TODO: Implement trait {Or,Xor,And}Assign
-// TODO: Implement trait Index
+// TODO: Implement trait Index!
 // TODO: Implement method to get/set one or several bits by index
-// TODO: Implement trait Index<(u32, u32)>?
+// TODO: Implement trait Index<(u32, u32)>?!
 // TODO: Implement method to get/set one or several bits by coordonate (X, Y flatten to index then call previous method above)
-// TODO: Implement mehtod to perform pattern matching.
+// TODO: Implement mehtod to perform pattern matching!
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct BitBoard {
     b: [u128; 3]
@@ -350,6 +349,24 @@ impl BitOr for &BitBoard {
     }
 }
 
+impl BitOrAssign for BitBoard {
+    /// Perform an in place bitwise operation OR between two `BitBoard`s.
+    fn bitor_assign(&mut self, rhs: Self) {
+        self.b[0] |= rhs.b[0];
+        self.b[1] |= rhs.b[1];
+        self.b[2] |= rhs.b[2];
+    }
+}
+
+impl BitOrAssign<&BitBoard> for BitBoard {
+    /// Perform an in place bitwise operation OR between two `BitBoard`'s references.
+    fn bitor_assign(&mut self, rhs: &Self) {
+        self.b[0] |= rhs.b[0];
+        self.b[1] |= rhs.b[1];
+        self.b[2] |= rhs.b[2];
+    }
+}
+
 impl BitXor for BitBoard {
     type Output = Self;
 
@@ -368,6 +385,24 @@ impl BitXor for &BitBoard {
     }
 }
 
+impl BitXorAssign for BitBoard {
+    /// Perform an in place bitwise operation XOR between two `BitBoard`s.
+    fn bitxor_assign(&mut self, rhs: Self) {
+        self.b[0] ^= rhs.b[0];
+        self.b[1] ^= rhs.b[1];
+        self.b[2] ^= rhs.b[2];
+    }
+}
+
+impl BitXorAssign<&BitBoard> for BitBoard {
+    /// Perform an in place bitwise operation XOR between two `BitBoard`'s references.
+    fn bitxor_assign(&mut self, rhs: &Self) {
+        self.b[0] ^= rhs.b[0];
+        self.b[1] ^= rhs.b[1];
+        self.b[2] ^= rhs.b[2];
+    }
+}
+
 impl BitAnd for BitBoard {
     type Output = Self;
 
@@ -383,6 +418,24 @@ impl BitAnd for &BitBoard {
     /// Perform bitwise operation AND between two `BitBoard`'s references.
     fn bitand(self, rhs: Self) -> Self::Output {
         Self::Output { b: [self.b[0] & rhs.b[0], self.b[1] & rhs.b[1], self.b[2] & rhs.b[2]] }
+    }
+}
+
+impl BitAndAssign for BitBoard {
+    /// Perform an in place bitwise operation OR between two `BitBoard`s.
+    fn bitand_assign(&mut self, rhs: Self) {
+        self.b[0] &= rhs.b[0];
+        self.b[1] &= rhs.b[1];
+        self.b[2] &= rhs.b[2];
+    }
+}
+
+impl BitAndAssign<&BitBoard> for BitBoard {
+    /// Perform an in place bitwise operation OR between two `BitBoard`'s references.
+    fn bitand_assign(&mut self, rhs: &Self) {
+        self.b[0] &= rhs.b[0];
+        self.b[1] &= rhs.b[1];
+        self.b[2] &= rhs.b[2];
     }
 }
 
