@@ -6,6 +6,7 @@ mod tests;
 
 use std::{
     mem::size_of,
+    fmt,
     ops::{Add, BitAnd, BitOr, BitXor, Not, Shl, Shr, Sub}
 };
 use direction::*;
@@ -437,5 +438,24 @@ impl Sub<Direction> for &BitBoard {
     /// Perform an erosion on a `BitBoard`'s reference using the provided `Direction`
     fn sub(self, rhs: Direction) -> Self::Output {
         self.erode(rhs)
+    }
+}
+
+impl fmt::Display for BitBoard {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut str_repr = format!("{:b}{:b}{:b}", self.b[0], self.b[1], self.b[2]);
+        let mut str_vec: Vec<String> = vec![];
+        let mut result = Ok(());
+
+        for i in 0..19 {
+            str_vec.push(str_repr[..19].into());
+            str_repr = str_repr[19..].into();
+        }
+
+        for s in str_vec.iter() {
+            result = Ok(write!(f, "{}\n", s)?);
+        }
+
+        result
     }
 }
