@@ -1,7 +1,7 @@
 const ARRAY_SIZE: usize = 8;
 
 // TODO: Missing doc here
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub enum Direction {
     N,
     S,
