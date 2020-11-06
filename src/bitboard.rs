@@ -309,18 +309,6 @@ impl BitBoard {
         }
     }
 
-    // Methods for dilation
-    #[inline]
-    pub fn dilate(&self, dir: Direction) -> Self {
-        self | &(self.shift_direction(dir))
-    }
-
-    // Methods for erosion
-    #[inline]
-    pub fn erode(&self, dir: Direction) -> Self {
-        unimplemented!()
-    }
-
     // TODO: Missing doc here
     fn shift_direction(&self, direction: Direction) -> Self {
         let board = *self;
@@ -337,13 +325,43 @@ impl BitBoard {
         }
     }
 
+    // --------------------
+    // Methods for dilation
+    // --------------------
+    /// This method should remain private.
+    /// Use the operator `+` instead.
+    #[inline]
+    fn dilate(&self, dir: Direction) -> Self {
+        match dir {
+            Direction::All => {
+                let mut result = *self;
                 for d in DirectionIterator::new() {
                     // TODO: Replace this `= result` with a `|=` when OrAssign will be implemented
                     result = result | self.shift_direction(d);
                 }
-
                 result
-            }
+            },
+            d => *self | self.shift_direction(d)
+        }
+    }
+
+    // -------------------
+    // Methods for erosion
+    // -------------------
+    /// This method should remain private.
+    /// Use the operator `-` instead.
+    #[inline]
+    fn erode(&self, dir: Direction) -> Self {
+        match dir {
+            Direction::All => {
+                let mut result = *self;
+                for d in DirectionIterator::new() {
+                    // TODO: Replace this `= result` with a `&=` when OrAssign will be implemented
+                    result = result & self.shift_direction(d);
+                }
+                result
+            },
+            d => *self & self.shift_direction(d)
         }
     }
 }
