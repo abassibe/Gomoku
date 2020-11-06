@@ -2,6 +2,7 @@ use std::fmt;
 use std::fmt::Formatter;
 use super::bitboard::*;
 use crate::bitboard::axis::AxisIterator;
+use crate::bitboard::direction::Direction;
 
 const EMPTY: u8 = 0;
 const BLACK: u8 = 1;
@@ -38,7 +39,7 @@ impl Goban
     // TODO: Neighbour layering
     pub fn list_neighbours(&self) -> BitBoard
     {
-        (self.enemy | self.player).dilate(Direction::All) & BitBoard::empty()
+        ((self.enemy | self.player) + (Direction::All)) & BitBoard::empty()
     }
 
     fn line_detection(&self) -> u16
@@ -53,7 +54,7 @@ impl Goban
             len = 0;
             while !bits.is_empty()
             {
-                bits = bits.erode(dir);
+                bits = bits - dir;
                 len += 1;
                 if len == 5 {
                     len = 5000;
@@ -77,4 +78,38 @@ impl Goban
 #[cfg(test)]
 mod tests {
     use crate::goban::{Goban, BLACK, WHITE};
+    use crate::bitboard::BitBoard;
+
+    #[test]
+    fn alignment()
+    {
+        let original = BitBoard::from_array([
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+        ]);
+
+        let stre: String = String::from("\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+        0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n");
+
+
+    }
 }
