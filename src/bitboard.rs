@@ -28,7 +28,7 @@ pub struct BitBoard {
 // Implementation of trait's methods on BitBoard.
 // ----------------------------------------------
 impl Default for BitBoard {
-    /// Create a new instance of an empty BitBoard
+    /// Create a new instance of an empty `BitBoard`
     fn default() -> Self {
         Self {
             b: [0, 0, 0]
@@ -39,7 +39,7 @@ impl Default for BitBoard {
 impl Shl<u32> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the left on a BitBoard using a u32.
+    /// Perform bitshift operation to the left on a `BitBoard` using a u32.
     fn shl(self, rhs: u32) -> Self::Output {
         self.shift_left(rhs as usize)
     }
@@ -48,7 +48,7 @@ impl Shl<u32> for BitBoard {
 impl Shl<u32> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the left on a BitBoard's reference using a u32.
+    /// Perform bitshift operation to the left on a `BitBoard`'s reference using a u32.
     fn shl(self, rhs: u32) -> Self::Output {
         self.shift_left(rhs as usize)
     }
@@ -57,7 +57,7 @@ impl Shl<u32> for &BitBoard {
 impl Shl<i32> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the left on a BitBoard using a i32.
+    /// Perform bitshift operation to the left on a `BitBoard` using a i32.
     fn shl(self, rhs: i32) -> Self::Output {
         if rhs.is_negative() {
             self.shift_right(rhs.abs() as usize)
@@ -70,7 +70,7 @@ impl Shl<i32> for BitBoard {
 impl Shl<i32> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the left on a BitBoard's reference using a i32.
+    /// Perform bitshift operation to the left on a `BitBoard`'s reference using a i32.
     fn shl(self, rhs: i32) -> Self::Output {
         if rhs.is_negative() {
             self.shift_right(rhs.abs() as usize)
@@ -83,7 +83,7 @@ impl Shl<i32> for &BitBoard {
 impl Shr<u32> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the right on a BitBoard using a u32.
+    /// Perform bitshift operation to the right on a `BitBoard` using a u32.
     fn shr(self, rhs: u32) -> Self::Output {
         self.shift_right(rhs as usize)
     }
@@ -92,7 +92,7 @@ impl Shr<u32> for BitBoard {
 impl Shr<u32> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the right on a BitBoard's reference using a u32.
+    /// Perform bitshift operation to the right on a `BitBoard`'s reference using a u32.
     fn shr(self, rhs: u32) -> Self::Output {
         self.shift_right(rhs as usize)
     }
@@ -101,7 +101,7 @@ impl Shr<u32> for &BitBoard {
 impl Shr<i32> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the right on a BitBoard using a i32.
+    /// Perform bitshift operation to the right on a `BitBoard` using a i32.
     fn shr(self, rhs: i32) -> Self::Output {
         if rhs.is_negative() {
             self.shift_left(rhs.abs() as usize)
@@ -114,7 +114,7 @@ impl Shr<i32> for BitBoard {
 impl Shr<i32> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the right on a BitBoard's reference using a i32.
+    /// Perform bitshift operation to the right on a `BitBoard`'s reference using a i32.
     fn shr(self, rhs: i32) -> Self::Output {
         if rhs.is_negative() {
             self.shift_left(rhs.abs() as usize)
@@ -127,7 +127,7 @@ impl Shr<i32> for &BitBoard {
 impl BitOr for BitBoard {
     type Output = Self;
 
-    /// Perform bitwise operation OR between two BitBoards.
+    /// Perform bitwise operation OR between two `BitBoards`.
     fn bitor(self, rhs: Self) -> Self::Output {
         Self::Output { b: [self.b[0] | rhs.b[0], self.b[1] | rhs.b[1], self.b[2] | rhs.b[2]] }
     }
@@ -136,7 +136,7 @@ impl BitOr for BitBoard {
 impl BitOr for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitwise operation OR between two BitBoard's references.
+    /// Perform bitwise operation OR between two `BitBoard`'s references.
     fn bitor(self, rhs: Self) -> Self::Output {
         Self::Output { b: [self.b[0] | rhs.b[0], self.b[1] | rhs.b[1], self.b[2] | rhs.b[2]] }
     }
@@ -145,7 +145,7 @@ impl BitOr for &BitBoard {
 impl BitXor for BitBoard {
     type Output = Self;
 
-    /// Perform bitwise operation XOR between two BitBoards.
+    /// Perform bitwise operation XOR between two `BitBoard`s.
     fn bitxor(self, rhs: Self) -> Self::Output {
         Self::Output { b: [self.b[0] ^ rhs.b[0], self.b[1] ^ rhs.b[1], self.b[2] ^ rhs.b[2]] }
     }
@@ -154,7 +154,7 @@ impl BitXor for BitBoard {
 impl BitXor for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitwise operation XOR between two BitBoard's references.
+    /// Perform bitwise operation XOR between two `BitBoard`'s references.
     fn bitxor(self, rhs: Self) -> Self::Output {
         Self::Output { b: [self.b[0] ^ rhs.b[0], self.b[1] ^ rhs.b[1], self.b[2] ^ rhs.b[2]] }
     }
@@ -163,7 +163,7 @@ impl BitXor for &BitBoard {
 impl BitAnd for BitBoard {
     type Output = Self;
 
-    /// Perform bitwise operation AND between two BitBoards.
+    /// Perform bitwise operation AND between two `BitBoards`.
     fn bitand(self, rhs: Self) -> Self::Output {
         Self::Output { b: [self.b[0] & rhs.b[0], self.b[1] & rhs.b[1], self.b[2] & rhs.b[2]] }
     }
@@ -172,7 +172,7 @@ impl BitAnd for BitBoard {
 impl BitAnd for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitwise operation AND between two BitBoard's references.
+    /// Perform bitwise operation AND between two `BitBoard`'s references.
     fn bitand(self, rhs: Self) -> Self::Output {
         Self::Output { b: [self.b[0] & rhs.b[0], self.b[1] & rhs.b[1], self.b[2] & rhs.b[2]] }
     }
@@ -181,7 +181,7 @@ impl BitAnd for &BitBoard {
 impl Not for BitBoard {
     type Output = Self;
 
-    /// Perform bitwise operation NOT on a BitBoard.
+    /// Perform bitwise operation NOT on a `BitBoard`.
     fn not(self) -> Self::Output {
         Self::Output { b: [!self.b[0], !self.b[1], !self.b[2]] }
     }
@@ -190,7 +190,7 @@ impl Not for BitBoard {
 impl Not for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitwise operation NOT on a BitBoard's reference.
+    /// Perform bitwise operation NOT on a `BitBoard`'s reference.
     fn not(self) -> Self::Output {
         Self::Output { b: [!self.b[0], !self.b[1], !self.b[2]] }
     }
