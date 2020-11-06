@@ -182,7 +182,6 @@ impl BitBoard {
             Direction::All => {
                 let mut result = *self;
                 for d in DirectionIterator::new() {
-                    // TODO: Replace this `= result` with a `&=` when OrAssign will be implemented
                     result &= self << d;
                 }
                 result
