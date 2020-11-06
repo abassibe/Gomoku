@@ -203,9 +203,15 @@ impl Not for &BitBoard {
 impl BitBoard {
     const MOVE_UP_DOWN_SHIFT_VALUE: u32 = 19;
 
+    // ------------
     // Constructors
+    // ------------
     pub fn new(one: u128, two: u128, three: u128) -> Self {
         Self { b: [one, two, three] }
+    }
+
+    pub fn from_array(from: [u128; 3]) -> Self { 
+        Self { b: from }
     }
 
     pub fn full() -> Self {
@@ -216,18 +222,45 @@ impl BitBoard {
         Self::default()
     }
 
-    pub fn from_array(from: [u128; 3]) -> Self { 
-        Self { b: from }
+    // -------------
+    // Tests methods
+    // -------------
+    /// Returns `true` if **every** bits are set to 1 in the bitboard.
+    /// Returns `false` otherwise.
+    pub fn is_full(&self) -> bool {
+        for x in &self.b {
+            if *x != u128::MAX {
+                return false
+            }
+        }
+
+        true
     }
 
-    // Computation's methods for BitBoard
+    /// Returns `true` if **no** bits are set to 1 in the bitboard.
+    /// Returns `false` otherwise.
+    pub fn is_empty(&self) -> bool {
+        for x in &self.b {
+            if *x != 0 {
+                return false;
+            }
+        }
+
+        true
+    }
+
+    // ---------------------------------
+    // Computation's method for BitBoard
+    // ---------------------------------
     pub fn compute_to_isize<F: Fn(&Self) -> isize>(&self, f: F) -> isize {
         f(self)
     }
 
+    // ---------------------------------------
     // Implementation of bitshift for BitBoard
+    // ---------------------------------------
     #[inline]
-    pub fn shift_left(&self, by: usize) -> Self {
+    fn shift_left(&self, by: usize) -> Self {
         let bits = self.b;
         let max_index = bits.len() - 1;
         let mut new_bits: [u128; 3] = [0, 0, 0];
@@ -252,7 +285,7 @@ impl BitBoard {
     }
 
     #[inline]
-    pub fn shift_right(&self, by: usize) -> Self {
+    fn shift_right(&self, by: usize) -> Self {
         let bits = self.b;
         let max_index = bits.len() - 1;
         let mut new_bits: [u128; 3] = [0, 0, 0];
@@ -286,30 +319,6 @@ impl BitBoard {
     #[inline]
     pub fn erode(&self, dir: Direction) -> Self {
         unimplemented!()
-    }
-
-    /// Returns `true` if **no** bits are set to 1 in the bitboard.
-    /// Returns `false` otherwise.
-    pub fn is_empty(&self) -> bool {
-        for x in &self.b {
-            if *x != 0 {
-                return false;
-            }
-        }
-
-        true
-    }
-
-    /// Returns `true` if **every** bits are set to 1 in the bitboard.
-    /// Returns `false` otherwise.
-    pub fn is_full(&self) -> bool {
-        for x in &self.b {
-            if *x != u128::MAX {
-                return false
-            }
-        }
-
-        true
     }
 
     // TODO: Missing doc here
