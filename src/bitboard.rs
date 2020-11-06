@@ -15,9 +15,10 @@ const BITS_IN_U128: usize = size_of::<u128>() * 8;
 
 // TODO: Implement trait {Or,Xor,And}Assign
 // TODO: Implement trait std::fmt::Display
-// TODO: Implement trait Index
 // TODO: Implement trait Shl/Shr<Direction>
+// TODO: Implement trait Index
 // TODO: Implement method to get/set one or several bits by index
+// TODO: Implement trait Index<(u32, u32)>?
 // TODO: Implement method to get/set one or several bits by coordonate (X, Y flatten to index then call previous method above)
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct BitBoard {
