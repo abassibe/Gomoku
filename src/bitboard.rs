@@ -111,6 +111,8 @@ impl Not for BitBoard {
 
 // Homemade methods implemented on BitBoard
 impl BitBoard {
+    const MOVE_UP_DOWN_SHIFT_VALUE: u32 = 19;
+
     // Constructors
     pub fn new(one: u128, two: u128, three: u128) -> Self {
         Self { b: [one, two, three] }
@@ -220,16 +222,17 @@ impl BitBoard {
 
     // TODO: Missing doc here
     pub fn shift_direction(&self, direction: Direction) -> Self {
+        let board = *self;
         match direction {
             // TODO: Finish this implementation.
-            Direction::N => {}
-            Direction::S => {}
-            Direction::E => {}
-            Direction::W => {}
-            Direction::NE => {}
-            Direction::NW => {}
-            Direction::SE => {}
-            Direction::SW => self.shift_left(by)
+            Direction::N => board << Self::MOVE_UP_DOWN_SHIFT_VALUE,
+            Direction::S => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE,
+            Direction::E => board >> 1,
+            Direction::W => board << 1,
+            Direction::NE => board << Self::MOVE_UP_DOWN_SHIFT_VALUE - 1,
+            Direction::NW => board << Self::MOVE_UP_DOWN_SHIFT_VALUE + 1,
+            Direction::SE => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE + 1,
+            Direction::SW => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE - 1,
             Direction::All => {
                 let mut result = Self::default();
 
