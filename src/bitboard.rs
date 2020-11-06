@@ -280,7 +280,7 @@ impl BitBoard {
     // Methods for dilation
     #[inline]
     pub fn dilate(&self, dir: Direction) -> Self {
-        *self | (self.shift_direction(dir))
+        self | &(self.shift_direction(dir))
     }
 
     // Methods for erosion
