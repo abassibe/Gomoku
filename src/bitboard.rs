@@ -29,6 +29,7 @@ pub struct BitBoard {
 // Implementation of trait's methods on BitBoard.
 // ----------------------------------------------
 impl Default for BitBoard {
+    /// Create a new instance of an empty BitBoard
     fn default() -> Self {
         Self {
             b: [0, 0, 0]
@@ -39,6 +40,16 @@ impl Default for BitBoard {
 impl Shl<u32> for BitBoard {
     type Output = Self;
 
+    /// Perform bitshift operation to the left on a BitBoard using a u32.
+    fn shl(self, rhs: u32) -> Self::Output {
+        self.shift_left(rhs as usize)
+    }
+}
+
+impl Shl<u32> for &BitBoard {
+    type Output = BitBoard;
+
+    /// Perform bitshift operation to the left on a BitBoard's reference using a u32.
     fn shl(self, rhs: u32) -> Self::Output {
         self.shift_left(rhs as usize)
     }
@@ -47,6 +58,20 @@ impl Shl<u32> for BitBoard {
 impl Shl<i32> for BitBoard {
     type Output = Self;
 
+    /// Perform bitshift operation to the left on a BitBoard using a i32.
+    fn shl(self, rhs: i32) -> Self::Output {
+        if rhs.is_negative() {
+            self.shift_right(rhs.abs() as usize)
+        } else {
+            self.shift_left(rhs as usize)
+        }
+    }
+}
+
+impl Shl<i32> for &BitBoard {
+    type Output = BitBoard;
+
+    /// Perform bitshift operation to the left on a BitBoard's reference using a i32.
     fn shl(self, rhs: i32) -> Self::Output {
         if rhs.is_negative() {
             self.shift_right(rhs.abs() as usize)
@@ -59,6 +84,16 @@ impl Shl<i32> for BitBoard {
 impl Shr<u32> for BitBoard {
     type Output = Self;
 
+    /// Perform bitshift operation to the right on a BitBoard using a u32.
+    fn shr(self, rhs: u32) -> Self::Output {
+        self.shift_right(rhs as usize)
+    }
+}
+
+impl Shr<u32> for &BitBoard {
+    type Output = BitBoard;
+
+    /// Perform bitshift operation to the right on a BitBoard's reference using a u32.
     fn shr(self, rhs: u32) -> Self::Output {
         self.shift_right(rhs as usize)
     }
@@ -67,6 +102,20 @@ impl Shr<u32> for BitBoard {
 impl Shr<i32> for BitBoard {
     type Output = Self;
 
+    /// Perform bitshift operation to the right on a BitBoard using a i32.
+    fn shr(self, rhs: i32) -> Self::Output {
+        if rhs.is_negative() {
+            self.shift_left(rhs.abs() as usize)
+        } else {
+            self.shift_right(rhs as usize)
+        }
+    }
+}
+
+impl Shr<i32> for &BitBoard {
+    type Output = BitBoard;
+
+    /// Perform bitshift operation to the right on a BitBoard's reference using a i32.
     fn shr(self, rhs: i32) -> Self::Output {
         if rhs.is_negative() {
             self.shift_left(rhs.abs() as usize)
