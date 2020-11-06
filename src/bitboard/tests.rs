@@ -263,6 +263,18 @@ fn test_iterate_on_direction_iterator() {
     assert_eq!(expect, result);
 }
 
+// Test for Display trait implementation on BitBoard
+#[test]
+fn test_display_on_a_bitboard() {
+    // Arrange
+    let bitboard = BitBoard::full();
+
+    // Act
+    println!("{}", bitboard);
+
+    // Assert
+}
+
 // TODO: Add tests for Not (trait implementation)
 // TODO: Add tests for BitOr (trait implementation)
 // TODO: Add tests for BitXor (trait implementation)
