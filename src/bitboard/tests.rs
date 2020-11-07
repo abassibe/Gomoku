@@ -283,3 +283,5 @@ fn test_display_on_a_bitboard() {
 // TODO: Add tests for BitXorAssign (trait implementation)
 // TODO: Add tests for BitAndAssign (trait implementation)
 // TODO: Add tests for Eq/PartialEq (derived trait)
+// TODO: Add tests for is_full/is_empty
+// TODO: Add tests for constructors BitBoard::full()/BitBoard::empty()
