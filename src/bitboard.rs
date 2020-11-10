@@ -493,7 +493,7 @@ impl Sub<Direction> for &BitBoard {
 
 impl fmt::Display for BitBoard {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let mut str_repr = format!("{:b}{:b}{:b}", self.b[0], self.b[1], self.b[2]);
+        let mut str_repr = format!("{:0128b}{:0128b}{:0128b}", self.b[0], self.b[1], self.b[2]);
         let mut str_vec: Vec<String> = vec![];
         let mut result = Ok(());
 
