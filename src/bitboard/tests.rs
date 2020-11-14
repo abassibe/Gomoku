@@ -275,6 +275,15 @@ fn test_display_on_a_bitboard() {
     // Assert
 }
 
+#[test]
+fn test_set_and_get() {
+    let mut board = BitBoard::empty();
+
+	board = board.set((5,1));
+    println!("{}", board);
+    assert!(board.get((5,1)));
+}
+
 // TODO: Add tests for Not (trait implementation)
 // TODO: Add tests for BitOr (trait implementation)
 // TODO: Add tests for BitXor (trait implementation)
