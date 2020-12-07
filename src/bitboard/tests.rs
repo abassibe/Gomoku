@@ -1,6 +1,9 @@
 use super::{*, axis::*, direction::*};
 
-// Tests for struct BitBoard
+
+//=======================================
+// Tests for bit shift on struct BitBoard
+//=======================================
 #[test]
 fn test_bitshift_left_by_4_on_bitboard() {
     // Arrange
@@ -235,7 +238,9 @@ fn test_bitshift_right_by_any_value() {
     // No assert
 }
 
+//==============================
 // Tests for struct AxisIterator
+//==============================
 #[test]
 fn test_iterate_on_axis_iterator() {
     // Arrange
@@ -249,7 +254,9 @@ fn test_iterate_on_axis_iterator() {
     assert_eq!(expect, result);
 }
 
+//===================================
 // Tests for struct DirectionIterator
+//===================================
 #[test]
 fn test_iterate_on_direction_iterator() {
     // Arrange
@@ -263,9 +270,11 @@ fn test_iterate_on_direction_iterator() {
     assert_eq!(expect, result);
 }
 
+//==================================================
 // Test for Display trait implementation on BitBoard
+//==================================================
 #[test]
-fn test_display_on_a_bitboard() {
+fn test_display_on_a_bitboard_full() {
     // Arrange
     let bitboard = BitBoard::full();
 
@@ -274,6 +283,21 @@ fn test_display_on_a_bitboard() {
 
     // Assert
 }
+
+#[test]
+fn test_display_on_a_bitboard_empty() {
+    // Arrange
+    let bitboard = BitBoard::empty();
+
+    // Act
+    println!("{}", bitboard);
+
+    // Assert
+}
+
+//===============================================
+// Tests for Not trait implementation on BitBoard
+//===============================================
 
 // TODO: Add tests for Not (trait implementation)
 // TODO: Add tests for BitOr (trait implementation)
