@@ -27,12 +27,15 @@ pub struct BitBoard {
 // ----------------------------------------
 // Homemade methods implemented on BitBoard
 // ----------------------------------------
+
+// #region Methods
 impl BitBoard {
     const MOVE_UP_DOWN_SHIFT_VALUE: u32 = 19;
 
     // ------------
     // Constructors
     // ------------
+    // #region Constructors
     pub fn new(one: u128, two: u128, three: u128) -> Self {
         Self { b: [one, two, three] }
     }
@@ -48,10 +51,12 @@ impl BitBoard {
     pub fn empty() -> Self {
         Self::default()
     }
+    // #endregion Constructors
 
     // -------------
     // Tests methods
     // -------------
+    // #region Test methods
     /// Returns `true` if **every** bits are set to 1 in the bitboard.
     /// Returns `false` otherwise.
     pub fn is_full(&self) -> bool {
@@ -75,6 +80,7 @@ impl BitBoard {
 
         true
     }
+    // #endregion Test methods
 
     // ---------------------------------
     // Computation's method for BitBoard
@@ -86,6 +92,7 @@ impl BitBoard {
     // ---------------------------------------
     // Implementation of bitshift for BitBoard
     // ---------------------------------------
+    // #region Bitshift implem
     #[inline]
     fn shift_left(&self, by: usize) -> Self {
         let bits = self.b;
@@ -151,6 +158,7 @@ impl BitBoard {
             Direction::All => unimplemented!("You MUST not use Direction::All with this method")
         }
     }
+    // #endregion Bitshift implem
 
     // --------------------
     // Methods for dilation
@@ -190,10 +198,13 @@ impl BitBoard {
         }
     }
 }
+// #endregion Method
 
 // ----------------------------------------------
 // Implementation of trait's methods on BitBoard.
 // ----------------------------------------------
+
+// #region Traits
 impl Default for BitBoard {
     /// Create a new instance of an empty `BitBoard`
     fn default() -> Self {
@@ -203,7 +214,9 @@ impl Default for BitBoard {
     }
 }
 
-// Bitshift on the left
+// #region Trait bitshift
+
+// #region Bitshift on the left
 impl Shl<u32> for BitBoard {
     type Output = Self;
 
@@ -265,8 +278,9 @@ impl Shl<Direction> for &BitBoard {
         self.shift_direction(rhs)
     }
 }
+// #endregion Bitshift on the left
 
-// Bitshift on the right
+// #region Bitshift on the right
 impl Shr<u32> for BitBoard {
     type Output = Self;
 
@@ -328,7 +342,10 @@ impl Shr<Direction> for &BitBoard {
         self.shift_direction(rhs)
     }
 }
+// #endregion Bitshift on the right
+// #endregion Trait bitshift
 
+// #region Trait bitwise op
 impl BitOr for BitBoard {
     type Output = Self;
 
@@ -454,7 +471,9 @@ impl Not for &BitBoard {
         Self::Output { b: [!self.b[0], !self.b[1], !self.b[2]] }
     }
 }
+// #endregion Trait bitwise op
 
+// #region Trait add for dilation
 impl Add<Direction> for BitBoard {
     type Output = Self;
 
@@ -472,7 +491,9 @@ impl Add<Direction> for &BitBoard {
         self.dilate(rhs)
     }
 }
+// #endregion Trait add for dilation
 
+// #region Trait sub for erosion
 impl Sub<Direction> for BitBoard {
     type Output = Self;
 
@@ -490,6 +511,7 @@ impl Sub<Direction> for &BitBoard {
         self.erode(rhs)
     }
 }
+// #endregion Trait sub for erosion
 
 impl fmt::Display for BitBoard {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -509,3 +531,4 @@ impl fmt::Display for BitBoard {
         result
     }
 }
+// #endregion Traits

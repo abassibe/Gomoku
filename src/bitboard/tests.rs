@@ -3,6 +3,8 @@ use super::{*, axis::*, direction::*};
 //=======================================
 // Tests for bit shift on struct BitBoard
 //=======================================
+
+// #region Tests bitshift
 #[test]
 fn test_bitshift_left_by_4_on_bitboard() {
     // Arrange
@@ -236,10 +238,13 @@ fn test_bitshift_right_by_any_value() {
 
     // No assert
 }
+// #endregion Tests bitshift
 
 //==============================
 // Tests for struct AxisIterator
 //==============================
+
+// #region Tests AxisIterator
 #[test]
 fn test_iterate_on_axis_iterator() {
     // Arrange
@@ -252,10 +257,13 @@ fn test_iterate_on_axis_iterator() {
     // Assert
     assert_eq!(expect, result);
 }
+// #endregion Tests AxisIterator
 
 //===================================
 // Tests for struct DirectionIterator
 //===================================
+
+// #region Tests DirectionIterator
 #[test]
 fn test_iterate_on_direction_iterator() {
     // Arrange
@@ -268,10 +276,13 @@ fn test_iterate_on_direction_iterator() {
     // Assert
     assert_eq!(expect, result);
 }
+// #endregion Tests DirectionIterator
 
 //==================================================
 // Test for Display trait implementation on BitBoard
 //==================================================
+
+// #region Tests Display
 #[test]
 fn test_display_on_a_bitboard_full() {
     // Arrange
@@ -293,11 +304,13 @@ fn test_display_on_a_bitboard_empty() {
 
     // Assert
 }
-
+// #endregion Tests Display
 
 //===============================================
 // Tests for Not trait implementation on BitBoard
 //===============================================
+
+// #region Tests Not
 #[test]
 fn test_not_on_bitboard_full() {
     // Arrange
@@ -344,10 +357,13 @@ fn test_not_on_bitboard_with_some_bits_set() {
     // Assert
     assert_eq!(expected, result);
 }
+// #endregion Tests Not
 
 //=================================================
 // Tests for BitOr trait implementation on BitBoard
 //=================================================
+
+// #region Tests BitOr
 #[test]
 fn test_bitor_on_bitboard_empty_with_full() {
     // Arrange
@@ -455,10 +471,13 @@ fn test_bitor_on_ref_bitboard_even_bits_set_with_on_odd_bits_set() {
     // Assert
     assert_eq!(expected, result);
 }
+// #endregion Tests BitOr
 
 //==================================================
 // Tests for BitXor trait implementation on BitBoard
 //==================================================
+
+// #region Tests BitXor
 #[test]
 fn test_bitxor_on_bitboard_empty_with_full() {
     // Arrange
@@ -566,10 +585,13 @@ fn test_bitxor_on_ref_bitboard_partially_set_with_same() {
     // Assert
     assert_eq!(expected, result);
 }
+// #endregion Tests BitXor
 
 //==================================================
 // Tests for BitAnd trait implementation on BitBoard
 //==================================================
+
+// #region Tests BitAnd
 #[test]
 fn test_bitand_on_bitboard_empty_with_full() {
     // Arrange
@@ -677,10 +699,13 @@ fn test_bitand_on_ref_bitboard_partially_set_with_same() {
     // Assert
     assert_eq!(expected, result);
 }
+// #endregion Tests BitAnd
 
 //=======================================================
 // Tests for BitOrAssign trait implementation on BitBoard
 //=======================================================
+
+// #region Tests BitOrAssign
 #[test]
 fn test_bitorassign_on_bitboard_empty_with_full() {
     // Arrange
@@ -788,10 +813,13 @@ fn test_bitorassign_on_ref_bitboard_even_bits_set_with_on_odd_bits_set() {
     // Assert
     assert_eq!(expected, bitboard);
 }
+// #endregion Tests BitOrAssign
 
 //========================================================
 // Tests for BitXorAssign trait implementation on BitBoard
 //========================================================
+
+// #region Tests BitXorAssign
 #[test]
 fn test_bitxorassign_on_bitboard_empty_with_full() {
     // Arrange
@@ -899,10 +927,13 @@ fn test_bitxorassign_on_ref_bitboard_even_bits_set_with_on_odd_bits_set() {
     // Assert
     assert_eq!(expected, bitboard);
 }
+// #endregion Tests BitXorAssign
 
 //========================================================
 // Tests for BitAndAssign trait implementation on BitBoard
 //========================================================
+
+// #region Tests BitAndAssign
 #[test]
 fn test_bitandassign_on_bitboard_empty_with_full() {
     // Arrange
@@ -1010,10 +1041,13 @@ fn test_bitandassign_on_ref_bitboard_even_bits_set_with_on_odd_bits_set() {
     // Assert
     assert_eq!(expected, bitboard);
 }
+// #endregion Tests BitAndAssign
 
 //========================================================
 // Tests for Eq/PartialEq trait implementation on BitBoard
 //========================================================
+
+// #region Tests Eq/PartialEq
 #[test]
 fn test_equality_on_bitboard_with_full() {
     // Arrange
@@ -1173,10 +1207,13 @@ fn test_unequality_on_bitboard_some_bits_set() {
     // Assert
     assert_eq!(expected, result);
 }
+// #endregion Tests Eq/PartialEq
 
 //=====================================
 // Tests for is_full method on BitBoard
 //=====================================
+
+// #region Tests is_full
 #[test]
 fn test_method_is_full_on_bitboard_half_empty() {
     // Arrange
@@ -1240,10 +1277,13 @@ fn test_method_is_full_on_bitboard_full() {
     // Assert
     assert_eq!(expected, result);
 }
+// #endregion Tests is_full
 
 //======================================
 // Tests for is_empty method on BitBoard
 //======================================
+
+// #region Tests is_empty
 #[test]
 fn test_method_is_empty_on_bitboard_half_empty() {
     // Arrange
@@ -1307,10 +1347,13 @@ fn test_method_is_empty_on_bitboard_empty() {
     // Assert
     assert_eq!(expected, result);
 }
+// #endregion Tests is_empty
 
 //==============================================
 // Tests for constructor method full on BitBoard
 //==============================================
+
+// #region Tests constructor full
 #[test]
 fn test_constructor_method_full_on_bitboard() {
     // Arrange
@@ -1328,10 +1371,13 @@ fn test_constructor_method_full_on_bitboard() {
     // Assert
     assert_eq!(expected, result);
 }
+// #endregion Tests constructor full
 
 //===============================================
 // Tests for constructor method empty on BitBoard
 //===============================================
+
+// #region Tests constructor empty
 #[test]
 fn test_constructor_method_empty_on_bitboard() {
     // Arrange
@@ -1349,3 +1395,4 @@ fn test_constructor_method_empty_on_bitboard() {
     // Assert
     assert_eq!(expected, result);
 }
+// #endregion Tests constructor empty
