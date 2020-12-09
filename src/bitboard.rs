@@ -14,7 +14,7 @@ use axis::*;
 
 const BITS_IN_U128: usize = size_of::<u128>() * 8;
 
-// TODO: Implement method to get/set one or several bits by index
+// TODO: Implement method to get/set ~one or~ several bits by index
 // TODO: Implement method to get/set one or several bits by coordonate (X, Y flatten to index then call previous method above)
 // TODO: Implement mehtod to perform pattern matching!
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
@@ -93,6 +93,26 @@ impl BitBoard {
     // ---------------------------------
     pub fn compute_to_isize<F: Fn(&Self) -> isize>(&self, f: F) -> isize {
         f(self)
+    }
+
+    // ----------
+    // Bit setter
+    // ----------
+    fn set(&mut self, bit_index: isize, bit_value: bool) {
+        let max_index = (BITS_IN_U128 * self.b.len()) as isize;
+        let min_index = -max_index;
+        if bit_index >= max_index || bit_index < min_index {
+            return;
+        }
+        let requested_bit = match bit_index.is_negative() {
+            true => BitBoard::from_array([0, 0, 1]) << (bit_index.abs() - 1) as usize,
+            false => BitBoard::from_array([1 << 127, 0, 0]) >> bit_index as usize
+        };
+        let is_bit_set = (*self & requested_bit).is_any();
+        let mut new_self = self;
+        if (is_bit_set && !bit_value) || (!is_bit_set && bit_value) {
+            new_self ^= &requested_bit;
+        }
     }
 
     // ---------------------------------------
@@ -454,6 +474,15 @@ impl BitXorAssign for BitBoard {
 impl BitXorAssign<&BitBoard> for BitBoard {
     /// Perform an in place bitwise operation XOR between two `BitBoard`'s references.
     fn bitxor_assign(&mut self, rhs: &Self) {
+        self.b[0] ^= rhs.b[0];
+        self.b[1] ^= rhs.b[1];
+        self.b[2] ^= rhs.b[2];
+    }
+}
+
+impl BitXorAssign<&BitBoard> for &mut BitBoard {
+    /// Perform an in place bitwise operation XOR between two `BitBoard`'s references.
+    fn bitxor_assign(&mut self, rhs: &BitBoard) {
         self.b[0] ^= rhs.b[0];
         self.b[1] ^= rhs.b[1];
         self.b[2] ^= rhs.b[2];
