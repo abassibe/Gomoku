@@ -1396,3 +1396,201 @@ fn test_constructor_method_empty_on_bitboard() {
     assert_eq!(expected, result);
 }
 // #endregion Tests constructor empty
+
+//=================================================
+// Tests for Index trait implementation on BitBoard
+//=================================================
+
+// #region Tests Index
+#[test]
+fn test_index_on_bitboard_with_bit_set() {
+    // Arrange
+    let bitboard = BitBoard {
+        b: [
+            0b00000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+        ]
+    };
+    let bit_index = [41, 42, 43];
+    let expected = [false, true, false];
+
+    // Act
+    let results = [bitboard[bit_index[0]], bitboard[bit_index[1]], bitboard[bit_index[2]]];
+
+    // Assert
+    assert_eq!(expected, results);
+}
+
+#[test]
+fn test_index_on_bitboard_with_bit_set_neg_index() {
+    // Arrange
+    let bitboard = BitBoard {
+        b: [
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000
+        ]
+    };
+    let bit_index = [-41, -42, -43];
+    let expected = [false, true, false];
+
+    // Act
+    let results = [bitboard[bit_index[0]], bitboard[bit_index[1]], bitboard[bit_index[2]]];
+
+    // Assert
+    assert_eq!(expected, results);
+}
+
+// TODO: Add tests for Index<(usize, usize)> and Index<(u32, u32)>
+// #endregion Tests Index
+
+//=================================
+// Tests for set method on BitBoard
+//=================================
+
+// #region Tests set
+#[test]
+fn test_method_set_on_bitboard_empty_set() {
+    // Arrange
+    let mut bitboard = BitBoard::empty();
+    let expected = BitBoard {
+        b: [
+            0b00000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+        ]
+    };
+    let bit_index = 42;
+    let bit_value = true;
+
+    // Act
+    bitboard.set(bit_index, bit_value);
+
+    // Assert
+    assert_eq!(expected, bitboard);
+}
+
+#[test]
+fn test_method_set_on_bitboard_full_set() {
+    // Arrange
+    let mut bitboard = BitBoard::full();
+    let expected = BitBoard::full();
+    let bit_index = 42;
+    let bit_value = true;
+
+    // Act
+    bitboard.set(bit_index, bit_value);
+
+    // Assert
+    assert_eq!(expected, bitboard);
+}
+
+#[test]
+fn test_method_set_on_bitboard_empty_unset() {
+    // Arrange
+    let mut bitboard = BitBoard::empty();
+    let expected = BitBoard::empty();
+    let bit_index = 42;
+    let bit_value = false;
+
+    // Act
+    bitboard.set(bit_index, bit_value);
+
+    // Assert
+    assert_eq!(expected, bitboard);
+}
+
+#[test]
+fn test_method_set_on_bitboard_full_unset() {
+    // Arrange
+    let mut bitboard = BitBoard::full();
+    let expected = BitBoard {
+        b: [
+            0b11111111111111111111111111111111111111111101111111111111111111111111111111111111111111111111111111111111111111111111111111111111,
+            0b11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111,
+            0b11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+        ]
+    };
+    let bit_index = 42;
+    let bit_value = false;
+
+    // Act
+    bitboard.set(bit_index, bit_value);
+
+    // Assert
+    assert_eq!(expected, bitboard);
+}
+
+#[test]
+fn test_method_set_on_bitboard_empty_set_neg_index() {
+    // Arrange
+    let mut bitboard = BitBoard::empty();
+    let expected = BitBoard {
+        b: [
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000
+        ]
+    };
+    let bit_index = -42;
+    let bit_value = true;
+
+    // Act
+    bitboard.set(bit_index, bit_value);
+
+    // Assert
+    assert_eq!(expected, bitboard);
+}
+
+#[test]
+fn test_method_set_on_bitboard_full_set_neg_index() {
+    // Arrange
+    let mut bitboard = BitBoard::full();
+    let expected = BitBoard::full();
+    let bit_index = -42;
+    let bit_value = true;
+
+    // Act
+    bitboard.set(bit_index, bit_value);
+
+    // Assert
+    assert_eq!(expected, bitboard);
+}
+
+#[test]
+fn test_method_set_on_bitboard_empty_unset_neg_index() {
+    // Arrange
+    let mut bitboard = BitBoard::empty();
+    let expected = BitBoard::empty();
+    let bit_index = -42;
+    let bit_value = false;
+
+    // Act
+    bitboard.set(bit_index, bit_value);
+
+    // Assert
+    assert_eq!(expected, bitboard);
+}
+
+#[test]
+fn test_method_set_on_bitboard_full_unset_neg_index() {
+    // Arrange
+    let mut bitboard = BitBoard::full();
+    let expected = BitBoard {
+        b: [
+            0b11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111,
+            0b11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111,
+            0b11111111111111111111111111111111111111111111111111111111111111111111111111111111111111011111111111111111111111111111111111111111
+        ]
+    };
+    let bit_index = -42;
+    let bit_value = false;
+
+    // Act
+    bitboard.set(bit_index, bit_value);
+
+    // Assert
+    assert_eq!(expected, bitboard);
+}
+// #endregion Tests set
