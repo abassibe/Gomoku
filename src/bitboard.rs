@@ -561,7 +561,7 @@ impl fmt::Display for BitBoard {
         let mut str_vec: Vec<String> = vec![];
         let mut result = Ok(());
 
-        for i in 0..19 {
+        for _ in 0..19 {
             str_vec.push(str_repr[..19].into());
             str_repr = str_repr[19..].into();
         }
