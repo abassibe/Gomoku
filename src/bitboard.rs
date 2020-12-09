@@ -31,6 +31,8 @@ pub struct BitBoard {
 // #region Methods
 impl BitBoard {
     const MOVE_UP_DOWN_SHIFT_VALUE: u32 = 19;
+    const INDEX_RETURN_FALSE: bool = false;
+    const INDEX_RETURN_TRUE: bool = true;
 
     // ------------
     // Constructors
