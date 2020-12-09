@@ -5,18 +5,16 @@ pub(crate) mod direction;
 mod tests;
 
 use std::{
-    mem::size_of,
     fmt,
-    ops::{Add, BitAnd, BitOr, BitXor, Not, Shl, Shr, Sub, BitOrAssign, BitXorAssign, BitAndAssign}
+    mem::size_of,
+    ops::{Add, BitAnd, BitOr, BitXor, Not, Shl, Shr, Sub, BitOrAssign, BitXorAssign, BitAndAssign, Index}
 };
 use direction::*;
 use axis::*;
 
 const BITS_IN_U128: usize = size_of::<u128>() * 8;
 
-// TODO: Implement trait Index!
 // TODO: Implement method to get/set one or several bits by index
-// TODO: Implement trait Index<(u32, u32)>?!
 // TODO: Implement method to get/set one or several bits by coordonate (X, Y flatten to index then call previous method above)
 // TODO: Implement mehtod to perform pattern matching!
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
@@ -575,4 +573,89 @@ impl fmt::Display for BitBoard {
         result
     }
 }
+
+// #region Trait index
+impl Index<usize> for BitBoard {
+    type Output = bool;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        if index >= BITS_IN_U128 * self.b.len() {
+            return &Self::INDEX_RETURN_FALSE;
+        }
+        let requested_bit = BitBoard::from_array([1 << 127, 0, 0]) >> index;
+        if (self & &requested_bit).is_any() {
+            &Self::INDEX_RETURN_TRUE
+        }
+        else {
+            &Self::INDEX_RETURN_FALSE
+        }
+    }
+}
+
+impl Index<isize> for BitBoard {
+    type Output = bool;
+
+    fn index(&self, index: isize) -> &Self::Output {
+        let max_index = (BITS_IN_U128 * self.b.len()) as isize;
+        let min_index = -max_index;
+        if index >= max_index || index < min_index {
+            return &Self::INDEX_RETURN_FALSE;
+        }
+        let requested_bit = match index.is_negative() {
+            true => BitBoard::from_array([0, 0, 1]) << (index.abs() - 1) as usize,
+            false => BitBoard::from_array([1 << 127, 0, 0]) >> index as usize
+        };
+        if (self & &requested_bit).is_any() {
+            &Self::INDEX_RETURN_TRUE
+        }
+        else {
+            &Self::INDEX_RETURN_FALSE
+        }
+    }
+}
+
+impl Index<u32> for BitBoard {
+    type Output = bool;
+
+    fn index(&self, index: u32) -> &Self::Output {
+        &self[index as usize]
+    }
+}
+
+impl Index<i32> for BitBoard {
+    type Output = bool;
+
+    fn index(&self, index: i32) -> &Self::Output {
+        &self[index as isize]
+    }
+}
+
+impl Index<(usize, usize)> for BitBoard {
+    type Output = bool;
+
+    // Here we assume that (0, 0) is at the top left corner of the board
+    // with x for the horizontal axis
+    // and y for the vertical axis
+    fn index(&self, coord: (usize, usize)) -> &Self::Output {
+        let x = coord.0;
+        let y = coord.1;
+        if x >= Self::MOVE_UP_DOWN_SHIFT_VALUE as usize || y >= Self::MOVE_UP_DOWN_SHIFT_VALUE as usize {
+            return &Self::INDEX_RETURN_FALSE;
+        }
+        &self[y * Self::MOVE_UP_DOWN_SHIFT_VALUE as usize + x]
+    }
+}
+
+impl Index<(u32, u32)> for BitBoard {
+    type Output = bool;
+
+    // Here we assume that (0, 0) is at the top left corner of the board
+    // with x for the horizontal axis
+    // and y for the vertical axis
+    fn index(&self, coord: (u32, u32)) -> &Self::Output {
+        &self[(coord.0 as usize, coord.1 as usize)]
+    }
+}
+// #endregion Trait index
+
 // #endregion Traits
