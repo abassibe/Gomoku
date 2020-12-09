@@ -80,6 +80,12 @@ impl BitBoard {
 
         true
     }
+
+    /// Returns `true` if **at least** one bit is set to 1 in the bitboard.
+    /// Returns `false` otherwise.
+    pub fn is_any(&self) -> bool {
+        !self.is_empty()
+    }
     // #endregion Test methods
 
     // ---------------------------------
