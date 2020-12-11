@@ -98,7 +98,6 @@ impl Goban
             }
         }
         ret
-        // TODO Flag pawns that were found in alignment
     }
 }
 
