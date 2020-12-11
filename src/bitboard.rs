@@ -5,18 +5,16 @@ pub(crate) mod direction;
 mod tests;
 
 use std::{
-    mem::size_of,
     fmt,
-    ops::{Add, BitAnd, BitOr, BitXor, Not, Shl, Shr, Sub, BitOrAssign, BitXorAssign, BitAndAssign}
+    mem::size_of,
+    ops::{Add, BitAnd, BitOr, BitXor, Not, Shl, Shr, Sub, BitOrAssign, BitXorAssign, BitAndAssign, Index}
 };
 use direction::*;
 use axis::*;
 
 const BITS_IN_U128: usize = size_of::<u128>() * 8;
 
-// TODO: Implement trait Index!
-// TODO: Implement method to get/set one or several bits by index
-// TODO: Implement trait Index<(u32, u32)>?!
+// TODO: Implement method to get/set ~one or~ several bits by index
 // TODO: Implement method to get/set one or several bits by coordonate (X, Y flatten to index then call previous method above)
 // TODO: Implement mehtod to perform pattern matching!
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
@@ -27,12 +25,29 @@ pub struct BitBoard {
 // ----------------------------------------
 // Homemade methods implemented on BitBoard
 // ----------------------------------------
+
+// #region Methods
 impl BitBoard {
-    const MOVE_UP_DOWN_SHIFT_VALUE: u32 = 19;
+    const NUMBER_OF_COLS: u32 = 19;
+    /// This is the value used to perform a bitshift on a BitBoard
+    /// when we have to move UP or DOWN all bit set on the BitBoard.
+    /// This value is the number of columns in the BitBoard + 1
+    /// (to take in account the separating bit at the end of each row).
+    const MOVE_UP_DOWN_SHIFT_VALUE: u32 = Self::NUMBER_OF_COLS + 1;
+    const INDEX_RETURN_FALSE: bool = false;
+    const INDEX_RETURN_TRUE: bool = true;
+    const ENDLINE_DELIMITER_MASK: Self = Self {
+        b: [
+            0b11111111111111111110111111111111111111101111111111111111111011111111111111111110111111111111111111101111111111111111111011111111,
+            0b11111111111011111111111111111110111111111111111111101111111111111111111011111111111111111110111111111111111111101111111111111111,
+            0b11101111111111111111111011111111111111111110111111111111111111101111111111111111111011111111111111111110111111111111111111100000
+        ]
+    };
 
     // ------------
     // Constructors
     // ------------
+    // #region Constructors
     pub fn new(one: u128, two: u128, three: u128) -> Self {
         Self { b: [one, two, three] }
     }
@@ -48,38 +63,12 @@ impl BitBoard {
     pub fn empty() -> Self {
         Self::default()
     }
+    // #endregion Constructors
 
-    pub fn set(&self, at: (u32, u32)) -> Self {
-        let mut ret = BitBoard::from_array([
-            0b10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
-            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
-            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-        ]);
-
-	    if at.0 > 19 || at.1 > 19 {
-            panic!("X or Y higher than size (set)")
-        }
-        ret = ret >> (at.0 + at.1 * 19);
-	    ret |= *self;
-	    ret
-    }
-
-    pub fn get(&self, at: (u32, u32)) -> bool {
-        let mut ret = BitBoard::from_array([
-            0b10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
-            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
-            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-        ]);
-
-        if at.0 > 19 || at.1 > 19 {
-            panic!("X or Y higher than size (get)")
-        }
-        ret = ret >> (at.0 + at.1 * 19);
-        !(ret & *self).is_empty()
-    }
     // -------------
     // Tests methods
     // -------------
+    // #region Test methods
     /// Returns `true` if **every** bits are set to 1 in the bitboard.
     /// Returns `false` otherwise.
     pub fn is_full(&self) -> bool {
@@ -104,6 +93,13 @@ impl BitBoard {
         true
     }
 
+    /// Returns `true` if **at least** one bit is set to 1 in the bitboard.
+    /// Returns `false` otherwise.
+    pub fn is_any(&self) -> bool {
+        !self.is_empty()
+    }
+    // #endregion Test methods
+
     // ---------------------------------
     // Computation's method for BitBoard
     // ---------------------------------
@@ -111,9 +107,30 @@ impl BitBoard {
         f(self)
     }
 
+    // ----------
+    // Bit setter
+    // ----------
+    fn set(&mut self, bit_index: isize, bit_value: bool) {
+        let max_index = (BITS_IN_U128 * self.b.len()) as isize;
+        let min_index = -max_index;
+        if bit_index >= max_index || bit_index < min_index {
+            return;
+        }
+        let requested_bit = match bit_index.is_negative() {
+            true => BitBoard::from_array([0, 0, 1]) << (bit_index.abs() - 1) as usize,
+            false => BitBoard::from_array([1 << 127, 0, 0]) >> bit_index as usize
+        };
+        let is_bit_set = (*self & requested_bit).is_any();
+        let mut new_self = self;
+        if (is_bit_set && !bit_value) || (!is_bit_set && bit_value) {
+            new_self ^= &requested_bit;
+        }
+    }
+
     // ---------------------------------------
     // Implementation of bitshift for BitBoard
     // ---------------------------------------
+    // #region Bitshift implem
     #[inline]
     fn shift_left(&self, by: usize) -> Self {
         let bits = self.b;
@@ -167,7 +184,7 @@ impl BitBoard {
     // TODO: Missing doc here
     fn shift_direction(&self, direction: Direction) -> Self {
         let board = *self;
-        match direction {
+        *match direction {
             Direction::N => board << Self::MOVE_UP_DOWN_SHIFT_VALUE,
             Direction::S => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE,
             Direction::E => board >> 1,
@@ -177,8 +194,17 @@ impl BitBoard {
             Direction::SE => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE + 1,
             Direction::SW => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE - 1,
             Direction::All => unimplemented!("You MUST not use Direction::All with this method")
-        }
+        }.apply_endline_delimiter_mask()
     }
+
+    /// This method cleans all the bits set in the 20eme column
+    /// which are the separating bits.
+    fn apply_endline_delimiter_mask(&mut self) -> &Self {
+        let mut new_self = self;
+        new_self &= &Self::ENDLINE_DELIMITER_MASK;
+        new_self
+    }
+    // #endregion Bitshift implem
 
     // --------------------
     // Methods for dilation
@@ -186,16 +212,32 @@ impl BitBoard {
     /// This method should remain private.
     /// Use the operator `+` instead.
     #[inline]
-    fn dilate(&self, dir: Direction) -> Self {
+    fn dilate_dir(&self, dir: Direction) -> Self {
         match dir {
             Direction::All => {
                 let mut result = *self;
                 for d in DirectionIterator::new() {
-                    result |= self >> d;
+                    result |= self << d;
                 }
                 result
             },
             d => *self | (self << d)
+        }
+    }
+
+    /// This method should remain private.
+    /// Use the operator `+` instead.
+    #[inline]
+    fn dilate_axis(&self, dir: Axis) -> Self {
+        match dir {
+            Axis::All => {
+                let mut result = *self;
+                for d in AxisIterator::new() {
+                    result |= self << d;
+                }
+                result
+            },
+            d => *self | (self << d.to_direction())
         }
     }
 
@@ -205,7 +247,7 @@ impl BitBoard {
     /// This method should remain private.
     /// Use the operator `-` instead.
     #[inline]
-    fn erode(&self, dir: Direction) -> Self {
+    fn erode_dir(&self, dir: Direction) -> Self {
         match dir {
             Direction::All => {
                 let mut result = *self;
@@ -217,11 +259,31 @@ impl BitBoard {
             d => *self & (self << d)
         }
     }
+
+    /// This method should remain private.
+    /// Use the operator `-` instead.
+    #[inline]
+    fn erode_axis(&self, dir: Axis) -> Self {
+        match dir {
+            Axis::All => {
+                let mut result = *self;
+                for d in AxisIterator::new() {
+                    println!("Result:\n{}", result);
+                    result &= self << d;
+                }
+                result
+            },
+            d => *self & (self << d.to_direction())
+        }
+    }
 }
+// #endregion Method
 
 // ----------------------------------------------
 // Implementation of trait's methods on BitBoard.
 // ----------------------------------------------
+
+// #region Traits
 impl Default for BitBoard {
     /// Create a new instance of an empty `BitBoard`
     fn default() -> Self {
@@ -231,7 +293,9 @@ impl Default for BitBoard {
     }
 }
 
-// Bitshift on the left
+// #region Trait bitshift
+
+// #region Bitshift on the left
 impl Shl<u32> for BitBoard {
     type Output = Self;
 
@@ -247,6 +311,24 @@ impl Shl<u32> for &BitBoard {
     /// Perform bitshift operation to the left on a `BitBoard`'s reference using a u32.
     fn shl(self, rhs: u32) -> Self::Output {
         self.shift_left(rhs as usize)
+    }
+}
+
+impl Shl<usize> for BitBoard {
+    type Output = Self;
+
+    /// Perform bitshift operation to the left on a `BitBoard` using a usize.
+    fn shl(self, rhs: usize) -> Self::Output {
+        self.shift_left(rhs)
+    }
+}
+
+impl Shl<usize> for &BitBoard {
+    type Output = BitBoard;
+
+    /// Perform bitshift operation to the left on a `BitBoard`'s reference using a usize.
+    fn shl(self, rhs: usize) -> Self::Output {
+        self.shift_left(rhs)
     }
 }
 
@@ -293,8 +375,9 @@ impl Shl<Direction> for &BitBoard {
         self.shift_direction(rhs)
     }
 }
+// #endregion Bitshift on the left
 
-// Bitshift on the right
+// #region Bitshift on the right
 impl Shr<u32> for BitBoard {
     type Output = Self;
 
@@ -310,6 +393,24 @@ impl Shr<u32> for &BitBoard {
     /// Perform bitshift operation to the right on a `BitBoard`'s reference using a u32.
     fn shr(self, rhs: u32) -> Self::Output {
         self.shift_right(rhs as usize)
+    }
+}
+
+impl Shr<usize> for BitBoard {
+    type Output = Self;
+
+    /// Perform bitshift operation to the right on a `BitBoard` using a usize.
+    fn shr(self, rhs: usize) -> Self::Output {
+        self.shift_right(rhs)
+    }
+}
+
+impl Shr<usize> for &BitBoard {
+    type Output = BitBoard;
+
+    /// Perform bitshift operation to the right on a `BitBoard`'s reference using a usize.
+    fn shr(self, rhs: usize) -> Self::Output {
+        self.shift_right(rhs)
     }
 }
 
@@ -356,7 +457,10 @@ impl Shr<Direction> for &BitBoard {
         self.shift_direction(rhs)
     }
 }
+// #endregion Bitshift on the right
+// #endregion Trait bitshift
 
+// #region Trait bitwise op
 impl BitOr for BitBoard {
     type Output = Self;
 
@@ -429,6 +533,15 @@ impl BitXorAssign<&BitBoard> for BitBoard {
     }
 }
 
+impl BitXorAssign<&BitBoard> for &mut BitBoard {
+    /// Perform an in place bitwise operation XOR between two `BitBoard`'s references.
+    fn bitxor_assign(&mut self, rhs: &BitBoard) {
+        self.b[0] ^= rhs.b[0];
+        self.b[1] ^= rhs.b[1];
+        self.b[2] ^= rhs.b[2];
+    }
+}
+
 impl BitAnd for BitBoard {
     type Output = Self;
 
@@ -465,6 +578,15 @@ impl BitAndAssign<&BitBoard> for BitBoard {
     }
 }
 
+impl BitAndAssign<&BitBoard> for &mut BitBoard {
+    /// Perform an in place bitwise operation OR between two `BitBoard`'s references.
+    fn bitand_assign(&mut self, rhs: &BitBoard) {
+        self.b[0] &= rhs.b[0];
+        self.b[1] &= rhs.b[1];
+        self.b[2] &= rhs.b[2];
+    }
+}
+
 impl Not for BitBoard {
     type Output = Self;
 
@@ -482,13 +604,15 @@ impl Not for &BitBoard {
         Self::Output { b: [!self.b[0], !self.b[1], !self.b[2]] }
     }
 }
+// #endregion Trait bitwise op
 
+// #region Trait add for dilation
 impl Add<Direction> for BitBoard {
     type Output = Self;
 
     /// Perform a dilation on a `BitBoard` using the provided `Direction`
     fn add(self, rhs: Direction) -> Self::Output {
-        self.dilate(rhs)
+        self.dilate_dir(rhs)
     }
 }
 
@@ -497,16 +621,36 @@ impl Add<Direction> for &BitBoard {
 
     /// Perform a dilation on a `BitBoard`'s reference using the provided `Direction`
     fn add(self, rhs: Direction) -> Self::Output {
-        self.dilate(rhs)
+        self.dilate_dir(rhs)
     }
 }
 
+impl Add<Axis> for BitBoard {
+    type Output = Self;
+
+    /// Perform a dilation on a `BitBoard` using the provided `Direction`
+    fn add(self, rhs: Axis) -> Self::Output {
+        self.dilate_axis(rhs)
+    }
+}
+
+impl Add<Axis> for &BitBoard {
+    type Output = BitBoard;
+
+    /// Perform a dilation on a `BitBoard`'s reference using the provided `Direction`
+    fn add(self, rhs: Axis) -> Self::Output {
+        self.dilate_axis(rhs)
+    }
+}
+// #endregion Trait add for dilation
+
+// #region Trait sub for erosion
 impl Sub<Direction> for BitBoard {
     type Output = Self;
 
     /// Perform an erosion on a `BitBoard` using the provided `Direction`
     fn sub(self, rhs: Direction) -> Self::Output {
-        self.erode(rhs)
+        self.erode_dir(rhs)
     }
 }
 
@@ -515,9 +659,28 @@ impl Sub<Direction> for &BitBoard {
 
     /// Perform an erosion on a `BitBoard`'s reference using the provided `Direction`
     fn sub(self, rhs: Direction) -> Self::Output {
-        self.erode(rhs)
+        self.erode_dir(rhs)
     }
 }
+
+impl Sub<Axis> for BitBoard {
+    type Output = Self;
+
+    /// Perform an erosion on a `BitBoard` using the provided `Direction`
+    fn sub(self, rhs: Axis) -> Self::Output {
+        self.erode_axis(rhs)
+    }
+}
+
+impl Sub<Axis> for &BitBoard {
+    type Output = BitBoard;
+
+    /// Perform an erosion on a `BitBoard`'s reference using the provided `Direction`
+    fn sub(self, rhs: Axis) -> Self::Output {
+        self.erode_axis(rhs)
+    }
+}
+// #endregion Trait sub for erosion
 
 impl fmt::Display for BitBoard {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -525,9 +688,9 @@ impl fmt::Display for BitBoard {
         let mut str_vec: Vec<String> = vec![];
         let mut result = Ok(());
 
-        for i in 0..19 {
+        for _ in 0..19 {
             str_vec.push(str_repr[..19].into());
-            str_repr = str_repr[19..].into();
+            str_repr = str_repr[20..].into();
         }
 
         for s in str_vec.iter() {
@@ -537,3 +700,89 @@ impl fmt::Display for BitBoard {
         result
     }
 }
+
+// #region Trait index
+impl Index<usize> for BitBoard {
+    type Output = bool;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        if index >= BITS_IN_U128 * self.b.len() {
+            return &Self::INDEX_RETURN_FALSE;
+        }
+        let requested_bit = BitBoard::from_array([1 << 127, 0, 0]) >> index;
+        if (self & &requested_bit).is_any() {
+            &Self::INDEX_RETURN_TRUE
+        }
+        else {
+            &Self::INDEX_RETURN_FALSE
+        }
+    }
+}
+
+impl Index<isize> for BitBoard {
+    type Output = bool;
+
+    fn index(&self, index: isize) -> &Self::Output {
+        let max_index = (BITS_IN_U128 * self.b.len()) as isize;
+        let min_index = -max_index;
+        if index >= max_index || index < min_index {
+            return &Self::INDEX_RETURN_FALSE;
+        }
+        let requested_bit = match index.is_negative() {
+            true => BitBoard::from_array([0, 0, 1]) << (index.abs() - 1) as usize,
+            false => BitBoard::from_array([1 << 127, 0, 0]) >> index as usize
+        };
+        if (self & &requested_bit).is_any() {
+            &Self::INDEX_RETURN_TRUE
+        }
+        else {
+            &Self::INDEX_RETURN_FALSE
+        }
+    }
+}
+
+impl Index<u32> for BitBoard {
+    type Output = bool;
+
+    fn index(&self, index: u32) -> &Self::Output {
+        &self[index as usize]
+    }
+}
+
+impl Index<i32> for BitBoard {
+    type Output = bool;
+
+    fn index(&self, index: i32) -> &Self::Output {
+        &self[index as isize]
+    }
+}
+
+impl Index<(usize, usize)> for BitBoard {
+    type Output = bool;
+
+    // Here we assume that (0, 0) is at the top left corner of the board
+    // with x for the horizontal axis
+    // and y for the vertical axis
+    fn index(&self, coord: (usize, usize)) -> &Self::Output {
+        let x = coord.0;
+        let y = coord.1;
+        if x >= Self::NUMBER_OF_COLS as usize || y >= Self::NUMBER_OF_COLS as usize {
+            return &Self::INDEX_RETURN_FALSE;
+        }
+        &self[y * Self::MOVE_UP_DOWN_SHIFT_VALUE as usize + x]
+    }
+}
+
+impl Index<(u32, u32)> for BitBoard {
+    type Output = bool;
+
+    // Here we assume that (0, 0) is at the top left corner of the board
+    // with x for the horizontal axis
+    // and y for the vertical axis
+    fn index(&self, coord: (u32, u32)) -> &Self::Output {
+        &self[(coord.0 as usize, coord.1 as usize)]
+    }
+}
+// #endregion Trait index
+
+// #endregion Traits
