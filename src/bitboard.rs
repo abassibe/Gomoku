@@ -28,9 +28,21 @@ pub struct BitBoard {
 
 // #region Methods
 impl BitBoard {
-    const MOVE_UP_DOWN_SHIFT_VALUE: u32 = 19;
+    const NUMBER_OF_COLS: u32 = 19;
+    /// This is the value used to perform a bitshift on a BitBoard
+    /// when we have to move UP or DOWN all bit set on the BitBoard.
+    /// This value is the number of columns in the BitBoard + 1
+    /// (to take in account the separating bit at the end of each row).
+    const MOVE_UP_DOWN_SHIFT_VALUE: u32 = Self::NUMBER_OF_COLS + 1;
     const INDEX_RETURN_FALSE: bool = false;
     const INDEX_RETURN_TRUE: bool = true;
+    const ENDLINE_DELIMITER_MASK: Self = Self {
+        b: [
+            0b11111111111111111110111111111111111111101111111111111111111011111111111111111110111111111111111111101111111111111111111011111111,
+            0b11111111111011111111111111111110111111111111111111101111111111111111111011111111111111111110111111111111111111101111111111111111,
+            0b11101111111111111111111011111111111111111110111111111111111111101111111111111111111011111111111111111110111111111111111111100000
+        ]
+    };
 
     // ------------
     // Constructors
@@ -172,7 +184,7 @@ impl BitBoard {
     // TODO: Missing doc here
     fn shift_direction(&self, direction: Direction) -> Self {
         let board = *self;
-        match direction {
+        *match direction {
             Direction::N => board << Self::MOVE_UP_DOWN_SHIFT_VALUE,
             Direction::S => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE,
             Direction::E => board >> 1,
@@ -182,7 +194,15 @@ impl BitBoard {
             Direction::SE => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE + 1,
             Direction::SW => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE - 1,
             Direction::All => unimplemented!("You MUST not use Direction::All with this method")
-        }
+        }.apply_endline_delimiter_mask()
+    }
+
+    /// This method cleans all the bits set in the 20eme column
+    /// which are the separating bits.
+    fn apply_endline_delimiter_mask(&mut self) -> &Self {
+        let mut new_self = self;
+        new_self &= &Self::ENDLINE_DELIMITER_MASK;
+        new_self
     }
     // #endregion Bitshift implem
 
@@ -192,7 +212,7 @@ impl BitBoard {
     /// This method should remain private.
     /// Use the operator `+` instead.
     #[inline]
-    fn dilate(&self, dir: Direction) -> Self {
+    fn dilate_dir(&self, dir: Direction) -> Self {
         match dir {
             Direction::All => {
                 let mut result = *self;
@@ -205,13 +225,29 @@ impl BitBoard {
         }
     }
 
+    /// This method should remain private.
+    /// Use the operator `+` instead.
+    #[inline]
+    fn dilate_axis(&self, dir: Axis) -> Self {
+        match dir {
+            Axis::All => {
+                let mut result = *self;
+                for d in AxisIterator::new() {
+                    result |= self << d;
+                }
+                result
+            },
+            d => *self | (self << d.to_direction())
+        }
+    }
+
     // -------------------
     // Methods for erosion
     // -------------------
     /// This method should remain private.
     /// Use the operator `-` instead.
     #[inline]
-    fn erode(&self, dir: Direction) -> Self {
+    fn erode_dir(&self, dir: Direction) -> Self {
         match dir {
             Direction::All => {
                 let mut result = *self;
@@ -221,6 +257,23 @@ impl BitBoard {
                 result
             },
             d => *self & (self << d)
+        }
+    }
+
+    /// This method should remain private.
+    /// Use the operator `-` instead.
+    #[inline]
+    fn erode_axis(&self, dir: Axis) -> Self {
+        match dir {
+            Axis::All => {
+                let mut result = *self;
+                for d in AxisIterator::new() {
+                    println!("Result:\n{}", result);
+                    result &= self << d;
+                }
+                result
+            },
+            d => *self & (self << d.to_direction())
         }
     }
 }
@@ -525,6 +578,15 @@ impl BitAndAssign<&BitBoard> for BitBoard {
     }
 }
 
+impl BitAndAssign<&BitBoard> for &mut BitBoard {
+    /// Perform an in place bitwise operation OR between two `BitBoard`'s references.
+    fn bitand_assign(&mut self, rhs: &BitBoard) {
+        self.b[0] &= rhs.b[0];
+        self.b[1] &= rhs.b[1];
+        self.b[2] &= rhs.b[2];
+    }
+}
+
 impl Not for BitBoard {
     type Output = Self;
 
@@ -550,7 +612,7 @@ impl Add<Direction> for BitBoard {
 
     /// Perform a dilation on a `BitBoard` using the provided `Direction`
     fn add(self, rhs: Direction) -> Self::Output {
-        self.dilate(rhs)
+        self.dilate_dir(rhs)
     }
 }
 
@@ -559,7 +621,25 @@ impl Add<Direction> for &BitBoard {
 
     /// Perform a dilation on a `BitBoard`'s reference using the provided `Direction`
     fn add(self, rhs: Direction) -> Self::Output {
-        self.dilate(rhs)
+        self.dilate_dir(rhs)
+    }
+}
+
+impl Add<Axis> for BitBoard {
+    type Output = Self;
+
+    /// Perform a dilation on a `BitBoard` using the provided `Direction`
+    fn add(self, rhs: Axis) -> Self::Output {
+        self.dilate_axis(rhs)
+    }
+}
+
+impl Add<Axis> for &BitBoard {
+    type Output = BitBoard;
+
+    /// Perform a dilation on a `BitBoard`'s reference using the provided `Direction`
+    fn add(self, rhs: Axis) -> Self::Output {
+        self.dilate_axis(rhs)
     }
 }
 // #endregion Trait add for dilation
@@ -570,7 +650,7 @@ impl Sub<Direction> for BitBoard {
 
     /// Perform an erosion on a `BitBoard` using the provided `Direction`
     fn sub(self, rhs: Direction) -> Self::Output {
-        self.erode(rhs)
+        self.erode_dir(rhs)
     }
 }
 
@@ -579,7 +659,25 @@ impl Sub<Direction> for &BitBoard {
 
     /// Perform an erosion on a `BitBoard`'s reference using the provided `Direction`
     fn sub(self, rhs: Direction) -> Self::Output {
-        self.erode(rhs)
+        self.erode_dir(rhs)
+    }
+}
+
+impl Sub<Axis> for BitBoard {
+    type Output = Self;
+
+    /// Perform an erosion on a `BitBoard` using the provided `Direction`
+    fn sub(self, rhs: Axis) -> Self::Output {
+        self.erode_axis(rhs)
+    }
+}
+
+impl Sub<Axis> for &BitBoard {
+    type Output = BitBoard;
+
+    /// Perform an erosion on a `BitBoard`'s reference using the provided `Direction`
+    fn sub(self, rhs: Axis) -> Self::Output {
+        self.erode_axis(rhs)
     }
 }
 // #endregion Trait sub for erosion
@@ -592,7 +690,7 @@ impl fmt::Display for BitBoard {
 
         for _ in 0..19 {
             str_vec.push(str_repr[..19].into());
-            str_repr = str_repr[19..].into();
+            str_repr = str_repr[20..].into();
         }
 
         for s in str_vec.iter() {
@@ -668,7 +766,7 @@ impl Index<(usize, usize)> for BitBoard {
     fn index(&self, coord: (usize, usize)) -> &Self::Output {
         let x = coord.0;
         let y = coord.1;
-        if x >= Self::MOVE_UP_DOWN_SHIFT_VALUE as usize || y >= Self::MOVE_UP_DOWN_SHIFT_VALUE as usize {
+        if x >= Self::NUMBER_OF_COLS as usize || y >= Self::NUMBER_OF_COLS as usize {
             return &Self::INDEX_RETURN_FALSE;
         }
         &self[y * Self::MOVE_UP_DOWN_SHIFT_VALUE as usize + x]

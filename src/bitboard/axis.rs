@@ -13,7 +13,20 @@ pub enum Axis {
     Horizontal,
     Vertical,
     DiagUpLeft,
-    DiagUpRight
+    DiagUpRight,
+    All
+}
+
+impl Axis {
+    pub fn to_direction(self) -> Direction {
+        match self {
+            Axis::Horizontal => Direction::W,
+            Axis::Vertical => Direction::N,
+            Axis::DiagUpLeft => Direction::NW,
+            Axis::DiagUpRight => Direction::NE,
+            _ => unimplemented!("You MUST not use this method with Axis::All")
+        }
+    }
 }
 
 /// This is the struct which wraps around Axis to make it itarable.
