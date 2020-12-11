@@ -1,184 +1,133 @@
-use std::fmt;
-use std::fmt::Formatter;
+use crate::bitboard::axis::AxisIterator;
+use crate::bitboard::direction::Direction;
 
-const EMPTY: u8 = 0;
-const BLACK: u8 = 1;
-const WHITE: u8 = 2;
-const BWIDTH: u8 = 19;
-const BHEIGHT: u8 = 19;
-const BSIZE: u16 = 361;
+use super::bitboard::*;
 
 #[derive(Clone, Debug)]
 pub struct Goban
 {
-    grid: Vec<u8>,
-    p_color:u8,
-}
-
-impl fmt::Display for Goban {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        let mut ret: String = String::with_capacity(400);
-        ret.push('\n');
-        for (i, x) in self.grid.iter().enumerate()
-        {
-            if i % 19 == 0 {
-                ret.push('\n');
-            }
-            ret.push_str(&*format!("{:?} ", x));
-        }
-        write!(f, "{}", ret)
-    }
-}
-
-impl std::ops::Index<(usize, usize)> for Goban {
-    type Output = u8;
-
-    fn index(&self, (x, y): (usize, usize)) -> &Self::Output {
-        &self.grid[BWIDTH as usize * y + x]
-    }
+	player: BitBoard,
+	enemy: BitBoard,
+	p_color: u8,
 }
 
 impl Goban
 {
-    pub fn new(grid: Vec<u8>, p_color: u8) -> Self
-    {
-        Self
-        {
-            grid,
-            p_color
+	pub fn new(player: BitBoard, enemy: BitBoard, p_color: u8) -> Self
+	{
+		Self
+		{
+			player,
+			enemy,
+			p_color,
         }
-    }
+	}
 
-    pub fn get_pos(&self, pos: (usize, usize), dir: Move) -> Option<(usize, usize)>
-    {
-        match dir {
-            Move::Up => if pos.1 != 0 { Some((pos.0, pos.1 - 1)) } else { None },
-            Move::UpLeft => if pos.1 != 0 && pos.0 != 0 { Some((pos.0 - 1, pos.1 - 1)) } else { None },
-            Move::UpRight => if pos.1 != 0 && pos.0 < 19 { Some((pos.0 + 1, pos.1 - 1)) } else { None },
-            Move::Left => if pos.0 != 0 { Some((pos.0 - 1, pos.1)) } else { None },
-            Move::Right => if pos.0 < 19 { Some((pos.0 + 1, pos.1)) } else { None },
-            Move::DownLeft => if pos.0 != 0 && pos.1 < 19 { Some((pos.0 - 1, pos.1 + 1)) } else { None },
-            Move::DownRight => if pos.1 < 19 && pos.0 < 19 { Some((pos.0 + 1, pos.1 + 1)) } else { None },
-            Move::Down => if pos.1 < 19 { Some((pos.0, pos.1 + 1)) } else { None },
-        }
-    }
+	pub fn list_moves(&self) -> BitBoard
+	{
+		!(self.enemy | self.player)
+	}
 
-    ///Lists all the player's pawns on the board. Returns a vector of all the positions of the board.
-    fn list_pawns(&self) -> Vec<(usize, usize)>
-    {
-        self.grid.iter().enumerate().filter(|(_, i)| **i == self.p_color).map(|(pc, _)| (pc % 19, pc / 19)).collect()
-    }
+	// TODO: Neighbour layering
+	pub fn neighbour_layering(&self, to_play: BitBoard)
+	{
+		todo!()
+	}
 
-    fn check_line(&self, pos: (usize, usize), dir: Move) -> u32
-    {
-        let mut ret : u32 = 0;
-        let mut next = self.get_pos(pos, dir);
+	pub fn list_neighbours(&self) -> BitBoard {
+		((self.enemy | self.player) + Direction::All) & self.list_moves()
+	}
 
-        println!("Checking...");
-        while next.is_some() && self[next.unwrap()] == self.p_color
-        {
-            next = self.get_pos(next.unwrap(), dir);
-            ret += 10;
-            println!("In align ret= {:?}, pos= {:?}", ret, pos);
-        }
-	    ret
-    }
+	fn line_detection(&self) -> u16
+	{
+		let mut bits: BitBoard;
+		let mut total: u16 = 0;
+		let mut len: u16;
 
-    pub fn find_alignments(&self) -> u32
-    {
-        let mut ret: u32 = 0;
-        let pawns: Vec<(usize, usize)> = self.list_pawns();
+		for dir in AxisIterator::new()
+		{
+			bits = self.player;
+			len = 0;
+			while !bits.is_empty()
+			{
+				println!("{}", bits);
+				bits = bits - dir;
+				len += 1;
+			}
+			total = len;
+		}
+		total
+	}
 
-        for (x, y) in pawns {
-            for val in [Move::Down, Move::DownRight, Move::Right, Move::DownLeft
-                                        ].iter()
-            {
-                println!("Pos: {:?} dir:{:?}", (x, y), val);
-                ret += self.check_line((x, y), *val)
-            }
-        }
-        ret
-    }
-}
+	pub fn get_heuristic(&self) -> i64
+	{
+		let mut ret: i64 = 0;
 
-#[derive(Debug, Clone, Copy)]
-pub enum Move
-{
-    Up,
-    UpLeft,
-    UpRight,
-    Left,
-    Right,
-    DownLeft,
-    DownRight,
-    Down
+		ret += self.line_detection() as i64;
+		ret
+	}
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::goban::{Goban, BLACK, WHITE};
+	use crate::bitboard::BitBoard;
+	use crate::goban::Goban;
 
-    #[test]
-    fn count_pawns() {
-        let mut input: Vec<u8> = vec![0; 361];
+	#[test]
+	fn neighbours()
+	{
+		let player = BitBoard::from_array([
+			0b00000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+			0b00000000000000000000000000000000000000000000000000000000000000000011111000000000000001111100000000000000000000000000000000000000,
+			0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+		]);
+		let enemy = BitBoard::from_array([
+			0b00000000000000000000000000000000000000000000000000000000000000000000001100000000000000000110000000000000000000000000000000000000,
+			0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+			0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000011100000000000001110000000000000000000000
+		]);
+		let expected = BitBoard::from_array([
+			0b00000000000000000000000000000000000000000000000000111100000000000000010010000000000000001001000000000000000111100000000000000000,
+			0b00000000000000000000000000000000000000000000001111111000000000000100000100000000000010000010000000000001111111000000000000000000,
+			0b00000000000000000000000000000000000000000000000000000000000000000001111100000000000111100010000000000010001111000000000001111100
+		]);
+		let board = Goban::new(player, enemy, 2);
+		println!("PLAYER\n{}\nENEMY\n{}\nFULL\n{}", player, enemy, player | enemy);
+		println!("RESULT\n{}\nEXPECTED\n{}", board.list_neighbours(), expected);
+		assert_eq!(board.list_neighbours(), expected);
+	}
 
-        input[4] = WHITE;
-        input[6] = WHITE;
-        input[0] = BLACK;
-        input[1] = BLACK;
-        input[2] = BLACK;
-        input[3] = BLACK;
-        input[18] = BLACK;
-        input[20] = BLACK;
-        input[21] = BLACK;
-        input[38] = BLACK;
-        input[180] = BLACK;
-        let go: Goban = Goban::new(input, BLACK);
-        assert_eq!(go.list_pawns(), vec![(0,0), (1, 0), (2, 0), (3, 0), (18, 0), (1, 1), (2, 1), (0, 2), (9, 9)]);
-    }
+	#[test]
+	fn alignment()
+	{
+		let original = BitBoard::from_array([
+			0b11111000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+			0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+			0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+		]);
+		let board = Goban::new(original, BitBoard::new(0, 0, 0), 2);
 
-    #[test]
-    fn heuristics_horizontal_line() {
-        let mut input: Vec<u8> = vec![0; 361];
+		assert_eq!(5000, board.line_detection());
 
-        input[0] = BLACK;
-        input[1] = BLACK;
-        input[2] = BLACK;
-        input[3] = BLACK;
-        input[4] = BLACK;
-        let go: Goban = Goban::new(input, BLACK);
-	    let ret = go.find_alignments();
-        // println!("{}\n{:?}", go, ret);
-	    assert_eq!(ret, 100);
-    }
-
-    #[test]
-    fn heuristics_diagonal_downright() {
-        let mut input: Vec<u8> = vec![0; 361];
-
-        input[1] = BLACK;
-        input[21] = BLACK;
-        input[41] = BLACK;
-        input[61] = BLACK;
-        input[81] = BLACK;
-        let go: Goban = Goban::new(input, BLACK);
-        let ret = go.find_alignments();
-        // println!("{}\n{:?}", go, ret);
-        assert_eq!(ret, 100);
-    }
-
-    #[test]
-    fn heuristics_diagonal_downleft() {
-        let mut input: Vec<u8> = vec![0; 361];
-
-        input[15] = BLACK;
-        input[33] = BLACK;
-        input[51] = BLACK;
-        input[69] = BLACK;
-        input[87] = BLACK;
-        let go: Goban = Goban::new(input, BLACK);
-        let ret = go.find_alignments();
-        println!("{}\n{:?}", go, ret);
-        assert_eq!(ret, 100);
-    }
+		// let stre: String = String::from("\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
+		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n");
+	}
 }

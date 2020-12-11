@@ -16,7 +16,6 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         if board.len() != 361 {
             return Err(exceptions::PyTypeError::new_err(format!("Fatal Rust Error: Invalid board size (Expected 361, got {})", board.len())));
         }
-        let goban: Goban = Goban::new(board, p_color);
         // Do my stuff
         let ret = (5, 6); //placeholder
         Ok(ret)
