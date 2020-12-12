@@ -4,7 +4,8 @@ use crate::bitboard::direction::Direction;
 use super::bitboard::*;
 use std::fmt::{Display, Formatter};
 use std::fmt;
-use std::intrinsics::write_bytes;
+use std::cmp::Ordering;
+
 
 #[derive(Clone, Debug)]
 pub struct Goban
@@ -15,13 +16,6 @@ pub struct Goban
 }
 
 // TODO impl Display, Ord, Eq, Hash, Debug
-
-impl fmt::Display for Goban
-{
-	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-		write!(f, "{}", self.player | self.enemy)
-	}
-}
 
 impl Goban
 {
@@ -77,6 +71,33 @@ impl Goban
 
 		ret += self.line_detection() as i64;
 		ret
+	}
+}
+
+impl Eq for Goban {}
+
+impl PartialEq for Goban {
+	fn eq(&self, other: &Self) -> bool {
+		self.fscore == other.fscore
+	}
+}
+
+impl Ord for Goban {
+	fn cmp(&self, other: &Self) -> Ordering {
+		self.fscore.cmp(&other.fscore)
+	}
+}
+
+impl PartialOrd for Goban {
+	fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+		Some(self.cmp(other))
+	}
+}
+
+impl fmt::Display for Goban
+{
+	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+		write!(f, "{}", self.player | self.enemy)
 	}
 }
 
