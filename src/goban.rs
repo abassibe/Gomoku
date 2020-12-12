@@ -5,6 +5,7 @@ use super::bitboard::*;
 use std::fmt::{Display, Formatter};
 use std::fmt;
 use std::cmp::Ordering;
+use std::hash::{Hash, Hasher};
 
 
 #[derive(Clone, Debug)]
@@ -98,6 +99,12 @@ impl fmt::Display for Goban
 {
 	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
 		write!(f, "{}", self.player | self.enemy)
+	}
+}
+
+impl Hash for Goban {
+	fn hash<H: Hasher>(&self, state: &mut H) {
+		(self.player | self.enemy).hash(state)
 	}
 }
 
