@@ -2,24 +2,36 @@ use crate::bitboard::axis::AxisIterator;
 use crate::bitboard::direction::Direction;
 
 use super::bitboard::*;
+use std::fmt::{Display, Formatter};
+use std::fmt;
+use std::intrinsics::write_bytes;
 
 #[derive(Clone, Debug)]
 pub struct Goban
 {
+	fscore: usize,
 	player: BitBoard,
 	enemy: BitBoard,
-	p_color: u8,
+}
+
+// TODO impl Display, Ord, Eq, Hash, Debug
+
+impl fmt::Display for Goban
+{
+	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+		write!(f, "{}", self.player | self.enemy)
+	}
 }
 
 impl Goban
 {
-	pub fn new(player: BitBoard, enemy: BitBoard, p_color: u8) -> Self
+	pub fn new(player: BitBoard, enemy: BitBoard) -> Self
 	{
 		Self
 		{
+			fscore: 0,
 			player,
 			enemy,
-			p_color,
         }
 	}
 
@@ -68,7 +80,7 @@ impl Goban
 	}
 }
 
-#[cfg(test)]
+	#[cfg(test)]
 mod tests {
 	use crate::bitboard::BitBoard;
 	use crate::goban::Goban;
@@ -91,7 +103,7 @@ mod tests {
 			0b00000000000000000000000000000000000000000000001111111000000000000100000100000000000010000010000000000001111111000000000000000000,
 			0b00000000000000000000000000000000000000000000000000000000000000000001111100000000000111100010000000000010001111000000000001111100
 		]);
-		let board = Goban::new(player, enemy, 2);
+		let board = Goban::new(player, enemy);
 		println!("PLAYER\n{}\nENEMY\n{}\nFULL\n{}", player, enemy, player | enemy);
 		println!("RESULT\n{}\nEXPECTED\n{}", board.list_neighbours(), expected);
 		assert_eq!(board.list_neighbours(), expected);
@@ -105,7 +117,7 @@ mod tests {
 			0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
 			0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 		]);
-		let board = Goban::new(original, BitBoard::new(0, 0, 0), 2);
+		let board = Goban::new(original, BitBoard::new(0, 0, 0));
 
 		assert_eq!(5000, board.line_detection());
 
