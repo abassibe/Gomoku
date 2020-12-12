@@ -16,8 +16,6 @@ pub struct Goban
 	enemy: BitBoard,
 }
 
-// TODO impl Display, Ord, Eq, Hash, Debug
-
 impl Goban
 {
 	pub fn new(player: BitBoard, enemy: BitBoard) -> Self
