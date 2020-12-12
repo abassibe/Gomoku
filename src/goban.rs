@@ -35,6 +35,12 @@ impl Goban
 		!(self.enemy | self.player)
 	}
 
+	// TODO: Forbidden moves
+	pub fn check_illegal(&self) -> bool
+	{
+		todo!()
+	}
+
 	// TODO: Neighbour layering
 	pub fn neighbour_layering(&self, to_play: BitBoard)
 	{
