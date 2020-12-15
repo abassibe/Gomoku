@@ -24,8 +24,14 @@ impl Axis {
             Axis::Vertical => Direction::N,
             Axis::DiagUpLeft => Direction::NW,
             Axis::DiagUpRight => Direction::NE,
-            _ => unimplemented!("You MUST not use this method with Axis::All")
+            Axis::All => Direction::All
         }
+    }
+}
+
+impl From<Direction> for Axis {
+    fn from(dir: Direction) -> Self {
+        dir.to_axis()
     }
 }
 

@@ -1,3 +1,5 @@
+use super::axis::Axis;
+
 const ARRAY_SIZE: usize = 8;
 
 // TODO: Missing doc here
@@ -12,6 +14,28 @@ pub enum Direction {
     SE,
     SW,
     All
+}
+
+impl Direction {
+    pub fn to_axis(&self) -> Axis {
+        match self {
+            Direction::N => Axis::Vertical,
+            Direction::S => Axis::Vertical,
+            Direction::E => Axis::Horizontal,
+            Direction::W => Axis::Horizontal,
+            Direction::NE => Axis::DiagUpRight,
+            Direction::SW => Axis::DiagUpRight,
+            Direction::NW => Axis::DiagUpLeft,
+            Direction::SE => Axis::DiagUpLeft,
+            Direction::All => Axis::All
+        }
+    }
+}
+
+impl From<Axis> for Direction {
+    fn from(axis: Axis) -> Self {
+        axis.to_direction()
+    }
 }
 
 // TODO: Missing doc here
