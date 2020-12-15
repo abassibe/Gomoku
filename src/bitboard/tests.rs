@@ -259,6 +259,25 @@ fn test_iterate_on_axis_iterator() {
 }
 // #endregion Tests AxisIterator
 
+//=============================
+// Tests for trait From on Axis
+//=============================
+
+// #region Tests trait From on Axis
+#[test]
+fn test_into_direction_on_axis() {
+    // Arrange
+    let axises = [Axis::Vertical, Axis::Horizontal, Axis::DiagUpLeft, Axis::DiagUpRight];
+    let expected = [Direction::N, Direction::W, Direction::NW, Direction::NE];
+
+    // Act
+    let results: [Direction; 4] = [axises[0].into(), axises[1].into(), axises[2].into(), axises[3].into()];
+
+    // Assert
+    assert_eq!(expected, results);
+}
+// #endregion Tests trait From on Axis
+
 //===================================
 // Tests for struct DirectionIterator
 //===================================
@@ -277,6 +296,25 @@ fn test_iterate_on_direction_iterator() {
     assert_eq!(expect, result);
 }
 // #endregion Tests DirectionIterator
+
+//==================================
+// Tests for trait From on Direction
+//==================================
+
+// #region Tests trait From on Direction
+#[test]
+fn test_into_direction_on_direction() {
+    // Arrange
+    let directions = [Direction::N, Direction::W, Direction::NW, Direction::NE];
+    let expected = [Axis::Vertical, Axis::Horizontal, Axis::DiagUpLeft, Axis::DiagUpRight];
+
+    // Act
+    let results: [Axis; 4] = [directions[0].into(), directions[1].into(), directions[2].into(), directions[3].into()];
+
+    // Assert
+    assert_eq!(expected, results);
+}
+// #endregion Tests trait From on Direction
 
 //==================================================
 // Test for Display trait implementation on BitBoard
