@@ -30,6 +30,20 @@ impl Direction {
             Direction::All => Axis::All
         }
     }
+
+    pub fn to_invert(&self) -> Self {
+        match self {
+            Direction::N => Direction::S,
+            Direction::S => Direction::N,
+            Direction::E => Direction::W,
+            Direction::W => Direction::E,
+            Direction::NE => Direction::SW,
+            Direction::SW => Direction::NE,
+            Direction::NW => Direction::SE,
+            Direction::SE => Direction::NW,
+            Direction::All => Direction::All
+        }
+    }
 }
 
 impl From<Axis> for Direction {
