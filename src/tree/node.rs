@@ -44,6 +44,7 @@ pub struct Node<T>
     /// * Eq
     /// * Hash
     item: T,
+    depth: usize,
     /// `branches` is a [`BinaryHeap`], wrapped in an [`Option`], which hold child nodes.
     /// The type `Branches` is used for convenience and is just an alias for `BinaryHeap<Rc<RefCell<Node<T>>>>`.
     /// `T` has to be of the same type as `item`.
@@ -86,6 +87,7 @@ impl<T: Ord> Node<T> {
     pub fn new(item: T) -> Self {
         Self {
             item,
+            depth: 0,
             branches: None
         }
     }
@@ -170,6 +172,7 @@ mod tests {
         // Arrange
         let node = Node {
             item: 42,
+            depth: 0,
             branches: Some(Branches::<u32>::new())
         };
 
@@ -185,6 +188,7 @@ mod tests {
         // Arrange
         let node = Node {
             item: 42,
+            depth: 0,
             branches: None
         };
 
@@ -201,14 +205,17 @@ mod tests {
         let (node0, node1, node2) = (
             Rc::new(RefCell::new(Node {
                 item: 0,
+                depth: 1,
                 branches: None
             })),
             Rc::new(RefCell::new(Node {
                 item: 1,
+                depth: 1,
                 branches: None
             })),
             Rc::new(RefCell::new(Node {
                 item: 2,
+                depth: 1,
                 branches: None
             }))
         );
@@ -218,6 +225,7 @@ mod tests {
         branches.push(node2);
         let node = Node {
             item: 42,
+            depth: 0,
             branches: Some(branches)
         };
 
@@ -233,6 +241,7 @@ mod tests {
         // Arrange
         let mut node = Node {
             item: 42,
+            depth: 0,
             branches: None
         };
 
