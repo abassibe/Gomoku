@@ -63,6 +63,31 @@ impl BitBoard {
     pub fn empty() -> Self {
         Self::default()
     }
+
+    pub fn from_str(from: &str) -> Self {
+        let mut one_line_str: String = from.split_ascii_whitespace()
+            .fold(String::new(), |mut r, n| {
+                r.push_str(n);
+                if n.len() == 19 {
+                    r.push('0');
+                }
+                r
+            });
+        let bits_count = one_line_str.len();
+        for _ in 0..(BITS_IN_U128 * 3) - bits_count {
+            one_line_str.push('0');
+        }
+        // let mut bins = vec![String::from("0b"), String::from("0b"), String::from("0b")];
+        let mut bins: Vec<&str> = vec!();
+        for i in 0..3 {
+            bins.push(&one_line_str[BITS_IN_U128 * i..BITS_IN_U128 * (i + 1)]);
+        }
+        BitBoard::from_array([
+            u128::from_str_radix(bins[0], 2).unwrap(),
+            u128::from_str_radix(bins[1], 2).unwrap(),
+            u128::from_str_radix(bins[2], 2).unwrap()
+        ])
+    }
     // #endregion Constructors
 
     // -------------
