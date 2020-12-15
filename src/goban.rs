@@ -1,4 +1,4 @@
-use crate::bitboard::axis::AxisIterator;
+use crate::bitboard::axis::{AxisIterator, Axis};
 use crate::bitboard::direction::Direction;
 
 use super::bitboard::*;
@@ -49,26 +49,50 @@ impl Goban
 		((self.enemy | self.player) + Direction::All) & self.list_moves()
 	}
 
+	fn check_surround(&self, lines: BitBoard, dir: Direction) -> u8
+	{
+		let mut ret: u8 = 0;
+		for dirs in [dir, dir.to_invert()].iter()
+		{
+			if ((lines >> *dirs) & self.enemy).is_empty() {
+				ret += 1;
+			}
+		}
+		ret
+	}
+
+	// TODO Add way to isolate different lines, currently cannot differentiate between lines that are on the same axes
 	fn line_detection(&self) -> u16
 	{
 		let mut bits: BitBoard;
+		let mut final_line: BitBoard;
 		let mut total: u16 = 0;
 		let mut len: u16;
 
 		for dir in AxisIterator::new()
 		{
 			bits = self.player;
+			final_line = BitBoard::empty();
 			len = 0;
 			while !bits.is_empty()
 			{
-				println!("Direction: {:?}, len = {}\n{}", dir, len, bits);
+				// println!("Direction: {:?}, len = {}\n{}", dir, len, bits);
+				if len == 1 {
+					final_line = bits + dir.to_invert();
+				}
 				bits = bits - dir;
 				len += 1;
 			}
 			if len > 1 {
-				total += len;
+				total += match self.check_surround(final_line, dir)
+				{
+					2 => len,
+					1 => len / 2,
+					_ => 0,
+				};
+				println!("Change Direction (Current: {:?})\nTotal = {}\n", dir, total);
+				println!("^-------------------------^\n{}v-------------------------v", final_line);
 			}
-			println!("Change Direction (Current: {:?})\nTotal = {}\n", dir, total);
 		}
 		total
 	}
@@ -211,14 +235,14 @@ mod tests {
 		// 00000000000000000002
 
 		let original = BitBoard::from_array([
-			0b00000000000000000000000000000000000000000000000000000000000000000000000100000000000000000010000000000000000000000000000000000000,
+			0b10000000000000000000000000000000000000000000000000000000000000000000000100000000000000000010000000000000000000000000000000000000,
 			0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
 			0b00000000001111100000000000000000000000000000000000000000000000000000000000000000000000011100000000000000000000000000000000000000,
 		]);
-		let board = Goban::new(original, BitBoard::new(0, 0, 0));
+		let board = Goban::new(original, BitBoard::empty());
 		println!("HSCORE= {}", board.line_detection());
 
-		assert_eq!(5000, board.line_detection());
+		assert_eq!(7, board.line_detection());
 
 		// let stre: String = String::from("\
 		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
