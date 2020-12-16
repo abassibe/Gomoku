@@ -97,13 +97,7 @@ impl BitBoard {
     /// Returns `true` if **every** bits are set to 1 in the bitboard.
     /// Returns `false` otherwise.
     pub fn is_full(&self) -> bool {
-        for x in &self.b {
-            if *x != u128::MAX {
-                return false
-            }
-        }
-
-        true
+        self & &BitBoard::ENDLINE_DELIMITER_MASK == BitBoard::ENDLINE_DELIMITER_MASK 
     }
 
     /// Returns `true` if **no** bits are set to 1 in the bitboard.
@@ -617,7 +611,7 @@ impl Not for BitBoard {
 
     /// Perform bitwise operation NOT on a `BitBoard`.
     fn not(self) -> Self::Output {
-        Self::Output { b: [!self.b[0], !self.b[1], !self.b[2]] }
+        *Self::Output { b: [!self.b[0], !self.b[1], !self.b[2]] }.apply_endline_delimiter_mask()
     }
 }
 
@@ -626,7 +620,7 @@ impl Not for &BitBoard {
 
     /// Perform bitwise operation NOT on a `BitBoard`'s reference.
     fn not(self) -> Self::Output {
-        Self::Output { b: [!self.b[0], !self.b[1], !self.b[2]] }
+        *BitBoard { b: [!self.b[0], !self.b[1], !self.b[2]] }.apply_endline_delimiter_mask()
     }
 }
 // #endregion Trait bitwise op

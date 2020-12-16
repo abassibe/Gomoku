@@ -1,4 +1,5 @@
 use super::axis::Axis;
+use std::fmt;
 
 const ARRAY_SIZE: usize = 8;
 
@@ -49,6 +50,23 @@ impl Direction {
 impl From<Axis> for Direction {
     fn from(axis: Axis) -> Self {
         axis.to_direction()
+    }
+}
+
+impl fmt::Display for Direction {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let stringified = match self {
+            Direction::N => "North",
+            Direction::S=> "South",
+            Direction::E=> "East",
+            Direction::W=> "West",
+            Direction::NE=> "North East",
+            Direction::NW=> "North West",
+            Direction::SE=> "South East",
+            Direction::SW=> "South West",
+            Direction::All=> "All directions"
+        };
+        write!(f, "{}", stringified)
     }
 }
 
