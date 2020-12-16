@@ -1,4 +1,4 @@
-use crate::bitboard::axis::{AxisIterator};
+use crate::bitboard::axis::AxisIterator;
 use crate::bitboard::direction::Direction;
 
 use super::bitboard::*;
@@ -74,9 +74,8 @@ impl Goban
 			bits = self.player;
 			final_line = BitBoard::empty();
 			len = 0;
-			while !bits.is_empty()
+			while bits.is_any()
 			{
-				// println!("Direction: {:?}, len = {}\n{}", dir, len, bits);
 				if len == 1 {
 					final_line = bits + dir.to_invert();
 				}
