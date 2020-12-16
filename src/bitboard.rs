@@ -97,13 +97,7 @@ impl BitBoard {
     /// Returns `true` if **every** bits are set to 1 in the bitboard.
     /// Returns `false` otherwise.
     pub fn is_full(&self) -> bool {
-        for x in &self.b {
-            if *x != u128::MAX {
-                return false
-            }
-        }
-
-        true
+        self & &BitBoard::ENDLINE_DELIMITER_MASK == BitBoard::ENDLINE_DELIMITER_MASK 
     }
 
     /// Returns `true` if **no** bits are set to 1 in the bitboard.
