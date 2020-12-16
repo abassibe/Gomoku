@@ -39,10 +39,10 @@ impl Goban
 		todo!()
 	}
 
-	pub fn neighbour_layering(&self, to_play: BitBoard) -> u8
+	pub fn neighbour_layering(&self, to_play: BitBoard) -> u16
 	{
 		let mut layers = self.player | self.enemy;
-		let mut ret: u8 = 0;
+		let mut ret: u16 = 0;
 		while (layers & to_play).is_empty()
 		{
 			layers |= layers + Direction::All;
@@ -79,12 +79,9 @@ impl Goban
 		total
 	}
 
-	pub fn get_heuristic(&self) -> i64
+	pub fn get_heuristic(&self, to_play: BitBoard) -> u64
 	{
-		let mut ret: i64 = 0;
-
-		ret += self.line_detection() as i64;
-		ret
+		(self.neighbour_layering(to_play) + self.line_detection()) as u64
 	}
 }
 
