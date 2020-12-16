@@ -1,8 +1,8 @@
-use crate::bitboard::axis::{AxisIterator, Axis};
+use crate::bitboard::axis::{AxisIterator};
 use crate::bitboard::direction::Direction;
 
 use super::bitboard::*;
-use std::fmt::{Display, Formatter};
+use std::fmt::{Formatter};
 use std::fmt;
 use std::cmp::Ordering;
 use std::hash::{Hash, Hasher};
