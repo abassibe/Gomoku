@@ -127,6 +127,13 @@ impl BitBoard {
     }
 
     // ----------
+    // Count bits
+    // ----------
+    pub fn count_ones(&self) -> u16 {
+        self.b.iter().fold(0, |acc: u16, &x| acc + x.count_ones() as u16)
+    }
+
+    // ----------
     // Bit setter
     // ----------
     fn set(&mut self, bit_index: isize, bit_value: bool) {
