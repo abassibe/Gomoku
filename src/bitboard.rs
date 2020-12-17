@@ -52,7 +52,7 @@ impl BitBoard {
         Self { b: [one, two, three] }
     }
 
-    pub fn from_array(from: [u128; 3]) -> Self { 
+    pub fn from_array(from: [u128; 3]) -> Self {
         Self { b: from }
     }
 
