@@ -1,5 +1,6 @@
 pub(crate) mod axis;
 pub(crate) mod direction;
+pub(crate) mod pattern;
 
 #[cfg(test)]
 mod tests;
@@ -52,7 +53,7 @@ impl BitBoard {
         Self { b: [one, two, three] }
     }
 
-    pub fn from_array(from: [u128; 3]) -> Self { 
+    pub fn from_array(from: [u128; 3]) -> Self {
         Self { b: from }
     }
 
@@ -124,6 +125,13 @@ impl BitBoard {
     // ---------------------------------
     pub fn compute_to_isize<F: Fn(&Self) -> isize>(&self, f: F) -> isize {
         f(self)
+    }
+
+    // ----------
+    // Count bits
+    // ----------
+    pub fn count_ones(&self) -> u16 {
+        self.b.iter().fold(0, |acc: u16, &x| acc + x.count_ones() as u16)
     }
 
     // ----------
