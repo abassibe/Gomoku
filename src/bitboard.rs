@@ -1,5 +1,6 @@
 pub(crate) mod axis;
 pub(crate) mod direction;
+pub(crate) mod pattern;
 
 #[cfg(test)]
 mod tests;
