@@ -92,6 +92,10 @@ impl<T: Ord> Node<T> {
         }
     }
 
+    pub fn get_item(&self) -> &T {
+        &self.item
+    }
+
     pub fn add_branch(&mut self, item: T) -> Rc<RefCell<Self>> {
         let new_node = Rc::new(RefCell::new(Self::new(item)));
         let mut branches = self.branches.take().unwrap_or_default();
@@ -114,8 +118,8 @@ impl<T: Ord> Node<T> {
     }
 
     /// A method that add many branches at once using the closure `generator`.
-    pub fn add_many_branches<U: Iterator<Item = Node<T>>, F: Fn(&mut Self) -> U>(&mut self, generator: F) {
-        let mut new_branches: BinaryHeap<Rc<RefCell<Node<T>>>> = generator(self).map(|x| Rc::new(RefCell::new(x))).collect();
+    pub fn add_many_branches<F: Fn(&mut Self) -> Vec<Node<T>>>(&mut self, generator: F) {
+        let mut new_branches: BinaryHeap<Rc<RefCell<Node<T>>>> = generator(self).into_iter().map(|x| Rc::new(RefCell::new(x))).collect();
 
         if !new_branches.is_empty() {
             let mut branches = self.branches.take().unwrap_or_default();
@@ -127,9 +131,9 @@ impl<T: Ord> Node<T> {
     // TODO: Ideally, this method should returns an Iterator (not an option)
     // in order to be able to directly iterate over its return value.
     /// Returns an iterator which iterates over the branches in the current node.
-    pub fn get_branches(&mut self) -> Option<impl Iterator<Item = &Rc<RefCell<Node<T>>>> + '_> {
+    pub fn get_branches(&mut self) -> Option<&Branches<T>> {
         if let Some(ref branches) = self.branches {
-            Some(branches.iter())
+            Some(branches)
         } else {
             None
         }
@@ -155,7 +159,7 @@ mod tests {
             for i in 1..10 {
                 vec.push(Node::new(i));
             }
-            vec.into_iter()
+            vec
         };
         let mut node = Node::new(0);
 
@@ -262,7 +266,7 @@ mod tests {
             for i in 1..10 {
                 vec.push(Node::new(i));
             }
-            vec.into_iter()
+            vec
         };
         let mut node = Node::new(0);
 

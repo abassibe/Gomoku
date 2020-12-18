@@ -8,7 +8,7 @@ use std::cmp::Ordering;
 use std::hash::{Hash, Hasher};
 
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct Goban
 {
 	fscore: usize,
@@ -26,6 +26,10 @@ impl Goban
 			player,
 			enemy,
         }
+	}
+
+	pub fn get_fscore(&self) -> usize {
+		self.fscore
 	}
 
 	pub fn list_moves(&self) -> BitBoard
@@ -65,6 +69,14 @@ impl Goban
 			}
 		}
 		ret
+	}
+
+	pub fn get_player(&self) -> &BitBoard {
+		&self.player
+	}
+
+	pub fn get_enemy(&self) -> &BitBoard {
+		&self.enemy
 	}
 
 	// TODO Add way to isolate different lines, currently cannot differentiate between lines that are on the same axes
