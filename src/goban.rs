@@ -6,12 +6,14 @@ use std::fmt::{Formatter};
 use std::fmt;
 use std::cmp::Ordering;
 use std::hash::{Hash, Hasher};
+use std::ops::{BitOr, BitAnd, BitXor};
 
 
 #[derive(Clone, Debug, Default)]
 pub struct Goban
 {
 	fscore: usize,
+	board: BitBoard,
 	player: BitBoard,
 	enemy: BitBoard,
 }
@@ -25,6 +27,7 @@ impl Goban
 			fscore: 0,
 			player,
 			enemy,
+			board: player | enemy,
         }
 	}
 
@@ -34,7 +37,7 @@ impl Goban
 
 	pub fn list_moves(&self) -> BitBoard
 	{
-		!(self.enemy | self.player)
+		!self.board
 	}
 
 	// TODO: Forbidden moves
@@ -56,7 +59,7 @@ impl Goban
 	}
 
 	pub fn list_neighbours(&self) -> BitBoard {
-		((self.enemy | self.player) + Direction::All) & self.list_moves()
+		(self.board + Direction::All) & self.list_moves()
 	}
 
 	fn check_surround(&self, lines: BitBoard, dir: Direction) -> u8
@@ -117,6 +120,30 @@ impl Goban
 	pub fn get_heuristic(&self, to_play: BitBoard) -> u64
 	{
 		(self.neighbour_layering(to_play) - self.line_detection()) as u64
+	}
+}
+
+impl BitAnd<BitBoard> for Goban {
+	type Output = BitBoard;
+
+	fn bitand(self, rhs: BitBoard) -> Self::Output {
+		self.board | rhs
+	}
+}
+
+impl BitXor<BitBoard> for Goban {
+	type Output = BitBoard;
+
+	fn bitxor(self, rhs: BitBoard) -> Self::Output {
+		self.board | rhs
+	}
+}
+
+impl BitOr<BitBoard> for Goban {
+	type Output = BitBoard;
+
+	fn bitor(self, rhs: BitBoard) -> Self::Output {
+		self.board | rhs
 	}
 }
 
