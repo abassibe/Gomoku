@@ -60,3 +60,17 @@ impl<H: Fn(Goban) -> u64> Algorithm<H>
             .collect()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::goban::Goban;
+    use crate::algorithm::Algorithm;
+    use crate::bitboard::BitBoard;
+
+    #[test]
+    fn generic_algo_test()
+    {
+        let board = Goban::default();
+        let tree = Algorithm::new(Goban::get_heuristic());
+    }
+}
