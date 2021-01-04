@@ -64,13 +64,13 @@ impl<H: Fn(Goban) -> u64> Algorithm<H>
 #[cfg(test)]
 mod tests {
     use crate::goban::Goban;
-    use crate::algorithm::Algorithm;
     use crate::bitboard::BitBoard;
+    use crate::algorithm::Algorithm;
 
     #[test]
     fn generic_algo_test()
     {
         let board = Goban::default();
-        let tree = Algorithm::new(Goban::get_heuristic());
+        let tree = Algorithm::new(Goban::get_heuristic, board);
     }
 }

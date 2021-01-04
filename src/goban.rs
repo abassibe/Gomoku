@@ -9,7 +9,7 @@ use std::hash::{Hash, Hasher};
 use std::ops::{BitOr, BitAnd, BitXor};
 
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Copy)]
 pub struct Goban
 {
 	fscore: usize,
@@ -117,9 +117,11 @@ impl Goban
 		total
 	}
 
-	pub fn get_heuristic(&self, to_play: BitBoard) -> u64
+	// TODO Reimplement neighbour layering somehow?
+	pub fn get_heuristic(board: Self) -> u64
 	{
-		(self.neighbour_layering(to_play) - self.line_detection()) as u64
+		// (self.neighbour_layering(to_play) - self.line_detection()) as u64
+        board.line_detection() as u64
 	}
 }
 
