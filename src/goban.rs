@@ -100,6 +100,9 @@ impl Goban
 				if len == 1 {
 					final_line = bits + dir.to_invert();
 				}
+				else if len == 5 {
+					return u16::MAX
+				}
 				bits = bits - dir;
 				len += 1;
 			}
@@ -121,7 +124,12 @@ impl Goban
 	pub fn get_heuristic(board: Self) -> u64
 	{
 		// (self.neighbour_layering(to_play) - self.line_detection()) as u64
-        board.line_detection() as u64
+		let ret = board.line_detection() as u64;
+		if ret == u16::MAX as u64 {
+			// This is horseshit please change it
+			u64::MAX - 1
+		}
+		else { ret }
 	}
 }
 

@@ -23,6 +23,7 @@ impl<H: Fn(Goban) -> u64> Algorithm<H>
 
     fn minimax(node: &mut Node<Goban>, depth: u32, maximazing: bool) -> usize {
         let mut fscore = node.get_item().get_fscore();
+        println!("What am I doing\n{}", node.get_item());
         if depth == 0 || fscore as u64 == Self::HEURISTIC_WIN_VALUE {
             return fscore;
         }
@@ -66,11 +67,36 @@ mod tests {
     use crate::goban::Goban;
     use crate::bitboard::BitBoard;
     use crate::algorithm::Algorithm;
+    use crate::tree::node::Node;
 
     #[test]
     fn generic_algo_test()
     {
-        let board = Goban::default();
+        let to_play = BitBoard::from_str("
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000001000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		");
+
+        let mut board = Goban::new(to_play, BitBoard::default());
         let tree = Algorithm::new(Goban::get_heuristic, board);
+        Algorithm::minimax(&mut Node::new(board), 5, true);
+        assert_eq!(1, 2 + 2);
     }
 }
