@@ -94,9 +94,10 @@ mod tests {
 		0000000000000000000
 		");
 
+        // let tree = Algorithm::new(Goban::get_heuristic, board);
         let mut board = Goban::new(to_play, BitBoard::default());
-        let tree = Algorithm::new(Goban::get_heuristic, board);
-        Algorithm::minimax(&mut Node::new(board), 5, true);
+        let mut node = Node::new(board);
+        let result = Algorithm::minimax(&mut node, 5, true);
         assert_eq!(1, 2 + 2);
     }
 }
