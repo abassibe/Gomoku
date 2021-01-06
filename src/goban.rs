@@ -287,9 +287,10 @@ mod tests {
     use super::Fscore;
 
 	#[test]
-	fn neighbour_layers()
+	fn test_goban_neighbour_layers_simple()
 	{
-		let to_play = BitBoard::from_str("
+		let to_play =
+			BitBoard::from_str("
 		0000000000000000000
 		0000000000000000000
 		0000000000000000000
@@ -362,7 +363,7 @@ mod tests {
 	}
 
 	#[test]
-	fn neighbours()
+	fn test_goban_neighbours()
 	{
 
 		// 00000000000000000012
@@ -428,7 +429,7 @@ mod tests {
 	}
 
 	#[test]
-	fn alignment()
+	fn test_goban_alignment()
 	{
 
 		// 00000000000000000002
