@@ -84,6 +84,10 @@ impl Node {
         &self.item
     }
 
+    pub fn get_depth(&self) -> usize {
+        self.depth
+    }
+
     pub fn add_branch(&mut self, item: Goban) -> Rc<RefCell<Self>> {
         let new_node = Rc::new(RefCell::new(Self::new(item)));
         let mut branches = self.branches.take().unwrap_or_default();

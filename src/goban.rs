@@ -1,4 +1,4 @@
-use crate::bitboard::axis::AxisIterator;
+use crate::{bitboard::axis::AxisIterator, algorithm};
 use crate::bitboard::direction::Direction;
 
 use super::bitboard::*;
@@ -46,11 +46,11 @@ impl Goban
 		todo!()
 	}
 
-	pub fn neighbour_layering(&self, to_play: BitBoard) -> u16
+	pub fn neighbour_layering(&self, to_play: &BitBoard) -> u16
 	{
-		let mut layers = self.player | self.enemy;
+		let mut layers = self.board;
 		let mut ret: u16 = 0;
-		while (layers & to_play).is_empty()
+		while (&layers & to_play).is_empty()
 		{
 			layers |= layers + Direction::All;
 			ret += 1;
@@ -113,23 +113,33 @@ impl Goban
 					1 => len / 2,
 					_ => 0,
 				};
-				println!("Change Direction (Current: {:?})\nTotal = {}\n", dir, total);
-				println!("^-------------------------^\n{}v-------------------------v", final_line);
+				// println!("Change Direction (Current: {:?})\nTotal = {}\n", dir, total);
+				// println!("^-------------------------^\n{}v-------------------------v", final_line);
 			}
 		}
 		total
 	}
 
-	// TODO Reimplement neighbour layering somehow?
-	pub fn get_heuristic(board: Self) -> u64
+	// TODO Reimplement neighbour layering somehow? -> I think this won't be necessary
+	pub fn compute_heuristic(&self, to_play: &BitBoard) -> usize
 	{
 		// (self.neighbour_layering(to_play) - self.line_detection()) as u64
-		let ret = board.line_detection() as u64;
+		let ret = self.line_detection() as u64;
 		if ret == u16::MAX as u64 {
-			// This is horseshit please change it
-			u64::MAX - 1
+			// This is horseshit please change it -> Is it better ? (as a reminder it was equivalent to `self.fscore = u64::MAX - 1`)
+			algorithm::Algorithm::HEURISTIC_WIN_VALUE as usize
 		}
-		else { ret }
+		else {
+			println!("to_play:\n{}", to_play);
+			println!("self.board:\n{}", self.board);
+			let neighbour_layering = self.neighbour_layering(to_play) as u64 * 10;
+			(neighbour_layering - ret) as usize
+		}
+	}
+
+	pub fn compute_fscore(&mut self, previous_state: &Goban, to_play: &BitBoard, depth: usize)
+	{
+		self.fscore = previous_state.compute_heuristic(to_play) + depth
 	}
 }
 
@@ -267,7 +277,7 @@ mod tests {
 		let board = Goban::new(player, enemy);
 
 		println!("{}", to_play);
-		assert_eq!(4, board.neighbour_layering(to_play));
+		assert_eq!(4, board.neighbour_layering(&to_play));
 	}
 
 	#[test]

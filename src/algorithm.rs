@@ -23,7 +23,7 @@ impl Algorithm
 
     fn minimax(node: &mut Node, depth: u32, maximazing: bool) -> usize {
         let mut fscore = node.get_item().get_fscore();
-        println!("What am I doing\n{}", node.get_item());
+        // println!("What am I doing\n{}", node.get_item());
         if depth == 0 || fscore as u64 == Self::HEURISTIC_WIN_VALUE {
             return fscore;
         }
@@ -33,7 +33,7 @@ impl Algorithm
             let children = node.get_branches();
             if children.is_some() {
                 for n in children.unwrap() {
-                    fscore = fscore.max(Self::minimax(&mut n.borrow_mut(), depth - 1, false));
+                    fscore = fscore.max(Self::minimax(&mut n.borrow_mut(), depth - 1, !maximazing));
                 }
             }
         }
@@ -43,7 +43,7 @@ impl Algorithm
             let children = node.get_branches();
             if children.is_some() {
                 for n in children.unwrap() {
-                    fscore = fscore.min(Self::minimax(&mut n.borrow_mut(), depth - 1, true));
+                    fscore = fscore.min(Self::minimax(&mut n.borrow_mut(), depth - 1, !maximazing));
                 }
             }
         }
@@ -57,7 +57,11 @@ impl Algorithm
             .list_neighbours()
             .enumerate()
             .iter()
-            .map(|b| Node::new(Goban::new(parent.get_item().get_player() | b, *parent.get_item().get_enemy())))
+            .map(|b| {
+                let mut goban = Goban::new(parent.get_item().get_player() | b, *parent.get_item().get_enemy());
+                goban.compute_fscore(parent.get_item(), b, parent.get_depth() + 1);
+                Node::new(goban)
+            })
             .collect()
     }
 }
@@ -95,9 +99,9 @@ mod tests {
 		");
 
         // let tree = Algorithm::new(Goban::get_heuristic, board);
-        let mut board = Goban::new(to_play, BitBoard::default());
+        let board = Goban::new(to_play, BitBoard::default());
         let mut node = Node::new(board);
-        // let result = Algorithm::minimax(&mut node, 5, true);
+        let result = Algorithm::minimax(&mut node, 3, true);
         assert_eq!(1, 2 + 2);
     }
 }
