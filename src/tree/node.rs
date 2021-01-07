@@ -8,83 +8,71 @@ use std::{
     fmt
 };
 
-/// This type is an alias for `BinaryHeap<Rc<RefCell<Node<T>>>>`.
-pub type Branches<T> = BinaryHeap<Rc<RefCell<Node<T>>>>;
+use crate::goban::Goban;
+
+/// This type is an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
+pub type Branches = BinaryHeap<Rc<RefCell<Node>>>;
 
 /// The struct that represent a node in a tree.
 /// ```
-/// pub struct Node<T>
+/// pub struct Node
 /// {
-///     item: T,
-///     branches: Option<Branches<T>>
+///     item: Goban,
+///     branches: Option<Branches>
 /// } 
 /// ```
 /// `item` is the inner value which is holded by a Node.
-/// It could be of any type that implement the following traits:
-/// * Display
-/// * Debug
-/// * Ord
-/// * Eq
-/// * Hash
 /// 
 /// `branches` is a [`BinaryHeap`], wrapped in an [`Option`], which hold child nodes.
-/// The type `Branches` is used for convenience and is just an alias for `BinaryHeap<Rc<RefCell<Node<T>>>>`.
-/// `T` has to be of the same type as `item`.
+/// The type `Branches` is used for convenience and is just an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
 /// 
 /// [`BinaryHeap`]: https://doc.rust-lang.org/std/collections/struct.BinaryHeap.html
 /// [`Option`]: https://doc.rust-lang.org/std/option/enum.Option.html
 #[derive(Debug)]
-pub struct Node<T>
+pub struct Node
 {
     /// `item` is the inner value which is holded by a Node.
-    /// It could be of any type that implement the following traits:
-    /// * Display
-    /// * Debug
-    /// * Ord
-    /// * Eq
-    /// * Hash
-    item: T,
+    item: Goban,
     depth: usize,
     /// `branches` is a [`BinaryHeap`], wrapped in an [`Option`], which hold child nodes.
-    /// The type `Branches` is used for convenience and is just an alias for `BinaryHeap<Rc<RefCell<Node<T>>>>`.
-    /// `T` has to be of the same type as `item`.
-    branches: Option<Branches<T>>,
+    /// The type `Branches` is used for convenience and is just an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
+    branches: Option<Branches>,
 }
 
-impl<T: fmt::Display + Debug> fmt::Display for Node<T> {
+impl fmt::Display for Node {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Inner: {}\nBranches: {:#?}", self.item, self.branches)
     }
 }
 
-impl<T: Ord> PartialOrd for Node<T> {
+impl PartialOrd for Node {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
     }
 }
 
-impl<T: Ord> Ord for Node<T> {
+impl Ord for Node {
     fn cmp(&self, other: &Self) -> Ordering {
         self.item.cmp(&other.item)
     }
 }
 
-impl<T: Eq> PartialEq for Node<T> {
+impl PartialEq for Node {
     fn eq(&self, other: &Self) -> bool {
         self.item == other.item
     }
 }
 
-impl<T: Eq> Eq for Node<T> {}
+impl Eq for Node {}
 
-impl<T: Hash> Hash for Node<T> {
+impl Hash for Node {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.item.hash(state);
     }
 }
 
-impl<T: Ord> Node<T> {
-    pub fn new(item: T) -> Self {
+impl Node {
+    pub fn new(item: Goban) -> Self {
         Self {
             item,
             depth: 0,
@@ -92,11 +80,11 @@ impl<T: Ord> Node<T> {
         }
     }
 
-    pub fn get_item(&self) -> &T {
+    pub fn get_item(&self) -> &Goban {
         &self.item
     }
 
-    pub fn add_branch(&mut self, item: T) -> Rc<RefCell<Self>> {
+    pub fn add_branch(&mut self, item: Goban) -> Rc<RefCell<Self>> {
         let new_node = Rc::new(RefCell::new(Self::new(item)));
         let mut branches = self.branches.take().unwrap_or_default();
 
@@ -118,8 +106,8 @@ impl<T: Ord> Node<T> {
     }
 
     /// A method that add many branches at once using the closure `generator`.
-    pub fn add_many_branches<F: Fn(&mut Self) -> Vec<Node<T>>>(&mut self, generator: F) {
-        let mut new_branches: BinaryHeap<Rc<RefCell<Node<T>>>> = generator(self).into_iter().map(|x| Rc::new(RefCell::new(x))).collect();
+    pub fn add_many_branches<F: Fn(&mut Self) -> Vec<Node>>(&mut self, generator: F) {
+        let mut new_branches: BinaryHeap<Rc<RefCell<Node>>> = generator(self).into_iter().map(|x| Rc::new(RefCell::new(x))).collect();
 
         if !new_branches.is_empty() {
             let mut branches = self.branches.take().unwrap_or_default();
@@ -130,8 +118,9 @@ impl<T: Ord> Node<T> {
 
     // TODO: Ideally, this method should returns an Iterator (not an option)
     // in order to be able to directly iterate over its return value.
-    /// Returns an iterator which iterates over the branches in the current node.
-    pub fn get_branches(&mut self) -> Option<&Branches<T>> {
+    /// Returns the Branches of the current node, if any, wrapped into an Option.
+    /// Returns None otherwise.
+    pub fn get_branches(&mut self) -> Option<&Branches> {
         if let Some(ref branches) = self.branches {
             Some(branches)
         } else {
@@ -147,6 +136,8 @@ mod tests {
         cell::RefCell,
         collections::{BinaryHeap}
     };
+    use crate::{bitboard::BitBoard, goban::Goban};
+
     use super::{Node, Branches};
 
     #[test]
@@ -154,14 +145,16 @@ mod tests {
     fn add_many_branches_with_valid_node_generator_should_add_branches()
     {
         // Arrange
-        let closure = |x: &mut Node<u32>| {
+        let closure = |x: &mut Node| {
             let mut vec = Vec::new();
             for i in 1..10 {
-                vec.push(Node::new(i));
+                let mut bitboard = BitBoard::default();
+                bitboard.set(i, true);
+                vec.push(Node::new(Goban::new(bitboard, bitboard)));
             }
             vec
         };
-        let mut node = Node::new(0);
+        let mut node = Node::new(Goban::default());
 
         // Act
         node.add_many_branches(closure);
@@ -174,10 +167,11 @@ mod tests {
     #[test]
     fn count_branch_with_0_branch_should_return_0() {
         // Arrange
+        let bitboard = BitBoard::default();
         let node = Node {
-            item: 42,
+            item: Goban::new(bitboard, bitboard),
             depth: 0,
-            branches: Some(Branches::<u32>::new())
+            branches: Some(Branches::new())
         };
 
         // Act
@@ -190,8 +184,9 @@ mod tests {
     #[test]
     fn count_branch_with_no_branch_should_return_0() {
         // Arrange
+        let bitboard = BitBoard::default();
         let node = Node {
-            item: 42,
+            item: Goban::new(bitboard, bitboard),
             depth: 0,
             branches: None
         };
@@ -206,19 +201,20 @@ mod tests {
     #[test]
     fn count_branch_with_3_branches_should_return_3() {
         // Arrange
+        let bitboards = [BitBoard::full(), BitBoard::empty()];
         let (node0, node1, node2) = (
             Rc::new(RefCell::new(Node {
-                item: 0,
+                item: Goban::new(bitboards[0], bitboards[1]),
                 depth: 1,
                 branches: None
             })),
             Rc::new(RefCell::new(Node {
-                item: 1,
+                item: Goban::new(bitboards[1], bitboards[0]),
                 depth: 1,
                 branches: None
             })),
             Rc::new(RefCell::new(Node {
-                item: 2,
+                item: Goban::new(bitboards[0], bitboards[0]),
                 depth: 1,
                 branches: None
             }))
@@ -228,7 +224,7 @@ mod tests {
         branches.push(node1);
         branches.push(node2);
         let node = Node {
-            item: 42,
+            item: Goban::new(bitboards[1], bitboards[1]),
             depth: 0,
             branches: Some(branches)
         };
@@ -243,14 +239,15 @@ mod tests {
     #[test]
     fn add_branch_should_add_a_branch() {
         // Arrange
+        let bitboards = [BitBoard::full(), BitBoard::empty()];
         let mut node = Node {
-            item: 42,
+            item: Goban::new(bitboards[0], bitboards[1]),
             depth: 0,
             branches: None
         };
 
         // Act
-        let new_node = node.add_branch(84);
+        let new_node = node.add_branch(Goban::new(bitboards[1], bitboards[0]));
         let nb_branches = node.count_branch();
 
         // Assert
@@ -261,14 +258,16 @@ mod tests {
     #[test]
     fn test_display_no_assert() {
         // Arrange
-        let closure = |x: &mut Node<u32>| {
+        let closure = |x: &mut Node| {
             let mut vec = Vec::new();
             for i in 1..10 {
-                vec.push(Node::new(i));
+                let mut bitboard = BitBoard::default();
+                bitboard.set(i, true);
+                vec.push(Node::new(Goban::new(bitboard, bitboard)));
             }
             vec
         };
-        let mut node = Node::new(0);
+        let mut node = Node::new(Goban::default());
 
         // Act
         node.add_many_branches(closure);

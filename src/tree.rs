@@ -1,25 +1,24 @@
 pub(crate) mod node;
 
 use node::Node;
+use crate::goban::Goban;
 
-pub struct Tree<H, T>
+pub struct Tree<H>
 where
-    H: Fn(T) -> u64,
-    T: Ord
+    H: Fn(Goban) -> u64,
 {
     // The heuristic function to use.
     // This is a generic because it allows us to mock the behavior of the heuristic function in tests.
     heuristic: H,
     depth: u64,
-    root: Node<T>
+    root: Node
 }
 
-impl<H, T> Tree<H, T>
+impl<H> Tree<H>
 where
-    H: Fn(T) -> u64,
-    T: Ord
+    H: Fn(Goban) -> u64,
 {
-    pub fn new(heuristic: H, root_item: T) -> Self {
+    pub fn new(heuristic: H, root_item: Goban) -> Self {
         Self {
             heuristic,
             depth: 0,

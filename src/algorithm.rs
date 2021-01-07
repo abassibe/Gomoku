@@ -7,7 +7,7 @@ use super::{
 
 pub struct Algorithm<H: Fn(Goban) -> u64>
 {
-    play_tree: Tree<H, Goban>,
+    play_tree: Tree<H>,
 }
 
 impl<H: Fn(Goban) -> u64> Algorithm<H>
@@ -21,7 +21,7 @@ impl<H: Fn(Goban) -> u64> Algorithm<H>
         }
     }
 
-    fn minimax(node: &mut Node<Goban>, depth: u32, maximazing: bool) -> usize {
+    fn minimax(node: &mut Node, depth: u32, maximazing: bool) -> usize {
         let mut fscore = node.get_item().get_fscore();
         println!("What am I doing\n{}", node.get_item());
         if depth == 0 || fscore as u64 == Self::HEURISTIC_WIN_VALUE {
@@ -51,7 +51,7 @@ impl<H: Fn(Goban) -> u64> Algorithm<H>
         fscore
     }
 
-    fn node_generator(parent: &mut Node<Goban>) -> Vec<Node<Goban>> {
+    fn node_generator(parent: &mut Node) -> Vec<Node> {
         parent
             .get_item()
             .list_neighbours()
@@ -97,7 +97,7 @@ mod tests {
         // let tree = Algorithm::new(Goban::get_heuristic, board);
         let mut board = Goban::new(to_play, BitBoard::default());
         let mut node = Node::new(board);
-        let result = Algorithm::minimax(&mut node, 5, true);
+        // let result = Algorithm::minimax(&mut node, 5, true);
         assert_eq!(1, 2 + 2);
     }
 }

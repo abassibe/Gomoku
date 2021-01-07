@@ -160,7 +160,7 @@ impl BitBoard {
     // ----------
     // Bit setter
     // ----------
-    fn set(&mut self, bit_index: isize, bit_value: bool) {
+    pub fn set(&mut self, bit_index: isize, bit_value: bool) {
         let max_index = (BITS_IN_U128 * self.b.len()) as isize;
         let min_index = -max_index;
         if bit_index >= max_index || bit_index < min_index {
