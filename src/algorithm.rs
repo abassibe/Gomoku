@@ -5,17 +5,17 @@ use super::{
     goban::Goban
 };
 
-pub struct Algorithm<H: Fn(Goban) -> u64>
+pub struct Algorithm
 {
-    play_tree: Tree<H>,
+    play_tree: Tree,
 }
 
-impl<H: Fn(Goban) -> u64> Algorithm<H>
+impl Algorithm
 {
-    const HEURISTIC_WIN_VALUE: u64 = u64::MAX - 1;
+    pub const HEURISTIC_WIN_VALUE: u64 = u64::MAX - 1;
 
-    pub fn new(heuristic: H, initial_state: Goban) -> Self {
-        let play_tree = Tree::new(heuristic, initial_state);
+    pub fn new(initial_state: Goban) -> Self {
+        let play_tree = Tree::new(initial_state);
         Algorithm {
             play_tree
         }
