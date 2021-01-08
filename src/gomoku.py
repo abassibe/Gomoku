@@ -39,7 +39,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if event.button() == 1:
             y = event.x()
             x = event.y()
-            if (x < 87 or x > 707) or (y < 100 or y > 720):
+            if (x < 87 or x > 716) or (y < 100 or y > 729):
                 return
             if self.gameManager.playerTurn:
                 self.gameManager.player1.endTurn(x, y)

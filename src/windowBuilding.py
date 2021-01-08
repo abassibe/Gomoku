@@ -239,7 +239,7 @@ def winDraw(window, isWin, player):
     QtCore.QTimer.singleShot(300, lambda: window.winOrDrawLabel.setGeometry(130, 120, 565, 535))
     newfont5 = QtGui.QFont("SF Wasabi", 72)
     QtCore.QTimer.singleShot(300, lambda: window.winOrDrawLabel.setFont(newfont5))
-    QtCore.QTimer.singleShot(300, lambda: window.winOrDrawLabel.setGeometry(95, 85, 630, 620))
+    QtCore.QTimer.singleShot(300, lambda: window.winOrDrawLabel.setGeometry(95, 85, 630, 624))
 
 
 def parseTranslationFile():

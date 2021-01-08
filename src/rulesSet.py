@@ -151,6 +151,8 @@ class Rules():
 
     def searchDoubleThreePoint(self, board, start, end, color):
         # Faire la même chose que dans searchThreePoint mais sur tout les points de start à end
+        print(start)
+        print(end)
         pass
 
     def searchThreePoint(self, board, x, y, color):
@@ -172,12 +174,6 @@ class Rules():
             d1Line[x] = color
         else:
             d1Line[y] = color
-        # if x < (9 + (9 - y)):
-        #     d2Line[x] = color
-        # else:
-        #     d2Line[y] = color
-        print(x, y)
-        print(d2Line)
         for i in range(y - 4, y + 1):
             if hLine[i:i + len(pattern[0])].tolist() == pattern[0]:
                 self.searchDoubleThreePoint(board, [x, i], [x, i + 4], color)   #|\   X < y   /|
@@ -215,7 +211,8 @@ class Rules():
             elif d2Line[i:i + len(pattern[2])].tolist() == pattern[2]:
                 self.searchDoubleThreePoint(board, [x, i], [x, i + 4], color)
                 numberThree += 1
-        print("number of three = " + str(numberThree))
+        print(numberThree)
+        return numberThree
 
     def doubleThreeRule(self, board, x, y, color):
         lst = []
@@ -227,10 +224,9 @@ class Rules():
             lst.append(board[x + x1][y - yMin:y + yMax].tolist())
         capture = np.vstack((lst[:]))
 
-        if self.searchThreePoint(board, x, y, color):
-            pass
-        # print(capture)
-        # print()
+        if self.searchThreePoint(board, x, y, color) > 1:
+            return False
+        return True
 
     def getValidPoints(self, board, color):
         if self.isWinner != 0:

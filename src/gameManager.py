@@ -27,9 +27,9 @@ class HumanPlayer():
     def start(self):
         self.timerText.setText("00:00:00")
         if self.color == 1:
-            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 18pt \"SF Wasabi\";")
+            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt \"SF Wasabi\";")
         else:
-            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 18pt \"SF Wasabi\";")
+            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt \"SF Wasabi\";")
 
     def startTurn(self):
         self.window.layoutWidget.setCursor(self.cursor)
@@ -61,9 +61,9 @@ class ComputerPlayer():
         self.window = window
         self.startTime = 0.0
         if self.color == 1:
-            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 18pt \"SF Wasabi\";")
+            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt \"SF Wasabi\";")
         else:
-            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 18pt \"SF Wasabi\";")
+            self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt \"SF Wasabi\";")
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.window.playerTwoTimer))
         self.playerCapture = None
         self.stoneRemovedCount = 0
@@ -99,14 +99,11 @@ class GameBoard():
             scaledX = x
             scaledY = y
         else:
-            boardWidth = 620
-            scaledX = x - self.window.layoutWidget.geometry().x()
-            blockWidth = (boardWidth / 19)
-            scaledX = int(scaledX / blockWidth)
-            boardHeight = 620
-            scaledY = y - self.window.layoutWidget.geometry().y()
-            blockHeight = (boardHeight / 19)
-            scaledY = int(scaledY / blockHeight)
+            blockSize = (629 / 19)
+            scaledX = x - self.window.layoutWidget.geometry().y()
+            scaledX = int(scaledX / blockSize)
+            scaledY = y - self.window.layoutWidget.geometry().x()
+            scaledY = int(scaledY / blockSize)
         if self.grid[scaledX, scaledY] != 0 or not self.isValidMove(scaledX, scaledY, color):
             return None
         self.window.gameManager.gameBoard.clearHint()
@@ -175,7 +172,8 @@ class GameBoard():
         #     if x == 9 and y == 9:
         #         return True
         #     return False
-        self.window.gameManager.rules.doubleThreeRule(self.grid, x, y, color)
+        if not self.window.gameManager.rules.doubleThreeRule(self.grid, x, y, color):
+            return False
         if self.window.gameManager.rules.isWinner != 0:
             ret = self.window.gameManager.rules.getValidPoints(self.grid, color)
             for validX, validY in ret:
