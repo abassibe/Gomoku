@@ -8,7 +8,7 @@ use std::{
     fmt
 };
 
-use crate::goban::Goban;
+use crate::{bitboard::BitBoard, goban::Goban};
 
 /// This type is an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
 pub type Branches = BinaryHeap<Rc<RefCell<Node>>>;
@@ -28,7 +28,7 @@ pub type Branches = BinaryHeap<Rc<RefCell<Node>>>;
 /// 
 /// [`BinaryHeap`]: https://doc.rust-lang.org/std/collections/struct.BinaryHeap.html
 /// [`Option`]: https://doc.rust-lang.org/std/option/enum.Option.html
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Node
 {
     /// `item` is the inner value which is holded by a Node.
@@ -72,10 +72,10 @@ impl Hash for Node {
 }
 
 impl Node {
-    pub fn new(item: Goban) -> Self {
+    pub fn new(item: Goban, depth: usize) -> Self {
         Self {
             item,
-            depth: 0,
+            depth,
             branches: None
         }
     }
@@ -88,8 +88,16 @@ impl Node {
         self.depth
     }
 
+    pub fn set_item_fscore(&mut self, fscore: usize) {
+        self.item.set_fscore(fscore);
+    }
+
+    pub fn compute_item_fscore(&mut self, previous_state: &Goban, to_play: &BitBoard, depth: usize) -> usize {
+        self.item.compute_fscore(previous_state, to_play, depth)
+    }
+
     pub fn add_branch(&mut self, item: Goban) -> Rc<RefCell<Self>> {
-        let new_node = Rc::new(RefCell::new(Self::new(item)));
+        let new_node = Rc::new(RefCell::new(Self::new(item, self.depth + 1)));
         let mut branches = self.branches.take().unwrap_or_default();
 
         branches.push(Rc::clone(&new_node));
@@ -149,16 +157,16 @@ mod tests {
     fn add_many_branches_with_valid_node_generator_should_add_branches()
     {
         // Arrange
-        let closure = |x: &mut Node| {
+        let closure = |n: &mut Node| {
             let mut vec = Vec::new();
             for i in 1..10 {
                 let mut bitboard = BitBoard::default();
                 bitboard.set(i, true);
-                vec.push(Node::new(Goban::new(bitboard, bitboard)));
+                vec.push(Node::new(Goban::new(bitboard, bitboard), n.depth + 1));
             }
             vec
         };
-        let mut node = Node::new(Goban::default());
+        let mut node = Node::new(Goban::default(), 0);
 
         // Act
         node.add_many_branches(closure);
@@ -262,16 +270,16 @@ mod tests {
     #[test]
     fn test_display_no_assert() {
         // Arrange
-        let closure = |x: &mut Node| {
+        let closure = |n: &mut Node| {
             let mut vec = Vec::new();
             for i in 1..10 {
                 let mut bitboard = BitBoard::default();
                 bitboard.set(i, true);
-                vec.push(Node::new(Goban::new(bitboard, bitboard)));
+                vec.push(Node::new(Goban::new(bitboard, bitboard), n.depth + 1));
             }
             vec
         };
-        let mut node = Node::new(Goban::default());
+        let mut node = Node::new(Goban::default(), 0);
 
         // Act
         node.add_many_branches(closure);

@@ -35,6 +35,10 @@ impl Goban
 		self.fscore
 	}
 
+	pub fn set_fscore(&mut self, fscore: usize) {
+		self.fscore = fscore;
+	}
+
 	pub fn list_moves(&self) -> BitBoard
 	{
 		!self.board
@@ -137,9 +141,10 @@ impl Goban
 		}
 	}
 
-	pub fn compute_fscore(&mut self, previous_state: &Goban, to_play: &BitBoard, depth: usize)
+	pub fn compute_fscore(&mut self, previous_state: &Goban, to_play: &BitBoard, depth: usize) -> usize
 	{
-		self.fscore = previous_state.compute_heuristic(to_play) + depth
+		self.fscore = previous_state.compute_heuristic(to_play) + depth;
+		self.fscore
 	}
 }
 
