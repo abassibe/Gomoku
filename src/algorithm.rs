@@ -1,8 +1,7 @@
-use std::{rc::Rc, cell::RefCell};
-
 use super::{
     tree::{Tree, node::Node},
-    goban::Goban
+    goban::Goban,
+    bitboard::BitBoard
 };
 
 pub struct Algorithm
