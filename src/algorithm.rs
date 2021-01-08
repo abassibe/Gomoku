@@ -43,6 +43,7 @@ impl Algorithm
             if children.is_some() {
                 for n in children.unwrap() {
                     fscore = fscore.min(Self::minimax(&mut n.borrow_mut(), depth - 1, !maximazing));
+
                 }
             }
         }
@@ -62,6 +63,12 @@ impl Algorithm
                 Node::new(goban)
             })
             .collect()
+    }
+
+    /// This mehtod is likely to change in a near future because I'm not sure what to return.
+    /// For now it returns a BitBoard that contains the next move to play.
+    pub fn get_next_move(&mut self, maximazing: bool) -> BitBoard {
+        todo!()
     }
 }
 
