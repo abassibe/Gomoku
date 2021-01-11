@@ -91,9 +91,13 @@ impl Algorithm
 
     /// This mehtod is likely to change in a near future because I'm not sure what to return.
     /// For now it returns a BitBoard that contains the next move to play.
-    pub fn get_next_move(&mut self, maximazing: bool) -> BitBoard {
+    pub fn get_next_move(&mut self, maximazing: bool) -> Option<BitBoard> {
         let next_state = Self::minimax(&mut self.play_tree, 3, maximazing);
-        next_state.get_item().get_player() ^ self.play_tree.get_item().get_player()
+        if next_state == self.play_tree {
+            None
+        } else {
+            Some(next_state.get_item().get_player() ^ self.play_tree.get_item().get_player())
+        }
     }
 }
 
