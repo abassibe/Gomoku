@@ -60,10 +60,10 @@ impl Goban
 		todo!()
 	}
 
-	pub fn neighbour_layering(&self, to_play: &BitBoard) -> u16
+	pub fn neighbour_layering(&self, to_play: &BitBoard) -> isize
 	{
 		let mut layers = self.board;
-		let mut ret: u16 = 0;
+		let mut ret: isize = 0;
 		while (&layers & to_play).is_empty()
 		{
 			layers |= layers + Direction::All;
@@ -143,8 +143,8 @@ impl Goban
 			Fscore::Value(x) => {
 				println!("to_play:\n{}", to_play);
 				println!("self.board:\n{}", self.board);
-				let neighbour_layering = self.neighbour_layering(to_play) as u64 * 10;
-				Fscore::Value((neighbour_layering - x) as isize)
+				let neighbour_layering = self.neighbour_layering(to_play) * 10;
+				Fscore::Value(neighbour_layering - x)
 			},
 		}
 	}
