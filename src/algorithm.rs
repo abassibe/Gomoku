@@ -28,18 +28,18 @@ impl Algorithm
         let mut candidate = node.clone();
         let mut fscore = node.get_item().get_fscore();
         // println!("What am I doing\n{}", node.get_item());
-        if depth == 0 || fscore as u64 == Self::HEURISTIC_WIN_VALUE {
+        if depth == 0 || fscore.is_win() {
             return candidate;
         }
         if maximazing {
-            fscore = Fscore::value(isize::MIN);
+            fscore = Fscore::Value(isize::MIN);
             node.add_many_branches(Self::node_generator);
             let children = node.get_branches();
             if let Some(children) = children {
                 for n in children {
                     let grandchild = Self::minimax(&mut n.borrow_mut(), depth - 1, !maximazing);
                     let grandchild_fscore = grandchild.get_item().get_fscore();
-                    if grandchild_fscore == usize::MIN {
+                    if !grandchild_fscore.is_initialized() {
                         let n_player = n.borrow().get_item().get_player().clone();
                         let n_depth = n.borrow().get_depth();
                         n.borrow_mut()
@@ -55,14 +55,14 @@ impl Algorithm
             }
         }
         else {
-            fscore = Fscore::value(isize::MAX);
+            fscore = Fscore::Value(isize::MAX);
             node.add_many_branches(Self::node_generator);
             let children = node.get_branches();
             if let Some(children) = children {
                 for n in children {
                     let grandchild = Self::minimax(&mut n.borrow_mut(), depth - 1, !maximazing);
                     let grandchild_fscore = grandchild.get_item().get_fscore();
-                    if grandchild_fscore == usize::MIN {
+                    if !grandchild_fscore.is_initialized() {
                         let n_player = n.borrow().get_item().get_player().clone();
                         let n_depth = n.borrow().get_depth();
                         n.borrow_mut()
