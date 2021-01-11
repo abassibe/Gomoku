@@ -107,7 +107,7 @@ mod tests {
     #[test]
     fn test_algorithm()
     {
-        let (mut player, enemy) = (BitBoard::default(), BitBoard::from_str("
+        let (mut player, mut enemy) = (BitBoard::default(), BitBoard::from_str("
             0000000000000000000
             0000000000000000000
             0000000000000000000
@@ -133,10 +133,15 @@ mod tests {
 
         for _ in 0..10 {
             let next_move = algo.get_next_move(true);
-            println!("Here is the next move to play:\n{}", next_move);
+            println!("Here is the next move to play for player:\n{}", next_move);
             player |= next_move;
+            let initial = Goban::new(enemy, player);
+            algo = Algorithm::new(initial);
+            let next_move = algo.get_next_move(true);
+            println!("Here is the next move to play for enemy:\n{}", next_move);
+            enemy |= next_move;
             let initial = Goban::new(player, enemy);
-            algo = Algorithm::new(initial)
+            algo = Algorithm::new(initial);
         }
         todo!();
     }
