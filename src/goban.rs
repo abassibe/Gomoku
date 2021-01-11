@@ -115,7 +115,7 @@ impl Goban
 					final_line = bits + dir.to_invert();
 				}
 				else if len == 5 {
-					return Fscore::win
+					return Fscore::Win
 				}
 				bits = bits - dir;
 				len += 1;
@@ -139,7 +139,7 @@ impl Goban
 	{
 		// (self.neighbour_layering(to_play) - self.line_detection()) as u64
 		match self.line_detection() {
-			Fscore::win => Fscore::win,
+			Fscore::Win => Fscore::Win,
 			Fscore::Value(x) => {
 				println!("to_play:\n{}", to_play);
 				println!("self.board:\n{}", self.board);
@@ -152,7 +152,7 @@ impl Goban
 	pub fn compute_fscore(&mut self, previous_state: &Goban, to_play: &BitBoard, depth: usize) -> Fscore
 	{
 		self.fscore = match previous_state.compute_heuristic(to_play) {
-			Fscore::win => Fscore::win,
+			Fscore::Win => Fscore::Win,
 			Fscore::Value(x) => Fscore::Value(x + depth),
 		};
 		self.fscore
