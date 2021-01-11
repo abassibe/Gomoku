@@ -13,8 +13,6 @@ pub struct Algorithm
 
 impl Algorithm
 {
-    pub const HEURISTIC_WIN_VALUE: u64 = u64::MAX - 1;
-
     pub fn new(initial_state: Goban) -> Self {
         let play_tree = Node::new(initial_state, 0);
         Algorithm {
