@@ -10,6 +10,10 @@ use pyo3::{exceptions};
 use pyo3::types::{PyBool};
 use goban::Goban;
 
+// Comment rajouter une fonction python sur rust
+// Simplement rajouter dans le block pymodule une fonction rust avec obligatoirement une instance Python<'_>, et si applicable un PyResult pour le retour
+// Presque n'importe quel type peut etre passé tant que c'est un type natif python/rust (check doc)
+// Pour compiler, maturin develop dans le terminal, qui genere un dylib dans le dossier target/debug qu'il faut mettre dans le meme dossier que gomoku.py
 #[pymodule]
 fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     #[pyfn(m, "ret_coord")]
