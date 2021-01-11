@@ -60,6 +60,16 @@ impl Into<u8> for &Fscore {
 	}
 }
 
+impl fmt::Display for Fscore {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		write!(f, "{}", match self {
+			Fscore::Uninitialized => "Uninitialized",
+			Fscore::Value(x) => &x.to_string(),
+			Fscore::Win => "Win"
+		})
+	}
+}
+
 #[derive(Clone, Debug, Default, Copy)]
 pub struct Goban
 {
