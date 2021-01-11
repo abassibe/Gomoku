@@ -102,7 +102,7 @@ impl Goban
 		let mut bits: BitBoard;
 		let mut final_line: BitBoard;
 		let mut total: isize = 0;
-		let mut len: u16;
+		let mut len: isize;
 
 		for dir in AxisIterator::new()
 		{
