@@ -8,11 +8,16 @@ use std::cmp::Ordering;
 use std::hash::{Hash, Hasher};
 use std::ops::{BitOr, BitAnd, BitXor};
 
+#[derive(Debug, Copy)]
+pub enum Fscore {
+	value(isize),
+	win
+}
 
 #[derive(Clone, Debug, Default, Copy)]
 pub struct Goban
 {
-	fscore: usize,
+	fscore: Fscore,
 	board: BitBoard,
 	player: BitBoard,
 	enemy: BitBoard,
@@ -24,19 +29,19 @@ impl Goban
 	{
 		Self
 		{
-			fscore: 0,
+			fscore: Fscore::value(0),
 			player,
 			enemy,
 			board: player | enemy,
         }
 	}
 
-	pub fn get_fscore(&self) -> usize {
+	pub fn get_fscore(&self) -> Fscore {
 		self.fscore
 	}
 
-	pub fn set_fscore(&mut self, fscore: usize) {
-		self.fscore = fscore;
+	pub fn set_fscore(&mut self, fscore: isize) {
+		self.fscore = Fscore::value(fscore);
 	}
 
 	pub fn list_moves(&self) -> BitBoard
@@ -87,11 +92,11 @@ impl Goban
 	}
 
 	// TODO Add way to isolate different lines, currently cannot differentiate between lines that are on the same axes
-	fn line_detection(&self) -> u16
+	fn line_detection(&self) -> Fscore
 	{
 		let mut bits: BitBoard;
 		let mut final_line: BitBoard;
-		let mut total: u16 = 0;
+		let mut total: isize = 0;
 		let mut len: u16;
 
 		for dir in AxisIterator::new()
@@ -105,7 +110,7 @@ impl Goban
 					final_line = bits + dir.to_invert();
 				}
 				else if len == 5 {
-					return u16::MAX
+					return Fscore::win
 				}
 				bits = bits - dir;
 				len += 1;
@@ -121,29 +126,32 @@ impl Goban
 				// println!("^-------------------------^\n{}v-------------------------v", final_line);
 			}
 		}
-		total
+		Fscore::value(total)
 	}
 
 	// TODO Reimplement neighbour layering somehow? -> I think this won't be necessary
-	pub fn compute_heuristic(&self, to_play: &BitBoard) -> usize
+	pub fn compute_heuristic(&self, to_play: &BitBoard) -> Fscore
 	{
 		// (self.neighbour_layering(to_play) - self.line_detection()) as u64
-		let ret = self.line_detection() as u64;
-		if ret == u16::MAX as u64 {
-			// This is horseshit please change it -> Is it better ? (as a reminder it was equivalent to `self.fscore = u64::MAX - 1`)
-			algorithm::Algorithm::HEURISTIC_WIN_VALUE as usize
-		}
-		else {
-			println!("to_play:\n{}", to_play);
-			println!("self.board:\n{}", self.board);
-			let neighbour_layering = self.neighbour_layering(to_play) as u64 * 10;
-			(neighbour_layering - ret) as usize
+		match self.line_detection() {
+			// much better
+			Fscore::win => Fscore::win,
+			Fscore::value(x) =>
+				{
+					println!("to_play:\n{}", to_play);
+					println!("self.board:\n{}", self.board);
+					let neighbour_layering = self.neighbour_layering(to_play) as u64 * 10;
+					Fscore::value((neighbour_layering - x) as isize)
+				},
 		}
 	}
 
-	pub fn compute_fscore(&mut self, previous_state: &Goban, to_play: &BitBoard, depth: usize) -> usize
+	pub fn compute_fscore(&mut self, previous_state: &Goban, to_play: &BitBoard, depth: usize) -> Fscore
 	{
-		self.fscore = previous_state.compute_heuristic(to_play) + depth;
+		self.fscore = match previous_state.compute_heuristic(to_play) {
+			Fscore::win => Fscore::win,
+			Fscore::value(x) => Fscore::value(x + depth),
+		};
 		self.fscore
 	}
 }

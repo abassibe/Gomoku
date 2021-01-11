@@ -2,7 +2,7 @@ use std::rc::Rc;
 
 use super::{
     tree::{Tree, node::Node},
-    goban::Goban,
+    goban::{Goban, Fscore},
     bitboard::BitBoard
 };
 
@@ -32,7 +32,7 @@ impl Algorithm
             return candidate;
         }
         if maximazing {
-            fscore = usize::MIN;
+            fscore = Fscore::value(isize::MIN);
             node.add_many_branches(Self::node_generator);
             let children = node.get_branches();
             if let Some(children) = children {
@@ -55,7 +55,7 @@ impl Algorithm
             }
         }
         else {
-            fscore = usize::MAX;
+            fscore = Fscore::value(isize::MIN);
             node.add_many_branches(Self::node_generator);
             let children = node.get_branches();
             if let Some(children) = children {
