@@ -178,7 +178,7 @@ impl Goban
 				if len == 1 {
 					final_line = bits + dir.to_invert();
 				}
-				else if len == 5 {
+				else if len >= 4 {
 					return Fscore::Win
 				}
 				bits = bits - dir;
@@ -283,7 +283,7 @@ impl Hash for Goban {
 }
 
 #[cfg(test)]
-mod tests {
+mod goban_tests {
 	use crate::bitboard::BitBoard;
 	use crate::goban::Goban;
 
@@ -516,7 +516,7 @@ mod tests {
 		0000000000000000000
 		0000000000000000000
 		0000000000000000000
-		0000001111100000000
+		0000001111000000000
 		0000000000000000000
 		0000000000000000000
 		0000000000000000000
@@ -525,8 +525,37 @@ mod tests {
 		");
 
 		let board = Goban::new(original, BitBoard::empty());
-		println!("HSCORE= {}", board.line_detection());
-		assert_eq!(Fscore::Value(7), board.line_detection());
+		// println!("HSCORE= {}", board.line_detection());
+		assert_eq!(Fscore::Value(6), board.line_detection());
+	}
+
+	#[test]
+	fn test_goban_alignment_win()
+	{
+		let original =
+			BitBoard::from_str("
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000001000000000000
+		0000001000000000000
+		0000001000000000000
+		0000001000000000000
+		0000001000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		");
+		let board = Goban::new(original, BitBoard::empty());
+		assert_eq!(Fscore::Win, board.line_detection());
 	}
 
 	#[test]
