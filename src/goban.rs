@@ -15,6 +15,16 @@ pub enum Fscore {
 	Win
 }
 
+impl Fscore {
+	pub fn is_win(&self) -> bool {
+		*self == Fscore::Win
+	}
+
+	pub fn is_initialized(&self) -> bool {
+		!(*self == Fscore::Uninitialized)
+	}
+}
+
 impl Default for Fscore {
 	fn default() -> Self { Fscore::Uninitialized }
 }
