@@ -1,4 +1,4 @@
-use crate::bitboard::axis::AxisIterator;
+use crate::{bitboard::axis::AxisIterator, algorithm};
 use crate::bitboard::direction::Direction;
 
 use super::bitboard::*;
@@ -6,12 +6,85 @@ use std::fmt::{Formatter};
 use std::fmt;
 use std::cmp::Ordering;
 use std::hash::{Hash, Hasher};
+use std::ops::{BitOr, BitAnd, BitXor};
 
+#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
+pub enum Fscore {
+	Uninitialized,
+	Value(isize),
+	Win
+}
 
-#[derive(Clone, Debug)]
+impl Fscore {
+	pub fn is_win(&self) -> bool {
+		*self == Fscore::Win
+	}
+
+	pub fn is_initialized(&self) -> bool {
+		!(*self == Fscore::Uninitialized)
+	}
+}
+
+impl Default for Fscore {
+	fn default() -> Self { Fscore::Uninitialized }
+}
+
+impl Ord for Fscore {
+	fn cmp(&self, other: &Self) -> Ordering {
+		let self_has_value = if let Fscore::Value(_) = self { true } else { false };
+		let other_has_value = if let Fscore::Value(_) = other { true } else { false };
+		if !self_has_value || !other_has_value {
+			let self_as_u8: u8 = self.into();
+			return self_as_u8.cmp(&other.into());
+		}
+		// At this point both `self` and `other` should be of type `Fscore::Value`
+		let self_value = if let Fscore::Value(x) = self { *x } else { isize::MIN };
+		let other_value = if let Fscore::Value(x) = other { *x } else { isize::MIN };
+		self_value.cmp(&other_value)
+	}
+}
+
+impl PartialOrd for Fscore {
+	fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+		Some(self.cmp(other))
+	}
+}
+
+impl Into<u8> for Fscore {
+	fn into(self) -> u8 {
+		match self {
+			Fscore::Uninitialized => 0,
+			Fscore::Value(_) => 1,
+			Fscore::Win => 2
+		}
+	}
+}
+
+impl Into<u8> for &Fscore {
+	fn into(self) -> u8 {
+		match self {
+			Fscore::Uninitialized => 0,
+			Fscore::Value(_) => 1,
+			Fscore::Win => 2
+		}
+	}
+}
+
+impl fmt::Display for Fscore {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		write!(f, "{}", match self {
+			Fscore::Uninitialized => "Uninitialized".into(),
+			Fscore::Value(x) => x.to_string(),
+			Fscore::Win => "Win".into()
+		})
+	}
+}
+
+#[derive(Clone, Debug, Default, Copy)]
 pub struct Goban
 {
-	fscore: usize,
+	fscore: Fscore,
+	board: BitBoard,
 	player: BitBoard,
 	enemy: BitBoard,
 }
@@ -22,15 +95,24 @@ impl Goban
 	{
 		Self
 		{
-			fscore: 0,
+			fscore: Fscore::Value(0),
 			player,
 			enemy,
+			board: player | enemy,
         }
+	}
+
+	pub fn get_fscore(&self) -> Fscore {
+		self.fscore
+	}
+
+	pub fn set_fscore(&mut self, fscore: Fscore) {
+		self.fscore = fscore;
 	}
 
 	pub fn list_moves(&self) -> BitBoard
 	{
-		!(self.enemy | self.player)
+		!self.board
 	}
 
 	// TODO: Forbidden moves
@@ -39,11 +121,11 @@ impl Goban
 		todo!()
 	}
 
-	pub fn neighbour_layering(&self, to_play: BitBoard) -> u16
+	pub fn neighbour_layering(&self, to_play: &BitBoard) -> isize
 	{
-		let mut layers = self.player | self.enemy;
-		let mut ret: u16 = 0;
-		while (layers & to_play).is_empty()
+		let mut layers = self.board;
+		let mut ret: isize = 0;
+		while (&layers & to_play).is_empty()
 		{
 			layers |= layers + Direction::All;
 			ret += 1;
@@ -52,7 +134,7 @@ impl Goban
 	}
 
 	pub fn list_neighbours(&self) -> BitBoard {
-		((self.enemy | self.player) + Direction::All) & self.list_moves()
+		(self.board + Direction::All) & self.list_moves()
 	}
 
 	fn check_surround(&self, lines: BitBoard, dir: Direction) -> u8
@@ -67,13 +149,21 @@ impl Goban
 		ret
 	}
 
+	pub fn get_player(&self) -> &BitBoard {
+		&self.player
+	}
+
+	pub fn get_enemy(&self) -> &BitBoard {
+		&self.enemy
+	}
+
 	// TODO Add way to isolate different lines, currently cannot differentiate between lines that are on the same axes
-	fn line_detection(&self) -> u16
+	fn line_detection(&self) -> Fscore
 	{
 		let mut bits: BitBoard;
 		let mut final_line: BitBoard;
-		let mut total: u16 = 0;
-		let mut len: u16;
+		let mut total: isize = 0;
+		let mut len: isize;
 
 		for dir in AxisIterator::new()
 		{
@@ -85,6 +175,9 @@ impl Goban
 				if len == 1 {
 					final_line = bits + dir.to_invert();
 				}
+				else if len == 5 {
+					return Fscore::Win
+				}
 				bits = bits - dir;
 				len += 1;
 			}
@@ -95,16 +188,61 @@ impl Goban
 					1 => len / 2,
 					_ => 0,
 				};
-				println!("Change Direction (Current: {:?})\nTotal = {}\n", dir, total);
-				println!("^-------------------------^\n{}v-------------------------v", final_line);
+				// println!("Change Direction (Current: {:?})\nTotal = {}\n", dir, total);
+				// println!("^-------------------------^\n{}v-------------------------v", final_line);
 			}
 		}
-		total
+		Fscore::Value(total)
 	}
 
-	pub fn get_heuristic(&self, to_play: BitBoard) -> u64
+	// TODO Reimplement neighbour layering somehow? -> I think this won't be necessary
+	pub fn compute_heuristic(&self, to_play: &BitBoard) -> Fscore
 	{
-		(self.neighbour_layering(to_play) - self.line_detection()) as u64
+		// (self.neighbour_layering(to_play) - self.line_detection()) as u64
+		match self.line_detection() {
+			Fscore::Win => Fscore::Win,
+			Fscore::Value(x) => {
+				println!("to_play:\n{}", to_play);
+				println!("self.board:\n{}", self.board);
+				let neighbour_layering = self.neighbour_layering(to_play) * 10;
+				Fscore::Value(neighbour_layering - x)
+			},
+			uninit => uninit
+		}
+	}
+
+	pub fn compute_fscore(&mut self, previous_state: &Goban, to_play: &BitBoard, depth: usize) -> Fscore
+	{
+		self.fscore = match previous_state.compute_heuristic(to_play) {
+			Fscore::Win => Fscore::Win,
+			Fscore::Value(x) => Fscore::Value(x + depth as isize),
+			uninit => uninit
+		};
+		self.fscore
+	}
+}
+
+impl BitAnd<BitBoard> for Goban {
+	type Output = BitBoard;
+
+	fn bitand(self, rhs: BitBoard) -> Self::Output {
+		self.board | rhs
+	}
+}
+
+impl BitXor<BitBoard> for Goban {
+	type Output = BitBoard;
+
+	fn bitxor(self, rhs: BitBoard) -> Self::Output {
+		self.board | rhs
+	}
+}
+
+impl BitOr<BitBoard> for Goban {
+	type Output = BitBoard;
+
+	fn bitor(self, rhs: BitBoard) -> Self::Output {
+		self.board | rhs
 	}
 }
 
@@ -145,6 +283,8 @@ impl Hash for Goban {
 mod tests {
 	use crate::bitboard::BitBoard;
 	use crate::goban::Goban;
+
+    use super::Fscore;
 
 	#[test]
 	fn neighbour_layers()
@@ -218,7 +358,7 @@ mod tests {
 		let board = Goban::new(player, enemy);
 
 		println!("{}", to_play);
-		assert_eq!(4, board.neighbour_layering(to_play));
+		assert_eq!(4, board.neighbour_layering(&to_play));
 	}
 
 	#[test]
@@ -319,7 +459,7 @@ mod tests {
 		let board = Goban::new(original, BitBoard::empty());
 		println!("HSCORE= {}", board.line_detection());
 
-		assert_eq!(7, board.line_detection());
+		assert_eq!(Fscore::Value(7), board.line_detection());
 
 		// let stre: String = String::from("\
 		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\

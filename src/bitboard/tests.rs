@@ -2175,3 +2175,36 @@ fn test_from_str_on_bitboard() {
     assert_eq!(expected, result);
 }
 // #endregion Tests from_string
+
+#[test]
+fn test_get_bit_indexes_on_bitboard() {
+    // Arrange
+    let bitboard = BitBoard::from_str("
+        0100000000000000000
+        0000000000000000000
+        1000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000100000000
+        0000000000000000001
+    ");
+    let expected = vec![1u16, 40u16, 350u16, 378u16];
+
+    // Act
+    let result = bitboard.get_bit_indexes();
+
+    // Assert
+    assert_eq!(expected, result);
+}

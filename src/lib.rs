@@ -2,6 +2,7 @@ mod goban;
 mod bitboard;
 mod stone;
 mod tree;
+mod algorithm;
 
 use numpy::{PyArray2};
 use pyo3::prelude::{pymodule, Py, PyModule, PyResult, Python};

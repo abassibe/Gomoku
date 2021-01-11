@@ -44,6 +44,14 @@ impl BitBoard {
             0b11101111111111111111111011111111111111111110111111111111111111101111111111111111111011111111111111111110111111111111111111100000
         ]
     };
+    const FIRST_BIT_SET: Self = Self {
+        b: [
+            0b10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+        ]
+    };
+    const U128_FIRST_BIT_SET: u128 = 0b10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;
 
     // ------------
     // Constructors
@@ -91,6 +99,22 @@ impl BitBoard {
     }
     // #endregion Constructors
 
+    pub fn enumerate(mut self) -> Vec<BitBoard> {
+        let mut list: Vec<BitBoard> = Vec::with_capacity(40);
+        let mut index = 0u32;
+
+        while self.is_any() {
+            if (&self & &Self::FIRST_BIT_SET).is_any() {
+                list.push(Self::FIRST_BIT_SET >> index);
+            }
+
+            self = self << 1;
+            index += 1;
+        }
+
+        list
+    }
+
     // -------------
     // Tests methods
     // -------------
@@ -137,7 +161,7 @@ impl BitBoard {
     // ----------
     // Bit setter
     // ----------
-    fn set(&mut self, bit_index: isize, bit_value: bool) {
+    pub fn set(&mut self, bit_index: isize, bit_value: bool) {
         let max_index = (BITS_IN_U128 * self.b.len()) as isize;
         let min_index = -max_index;
         if bit_index >= max_index || bit_index < min_index {
@@ -153,6 +177,27 @@ impl BitBoard {
             new_self ^= &requested_bit;
         }
     }
+
+    // ----------
+    // Bit getter
+    // ----------
+    /// Returns the index of every bit set in the BitBoard in a Vec<u16>.
+    pub fn get_bit_indexes(&self) -> Vec<u16> {
+        let mut result = vec![];
+        let mut index = 0u16;
+        let mut bitboard = *self;
+
+        while bitboard.is_any() {
+            if bitboard.b[0] & Self::U128_FIRST_BIT_SET != 0 {
+                result.push(index);
+            }
+            bitboard = bitboard << 1;
+            index += 1;
+        }
+
+        result
+    }
+
 
     // ---------------------------------------
     // Implementation of bitshift for BitBoard
