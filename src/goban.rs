@@ -8,10 +8,15 @@ use std::cmp::Ordering;
 use std::hash::{Hash, Hasher};
 use std::ops::{BitOr, BitAnd, BitXor};
 
-#[derive(Debug, Copy)]
+#[derive(Debug, Copy, Clone)]
 pub enum Fscore {
-	value(isize),
-	win
+	Uninitialized,
+	Value(isize),
+	Win
+}
+
+impl Default for Fscore {
+	fn default() -> Self { Fscore::Uninitialized }
 }
 
 #[derive(Clone, Debug, Default, Copy)]
@@ -29,7 +34,7 @@ impl Goban
 	{
 		Self
 		{
-			fscore: Fscore::value(0),
+			fscore: Fscore::Value(0),
 			player,
 			enemy,
 			board: player | enemy,
@@ -41,7 +46,7 @@ impl Goban
 	}
 
 	pub fn set_fscore(&mut self, fscore: isize) {
-		self.fscore = Fscore::value(fscore);
+		self.fscore = Fscore::Value(fscore);
 	}
 
 	pub fn list_moves(&self) -> BitBoard
@@ -126,7 +131,7 @@ impl Goban
 				// println!("^-------------------------^\n{}v-------------------------v", final_line);
 			}
 		}
-		Fscore::value(total)
+		Fscore::Value(total)
 	}
 
 	// TODO Reimplement neighbour layering somehow? -> I think this won't be necessary
@@ -150,7 +155,7 @@ impl Goban
 	{
 		self.fscore = match previous_state.compute_heuristic(to_play) {
 			Fscore::win => Fscore::win,
-			Fscore::value(x) => Fscore::value(x + depth),
+			Fscore::Value(x) => Fscore::Value(x + depth),
 		};
 		self.fscore
 	}
