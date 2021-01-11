@@ -95,7 +95,7 @@ impl Goban
 	{
 		Self
 		{
-			fscore: Fscore::Value(0),
+			fscore: Fscore::Uninitialized,
 			player,
 			enemy,
 			board: player | enemy,
