@@ -51,6 +51,7 @@ impl BitBoard {
             0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
         ]
     };
+    const U128_FIRST_BIT_SET: u128 = 0b10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;
 
     // ------------
     // Constructors
@@ -176,6 +177,27 @@ impl BitBoard {
             new_self ^= &requested_bit;
         }
     }
+
+    // ----------
+    // Bit getter
+    // ----------
+    /// Returns the index of every bit set in the BitBoard in a Vec<u16>.
+    pub fn get_bit_indexes(&self) -> Vec<u16> {
+        let mut result = vec![];
+        let mut index = 0u16;
+        let mut bitboard = *self;
+
+        while bitboard.is_any() {
+            if bitboard.b[0] & Self::U128_FIRST_BIT_SET != 0 {
+                result.push(index);
+            }
+            bitboard = bitboard << 1;
+            index += 1;
+        }
+
+        result
+    }
+
 
     // ---------------------------------------
     // Implementation of bitshift for BitBoard
