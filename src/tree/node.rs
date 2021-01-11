@@ -8,7 +8,7 @@ use std::{
     fmt
 };
 
-use crate::{bitboard::BitBoard, goban::Goban};
+use crate::{bitboard::BitBoard, goban::{Fscore, Goban}};
 
 /// This type is an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
 pub type Branches = BinaryHeap<Rc<RefCell<Node>>>;
@@ -88,11 +88,11 @@ impl Node {
         self.depth
     }
 
-    pub fn set_item_fscore(&mut self, fscore: usize) {
+    pub fn set_item_fscore(&mut self, fscore: Fscore) {
         self.item.set_fscore(fscore);
     }
 
-    pub fn compute_item_fscore(&mut self, previous_state: &Goban, to_play: &BitBoard, depth: usize) -> usize {
+    pub fn compute_item_fscore(&mut self, previous_state: &Goban, to_play: &BitBoard, depth: usize) -> Fscore {
         self.item.compute_fscore(previous_state, to_play, depth)
     }
 
