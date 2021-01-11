@@ -146,6 +146,7 @@ impl Goban
 				let neighbour_layering = self.neighbour_layering(to_play) * 10;
 				Fscore::Value(neighbour_layering - x)
 			},
+			uninit => uninit
 		}
 	}
 
@@ -154,6 +155,7 @@ impl Goban
 		self.fscore = match previous_state.compute_heuristic(to_play) {
 			Fscore::Win => Fscore::Win,
 			Fscore::Value(x) => Fscore::Value(x + depth),
+			uninit => uninit
 		};
 		self.fscore
 	}
