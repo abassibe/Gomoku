@@ -55,7 +55,7 @@ impl Algorithm
             }
         }
         else {
-            fscore = Fscore::value(isize::MIN);
+            fscore = Fscore::value(isize::MAX);
             node.add_many_branches(Self::node_generator);
             let children = node.get_branches();
             if let Some(children) = children {
