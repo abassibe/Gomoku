@@ -201,11 +201,11 @@ impl Goban
 		}
 	}
 
-	pub fn compute_fscore(&mut self, previous_state: &Goban, to_play: &BitBoard, depth: isize) -> Fscore
+	pub fn compute_fscore(&mut self, previous_state: &Goban, to_play: &BitBoard, depth: usize) -> Fscore
 	{
 		self.fscore = match previous_state.compute_heuristic(to_play) {
 			Fscore::Win => Fscore::Win,
-			Fscore::Value(x) => Fscore::Value(x + depth),
+			Fscore::Value(x) => Fscore::Value(x + depth as isize),
 			uninit => uninit
 		};
 		self.fscore
