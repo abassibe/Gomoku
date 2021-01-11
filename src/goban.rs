@@ -8,7 +8,7 @@ use std::cmp::Ordering;
 use std::hash::{Hash, Hasher};
 use std::ops::{BitOr, BitAnd, BitXor};
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum Fscore {
 	Uninitialized,
 	Value(isize),
@@ -17,6 +17,47 @@ pub enum Fscore {
 
 impl Default for Fscore {
 	fn default() -> Self { Fscore::Uninitialized }
+}
+
+impl Ord for Fscore {
+	fn cmp(&self, other: &Self) -> Ordering {
+		let self_has_value = if let Fscore::Value(_) = self { true } else { false };
+		let other_has_value = if let Fscore::Value(_) = other { true } else { false };
+		if !self_has_value || !other_has_value {
+			let self_as_u8: u8 = self.into();
+			return self_as_u8.cmp(&other.into());
+		}
+		// At this point both `self` and `other` should be of type `Fscore::Value`
+		let self_value = if let Fscore::Value(x) = self { *x } else { isize::MIN };
+		let other_value = if let Fscore::Value(x) = other { *x } else { isize::MIN };
+		self_value.cmp(&other_value)
+	}
+}
+
+impl PartialOrd for Fscore {
+	fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+		Some(self.cmp(other))
+	}
+}
+
+impl Into<u8> for Fscore {
+	fn into(self) -> u8 {
+		match self {
+			Fscore::Uninitialized => 0,
+			Fscore::Value(_) => 1,
+			Fscore::Win => 2
+		}
+	}
+}
+
+impl Into<u8> for &Fscore {
+	fn into(self) -> u8 {
+		match self {
+			Fscore::Uninitialized => 0,
+			Fscore::Value(_) => 1,
+			Fscore::Win => 2
+		}
+	}
 }
 
 #[derive(Clone, Debug, Default, Copy)]
