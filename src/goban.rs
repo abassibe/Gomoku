@@ -106,8 +106,8 @@ impl Goban
 		self.fscore
 	}
 
-	pub fn set_fscore(&mut self, fscore: isize) {
-		self.fscore = Fscore::Value(fscore);
+	pub fn set_fscore(&mut self, fscore: Fscore) {
+		self.fscore = fscore;
 	}
 
 	pub fn list_moves(&self) -> BitBoard
