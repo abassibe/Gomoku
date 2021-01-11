@@ -274,6 +274,8 @@ mod tests {
 	use crate::bitboard::BitBoard;
 	use crate::goban::Goban;
 
+    use super::Fscore;
+
 	#[test]
 	fn neighbour_layers()
 	{
@@ -447,7 +449,7 @@ mod tests {
 		let board = Goban::new(original, BitBoard::empty());
 		println!("HSCORE= {}", board.line_detection());
 
-		assert_eq!(7, board.line_detection());
+		assert_eq!(Fscore::Value(7), board.line_detection());
 
 		// let stre: String = String::from("\
 		// 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n\
