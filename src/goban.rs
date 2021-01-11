@@ -139,15 +139,13 @@ impl Goban
 	{
 		// (self.neighbour_layering(to_play) - self.line_detection()) as u64
 		match self.line_detection() {
-			// much better
 			Fscore::win => Fscore::win,
-			Fscore::value(x) =>
-				{
-					println!("to_play:\n{}", to_play);
-					println!("self.board:\n{}", self.board);
-					let neighbour_layering = self.neighbour_layering(to_play) as u64 * 10;
-					Fscore::value((neighbour_layering - x) as isize)
-				},
+			Fscore::Value(x) => {
+				println!("to_play:\n{}", to_play);
+				println!("self.board:\n{}", self.board);
+				let neighbour_layering = self.neighbour_layering(to_play) as u64 * 10;
+				Fscore::Value((neighbour_layering - x) as isize)
+			},
 		}
 	}
 
