@@ -279,7 +279,7 @@ impl Hash for Goban {
 	}
 }
 
-	#[cfg(test)]
+#[cfg(test)]
 mod tests {
 	use crate::bitboard::BitBoard;
 	use crate::goban::Goban;
@@ -368,7 +368,7 @@ mod tests {
 	#[test]
 	fn test_goban_neighbours_simple()
 	{
-        let player =
+		let player =
 			BitBoard::from_str("
 		0000000000000000001
 		0000000000000000000
@@ -442,7 +442,6 @@ mod tests {
 		assert_eq!(board.list_neighbours(), expected);
 	}
 
-
 	#[test]
 	fn test_goban_neighbours_borders()
 	{
@@ -498,10 +497,9 @@ mod tests {
 	}
 
 
-		#[test]
-	fn test_goban_alignment()
+	#[test]
+	fn test_goban_alignment_simple()
 	{
-
 		let original =
 			BitBoard::from_str("
 		0000000000000000000
@@ -528,5 +526,37 @@ mod tests {
 		let board = Goban::new(original, BitBoard::empty());
 		println!("HSCORE= {}", board.line_detection());
 		assert_eq!(Fscore::Value(7), board.line_detection());
+	}
+
+	#[test]
+	fn test_goban_alignment_wraparound()
+	{
+
+		let original =
+			BitBoard::from_str("
+		0100000010000000000
+		1000000010000000000
+		0000000000000000001
+		0000000000000000010
+		0000000000000000000
+		0000000000000000010
+		0000000000000000001
+		1000000000000000000
+		0100000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000011
+		1100000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000000000000000
+		0000000010000000000
+		0000000010000000000
+		");
+
+		let board = Goban::new(original, BitBoard::empty());
+		println!("HSCORE= {}", board.line_detection());
+		assert_eq!(8, board.line_detection());
 	}
 }
