@@ -110,6 +110,7 @@ impl Goban
 		self.fscore = fscore;
 	}
 
+    /// This method returns a negative version of `self's` bitboard
 	pub fn list_moves(&self) -> BitBoard
 	{
 		!self.board
@@ -121,6 +122,7 @@ impl Goban
 		todo!()
 	}
 
+	/// This method returns the distance (number of layers) between the input and `self`
 	pub fn neighbour_layering(&self, to_play: &BitBoard) -> isize
 	{
 		let mut layers = self.board;
@@ -133,6 +135,7 @@ impl Goban
 		ret
 	}
 
+	/// This method returns a bitboard where the only set bits are the ones around the bits of self's bitboard.
 	pub fn list_neighbours(&self) -> BitBoard {
 		(self.board + Direction::All) & self.list_moves()
 	}
@@ -364,7 +367,6 @@ mod tests {
 		assert_eq!(4, board.neighbour_layering(&to_play));
 	}
 
-
 	#[test]
 	fn test_goban_neighbours_simple()
 	{
@@ -496,7 +498,6 @@ mod tests {
 		assert_eq!(board.list_neighbours(), expect);
 	}
 
-
 	#[test]
 	fn test_goban_alignment_simple()
 	{
@@ -557,6 +558,6 @@ mod tests {
 
 		let board = Goban::new(original, BitBoard::empty());
 		println!("HSCORE= {}", board.line_detection());
-		assert_eq!(8, board.line_detection());
+		assert_eq!(Fscore::Value(8), board.line_detection());
 	}
 }
