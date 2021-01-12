@@ -95,7 +95,7 @@ impl Goban
 	{
 		Self
 		{
-			fscore: Fscore::Value(0),
+			fscore: Fscore::Uninitialized,
 			player,
 			enemy,
 			board: player | enemy,
@@ -205,8 +205,6 @@ impl Goban
 		match self.line_detection() {
 			Fscore::Win => Fscore::Win,
 			Fscore::Value(x) => {
-				println!("to_play:\n{}", to_play);
-				println!("self.board:\n{}", self.board);
 				let neighbour_layering = self.neighbour_layering(to_play) * 10;
 				Fscore::Value(neighbour_layering - x)
 			},
