@@ -145,37 +145,4 @@ mod tests {
         }
         todo!();
     }
-
-    #[test]
-    fn generic_algo_test()
-    {
-        let to_play = BitBoard::from_str("
-		0000000000000000000
-		0000000000000000000
-		0000000000000000000
-		0000000000000000000
-		0000000000000000000
-		0000000000000000000
-		0000000000000000000
-		0000000000000000000
-		0000000000000000000
-		0000000001000000000
-		0000000000000000000
-		0000000000000000000
-		0000000000000000000
-		0000000000000000000
-		0000000000000000000
-		0000000000000000000
-		0000000000000000000
-		0000000000000000000
-		0000000000000000000
-		");
-
-        // let tree = Algorithm::new(Goban::get_heuristic, board);
-        let board = Goban::new(to_play, BitBoard::default());
-        let mut node = Node::new(board, 0);
-        let result = Algorithm::minimax(&mut node, 3, true);
-        println!("Here is what to got:\n{}", result);
-        assert_eq!(1, 2 + 2);
-    }
 }
