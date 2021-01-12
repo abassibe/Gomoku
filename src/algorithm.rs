@@ -24,7 +24,9 @@ impl Algorithm
     fn minimax(node: &mut Node, depth: u32, maximazing: bool) -> Node {
         let current_goban = node.get_item().clone();
         if depth == 0 {
-            node.compute_item_fscore(&current_goban, &BitBoard::empty(), depth as usize);
+            // TODO: We have to passe the potential next move to compute_item_fscore but we don't have it at this point
+            // and I'm not even sure we actually need it, maybe we should remove it completely?
+            node.compute_item_fscore(&current_goban, current_goban.get_player(), depth as usize);
             return node.clone();
         }
         let mut candidate = node.clone();
