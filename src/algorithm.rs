@@ -131,15 +131,17 @@ mod tests {
             let next_move = next_move.unwrap();
             println!("Here is the next move to play for player:\n{}", next_move);
             player |= next_move;
+            println!("Player's BitBoard:\n{}", player);
             let initial = Goban::new(enemy, player);
             algo = Algorithm::new(initial);
-            // let next_move = algo.get_next_move(true);
-            // if next_move.is_none() { break; }
-            // let next_move = next_move.unwrap();
-            // println!("Here is the next move to play for enemy:\n{}", next_move);
-            // enemy |= next_move;
-            // let initial = Goban::new(player, enemy);
-            // algo = Algorithm::new(initial);
+            let next_move = algo.get_next_move(true);
+            if next_move.is_none() { break; }
+            let next_move = next_move.unwrap();
+            println!("Here is the next move to play for enemy:\n{}", next_move);
+            enemy |= next_move;
+            println!("Enemy's BitBoard:\n{}", enemy);
+            let initial = Goban::new(player, enemy);
+            algo = Algorithm::new(initial);
         }
         todo!();
     }
