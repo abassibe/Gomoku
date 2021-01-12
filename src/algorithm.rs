@@ -23,30 +23,27 @@ impl Algorithm
     // TODO: There is a lot of duplicated code in this function, we should refactor it.
     fn minimax(node: &mut Node, depth: u32, maximazing: bool) -> Node {
         let current_goban = node.get_item().clone();
+        if depth == 0 {
+            node.compute_item_fscore(&current_goban, &BitBoard::empty(), depth as usize);
+            return node.clone();
+        }
         let mut candidate = node.clone();
         let mut fscore = node.get_item().get_fscore();
-        // println!("What am I doing\n{}", node.get_item());
-        if depth == 0 || fscore.is_win() {
+        if fscore.is_win() {
             return candidate;
         }
+
         if maximazing {
             fscore = Fscore::Value(isize::MIN);
             node.add_many_branches(Self::node_generator);
             let children = node.get_branches();
             if let Some(children) = children {
-                for n in children {
-                    let grandchild = Self::minimax(&mut n.borrow_mut(), depth - 1, !maximazing);
+                for child in children {
+                    let grandchild = Self::minimax(&mut child.borrow_mut(), depth - 1, !maximazing);
                     let grandchild_fscore = grandchild.get_item().get_fscore();
-                    if !grandchild_fscore.is_initialized() {
-                        let n_player = n.borrow().get_item().get_player().clone();
-                        let n_depth = n.borrow().get_depth();
-                        n.borrow_mut()
-                            .compute_item_fscore(&current_goban, &(current_goban.get_player() ^ &n_player), n_depth);
-                    } else {
-                        n.borrow_mut().set_item_fscore(grandchild_fscore);
-                    }
+                    child.borrow_mut().set_item_fscore(grandchild_fscore);
                     if fscore < grandchild_fscore {
-                        candidate = n.borrow().clone();
+                        candidate = child.borrow().clone();
                         fscore = grandchild_fscore;
                     }
                 }
@@ -57,19 +54,12 @@ impl Algorithm
             node.add_many_branches(Self::node_generator);
             let children = node.get_branches();
             if let Some(children) = children {
-                for n in children {
-                    let grandchild = Self::minimax(&mut n.borrow_mut(), depth - 1, !maximazing);
+                for child in children {
+                    let grandchild = Self::minimax(&mut child.borrow_mut(), depth - 1, !maximazing);
                     let grandchild_fscore = grandchild.get_item().get_fscore();
-                    if !grandchild_fscore.is_initialized() {
-                        let n_player = n.borrow().get_item().get_player().clone();
-                        let n_depth = n.borrow().get_depth();
-                        n.borrow_mut()
-                            .compute_item_fscore(&current_goban, &(current_goban.get_player() ^ &n_player), n_depth);
-                    } else {
-                        n.borrow_mut().set_item_fscore(grandchild_fscore);
-                    }
+                    child.borrow_mut().set_item_fscore(grandchild_fscore);
                     if fscore > grandchild_fscore {
-                        candidate = n.borrow().clone();
+                        candidate = child.borrow().clone();
                         fscore = grandchild_fscore;
                     }
                 }
