@@ -98,9 +98,10 @@ mod tests {
     use crate::goban::Goban;
     use crate::bitboard::BitBoard;
     use crate::algorithm::Algorithm;
-    use crate::tree::node::Node;
 
     #[test]
+    // This test is quite time-consuming and serves basically no purpose at this point,
+    // we better not to run it especially using GitHub Actions.
     #[ignore]
     fn test_algorithm()
     {
