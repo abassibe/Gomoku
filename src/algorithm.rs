@@ -99,6 +99,7 @@ mod tests {
     use crate::tree::node::Node;
 
     #[test]
+    #[ignore]
     fn test_algorithm()
     {
         let (mut player, mut enemy) = (BitBoard::default(), BitBoard::from_str("
