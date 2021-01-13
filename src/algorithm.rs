@@ -21,7 +21,7 @@ impl Algorithm
     }
 
     // TODO: There is a lot of duplicated code in this function, we should refactor it.
-    fn minimax(node: &mut Node, depth: u32, maximazing: bool) -> Node {
+    fn minimax(node: &mut Node, depth: u32, mut alpha: Fscore, mut beta: Fscore, maximazing: bool) -> Node {
         let current_goban = node.get_item().clone();
         if depth == 0 {
             // TODO: We have to passe the potential next move to compute_item_fscore but we don't have it at this point
@@ -41,12 +41,16 @@ impl Algorithm
             let children = node.get_branches();
             if let Some(children) = children {
                 for child in children {
-                    let grandchild = Self::minimax(&mut child.borrow_mut(), depth - 1, !maximazing);
+                    let grandchild = Self::minimax(&mut child.borrow_mut(), depth - 1, alpha, beta, !maximazing);
                     let grandchild_fscore = grandchild.get_item().get_fscore();
                     child.borrow_mut().set_item_fscore(grandchild_fscore);
                     if fscore < grandchild_fscore {
                         candidate = child.borrow().clone();
                         fscore = grandchild_fscore;
+                    }
+                    alpha = alpha.max(grandchild_fscore);
+                    if beta <= alpha {
+                        break;
                     }
                 }
             }
@@ -57,12 +61,16 @@ impl Algorithm
             let children = node.get_branches();
             if let Some(children) = children {
                 for child in children {
-                    let grandchild = Self::minimax(&mut child.borrow_mut(), depth - 1, !maximazing);
+                    let grandchild = Self::minimax(&mut child.borrow_mut(), depth - 1, alpha, beta, !maximazing);
                     let grandchild_fscore = grandchild.get_item().get_fscore();
                     child.borrow_mut().set_item_fscore(grandchild_fscore);
                     if fscore > grandchild_fscore {
                         candidate = child.borrow().clone();
                         fscore = grandchild_fscore;
+                    }
+                    beta = beta.min(grandchild_fscore);
+                    if beta <= alpha {
+                        break;
                     }
                 }
             }
@@ -84,7 +92,7 @@ impl Algorithm
     /// This mehtod is likely to change in a near future because I'm not sure what to return.
     /// For now it returns a BitBoard that contains the next move to play.
     pub fn get_next_move(&mut self, maximazing: bool) -> Option<BitBoard> {
-        let next_state = Self::minimax(&mut self.play_tree, 3, maximazing);
+        let next_state = Self::minimax(&mut self.play_tree, 3, Fscore::MIN, Fscore::MAX, maximazing);
         if next_state == self.play_tree {
             None
         } else {
