@@ -16,6 +16,9 @@ pub enum Fscore {
 }
 
 impl Fscore {
+	pub const MIN: Self = Fscore::Value(isize::MIN);
+	pub const MAX: Self = Fscore::Value(isize::MAX);
+
 	pub fn is_win(&self) -> bool {
 		*self == Fscore::Win
 	}
