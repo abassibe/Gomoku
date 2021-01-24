@@ -149,13 +149,9 @@ class Rules():
             self.isWinner = color
         return result
 
-    def searchDoubleThreePoint(self, board, start, end, color):
-        # Faire la même chose que dans searchThreePoint mais sur tout les points de start à end
-        print(start)
-        print(end)
-        pass
-
     def searchThreePoint(self, board, x, y, color):
+        if color == 1:
+            return 1
         pattern = [[0, 1, 1, 1, 0],
                    [0, 1, 1, 0, 1, 0],
                    [0, 1, 0, 1, 1, 0]]
@@ -166,7 +162,17 @@ class Rules():
         hLine = cp.deepcopy(board[x])
         vLine = cp.deepcopy(board[:,y])
         d1Line = cp.deepcopy(np.diag(board, y - x))
+
         d2Line = cp.deepcopy(np.diag(np.fliplr(board), (9 + (9 - y)) - x))
+        d2Line = np.flip(d2Line)
+        if y >= 19 - x:
+            tmp = np.full(18 - (d2Line.size - 1), 1, dtype=int)
+            d2Line = np.concatenate((tmp, d2Line), axis=None)
+        else:
+            tmp = np.full(18 - (d2Line.size - 1), 1, dtype=int)
+            d2Line = np.concatenate((d2Line, tmp), axis=None)
+        d2Line[y] = color
+
         numberThree = 0
         hLine[y] = color
         vLine[x] = color
@@ -176,41 +182,33 @@ class Rules():
             d1Line[y] = color
         for i in range(y - 4, y + 1):
             if hLine[i:i + len(pattern[0])].tolist() == pattern[0]:
-                self.searchDoubleThreePoint(board, [x, i], [x, i + 4], color)   #|\   X < y   /|
-                numberThree += 1                                                #|  \       /  |
-            elif hLine[i:i + len(pattern[1])].tolist() == pattern[1]:           #|    \   /    |
-                self.searchDoubleThreePoint(board, [x, i], [x, i + 4], color)   #| x>y  X  x<y |
-                numberThree += 1                                                #|    /   \    |
-            elif hLine[i:i + len(pattern[2])].tolist() == pattern[2]:           #|  /       \  |
-                self.searchDoubleThreePoint(board, [x, i], [x, i + 4], color)   #|/   x > y   \|
                 numberThree += 1
-            if vLine[i:i + len(pattern[0])].tolist() == pattern[0]:
-                self.searchDoubleThreePoint(board, [x, i], [x, i + 4], color)
+            elif hLine[i:i + len(pattern[1])].tolist() == pattern[1]:
                 numberThree += 1
-            elif vLine[i:i + len(pattern[1])].tolist() == pattern[1]:
-                self.searchDoubleThreePoint(board, [x, i], [x, i + 4], color)
-                numberThree += 1
-            elif vLine[i:i + len(pattern[2])].tolist() == pattern[2]:
-                self.searchDoubleThreePoint(board, [x, i], [x, i + 4], color)
-                numberThree += 1
-            if d1Line[i:i + len(pattern[0])].tolist() == pattern[0]:
-                self.searchDoubleThreePoint(board, [x, i], [x, i + 4], color)
-                numberThree += 1
-            elif d1Line[i:i + len(pattern[1])].tolist() == pattern[1]:
-                self.searchDoubleThreePoint(board, [x, i], [x, i + 4], color)
-                numberThree += 1
-            elif d1Line[i:i + len(pattern[2])].tolist() == pattern[2]:
-                self.searchDoubleThreePoint(board, [x, i], [x, i + 4], color)
+            elif hLine[i:i + len(pattern[2])].tolist() == pattern[2]:
                 numberThree += 1
             if d2Line[i:i + len(pattern[0])].tolist() == pattern[0]:
-                self.searchDoubleThreePoint(board, [x, i], [x, i + 4], color)
                 numberThree += 1
             elif d2Line[i:i + len(pattern[1])].tolist() == pattern[1]:
-                self.searchDoubleThreePoint(board, [x, i], [x, i + 4], color)
                 numberThree += 1
             elif d2Line[i:i + len(pattern[2])].tolist() == pattern[2]:
-                self.searchDoubleThreePoint(board, [x, i], [x, i + 4], color)
                 numberThree += 1
+        for i in range(x - 4, x + 1):
+            if vLine[i:i + len(pattern[0])].tolist() == pattern[0]:
+                numberThree += 1
+            elif vLine[i:i + len(pattern[1])].tolist() == pattern[1]:
+                numberThree += 1
+            elif vLine[i:i + len(pattern[2])].tolist() == pattern[2]:
+                numberThree += 1
+            if d1Line[i:i + len(pattern[0])].tolist() == pattern[0]:
+                numberThree += 1
+            elif d1Line[i:i + len(pattern[1])].tolist() == pattern[1]:
+                numberThree += 1
+            elif d1Line[i:i + len(pattern[2])].tolist() == pattern[2]:
+                numberThree += 1
+            if numberThree > 1:
+                print(numberThree)
+                return numberThree
         print(numberThree)
         return numberThree
 

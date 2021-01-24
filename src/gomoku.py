@@ -22,6 +22,7 @@ class MainWindow(QtWidgets.QMainWindow):
         uic.loadUi(str(pathlib.Path("GUI/mainwindow.ui")), self)
         self.option = options.Options()
         windowBuilding.parseTranslationFile()
+        self.setWindowTitle("Gomoku")
         self.gameManager = None
 
         self.optionsButton.clicked.connect(lambda x: buttonEventHandler.optionsEvent(self, self.option))
