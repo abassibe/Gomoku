@@ -8,6 +8,14 @@ import numpy as np
 
 
 _hintButtonBool = False
+helpDialog = None
+
+def helpButton():
+    global helpDialog
+
+    if helpDialog is None:
+        helpDialog = uic.loadUi(str(pathlib.Path("GUI/howtoplay.ui")))
+    helpDialog.exec()
 
 
 def optionsEvent(window, option):
@@ -22,6 +30,7 @@ def optionsEvent(window, option):
 
     dialog = uic.loadUi(str(pathlib.Path("GUI/dialog.ui")))
     dialog.ruleCheckbox1.setEnabled(False)
+    dialog.helpButton.clicked.connect(lambda x: helpButton())
     windowBuilding.dialogTranslate(dialog, option.langage)
     if option.gameMode == "PVE":
         dialog.PVEButton.setChecked(True)
@@ -41,7 +50,7 @@ def optionsEvent(window, option):
             dialog.ruleCheckbox4.setChecked(True)
 
     dialog.show()
-    dialog.exec()
+    dialog.activateWindow()
 
     effect.setBlurRadius(0)
     effect.setColor(QtGui.QColor(0, 0, 0, 90))

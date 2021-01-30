@@ -187,6 +187,7 @@ class GameBoard():
         return self.window.gameManager.rules.checkBasicRule(self.grid, x, y, color)
 
     def isWinner(self):
+        return None, None
         if self.window.gameManager.player1.stoneRemovedCount >= 10:
             return self.window.gameManager.player1.color, self.window.gameManager.player1.color
         elif self.window.gameManager.player2.stoneRemovedCount >= 10:

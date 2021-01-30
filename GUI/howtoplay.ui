@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>823</width>
+    <height>1998</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QScrollArea" name="scrollArea">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>831</width>
+     <height>1991</height>
+    </rect>
+   </property>
+   <property name="widgetResizable">
+    <bool>true</bool>
+   </property>
+   <widget class="QWidget" name="scrollAreaWidgetContents">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>829</width>
+      <height>1989</height>
+     </rect>
+    </property>
+    <widget class="QLabel" name="HowToPlayTitle">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>821</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 28pt;</string>
+     </property>
+     <property name="text">
+      <string>Gomoku: How to play ?</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="BasicRuleTitle">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>90</y>
+       <width>791</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font:20pt;</string>
+     </property>
+     <property name="text">
+      <string>Basic rule:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="BasicRuleText">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>140</y>
+       <width>761</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font:15pt;</string>
+     </property>
+     <property name="text">
+      <string>Players alternate turns placing a stone of their color on an empty intersection. Black plays first. The winner is the first player to form an unbroken chain of five stones horizontally, vertically, or diagonally.</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="CaptureRule">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>200</y>
+       <width>791</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font:20pt;</string>
+     </property>
+     <property name="text">
+      <string>Capture rule:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="CaptureRuleText1">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>250</y>
+       <width>761</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font:15pt;</string>
+     </property>
+     <property name="text">
+      <string>Captures are made by flanking a pair of the opponent’s stones, as demonstrated below :</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="CaptureImg1">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>280</y>
+       <width>221</width>
+       <height>121</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../ressources/pictures/Capture1.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="Arrow">
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>280</y>
+       <width>91</width>
+       <height>121</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font:30pt;</string>
+     </property>
+     <property name="text">
+      <string>=&gt;</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="CaptureImg2">
+     <property name="geometry">
+      <rect>
+       <x>440</x>
+       <y>280</y>
+       <width>221</width>
+       <height>121</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../ressources/pictures/Capture2.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="CaptureRuleText2">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>410</y>
+       <width>761</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font:15pt;</string>
+     </property>
+     <property name="text">
+      <string>In this scenario, White capture the Black pair and removes the stones from the game. The now-free intersections can be played on as if they were never occupied.
+One can only capture PAIRS, not single stones, and not more than 2 stones in a row.
+
+Also note that one can not move into a capture. Example :</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="CaptureImg3">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>510</y>
+       <width>221</width>
+       <height>121</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../ressources/pictures/Capture3.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="Arrow2">
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>510</y>
+       <width>91</width>
+       <height>121</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font:30pt;</string>
+     </property>
+     <property name="text">
+      <string>=&gt;</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="CaptureImg4">
+     <property name="geometry">
+      <rect>
+       <x>440</x>
+       <y>510</y>
+       <width>221</width>
+       <height>121</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../ressources/pictures/Capture4.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="CaptureRuleText3">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>650</y>
+       <width>761</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font:15pt;</string>
+     </property>
+     <property name="text">
+      <string>In this scenario, Black can play between White without losing the pair.
+However, if later Black takes one of the White stones, his position becomes vulnerable to capture...
+
+This rule adds a win condition : If you manage to capture ten of your opponent’s stones, you win the game.</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="GameEndingRule">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>740</y>
+       <width>791</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font:20pt;</string>
+     </property>
+     <property name="text">
+      <string>Game-Ending capture rule:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="GameEndingCaptureRuleText1">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>790</y>
+       <width>761</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font:15pt;</string>
+     </property>
+     <property name="text">
+      <string>A player that manages to align five stones only wins if the opponent can not break this alignment by capturing a pair, or if he has already lost four pairs and the opponent can capture one more, therefore winning by capture.
+There is no need for the game to go on if there is no possibility of this happening.</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="GameEndingImg1">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>890</y>
+       <width>241</width>
+       <height>201</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../ressources/pictures/GameEnding1.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="Arrow3">
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>930</y>
+       <width>91</width>
+       <height>121</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font:30pt;</string>
+     </property>
+     <property name="text">
+      <string>=&gt;</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="GameEndingImg2">
+     <property name="geometry">
+      <rect>
+       <x>440</x>
+       <y>890</y>
+       <width>241</width>
+       <height>201</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../ressources/pictures/GameEnding2.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="DoubleThreeRule">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>1130</y>
+       <width>790</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font:20pt;</string>
+     </property>
+     <property name="text">
+      <string>Double Three rule:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="DoubleThreeRuleText1">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>1180</y>
+       <width>761</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font:15pt;</string>
+     </property>
+     <property name="text">
+      <string>It is forbidden to play a move that introduces two free-threealignments, which would guarantee a win by alignment.
+
+A free-three is an alignement of three stones that, if not immediately blocked, allows for an indefendable alignment of four stones (that’s to say an alignment of four stones with two unobstructed extremities).
+
+These scenarios are free-threes, valid in any direction (diagonal, vertical and horizontal):</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="DoubleThreeImg1">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>1320</y>
+       <width>181</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../ressources/pictures/DoubleThree1.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="DoubleThreeImg2">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>1320</y>
+       <width>211</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../ressources/pictures/DoubleThree2.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="DoubleThreeRuleText2">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>1460</y>
+       <width>761</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font:15pt;</string>
+     </property>
+     <property name="text">
+      <string>A double-three is a move that introduces two simultaneous free-three alignments. This is an indefendable scenario.</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="DoubleThreeImg3">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>1510</y>
+       <width>181</width>
+       <height>171</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../ressources/pictures/DoubleThree3.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="DoubleThreeRuleText3">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>1710</y>
+       <width>761</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font:15pt;</string>
+     </property>
+     <property name="text">
+      <string>A double-three is a move that introduces two simultaneous free-three alignments. This is an indefendable scenario.</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
