@@ -150,8 +150,6 @@ class Rules():
         return result
 
     def searchThreePoint(self, board, x, y, color):
-        if color == 1:
-            return 1
         pattern = [[0, 1, 1, 1, 0],
                    [0, 1, 1, 0, 1, 0],
                    [0, 1, 0, 1, 1, 0]]
@@ -159,27 +157,30 @@ class Rules():
             pattern = [[0, 2, 2, 2, 0],
                     [0, 2, 2, 0, 2, 0],
                     [0, 2, 0, 2, 2, 0]]
+
         hLine = cp.deepcopy(board[x])
+        hLine[y] = color
         vLine = cp.deepcopy(board[:,y])
+        vLine[x] = color
+
         d1Line = cp.deepcopy(np.diag(board, y - x))
+        tmp = np.full(18 - (d1Line.size - 1), 1, dtype=int)
+        if y < x:
+            d1Line = np.concatenate((d1Line, tmp), axis=None)
+        else:
+            d1Line = np.concatenate((tmp, d1Line), axis=None)
+        d1Line[y] = color
 
         d2Line = cp.deepcopy(np.diag(np.fliplr(board), (9 + (9 - y)) - x))
         d2Line = np.flip(d2Line)
+        tmp = np.full(18 - (d2Line.size - 1), 1, dtype=int)
         if y >= 19 - x:
-            tmp = np.full(18 - (d2Line.size - 1), 1, dtype=int)
             d2Line = np.concatenate((tmp, d2Line), axis=None)
         else:
-            tmp = np.full(18 - (d2Line.size - 1), 1, dtype=int)
             d2Line = np.concatenate((d2Line, tmp), axis=None)
         d2Line[y] = color
 
         numberThree = 0
-        hLine[y] = color
-        vLine[x] = color
-        if x < y:
-            d1Line[x] = color
-        else:
-            d1Line[y] = color
         for i in range(y - 4, y + 1):
             if hLine[i:i + len(pattern[0])].tolist() == pattern[0]:
                 numberThree += 1
@@ -193,6 +194,12 @@ class Rules():
                 numberThree += 1
             elif d2Line[i:i + len(pattern[2])].tolist() == pattern[2]:
                 numberThree += 1
+            if d1Line[i:i + len(pattern[0])].tolist() == pattern[0]:
+                numberThree += 1
+            elif d1Line[i:i + len(pattern[1])].tolist() == pattern[1]:
+                numberThree += 1
+            elif d1Line[i:i + len(pattern[2])].tolist() == pattern[2]:
+                numberThree += 1
         for i in range(x - 4, x + 1):
             if vLine[i:i + len(pattern[0])].tolist() == pattern[0]:
                 numberThree += 1
@@ -200,16 +207,8 @@ class Rules():
                 numberThree += 1
             elif vLine[i:i + len(pattern[2])].tolist() == pattern[2]:
                 numberThree += 1
-            if d1Line[i:i + len(pattern[0])].tolist() == pattern[0]:
-                numberThree += 1
-            elif d1Line[i:i + len(pattern[1])].tolist() == pattern[1]:
-                numberThree += 1
-            elif d1Line[i:i + len(pattern[2])].tolist() == pattern[2]:
-                numberThree += 1
             if numberThree > 1:
-                print(numberThree)
                 return numberThree
-        print(numberThree)
         return numberThree
 
     def doubleThreeRule(self, board, x, y, color):
@@ -220,7 +219,6 @@ class Rules():
             if x + x1 < 0 or x + x1 > 18:
                 continue
             lst.append(board[x + x1][y - yMin:y + yMax].tolist())
-        capture = np.vstack((lst[:]))
 
         if self.searchThreePoint(board, x, y, color) > 1:
             return False
@@ -230,4 +228,3 @@ class Rules():
         if self.isWinner != 0:
             return self.gameEndingCaptureRule(board, self.winStart, self.winEnd, self.isWinner)
         return self.getBasicRule(board, color)
-        # validsPoint = []
