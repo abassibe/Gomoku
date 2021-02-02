@@ -231,6 +231,59 @@ impl BitBoard {
         }
     }
 
+    /// Returns the same BitBoard without the edge delimiter bits
+    fn remove_edge_delimiters(mut self) -> Self {
+        let mut i = 0u32;
+        let mut new_bitboard = BitBoard::default();
+
+        while self.is_any() {
+            new_bitboard |= (self & BitBoard::FIRST_LINE_MASK) >> 19 * i;
+            self = self << 20;
+            i += 1;
+        }
+
+        new_bitboard
+    }
+
+    fn add_edge_delimiters(mut self) -> Self {
+        let mut i = 0u32;
+        let mut new_bitboard = BitBoard::default();
+
+        while self.is_any() {
+            new_bitboard |= (self & BitBoard::FIRST_LINE_MASK) >> 20 * i;
+            self = self << 19;
+            i += 1;
+        }
+
+        new_bitboard
+    }
+
+    fn rotate_left(&self, by: usize) -> Self {
+        let bits = self.remove_edge_delimiters().b;
+        let max_index = bits.len() - 1;
+        let mut new_bits: [u128; 3] = [0, 0, 0];
+
+        if by >= BITS_IN_U128 * (max_index + 1) {
+            return Self::default();
+        }
+
+        let inner_lshift = by % BITS_IN_U128;
+        let inner_rshift = BITS_IN_U128 - inner_lshift;
+        let value_off = by / BITS_IN_U128;
+        for (dest_i, src_i) in (0..=(max_index - value_off)).rev().zip((0..=max_index).rev()) {
+            if src_i < max_index && inner_rshift < BITS_IN_U128 {
+                new_bits[dest_i] = bits[src_i + 1] >> inner_rshift
+            } else if src_i == max_index {
+                new_bits[dest_i] = bits[0] >> inner_rshift - 23
+            }
+            new_bits[dest_i] |= bits[src_i] << inner_lshift;
+        }
+
+        Self {
+            b: new_bits
+        }.add_edge_delimiters()
+    }
+
     #[inline]
     fn shift_right(&self, by: usize) -> Self {
         let bits = self.b;
