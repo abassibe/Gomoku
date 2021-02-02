@@ -244,7 +244,7 @@ impl BitBoard {
         let inner_rshift = by % BITS_IN_U128;
         let inner_lshift = BITS_IN_U128 - inner_rshift;
         let value_off = by / BITS_IN_U128;
-        for (dest_i, src_i) in (value_off..=max_index).zip((0..=max_index)) {
+        for (dest_i, src_i) in (value_off..=max_index).zip(0..=max_index) {
             if src_i > usize::MIN && inner_lshift < BITS_IN_U128 {
                 new_bits[dest_i] = bits[src_i - 1] << inner_lshift
             }
