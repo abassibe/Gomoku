@@ -28,7 +28,7 @@ pub type Branches = BinaryHeap<Rc<RefCell<Node>>>;
 /// 
 /// [`BinaryHeap`]: https://doc.rust-lang.org/std/collections/struct.BinaryHeap.html
 /// [`Option`]: https://doc.rust-lang.org/std/option/enum.Option.html
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct Node
 {
     /// `item` is the inner value which is holded by a Node.
