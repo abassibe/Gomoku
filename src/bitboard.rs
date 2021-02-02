@@ -10,6 +10,7 @@ use direction::*;
 use axis::*;
 
 const BITS_IN_U128: usize = size_of::<u128>() * 8;
+const U8_FIRST_BIT: u8 = 1u8 << 7;
 
 // TODO: Implement method to get/set ~one or~ several bits by index
 // TODO: Implement method to get/set one or several bits by coordonate (X, Y flatten to index then call previous method above)
@@ -152,6 +153,33 @@ impl BitBoard {
     // ---------------------------------
     pub fn compute_to_isize<F: Fn(&Self) -> isize>(&self, f: F) -> isize {
         f(self)
+    }
+
+    pub fn match_pattern_base(player: BitBoard, opponent: BitBoard, pattern: u8, pattern_size: u8, move_step: u8, closure_bits: u8) -> BitBoard {
+        let open_cells = !(player | opponent);
+        let mut result = BitBoard::empty();
+
+        for direction in DirectionIterator::new() {
+            let mut tmp = if closure_bits == U8_FIRST_BIT { opponent } else { BitBoard::full() };
+            for x in 0..pattern_size {
+                if tmp.is_empty() {
+                    break;
+                }
+                tmp = (tmp >> direction) & if (pattern << x) & U8_FIRST_BIT == U8_FIRST_BIT {
+                    player
+                } else {
+                    open_cells
+                };
+            }
+            result |= tmp.shift_direction_by(direction.to_invert(), move_step);
+        }
+
+        result
+    }
+
+    pub fn match_pattern(player: BitBoard, opponent: BitBoard, pattern: u8, pattern_size: u8) -> BitBoard {
+        let closure_bits = (pattern & U8_FIRST_BIT) | (1 << (8 - pattern_size) & pattern);
+        BitBoard::match_pattern_base(player, opponent, pattern, pattern_size, 0, closure_bits)
     }
 
     // ----------
@@ -439,6 +467,29 @@ impl BitBoard {
             Direction::NW => board << Self::MOVE_UP_DOWN_SHIFT_VALUE + 1,
             Direction::SE => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE + 1,
             Direction::SW => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE - 1,
+            Direction::All => unimplemented!("You MUST not use Direction::All with this method")
+        }.apply_endline_delimiter_mask()
+    }
+
+    // TODO: Add tests for this method.
+    fn shift_direction_by(&self, direction: Direction, by: u8) -> Self {
+        // Since we multiply the value by which we want to shift by `by`,
+        // if `by` is `0` then there is nothing to do.
+        if by == 0 {
+            return *self;
+        }
+
+        let board = *self;
+        let by = by as u32;
+        *match direction {
+            Direction::N => board << Self::MOVE_UP_DOWN_SHIFT_VALUE * by,
+            Direction::S => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE * by,
+            Direction::E => board >> 1 * by,
+            Direction::W => board << 1 * by,
+            Direction::NE => board << (Self::MOVE_UP_DOWN_SHIFT_VALUE - 1) * by,
+            Direction::NW => board << (Self::MOVE_UP_DOWN_SHIFT_VALUE + 1) * by,
+            Direction::SE => board >> (Self::MOVE_UP_DOWN_SHIFT_VALUE + 1) * by,
+            Direction::SW => board >> (Self::MOVE_UP_DOWN_SHIFT_VALUE - 1) * by,
             Direction::All => unimplemented!("You MUST not use Direction::All with this method")
         }.apply_endline_delimiter_mask()
     }
