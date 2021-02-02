@@ -6,18 +6,23 @@ use super::{
     bitboard::BitBoard
 };
 
+#[derive(Default)]
 pub struct Algorithm
 {
-    play_tree: Node,
+    initial: Node,
 }
 
 impl Algorithm
 {
-    pub fn new(initial_state: Goban) -> Self {
-        let play_tree = Node::new(initial_state, 0);
-        Algorithm {
-            play_tree
-        }
+    /// Initialize a new default Algorithm object.
+    pub fn new() -> Self {
+        Algorithm::default()
+    }
+
+    /// Set the initial Node to a new state using the provided Goban.
+    pub fn update_initial_state(&mut self, initial_state: Goban) {
+        let new_initial_node = Node::new(initial_state, 0);
+        self.initial = new_initial_node;
     }
 
     // TODO: There is a lot of duplicated code in this function, we should refactor it.
@@ -104,11 +109,11 @@ impl Algorithm
     /// This mehtod is likely to change in a near future because I'm not sure what to return.
     /// For now it returns a BitBoard that contains the next move to play.
     pub fn get_next_move(&mut self) -> Option<BitBoard> {
-        let next_state = Self::minimax(&mut self.play_tree, 1, Fscore::MIN, Fscore::MAX, true);
-        if next_state == self.play_tree {
+        let next_state = Self::minimax(&mut self.initial, 1, Fscore::MIN, Fscore::MAX, true);
+        if next_state == self.initial {
             None
         } else {
-            Some(next_state.get_item().get_player() ^ self.play_tree.get_item().get_player())
+            Some(next_state.get_item().get_player() ^ self.initial.get_item().get_player())
         }
     }
 }
@@ -147,9 +152,10 @@ mod tests {
             0000000000000000000
         "));
         let initial = Goban::new(player, enemy);
-        let mut algo = Algorithm::new(initial);
+        let mut algo = Algorithm::new();
 
         for _ in 0..10 {
+            algo.update_initial_state(initial);
             let next_move = algo.get_next_move();
             if next_move.is_none() { break; }
             let next_move = next_move.unwrap();
@@ -157,7 +163,7 @@ mod tests {
             player |= next_move;
             println!("Player's BitBoard:\n{}", player);
             let initial = Goban::new(enemy, player);
-            algo = Algorithm::new(initial);
+            algo.update_initial_state(initial);
             let next_move = algo.get_next_move();
             if next_move.is_none() { break; }
             let next_move = next_move.unwrap();
@@ -165,7 +171,6 @@ mod tests {
             enemy |= next_move;
             println!("Enemy's BitBoard:\n{}", enemy);
             let initial = Goban::new(player, enemy);
-            algo = Algorithm::new(initial);
         }
         todo!();
     }
