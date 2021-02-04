@@ -1,6 +1,7 @@
 pub(crate) mod axis;
 pub(crate) mod direction;
 pub(crate) mod pattern;
+pub(crate) mod new_pattern;
 
 #[cfg(test)]
 mod tests;
@@ -56,12 +57,14 @@ impl BitBoard {
             0
         ]
     };
+    const EMPTY_BITBOARD: BitBoard = Self { b: [0, 0, 0] };
+    const FULL_BITBOARD: BitBoard = Self::ENDLINE_DELIMITER_MASK;
 
     // ------------
     // Constructors
     // ------------
     // #region Constructors
-    pub fn new(one: u128, two: u128, three: u128) -> Self {
+    pub const fn new(one: u128, two: u128, three: u128) -> Self {
         Self { b: [one, two, three] }
     }
 
@@ -70,7 +73,7 @@ impl BitBoard {
     }
 
     pub fn full() -> Self {
-        !Self::default()
+        Self::FULL_BITBOARD
     }
 
     pub fn empty() -> Self {
@@ -584,9 +587,7 @@ impl BitBoard {
 impl Default for BitBoard {
     /// Create a new instance of an empty `BitBoard`
     fn default() -> Self {
-        Self {
-            b: [0, 0, 0]
-        }
+        Self::EMPTY_BITBOARD
     }
 }
 
