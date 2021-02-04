@@ -158,33 +158,6 @@ impl BitBoard {
         f(self)
     }
 
-    pub fn match_pattern_base(player: BitBoard, opponent: BitBoard, pattern: u8, pattern_size: u8, move_step: u8, closure_bits: u8) -> BitBoard {
-        let open_cells = !(player | opponent);
-        let mut result = BitBoard::empty();
-
-        for direction in DirectionIterator::new() {
-            let mut tmp = if closure_bits == U8_FIRST_BIT { opponent } else { BitBoard::full() };
-            for x in 0..pattern_size {
-                if tmp.is_empty() {
-                    break;
-                }
-                tmp = (tmp >> direction) & if (pattern << x) & U8_FIRST_BIT == U8_FIRST_BIT {
-                    player
-                } else {
-                    open_cells
-                };
-            }
-            result |= tmp.shift_direction_by(direction.to_invert(), move_step);
-        }
-
-        result
-    }
-
-    pub fn match_pattern(player: BitBoard, opponent: BitBoard, pattern: u8, pattern_size: u8) -> BitBoard {
-        let closure_bits = (pattern & U8_FIRST_BIT) | (1 << (8 - pattern_size) & pattern);
-        BitBoard::match_pattern_base(player, opponent, pattern, pattern_size, 0, closure_bits)
-    }
-
     // ----------
     // Count bits
     // ----------
