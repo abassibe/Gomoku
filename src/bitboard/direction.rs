@@ -1,5 +1,5 @@
 use super::axis::Axis;
-use std::fmt;
+use std::{slice::Iter, fmt};
 
 const ARRAY_SIZE: usize = 8;
 
@@ -73,14 +73,16 @@ impl fmt::Display for Direction {
 // TODO: Missing doc here
 /// This struct exist only to build an iterator around Direction.
 pub struct DirectionIterator {
-    index: usize,
+    index_forward: isize,
+    index_backward: isize,
     directions: [Direction; ARRAY_SIZE]
 }
 
 impl DirectionIterator {
     pub fn new() -> Self {
         Self {
-            index: 0,
+            index_forward: 0,
+            index_backward: ARRAY_SIZE as isize - 1,
             directions: [Direction::N, Direction::S, Direction::E, Direction::W, Direction::NE, Direction::NW, Direction::SE, Direction::SW]
         }
     }
@@ -94,12 +96,24 @@ impl Iterator for DirectionIterator {
     type Item = Direction;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.index >= ARRAY_SIZE {
+        if self.index_forward > self.index_backward {
             return None;
         }
 
-        let direction = self.directions[self.index];
-        self.index += 1;
+        let direction = self.directions[self.index_forward as usize];
+        self.index_forward += 1;
+        Some(direction)
+    }
+}
+
+impl DoubleEndedIterator for DirectionIterator {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        if self.index_backward < self.index_forward {
+            return None;
+        }
+
+        let direction = self.directions[self.index_backward as usize];
+        self.index_backward -= 1;
         Some(direction)
     }
 }
