@@ -84,6 +84,10 @@ impl DirectionIterator {
             directions: [Direction::N, Direction::S, Direction::E, Direction::W, Direction::NE, Direction::NW, Direction::SE, Direction::SW]
         }
     }
+
+    pub fn as_array_iter() -> Iter<'static, Direction> {
+        [Direction::N, Direction::S, Direction::E, Direction::W, Direction::NE, Direction::NW, Direction::SE, Direction::SW].iter()
+    }
 }
 
 impl Iterator for DirectionIterator {
