@@ -298,6 +298,25 @@ pub fn extract_missing_bit(player: BitBoard, opponent: BitBoard, pattern: u8, pa
     result & !(player | opponent)
 }
 
+pub fn extract_captured_by_move(player: BitBoard, opponent: BitBoard, being_played: BitBoard) -> BitBoard {
+    let mut result = BitBoard::empty();
+
+    for direction in DirectionIterator::new() {
+        let mut tmp = being_played;
+        let mut i = 0;
+        while i < 3 && tmp.is_any() {
+            tmp = (tmp >> direction) & if (U8_TWO_FIRST_BITS << i) & U8_FIRST_BIT == U8_FIRST_BIT { opponent } else { player };
+            i += 1;
+        }
+        if tmp.is_any() {
+            let inverted_direction = direction.to_invert();
+            result |= tmp.shift_direction_by(inverted_direction, 2) | tmp.shift_direction_by(inverted_direction, 1);
+        }
+    }
+
+    result
+}
+
 pub fn contains_five_aligned(player: BitBoard) -> bool {
     for direction in DirectionIterator::new() {
         let mut tmp = player;
