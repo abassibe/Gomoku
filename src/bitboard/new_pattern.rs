@@ -261,9 +261,7 @@ pub fn extract_threatening_moves_from_opponent(player: BitBoard, opponent: BitBo
             continue;
         }
         for _ in 0..(pattern_size - 1) {
-            println!("tmp before:\n{}", tmp);
             tmp |= tmp << direction.to_invert();
-            println!("tmp after:\n{}", tmp);
         }
         result |= tmp & open_cells;
     }
@@ -809,7 +807,6 @@ mod tests {
 
         // Act
         let result = match_pattern(player, opponent, pattern, pattern_size, is_sym);
-        println!("Here is the result:\n{}", result);
 
         // Assert
         assert_eq!(expected, result);
