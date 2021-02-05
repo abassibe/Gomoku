@@ -271,6 +271,33 @@ pub fn extract_threatening_moves_from_opponent(player: BitBoard, opponent: BitBo
     result
 }
 
+// FIXME: It seems that this fonction doesn't concider the edges as occupied places
+// thus the patterns for close (CloseThree, CloseSplitThreeLeft, CloseSplitThreeRight & CloseFour)
+// will not match when the close side is right next to an edge (it wouldn't match either when the open side is
+// right next to an edge, even is the close side is next to an opponent stone).
+// Take a look at the `test_pattern_matching_extract_missing_bit_with_close_three()` test function for more detail.
+/// Returns the bits that are missing to complete the provided pattern.
+/// Only one bit by potential match are returned, understand that the returned bits
+/// are the ones we can play to complete the provided pattern in one move.
+pub fn extract_missing_bit(player: BitBoard, opponent: BitBoard, pattern: u8, pattern_size: u8, is_sym: bool) -> BitBoard {
+    let closure_bits = (pattern & U8_FIRST_BIT) | (pattern & (U8_FIRST_BIT >> (pattern_size - 1)));
+    let mut result = BitBoard::empty();
+
+    for i in 0..pattern_size {
+        let tmp = pattern & !(U8_FIRST_BIT >> i);
+        if tmp == pattern {
+            continue;
+        }
+        if is_sym {
+            result |= match_pattern_all_axis(player, opponent, tmp, pattern_size, pattern_size - i - 1, closure_bits);
+        } else {
+            result |= match_pattern_all_directions(player, opponent, tmp, pattern_size, pattern_size - i - 1, closure_bits);
+        }
+    }
+
+    result & !(player | opponent)
+}
+
 pub fn contains_five_aligned(player: BitBoard) -> bool {
     for direction in DirectionIterator::new() {
         let mut tmp = player;
