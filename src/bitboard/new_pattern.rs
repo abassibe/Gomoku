@@ -1016,7 +1016,10 @@ mod tests {
 
         // Act
         let result = extract_threatening_moves_from_opponent(player, opponent, pattern, pattern_size, is_sym);
-        println!("Here is the result:\n{}", result);
+
+        // Assert
+        assert_eq!(expected, result);
+    }
 
         // Assert
         assert_eq!(expected, result);
