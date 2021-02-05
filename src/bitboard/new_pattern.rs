@@ -193,7 +193,7 @@ pub fn match_pattern(player: BitBoard, opponent: BitBoard, pattern: u8, pattern_
     }
 }
 
-pub fn isolate_five_aligned(player: BitBoard) -> BitBoard {
+pub fn extract_five_aligned(player: BitBoard) -> BitBoard {
     let mut result = BitBoard::empty();
 
     for direction in AxisIterator::new() {
@@ -735,7 +735,7 @@ mod tests {
         ");
 
         // Act
-        let result = isolate_five_aligned(player);
+        let result = extract_five_aligned(player);
 
         // Assert
         assert_eq!(expected, result);
