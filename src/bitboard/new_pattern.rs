@@ -340,7 +340,8 @@ mod tests {
     #[test]
     fn test_pattern_index() {
         // Arrange
-        let expected: [(u8, u8, bool); 12] = [
+        let expected: [(u8, u8, bool); 13] = [
+            (0b11000000, 3, false),
             (0b01110000, 5, true),
             (0b01101000, 6, false),
             (0b01011000, 6, false),
@@ -357,7 +358,8 @@ mod tests {
         let patterns = NewPattern::new();
 
         // Act
-        let results: [(u8, u8, bool); 12] = [
+        let results: [(u8, u8, bool); 13] = [
+            patterns[PatternName::CloseTwo],
             patterns[PatternName::OpenThree],
             patterns[PatternName::OpenSplitThreeRight],
             patterns[PatternName::OpenSplitThreeLeft],
