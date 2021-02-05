@@ -10,6 +10,7 @@ const EDGE_MASK: BitBoard = BitBoard::new(
 
 #[derive(Debug, Eq, PartialEq, Hash)]
 pub enum PatternName {
+    CloseTwo,
     OpenThree,
     OpenSplitThreeLeft,
     OpenSplitThreeRight,
@@ -33,6 +34,7 @@ impl NewPattern {
     pub fn new() -> NewPattern {
         let mut hashmap: HashMap<PatternName, (u8, u8, bool)> = HashMap::new();
 
+        hashmap.insert(PatternName::CloseTwo,               (0b11000000, 3, false));
         hashmap.insert(PatternName::OpenThree,              (0b01110000, 5, true));
         hashmap.insert(PatternName::OpenSplitThreeRight,    (0b01101000, 6, false));
         hashmap.insert(PatternName::OpenSplitThreeLeft,     (0b01011000, 6, false));
