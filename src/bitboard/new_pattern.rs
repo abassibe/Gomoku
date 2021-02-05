@@ -317,6 +317,62 @@ pub fn extract_captured_by_move(player: BitBoard, opponent: BitBoard, being_play
     result
 }
 
+pub fn extract_captures(player: BitBoard, opponent: BitBoard, patterns: NewPattern) -> BitBoard {
+    let open_cells = !(player | opponent);
+    let (pattern, pattern_size, is_sym) = patterns[PatternName::CloseTwo];
+    let mut result = BitBoard::empty();
+
+    for direction in DirectionIterator::new() {
+        let mut tmp = player;
+        let mut i = 0;
+        while i < pattern_size && tmp.is_any() {
+            tmp = tmp >> direction & if ((pattern << i) & U8_FIRST_BIT) == U8_FIRST_BIT { opponent } else { open_cells };
+            i += 1;
+        }
+        if tmp.is_any() {
+            let inverted_direction = direction.to_invert();
+            result |= tmp.shift_direction_by(inverted_direction, 2) | tmp.shift_direction_by(inverted_direction, 1);
+        }
+    }
+
+    result
+}
+
+pub fn extract_winning_move_align(player: BitBoard, opponent: BitBoard, illegals: BitBoard, opponent_captures: u8, patterns: NewPattern) -> BitBoard {
+    let illegals_complement = !illegals;
+    let open_cells = !(player | opponent);
+    let (pattern, pattern_size, is_sym) = patterns[PatternName::Five];
+    let result = (player | extract_missing_bit(player, opponent, pattern, pattern_size, is_sym)) & illegals_complement;
+    let result = extract_five_aligned(result ^ extract_captures(opponent, result, patterns)) & open_cells;
+
+    if result.is_any() && extract_winning_move_capture(opponent, player, opponent_captures, patterns).is_empty() {
+        result
+    } else {
+        BitBoard::empty()
+    }
+}
+
+// TODO: Verify this function works as expected
+// TODO: Write tests for this function
+pub fn extract_winning_move_capture(player: BitBoard, opponent: BitBoard, player_captures: u8, patterns: NewPattern) -> BitBoard {
+    let player_capturing_moves = extract_captures(player, opponent, patterns);
+    let mut current_bit = BitBoard::FIRST_BIT_SET;
+    let mut result = BitBoard::empty();
+
+    if player_capturing_moves.is_empty() {
+        return result;
+    }
+
+    for capturing_move in player_capturing_moves.enumerate() {
+        let tmp = extract_captured_by_move(player | capturing_move, opponent, capturing_move);
+        if player_captures as u16 + tmp.count_ones() / 2 >= 5 {
+            result |= capturing_move;
+        }
+    }
+
+    result
+}
+
 pub fn contains_five_aligned(player: BitBoard) -> bool {
     for direction in DirectionIterator::new() {
         let mut tmp = player;
