@@ -215,7 +215,7 @@ pub fn extract_five_aligned(player: BitBoard) -> BitBoard {
 }
 
 // TODO: Investiguate and fix this!
-pub fn extract_illegal_moves(player: BitBoard, opponent: BitBoard, patterns: NewPattern) -> BitBoard {
+pub fn extract_illegal_moves(player: BitBoard, opponent: BitBoard, patterns: &NewPattern) -> BitBoard {
     let open_cells = !(player | opponent);
     let illegal_patterns = [
         patterns[PatternName::OpenSplitThreeLeft],
@@ -271,6 +271,21 @@ pub fn extract_threatening_moves_from_opponent(player: BitBoard, opponent: BitBo
     result
 }
 
+// TODO: Missing tests
+pub fn extract_threatening_moves_from_player(player: BitBoard, opponent: BitBoard, opponent_captures: u8, patterns: &NewPattern) -> BitBoard {
+    let open_cells = !(player | opponent);
+    let (pattern_three, pattern_three_size, is_three_sym) = patterns[PatternName::OpenThree];
+    let (pattern_split_three, pattern_split_three_size, is_split_three_sym) = patterns[PatternName::OpenSplitThreeRight];
+    let (pattern_five, pattern_five_size, is_five_sym) = patterns[PatternName::Five];
+
+    let mut result = extract_winning_move_capture(opponent, player, opponent_captures, patterns);
+    result |= extract_threatening_moves_from_opponent(player, opponent, pattern_three, pattern_three_size, is_three_sym);
+    result |= extract_threatening_moves_from_opponent(player, opponent, pattern_split_three, pattern_split_three_size, is_split_three_sym);
+    result |= extract_missing_bit(opponent, player, pattern_five, pattern_five_size, is_five_sym);
+
+    result | open_cells
+}
+
 // FIXME: It seems that this fonction doesn't concider the edges as occupied places
 // thus the patterns for close (CloseThree, CloseSplitThreeLeft, CloseSplitThreeRight & CloseFour)
 // will not match when the close side is right next to an edge (it wouldn't match either when the open side is
@@ -298,65 +313,129 @@ pub fn extract_missing_bit(player: BitBoard, opponent: BitBoard, pattern: u8, pa
     result & !(player | opponent)
 }
 
-pub fn extract_captured_by_move(player: BitBoard, opponent: BitBoard, being_played: BitBoard) -> BitBoard {
+pub fn extract_captured_by_move(player: BitBoard, opponent: BitBoard, being_played: BitBoard, patterns: &NewPattern) -> BitBoard {
     let mut result = BitBoard::empty();
+    let (pattern, pattern_size, _) = patterns[PatternName::CloseTwo];
 
     for direction in DirectionIterator::new() {
         let mut tmp = being_played;
         let mut i = 0;
-        while i < 3 && tmp.is_any() {
-            tmp = (tmp >> direction) & if (U8_TWO_FIRST_BITS << i) & U8_FIRST_BIT == U8_FIRST_BIT { opponent } else { player };
+        while i < pattern_size && tmp.is_any() {
+            tmp = (tmp >> direction) & if (pattern << i) & U8_FIRST_BIT == U8_FIRST_BIT { opponent } else { player };
             i += 1;
         }
         if tmp.is_any() {
             let inverted_direction = direction.to_invert();
-            result |= tmp.shift_direction_by(inverted_direction, 2) | tmp.shift_direction_by(inverted_direction, 1);
+            result |= tmp.shift_direction_by(inverted_direction, 1) | tmp.shift_direction_by(inverted_direction, 2);
         }
     }
 
     result
 }
 
-pub fn extract_captures(player: BitBoard, opponent: BitBoard, patterns: NewPattern) -> BitBoard {
+pub fn extract_capturing_moves(player: BitBoard, opponent: BitBoard, patterns: &NewPattern) -> BitBoard {
     let open_cells = !(player | opponent);
-    let (pattern, pattern_size, is_sym) = patterns[PatternName::CloseTwo];
+    let (pattern, pattern_size, _) = patterns[PatternName::CloseTwo];
     let mut result = BitBoard::empty();
 
     for direction in DirectionIterator::new() {
         let mut tmp = player;
         let mut i = 0;
         while i < pattern_size && tmp.is_any() {
-            tmp = tmp >> direction & if ((pattern << i) & U8_FIRST_BIT) == U8_FIRST_BIT { opponent } else { open_cells };
+            tmp = (tmp >> direction) & if (pattern << i) & U8_FIRST_BIT == U8_FIRST_BIT { opponent } else { open_cells };
+            i += 1;
+        }
+        result |= tmp;
+    }
+
+    result
+}
+
+pub fn extract_captures(player: BitBoard, opponent: BitBoard, patterns: &NewPattern) -> BitBoard {
+    let open_cells = !(player | opponent);
+    let (pattern, pattern_size, _) = patterns[PatternName::CloseTwo];
+    let mut result = BitBoard::empty();
+
+    for direction in DirectionIterator::new() {
+        let mut tmp = player;
+        let mut i = 0;
+        while i < pattern_size && tmp.is_any() {
+            tmp = (tmp >> direction) & if (pattern << i) & U8_FIRST_BIT == U8_FIRST_BIT { opponent } else { open_cells };
             i += 1;
         }
         if tmp.is_any() {
             let inverted_direction = direction.to_invert();
-            result |= tmp.shift_direction_by(inverted_direction, 2) | tmp.shift_direction_by(inverted_direction, 1);
+            result |= tmp.shift_direction_by(inverted_direction, 1) | tmp.shift_direction_by(inverted_direction, 2);
         }
     }
 
     result
 }
 
-pub fn extract_winning_move_align(player: BitBoard, opponent: BitBoard, illegals: BitBoard, opponent_captures: u8, patterns: NewPattern) -> BitBoard {
-    let illegals_complement = !illegals;
+/// **WARNING**: This function also returns the moves that capture the last or first bit of an alignment of 6 or +
+/// which means that it's possible for that function to return a move that will NOT actually break the alignment
+/// for the an alignment of 6 or +.
+pub fn extract_five_align_breaking_moves(player: BitBoard, opponent: BitBoard, patterns: &NewPattern) -> BitBoard {
+    let mut result = BitBoard::empty();
     let open_cells = !(player | opponent);
-    let (pattern, pattern_size, is_sym) = patterns[PatternName::Five];
-    let result = (player | extract_missing_bit(player, opponent, pattern, pattern_size, is_sym)) & illegals_complement;
-    let result = extract_five_aligned(result ^ extract_captures(opponent, result, patterns)) & open_cells;
+    let opponent_fives = extract_five_aligned(opponent);
+    let (pattern, pattern_size, _) = patterns[PatternName::CloseTwo];
 
-    if result.is_any() && extract_winning_move_capture(opponent, player, opponent_captures, patterns).is_empty() {
-        result
-    } else {
-        BitBoard::empty()
+    for direction in DirectionIterator::new() {
+        let inverted_direction = direction.to_invert();
+        let tmp = match_pattern_base(
+            opponent,
+            player,
+            pattern,
+            pattern_size,
+            0,
+            U8_FIRST_BIT,
+            open_cells, direction
+        );
+        // TODO: We probably can do much better in term of perf here
+        let tmp = (((tmp >> inverted_direction) & opponent_fives) >> direction)
+            | ((tmp.shift_direction_by(inverted_direction, 2) & opponent_fives).shift_direction_by(direction, 2));
+        if tmp.is_any() {
+            result |= tmp;
+        }
     }
+
+    result
 }
 
-// TODO: Verify this function works as expected
-// TODO: Write tests for this function
-pub fn extract_winning_move_capture(player: BitBoard, opponent: BitBoard, player_captures: u8, patterns: NewPattern) -> BitBoard {
-    let player_capturing_moves = extract_captures(player, opponent, patterns);
-    let mut current_bit = BitBoard::FIRST_BIT_SET;
+// TODO: Missing tests
+pub fn extract_winning_moves_from_player(player: BitBoard, opponent: BitBoard, player_captures: u8, opponent_captures: u8, patterns: &NewPattern) -> BitBoard {
+    let open_cells = !(player | opponent);
+    let (pattern, pattern_size, is_sym) = patterns[PatternName::Five];
+
+    let player_with_finisher = player | extract_missing_bit(player, opponent, pattern, pattern_size, is_sym);
+    let result = extract_five_aligned(player_with_finisher) ^ extract_captures(opponent, player_with_finisher, patterns);
+    let result = if result.is_any() && extract_winning_move_capture(opponent, player, opponent_captures, patterns).is_empty() {
+        result
+    } else {
+        extract_winning_move_capture(player, opponent, player_captures, patterns)
+    };
+
+    result & open_cells
+}
+
+// There is no use for the following function. I keep it here for now, just in case.
+// pub fn extract_winning_move_align(player: BitBoard, opponent: BitBoard, illegals: BitBoard, opponent_captures: u8, patterns: &NewPattern) -> BitBoard {
+//     let illegals_complement = !illegals;
+//     let open_cells = !(player | opponent);
+//     let (pattern, pattern_size, is_sym) = patterns[PatternName::Five];
+//     let result = (player | extract_missing_bit(player, opponent, pattern, pattern_size, false)) & illegals_complement;
+//     let result = extract_five_aligned(result ^ extract_captures(opponent, result, patterns)) & open_cells;
+
+//     if result.is_any() && extract_winning_move_capture(opponent, player, opponent_captures, patterns).is_empty() {
+//         result
+//     } else {
+//         BitBoard::empty()
+//     }
+// }
+
+pub fn extract_winning_move_capture(player: BitBoard, opponent: BitBoard, player_captures: u8, patterns: &NewPattern) -> BitBoard {
+    let player_capturing_moves = extract_capturing_moves(player, opponent, patterns);
     let mut result = BitBoard::empty();
 
     if player_capturing_moves.is_empty() {
@@ -364,7 +443,7 @@ pub fn extract_winning_move_capture(player: BitBoard, opponent: BitBoard, player
     }
 
     for capturing_move in player_capturing_moves.enumerate() {
-        let tmp = extract_captured_by_move(player | capturing_move, opponent, capturing_move);
+        let tmp = extract_captured_by_move(player | capturing_move, opponent, capturing_move, patterns);
         if player_captures as u16 + tmp.count_ones() / 2 >= 5 {
             result |= capturing_move;
         }
@@ -941,7 +1020,7 @@ mod tests {
         let patterns = NewPattern::new();
 
         // Act
-        let result = extract_illegal_moves(player, opponent, patterns);
+        let result = extract_illegal_moves(player, opponent, &patterns);
 
         // Assert
         assert_eq!(expected, result);
@@ -1016,7 +1095,7 @@ mod tests {
         let patterns = NewPattern::new();
 
         // Act
-        let result = extract_illegal_moves(player, opponent, patterns);
+        let result = extract_illegal_moves(player, opponent, &patterns);
 
         // Assert
         assert_eq!(expected, result);
@@ -1314,9 +1393,10 @@ mod tests {
             0000000000000000000
             0000000000000000000
         ");
+        let patterns = NewPattern::new();
 
         // Act
-        let result = extract_captured_by_move(player, opponent, player_last_move);
+        let result = extract_captured_by_move(player, opponent, player_last_move, &patterns);
 
         // Assert
         assert_eq!(expected, result);
@@ -1409,11 +1489,391 @@ mod tests {
             1000000000000000000
             0110000000000000000
         ");
+        let patterns = NewPattern::new();
 
         // Act
-        let result = extract_captured_by_move(player, opponent, player_last_move);
+        let result = extract_captured_by_move(player, opponent, player_last_move, &patterns);
 
         // Assert
         assert_eq!(expected, result);
     }
+
+    #[test]
+    fn test_pattern_matching_extract_winning_move_capture_with_3_captures() {
+        // Arrange
+        let player = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            1000000000000000000
+            0000000000000000100
+            0000000000000000000
+            0001000000000000000
+        ");
+        let opponent = BitBoard::from_str("
+            0000000000000000000
+            0000001100000000000
+            0000000000000000000
+            0000000000000100000
+            0000000000000100000
+            0000000000000000000
+            0000000000000000000
+            0000000001000000000
+            0000000001000000000
+            0000000110000000000
+            0000000000000000000
+            0000000000000000000
+            0000000001000000000
+            0000000010000000000
+            0000100000000010000
+            0000100000000001000
+            1000000000000000000
+            1000000000000000000
+            0110000000000000000
+        ");
+        let expected = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            1000000000000000000
+        ");
+        let patterns = NewPattern::new();
+
+        // Act
+        let result = extract_winning_move_capture(player, opponent, 3, &patterns);
+        println!("Here is the result:\n{}", result);
+
+        // Assert
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_pattern_matching_extract_winning_move_capture_with_4_captures() {
+        // Arrange
+        let player = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            1000000000000000000
+            0000000000000000100
+            0000000000000000000
+            0001000000000000000
+        ");
+        let opponent = BitBoard::from_str("
+            0000000000000000000
+            0000001100000000000
+            0000000000000000000
+            0000000000000100000
+            0000000000000100000
+            0000000000000000000
+            0000000000000000000
+            0000000001000000000
+            0000000001000000000
+            0000000110000000000
+            0000000000000000000
+            0000000000000000000
+            0000000001000000000
+            0000000010000000000
+            0000100000000010000
+            0000100000000001000
+            1000000000000000000
+            1000000000000000000
+            0110000000000000000
+        ");
+        let expected = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000100000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            1000000000000000000
+        ");
+        let patterns = NewPattern::new();
+
+        // Act
+        let result = extract_winning_move_capture(player, opponent, 4, &patterns);
+
+        // Assert
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_pattern_matching_extract_five_align_breaking_moves() {
+        // Arrange
+        let player = BitBoard::from_str("
+            0000100000000000000
+            0001100000000000000
+            0010000000000100000
+            0100000000000100000
+            1000000000000100000
+            0000000000001100000
+            0000000000000100000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000001000000000000
+            0000000100000000010
+            0000000010000000100
+            0000000000000000100
+            0001100000001000100
+            0001000111111000100
+            0010000000000000100
+            0000000000000000000
+            1000000000000000000
+        ");
+        let opponent = BitBoard::from_str("
+            0000000000000000000
+            0000010000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000010000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000001
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000010000000000000
+            0000000000000000000
+            0000000000001000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let expected = BitBoard::from_str("
+            0000000000000000000
+            0010000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000010000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000001001000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let patterns = NewPattern::new();
+
+        // Act
+        let result = extract_five_align_breaking_moves(opponent, player, &patterns);
+        println!("Here is the result:\n{}", result);
+
+        // Assert
+        assert_eq!(expected, result);
+    }
+
+    // #[test]
+    // fn test_pattern_matching_extract_winning_move_align_with_breakable_alignment() {
+    //     // Arrange
+    //     let player = BitBoard::from_str("
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         1000000000000000000
+    //         0000000000000000100
+    //         0000000000000000000
+    //         0001000000000000000
+    //     ");
+    //     let opponent = BitBoard::from_str("
+    //         0000000000000000000
+    //         0000001100000000000
+    //         0000000000000000000
+    //         0000000000000100000
+    //         0000000000000100000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000001000000000
+    //         0000000001000000000
+    //         0000000110000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000001000000000
+    //         0000000010000000000
+    //         0000100000000010000
+    //         0000100000000001000
+    //         1000000000000000000
+    //         1000000000000000000
+    //         0110000000000000000
+    //     ");
+    //     let expected = BitBoard::from_str("
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000100000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         1000000000000000000
+    //     ");
+    //     let patterns = NewPattern::new();
+
+    //     // Act
+    //     let result = extract_winning_move_capture(player, opponent, 4, &patterns);
+
+    //     // Assert
+    //     assert_eq!(expected, result);
+    // }
+
+    // #[test]
+    // fn test_pattern_matching_extract_winning_move_align_with_unbreakable_alignment() {
+    //     // Arrange
+    //     let player = BitBoard::from_str("
+    //         0000100000000000000
+    //         0000000000000000000
+    //         0010000000000000000
+    //         0100000000000100000
+    //         1000000000000100000
+    //         0000000000000100000
+    //         0000000000000100000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000001000000000000
+    //         0000000100000000000
+    //         0000000010000000100
+    //         0000000000000000100
+    //         0000100000000000100
+    //         0001000110110000000
+    //         0010000000000000100
+    //         0000000000000000000
+    //         1000000000000000000
+    //     ");
+    //     let opponent = BitBoard::from_str("
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000100000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000001000001000100
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //     ");
+    //     let expected = BitBoard::from_str("
+    //         0000000000000000000
+    //         0001000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000100000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000000000000000
+    //         0000000001000000000
+    //         0000000000000000000
+    //         0100000000000000000
+    //         0000000000000000000
+    //     ");
+    //     let patterns = NewPattern::new();
+    //     let illegals = extract_illegal_moves(player, opponent, &patterns);
+
+    //     // Act
+    //     let result = extract_winning_move_align(player, opponent, illegals, 1, &patterns);
+    //     println!("Here is the result:\n{}", result);
+
+    //     // Assert
+    //     assert_eq!(expected, result);
+    // }
 }
