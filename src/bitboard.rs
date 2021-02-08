@@ -58,6 +58,13 @@ impl BitBoard {
             0
         ]
     };
+    pub const CENTER_BIT_SET: Self = Self {
+        b: [
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+        ]
+    };
     const EMPTY_BITBOARD: BitBoard = Self { b: [0, 0, 0] };
     const FULL_BITBOARD: BitBoard = Self::ENDLINE_DELIMITER_MASK;
 
@@ -149,6 +156,22 @@ impl BitBoard {
     /// Returns `false` otherwise.
     pub fn is_any(&self) -> bool {
         !self.is_empty()
+    }
+
+    pub fn contains_five_aligned(&self) -> bool {
+        for direction in DirectionIterator::new() {
+            let mut tmp = *self;
+            let mut i = 1;
+            while tmp.is_any() {
+                tmp &= tmp << direction;
+                if i >= 5 {
+                    return true;
+                }
+                i += 1;
+            }
+        }
+
+        false
     }
     // #endregion Test methods
 

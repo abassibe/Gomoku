@@ -10,6 +10,7 @@ const EDGE_MASK: BitBoard = BitBoard::new(
 
 #[derive(Debug, Eq, PartialEq, Hash)]
 pub enum PatternName {
+    OpenTwo,
     CloseTwo,
     OpenThree,
     OpenSplitThreeLeft,
@@ -34,6 +35,7 @@ impl NewPattern {
     pub fn new() -> NewPattern {
         let mut hashmap: HashMap<PatternName, (u8, u8, bool)> = HashMap::new();
 
+        hashmap.insert(PatternName::OpenTwo,                (0b01100000, 4, true));
         hashmap.insert(PatternName::CloseTwo,               (0b11000000, 3, false));
         hashmap.insert(PatternName::OpenThree,              (0b01110000, 5, true));
         hashmap.insert(PatternName::OpenSplitThreeRight,    (0b01101000, 6, false));
@@ -63,6 +65,12 @@ impl Index<PatternName> for NewPattern {
 
     fn index(&self, name: PatternName) -> &Self::Output {
         &self.patterns[&name]
+    }
+}
+
+impl Default for NewPattern {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -452,22 +460,6 @@ pub fn extract_winning_move_capture(player: BitBoard, opponent: BitBoard, player
     result
 }
 
-pub fn contains_five_aligned(player: BitBoard) -> bool {
-    for direction in DirectionIterator::new() {
-        let mut tmp = player;
-        let mut i = 1;
-        while tmp.is_any() {
-            tmp &= tmp << direction;
-            if i >= 5 {
-                return true;
-            }
-            i += 1;
-        }
-    }
-
-    false
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -475,7 +467,8 @@ mod tests {
     #[test]
     fn test_pattern_index() {
         // Arrange
-        let expected: [(u8, u8, bool); 13] = [
+        let expected: [(u8, u8, bool); 14] = [
+            (0b01100000, 4, true),
             (0b11000000, 3, false),
             (0b01110000, 5, true),
             (0b01101000, 6, false),
@@ -493,7 +486,8 @@ mod tests {
         let patterns = NewPattern::new();
 
         // Act
-        let results: [(u8, u8, bool); 13] = [
+        let results: [(u8, u8, bool); 14] = [
+            patterns[PatternName::OpenTwo],
             patterns[PatternName::CloseTwo],
             patterns[PatternName::OpenThree],
             patterns[PatternName::OpenSplitThreeRight],
@@ -646,12 +640,12 @@ mod tests {
 
         // Act
         let results = [
-            contains_five_aligned(one_five_aligned),
-            contains_five_aligned(no_five_aligned),
-            contains_five_aligned(two_five_aligned),
-            contains_five_aligned(one_six_aligned),
-            contains_five_aligned(one_seven_aligned),
-            contains_five_aligned(one_five_aligned_edge)
+            one_five_aligned.contains_five_aligned(),
+            no_five_aligned.contains_five_aligned(),
+            two_five_aligned.contains_five_aligned(),
+            one_six_aligned.contains_five_aligned(),
+            one_seven_aligned.contains_five_aligned(),
+            one_five_aligned_edge.contains_five_aligned()
         ];
 
         // Assert

@@ -1,5 +1,7 @@
 use std::rc::Rc;
 
+use crate::bitboard::{direction::Direction, new_pattern::*};
+
 use super::{
     tree::{Tree, node::Node},
     goban::{Goban, Fscore},
@@ -10,6 +12,7 @@ use super::{
 pub struct Algorithm
 {
     initial: Node,
+    patterns: NewPattern
 }
 
 impl Algorithm
@@ -100,6 +103,91 @@ impl Algorithm
                 Node::new(Goban::new(player, enemy), parent.get_depth() + 1)
             })
             .collect()
+    }
+
+    #[inline]
+    fn get_first_move(player: BitBoard, opponent: BitBoard) -> BitBoard {
+        match (player.is_empty(), opponent.is_empty()) {
+            (true, false) => (opponent + Direction::All) & !player,
+            (true, true) => BitBoard::CENTER_BIT_SET,
+            (false, _) => BitBoard::empty()
+        }
+    }
+
+    #[inline]
+    fn counter_five_aligned(&self, player: BitBoard, opponent: BitBoard, player_captures: u8) -> BitBoard {
+        let mut result = extract_five_align_breaking_moves(player, opponent, &self.patterns);
+
+        if result.is_empty() {
+            extract_winning_move_capture(player, opponent, player_captures, &self.patterns)
+        } else {
+            result
+        }
+    }
+
+    // TODO: Missing tests
+    // TODO: Ensure this method works as expected
+    fn get_potential_moves(&self, player: BitBoard, opponent: BitBoard, player_captures: u8, opponent_captures: u8, illegal_moves: BitBoard) -> BitBoard {
+        let open_cells = !(player | opponent);
+        let players_complement = !player;
+        let opponents_complement = !opponent;
+
+        if player.is_empty() {
+            return open_cells & Self::get_first_move(player, opponent);
+        }
+
+        if opponent.contains_five_aligned() {
+            let result = self.counter_five_aligned(player, opponent, player_captures);
+            if result.is_any() {
+                return result & open_cells;
+            }
+        }
+
+        let result = extract_winning_moves_from_player(player, opponent, player_captures, opponent_captures, &self.patterns);
+        if result.is_any() {
+            return result;
+        }
+
+        let result = extract_winning_moves_from_player(opponent, player, opponent_capture, player_captures, &self.patterns);
+        if result.is_any() {
+            let (pattern, pattern_size, is_sym) = self.patterns[PatternName::Five];
+            return result | extract_missing_bit(player, opponent, pattern, pattern_size, is_sym);
+        }
+
+        // FIXME: Probably best to have that as a const
+        let patterns = [
+            self.patterns[PatternName::Five],
+            self.patterns[PatternName::OpenFour],
+            self.patterns[PatternName::OpenTwo],
+            self.patterns[PatternName::OpenThree],
+            self.patterns[PatternName::OpenSplitThreeRight],
+            self.patterns[PatternName::CloseFour]
+        ];
+        let mut result = extract_threatening_moves_from_player(player, opponent, opponent_captures, &self.patterns);
+        result |= extract_capturing_moves(opponent, player, &self.patterns);
+        result |= extract_missing_bit(player, opponent, patterns[0].0, patterns[0].1, patterns[0].2);
+        result |= extract_missing_bit(player, opponent, patterns[1].0, patterns[1].1, patterns[1].2);
+        result |= extract_capturing_moves(player, opponent, &self.patterns);
+
+        if result.count_ones() > 4 {
+            return result & open_cells & !illegal_moves;
+        }
+
+        result |= extract_threatening_moves_from_opponent(player, opponent, patterns[2].0, patterns[2].1, patterns[2].2);
+        result |= extract_missing_bit(player, opponent, patterns[3].0, patterns[3].1, patterns[3].2);
+        result |= extract_missing_bit(player, opponent, patterns[4].0, patterns[4].1, patterns[4].2);
+
+        if result.count_ones() > 4 {
+            return result & open_cells & !illegal_moves;
+        }
+
+        result |= extract_missing_bit(player, opponent, patterns[5].0, patterns[5].1, patterns[5].2);
+
+        if result.count_ones() > 2 {
+            return result & open_cells & !illegal_moves;
+        }
+
+        (result | ((player + Direction::All) & !opponent)) & open_cells & !illegal_moves;
     }
 
     // fn set_with_capture(state: BitBoard, to_play: &BitBoard) -> BitBoard {
