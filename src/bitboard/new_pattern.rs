@@ -7,6 +7,14 @@ const EDGE_MASK: BitBoard = BitBoard::new(
         207692072411988285641522779730903040,
         53169170537469001124229831611119566816
     );
+pub static GET_MOVES_PATTERNS: [(u8, u8, bool); 6] = [
+    (0b11111000, 5, true),
+    (0b01111000, 6, true),
+    (0b01100000, 4, true),
+    (0b01110000, 5, true),
+    (0b01101000, 6, false),
+    (0b11110000, 5, false)
+];
 
 #[derive(Debug, Eq, PartialEq, Hash)]
 pub enum PatternName {
