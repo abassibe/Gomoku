@@ -167,34 +167,25 @@ impl Algorithm
             return result | extract_missing_bit(player, opponent, pattern, pattern_size, is_sym);
         }
 
-        // FIXME: Probably best to have that as a const
-        let patterns = [
-            self.patterns[PatternName::Five],
-            self.patterns[PatternName::OpenFour],
-            self.patterns[PatternName::OpenTwo],
-            self.patterns[PatternName::OpenThree],
-            self.patterns[PatternName::OpenSplitThreeRight],
-            self.patterns[PatternName::CloseFour]
-        ];
         let mut result = extract_threatening_moves_from_player(player, opponent, opponent_captures, &self.patterns);
         result |= extract_capturing_moves(opponent, player, &self.patterns);
-        result |= extract_missing_bit(player, opponent, patterns[0].0, patterns[0].1, patterns[0].2);
-        result |= extract_missing_bit(player, opponent, patterns[1].0, patterns[1].1, patterns[1].2);
+        result |= extract_missing_bit(player, opponent, GET_MOVES_PATTERNS[0].0, GET_MOVES_PATTERNS[0].1, GET_MOVES_PATTERNS[0].2);
+        result |= extract_missing_bit(player, opponent, GET_MOVES_PATTERNS[1].0, GET_MOVES_PATTERNS[1].1, GET_MOVES_PATTERNS[1].2);
         result |= extract_capturing_moves(player, opponent, &self.patterns);
 
         if result.count_ones() > 4 {
             return result & open_cells & illegal_moves_complement;
         }
 
-        result |= extract_threatening_moves_from_opponent(player, opponent, patterns[2].0, patterns[2].1, patterns[2].2);
-        result |= extract_missing_bit(player, opponent, patterns[3].0, patterns[3].1, patterns[3].2);
-        result |= extract_missing_bit(player, opponent, patterns[4].0, patterns[4].1, patterns[4].2);
+        result |= extract_threatening_moves_from_opponent(player, opponent, GET_MOVES_PATTERNS[2].0, GET_MOVES_PATTERNS[2].1, GET_MOVES_PATTERNS[2].2);
+        result |= extract_missing_bit(player, opponent, GET_MOVES_PATTERNS[3].0, GET_MOVES_PATTERNS[3].1, GET_MOVES_PATTERNS[3].2);
+        result |= extract_missing_bit(player, opponent, GET_MOVES_PATTERNS[4].0, GET_MOVES_PATTERNS[4].1, GET_MOVES_PATTERNS[4].2);
 
         if result.count_ones() > 4 {
             return result & open_cells & illegal_moves_complement;
         }
 
-        result |= extract_missing_bit(player, opponent, patterns[5].0, patterns[5].1, patterns[5].2);
+        result |= extract_missing_bit(player, opponent, GET_MOVES_PATTERNS[5].0, GET_MOVES_PATTERNS[5].1, GET_MOVES_PATTERNS[5].2);
 
         if result.count_ones() > 2 {
             return result & open_cells & illegal_moves_complement;
