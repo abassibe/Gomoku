@@ -136,8 +136,6 @@ impl Algorithm
         extract_illegal_moves(player, opponent, &self.patterns)
     }
 
-    // TODO: Missing tests
-    // TODO: Ensure this method works as expected
     fn get_potential_moves(&self) -> BitBoard {
         let goban = self.initial.get_item();
         let player = *goban.get_player();
