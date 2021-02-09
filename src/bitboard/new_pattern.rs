@@ -82,9 +82,9 @@ impl Default for NewPattern {
     }
 }
 
-// TODO: Implement the method to get the next move as soon as possible in order to test it and identify potential bugs
 // TODO: Implement the missing methods (get the potential next moves according to the threats/opportunities, ...) in the right mod directly this time
 // TODO: Test all this as much as possible
+// TODO: Move the tests in a dedicated mod. Move every tests in a dedicated direcotry/files.
 #[inline]
 pub fn match_pattern_base(
     player: BitBoard,
