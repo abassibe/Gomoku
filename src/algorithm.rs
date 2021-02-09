@@ -138,10 +138,14 @@ impl Algorithm
 
     // TODO: Missing tests
     // TODO: Ensure this method works as expected
-    fn get_potential_moves(&self, player: BitBoard, opponent: BitBoard, player_captures: u8, opponent_captures: u8, illegal_moves: BitBoard) -> BitBoard {
+    fn get_potential_moves(&self) -> BitBoard {
+        let goban = self.initial.get_item();
+        let player = *goban.get_player();
+        let opponent = *goban.get_enemy();
+        let player_captures = self.player_captures;
+        let opponent_captures = self.opponent_captures;
         let open_cells = !(player | opponent);
-        let players_complement = !player;
-        let opponents_complement = !opponent;
+        let illegal_moves_complement = !self.compute_illegal_moves();
 
         if player.is_empty() {
             return open_cells & Self::get_first_move(player, opponent);
@@ -159,7 +163,7 @@ impl Algorithm
             return result;
         }
 
-        let result = extract_winning_moves_from_player(opponent, player, opponent_capture, player_captures, &self.patterns);
+        let result = extract_winning_moves_from_player(opponent, player, opponent_captures, player_captures, &self.patterns);
         if result.is_any() {
             let (pattern, pattern_size, is_sym) = self.patterns[PatternName::Five];
             return result | extract_missing_bit(player, opponent, pattern, pattern_size, is_sym);
@@ -181,7 +185,7 @@ impl Algorithm
         result |= extract_capturing_moves(player, opponent, &self.patterns);
 
         if result.count_ones() > 4 {
-            return result & open_cells & !illegal_moves;
+            return result & open_cells & illegal_moves_complement;
         }
 
         result |= extract_threatening_moves_from_opponent(player, opponent, patterns[2].0, patterns[2].1, patterns[2].2);
@@ -189,16 +193,16 @@ impl Algorithm
         result |= extract_missing_bit(player, opponent, patterns[4].0, patterns[4].1, patterns[4].2);
 
         if result.count_ones() > 4 {
-            return result & open_cells & !illegal_moves;
+            return result & open_cells & illegal_moves_complement;
         }
 
         result |= extract_missing_bit(player, opponent, patterns[5].0, patterns[5].1, patterns[5].2);
 
         if result.count_ones() > 2 {
-            return result & open_cells & !illegal_moves;
+            return result & open_cells & illegal_moves_complement;
         }
 
-        (result | ((player + Direction::All) & !opponent)) & open_cells & !illegal_moves;
+        (result | (player + Direction::All)) & open_cells & illegal_moves_complement
     }
 
     // fn set_with_capture(state: BitBoard, to_play: &BitBoard) -> BitBoard {
