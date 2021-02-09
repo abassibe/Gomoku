@@ -222,7 +222,6 @@ pub fn extract_five_aligned(player: BitBoard) -> BitBoard {
     result
 }
 
-// TODO: Investiguate and fix this!
 pub fn extract_illegal_moves(player: BitBoard, opponent: BitBoard, patterns: &NewPattern) -> BitBoard {
     let open_cells = !(player | opponent);
     let illegal_patterns = [
