@@ -290,7 +290,7 @@ pub fn extract_threatening_moves_from_player(player: BitBoard, opponent: BitBoar
     result |= extract_threatening_moves_from_opponent(player, opponent, pattern_split_three, pattern_split_three_size, is_split_three_sym);
     result |= extract_missing_bit(opponent, player, pattern_five, pattern_five_size, is_five_sym);
 
-    result | open_cells
+    result & open_cells
 }
 
 // FIXME: It seems that this fonction doesn't concider the edges as occupied places
