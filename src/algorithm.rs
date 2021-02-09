@@ -127,6 +127,15 @@ impl Algorithm
         }
     }
 
+    #[inline]
+    fn compute_illegal_moves(&self) -> BitBoard {
+        let goban = self.initial.get_item();
+        let player = *goban.get_player();
+        let opponent = *goban.get_enemy();
+
+        extract_illegal_moves(player, opponent, &self.patterns)
+    }
+
     // TODO: Missing tests
     // TODO: Ensure this method works as expected
     fn get_potential_moves(&self, player: BitBoard, opponent: BitBoard, player_captures: u8, opponent_captures: u8, illegal_moves: BitBoard) -> BitBoard {
