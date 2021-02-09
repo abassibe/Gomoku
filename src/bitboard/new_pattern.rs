@@ -99,8 +99,10 @@ pub fn match_pattern_base(
         result = if ((pattern << x) & U8_FIRST_BIT) == U8_FIRST_BIT {
             (result >> direction) & player
         } else {
+            if edge_mask.is_any() && x > 0 {
+                edge_mask = BitBoard::empty();
+            }
             let inner_result = ((result >> direction) | edge_mask) & open_cells;
-            edge_mask = BitBoard::empty();
             inner_result
         };
         x += 1;
