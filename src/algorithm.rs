@@ -12,7 +12,9 @@ use super::{
 pub struct Algorithm
 {
     initial: Node,
-    patterns: NewPattern
+    patterns: NewPattern,
+    player_captures: u8,
+    opponent_captures: u8
 }
 
 impl Algorithm
