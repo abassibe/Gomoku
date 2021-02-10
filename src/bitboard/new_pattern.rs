@@ -15,6 +15,17 @@ pub static GET_MOVES_PATTERNS: [(u8, u8, bool); 6] = [
     (0b01101000, 6, false),
     (0b11110000, 5, false)
 ];
+pub static THREE_PATTERNS: [(u8, u8, bool); 3] = [
+    (0b01110000, 5, false),
+    (0b01011000, 6, false),
+    (0b01101000, 6, false)
+];
+pub static FOUR_PATTERNS: [(u8, u8, bool); 4] = [
+    (0b11110000, 5, false),
+    (0b01111000, 5, false),
+    (0b11101000, 5, false),
+    (0b10111000, 5, false)
+];
 
 #[derive(Debug, Eq, PartialEq, Hash)]
 pub enum PatternName {
