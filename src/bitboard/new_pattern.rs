@@ -42,6 +42,7 @@ pub enum PatternName {
     SplitFourLeft,
     SplitFourMiddle,
     SplitFourRight,
+    CloseSplitFourRight,
     Five
 }
 
@@ -67,6 +68,7 @@ impl NewPattern {
         hashmap.insert(PatternName::SplitFourLeft,          (0b01011100, 6, false));
         hashmap.insert(PatternName::SplitFourMiddle,        (0b01101100, 6, false));
         hashmap.insert(PatternName::SplitFourRight,         (0b01110100, 6, false));
+        hashmap.insert(PatternName::CloseSplitFourRight,    (0b11101000, 5, false));
         hashmap.insert(PatternName::Five,                   (0b11111000, 5, true));
 
         NewPattern {
@@ -458,7 +460,7 @@ mod tests {
     #[test]
     fn test_pattern_index() {
         // Arrange
-        let expected: [(u8, u8, bool); 14] = [
+        let expected: [(u8, u8, bool); 15] = [
             (0b01100000, 4, true),
             (0b11000000, 3, false),
             (0b01110000, 5, true),
@@ -472,12 +474,13 @@ mod tests {
             (0b01011100, 6, false),
             (0b01101100, 6, false),
             (0b01110100, 6, false),
+            (0b11101000, 5, false),
             (0b11111000, 5, true)
         ];
         let patterns = NewPattern::new();
 
         // Act
-        let results: [(u8, u8, bool); 14] = [
+        let results: [(u8, u8, bool); 15] = [
             patterns[PatternName::OpenTwo],
             patterns[PatternName::CloseTwo],
             patterns[PatternName::OpenThree],
@@ -491,6 +494,7 @@ mod tests {
             patterns[PatternName::SplitFourLeft],
             patterns[PatternName::SplitFourMiddle],
             patterns[PatternName::SplitFourRight],
+            patterns[PatternName::CloseSplitFourRight],
             patterns[PatternName::Five]
         ];
 
