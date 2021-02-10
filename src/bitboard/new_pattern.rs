@@ -296,6 +296,64 @@ pub fn extract_threatening_moves_from_player(player: BitBoard, opponent: BitBoar
     result & open_cells
 }
 
+pub fn extract_missing_bit_cross_three_with_four(player: BitBoard, opponent: BitBoard) -> BitBoard {
+    let open_cells = !(player | opponent);
+    let mut tmp_three = [BitBoard::empty(), BitBoard::empty(), BitBoard::empty(), BitBoard::empty()];
+    let mut tmp_four = [BitBoard::empty(), BitBoard::empty(), BitBoard::empty(), BitBoard::empty()];
+    let mut result = BitBoard::empty();
+
+    for (pi, &(pattern, pattern_size, _)) in THREE_PATTERNS.iter().chain(FOUR_PATTERNS.iter()).enumerate() {
+        for i in 0..pattern_size {
+            let masked_pattern = pattern & !(U8_FIRST_BIT >> i);
+            if masked_pattern == pattern {
+                continue;
+            }
+            for (di, direction) in AxisIterator::new().enumerate() {
+                let tmp = match_pattern_base(player, opponent, masked_pattern, pattern_size, pattern_size - i - 1, 0, open_cells, direction) & open_cells;
+                if pi < THREE_PATTERNS.len() {
+                    tmp_three[di] |= tmp;
+                } else {
+                    tmp_four[di] |= tmp;
+                }
+                if tmp_three[di].is_empty() {
+                    continue;
+                }
+                for dj in (0..di).rev() {
+                    result |= tmp_three[di] & tmp_four[dj];
+                }
+            }
+        }
+    }
+
+    result & open_cells
+}
+
+pub fn extract_missing_bit_cross_four_with_four(player: BitBoard, opponent: BitBoard) -> BitBoard {
+    let open_cells = !(player | opponent);
+    let mut tmp = [BitBoard::empty(), BitBoard::empty(), BitBoard::empty(), BitBoard::empty()];
+    let mut result = BitBoard::empty();
+
+    for &(pattern, pattern_size, _) in FOUR_PATTERNS.iter() {
+        for i in 0..pattern_size {
+            let masked_pattern = pattern & !(U8_FIRST_BIT >> i);
+            if masked_pattern == pattern {
+                continue;
+            }
+            for (di, direction) in AxisIterator::new().enumerate() {
+                tmp[di] |= match_pattern_base(player, opponent, masked_pattern, pattern_size, pattern_size - i - 1, 0, open_cells, direction) & open_cells;
+                if tmp[di].is_empty() {
+                    continue;
+                }
+                for dj in (0..di).rev() {
+                    result |= tmp[di] & tmp[dj];
+                }
+            }
+        }
+    }
+
+    result & open_cells
+}
+
 // FIXME: It seems that this fonction doesn't concider the edges as occupied places
 // thus the patterns for close (CloseThree, CloseSplitThreeLeft, CloseSplitThreeRight & CloseFour)
 // will not match when the close side is right next to an edge (it wouldn't match either when the open side is
