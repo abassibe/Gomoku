@@ -1704,7 +1704,6 @@ mod tests {
 
         // Act
         let result = extract_five_align_breaking_moves(opponent, player, &patterns);
-        println!("Here is the result:\n{}", result);
 
         // Assert
         assert_eq!(expected, result);
