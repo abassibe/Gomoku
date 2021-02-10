@@ -238,7 +238,16 @@ pub fn extract_illegal_moves(player: BitBoard, opponent: BitBoard, patterns: &Ne
                 continue;
             }
             for (id, direction) in AxisIterator::new().enumerate() {
-                tmp[id] |= match_pattern_base(player, opponent, sub_pattern, pattern_size, pattern_size - i - 1, 0, open_cells, direction) & open_cells;
+                tmp[id] |= match_pattern_base(
+                    player,
+                    opponent,
+                    sub_pattern,
+                    pattern_size,
+                    pattern_size - i - 1,
+                    0,
+                    open_cells,
+                    direction
+                ) & open_cells;
                 if tmp[id].is_empty() {
                     continue;
                 }
