@@ -28,7 +28,7 @@ pub type Branches = BinaryHeap<Rc<RefCell<Node>>>;
 /// 
 /// [`BinaryHeap`]: https://doc.rust-lang.org/std/collections/struct.BinaryHeap.html
 /// [`Option`]: https://doc.rust-lang.org/std/option/enum.Option.html
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct Node
 {
     /// `item` is the inner value which is holded by a Node.
@@ -118,8 +118,8 @@ impl Node {
     }
 
     /// A method that add many branches at once using the closure `generator`.
-    pub fn add_many_branches<F: Fn(&mut Self) -> Vec<Node>>(&mut self, generator: F) {
-        let mut new_branches: BinaryHeap<Rc<RefCell<Node>>> = generator(self).into_iter().map(|x| Rc::new(RefCell::new(x))).collect();
+    pub fn add_many_branches<F: Fn(&mut Self, bool) -> Vec<Node>>(&mut self, generator: F, maximizing: bool) {
+        let mut new_branches: BinaryHeap<Rc<RefCell<Node>>> = generator(self, maximizing).into_iter().map(|x| Rc::new(RefCell::new(x))).collect();
 
         if !new_branches.is_empty() {
             let mut branches = self.branches.take().unwrap_or_default();
@@ -157,7 +157,7 @@ mod tests {
     fn add_many_branches_with_valid_node_generator_should_add_branches()
     {
         // Arrange
-        let closure = |n: &mut Node| {
+        let closure = |n: &mut Node, m| {
             let mut vec = Vec::new();
             for i in 1..10 {
                 let mut bitboard = BitBoard::default();
@@ -169,7 +169,7 @@ mod tests {
         let mut node = Node::new(Goban::default(), 0);
 
         // Act
-        node.add_many_branches(closure);
+        node.add_many_branches(closure, true);
         let nb_branches = node.count_branch();
 
         // Assert
@@ -270,7 +270,7 @@ mod tests {
     #[test]
     fn test_display_no_assert() {
         // Arrange
-        let closure = |n: &mut Node| {
+        let closure = |n: &mut Node, m| {
             let mut vec = Vec::new();
             for i in 1..10 {
                 let mut bitboard = BitBoard::default();
@@ -282,7 +282,7 @@ mod tests {
         let mut node = Node::new(Goban::default(), 0);
 
         // Act
-        node.add_many_branches(closure);
+        node.add_many_branches(closure, true);
         println!("Here is a node with 9 branches:\n{}", node);
     }
 }
