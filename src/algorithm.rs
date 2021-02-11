@@ -1,5 +1,3 @@
-use std::rc::Rc;
-
 use crate::bitboard::{direction::Direction, new_pattern::*};
 
 use super::{
