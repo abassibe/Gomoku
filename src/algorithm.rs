@@ -211,7 +211,7 @@ impl Algorithm
 
 #[cfg(test)]
 mod tests {
-    use crate::{goban::Goban, tree::node::Node};
+    use crate::{goban::Goban, node::Node};
     use crate::bitboard::BitBoard;
     use crate::algorithm::Algorithm;
 
