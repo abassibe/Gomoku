@@ -1,7 +1,7 @@
 mod goban;
 mod bitboard;
 mod stone;
-mod tree;
+mod node;
 mod algorithm;
 
 use numpy::{PyArray2};

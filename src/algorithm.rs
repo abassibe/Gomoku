@@ -3,7 +3,7 @@ use std::rc::Rc;
 use crate::bitboard::{direction::Direction, new_pattern::*};
 
 use super::{
-    tree::{Tree, node::Node},
+    node::Node,
     goban::{Goban, Fscore},
     bitboard::BitBoard
 };
