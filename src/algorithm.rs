@@ -25,8 +25,8 @@ impl Algorithm
     }
 
     /// Set the initial Node to a new state using the provided Goban.
-    pub fn update_initial_state(&mut self, initial_state: Goban) {
-        let new_initial_node = Node::new(initial_state, 0);
+    pub fn update_initial_state(&mut self, initial_state: Goban, last_move: BitBoard) {
+        let new_initial_node = Node::new(initial_state, 0, last_move);
         self.initial = new_initial_node;
     }
 
@@ -102,7 +102,7 @@ impl Algorithm
                 } else {
                     (*parent.get_item().get_player(), parent.get_item().get_enemy() | b)
                 };
-                Node::new(Goban::new(player, enemy), parent.get_depth() + 1)
+                Node::new(Goban::new(player, enemy), parent.get_depth() + 1, *b)
             })
             .collect()
     }
@@ -283,7 +283,7 @@ mod tests {
             0000000000000000000
         ");
         let mut algo = Algorithm::new();
-        algo.update_initial_state(Goban::new(player, opponent));
+        algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty());
 
         // Act
         let result = algo.get_potential_moves();
@@ -360,7 +360,7 @@ mod tests {
             0000000000000000000
         ");
         let mut algo = Algorithm::new();
-        algo.update_initial_state(Goban::new(player, opponent));
+        algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty());
 
         // Act
         let result = algo.get_potential_moves();
@@ -437,7 +437,7 @@ mod tests {
             0000000000000000000
         ");
         let mut algo = Algorithm::new();
-        algo.update_initial_state(Goban::new(player, opponent));
+        algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty());
 
         // Act
         let result = algo.get_potential_moves();
@@ -514,7 +514,7 @@ mod tests {
             0000000000000000000
         ");
         let mut algo = Algorithm::new();
-        algo.update_initial_state(Goban::new(player, opponent));
+        algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty());
 
         // Act
         let result = algo.get_potential_moves();
@@ -591,7 +591,7 @@ mod tests {
             0000000000000000000
         ");
         let mut algo = Algorithm::new();
-        algo.update_initial_state(Goban::new(player, opponent));
+        algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty());
 
         // Act
         let result = algo.get_potential_moves();
@@ -668,7 +668,7 @@ mod tests {
             0000000000000000000
         ");
         let mut algo = Algorithm::new();
-        algo.update_initial_state(Goban::new(player, opponent));
+        algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty());
 
         // Act
         let result = algo.get_potential_moves();
@@ -745,7 +745,7 @@ mod tests {
             0000000000000000000
         ");
         let mut algo = Algorithm::new();
-        algo.update_initial_state(Goban::new(player, opponent));
+        algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty());
 
         // Act
         let result = algo.get_potential_moves();
@@ -783,21 +783,22 @@ mod tests {
             0000000000000000000
         "));
         let initial = Goban::new(player, enemy);
+        let mut next_move = enemy;
         let mut algo = Algorithm::new();
 
         for _ in 0..10 {
-            algo.update_initial_state(initial);
-            let next_move = algo.get_next_move();
-            if next_move.is_none() { break; }
-            let next_move = next_move.unwrap();
+            algo.update_initial_state(initial, next_move);
+            let next_move_opt = algo.get_next_move();
+            if next_move_opt.is_none() { break; }
+            next_move = next_move_opt.unwrap();
             println!("Here is the next move to play for player:\n{}", next_move);
             player |= next_move;
             println!("Player's BitBoard:\n{}", player);
             let initial = Goban::new(enemy, player);
-            algo.update_initial_state(initial);
-            let next_move = algo.get_next_move();
-            if next_move.is_none() { break; }
-            let next_move = next_move.unwrap();
+            algo.update_initial_state(initial, next_move);
+            let next_move_opt = algo.get_next_move();
+            if next_move_opt.is_none() { break; }
+            next_move = next_move_opt.unwrap();
             println!("Here is the next move to play for enemy:\n{}", next_move);
             enemy |= next_move;
             println!("Enemy's BitBoard:\n{}", enemy);

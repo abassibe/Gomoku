@@ -1,7 +1,7 @@
 pub(crate) mod node;
 
 use node::Node;
-use crate::goban::Goban;
+use crate::{bitboard::BitBoard, goban::Goban};
 
 pub struct Tree
 {
@@ -16,7 +16,7 @@ impl Tree
     pub fn new(root_item: Goban) -> Self {
         Self {
             depth: 0,
-            root: Node::new(root_item, 0)
+            root: Node::new(root_item, 0, BitBoard::empty())
         }
     }
 }

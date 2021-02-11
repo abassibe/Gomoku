@@ -34,6 +34,7 @@ pub struct Node
     /// `item` is the inner value which is holded by a Node.
     item: Goban,
     depth: usize,
+    last_move: BitBoard,
     /// `branches` is a [`BinaryHeap`], wrapped in an [`Option`], which hold child nodes.
     /// The type `Branches` is used for convenience and is just an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
     branches: Option<Branches>,
@@ -72,10 +73,11 @@ impl Hash for Node {
 }
 
 impl Node {
-    pub fn new(item: Goban, depth: usize) -> Self {
+    pub fn new(item: Goban, depth: usize, last_move: BitBoard) -> Self {
         Self {
             item,
             depth,
+            last_move,
             branches: None
         }
     }
@@ -96,8 +98,8 @@ impl Node {
         self.item.compute_fscore(previous_state, to_play, depth)
     }
 
-    pub fn add_branch(&mut self, item: Goban) -> Rc<RefCell<Self>> {
-        let new_node = Rc::new(RefCell::new(Self::new(item, self.depth + 1)));
+    pub fn add_branch(&mut self, item: Goban, last_move: BitBoard) -> Rc<RefCell<Self>> {
+        let new_node = Rc::new(RefCell::new(Self::new(item, self.depth + 1, last_move)));
         let mut branches = self.branches.take().unwrap_or_default();
 
         branches.push(Rc::clone(&new_node));
@@ -162,11 +164,11 @@ mod tests {
             for i in 1..10 {
                 let mut bitboard = BitBoard::default();
                 bitboard.set(i, true);
-                vec.push(Node::new(Goban::new(bitboard, bitboard), n.depth + 1));
+                vec.push(Node::new(Goban::new(bitboard, bitboard), n.depth + 1, BitBoard::empty()));
             }
             vec
         };
-        let mut node = Node::new(Goban::default(), 0);
+        let mut node = Node::new(Goban::default(), 0, BitBoard::empty());
 
         // Act
         node.add_many_branches(closure, true);
@@ -183,6 +185,7 @@ mod tests {
         let node = Node {
             item: Goban::new(bitboard, bitboard),
             depth: 0,
+            last_move: BitBoard::empty(),
             branches: Some(Branches::new())
         };
 
@@ -200,6 +203,7 @@ mod tests {
         let node = Node {
             item: Goban::new(bitboard, bitboard),
             depth: 0,
+            last_move: BitBoard::empty(),
             branches: None
         };
 
@@ -218,16 +222,19 @@ mod tests {
             Rc::new(RefCell::new(Node {
                 item: Goban::new(bitboards[0], bitboards[1]),
                 depth: 1,
+                last_move: BitBoard::empty(),
                 branches: None
             })),
             Rc::new(RefCell::new(Node {
                 item: Goban::new(bitboards[1], bitboards[0]),
                 depth: 1,
+                last_move: BitBoard::empty(),
                 branches: None
             })),
             Rc::new(RefCell::new(Node {
                 item: Goban::new(bitboards[0], bitboards[0]),
                 depth: 1,
+                last_move: BitBoard::empty(),
                 branches: None
             }))
         );
@@ -238,6 +245,7 @@ mod tests {
         let node = Node {
             item: Goban::new(bitboards[1], bitboards[1]),
             depth: 0,
+            last_move: BitBoard::empty(),
             branches: Some(branches)
         };
 
@@ -255,11 +263,12 @@ mod tests {
         let mut node = Node {
             item: Goban::new(bitboards[0], bitboards[1]),
             depth: 0,
+            last_move: BitBoard::empty(),
             branches: None
         };
 
         // Act
-        let new_node = node.add_branch(Goban::new(bitboards[1], bitboards[0]));
+        let new_node = node.add_branch(Goban::new(bitboards[1], bitboards[0]), BitBoard::empty());
         let nb_branches = node.count_branch();
 
         // Assert
@@ -268,6 +277,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn test_display_no_assert() {
         // Arrange
         let closure = |n: &mut Node, m| {
@@ -275,11 +285,11 @@ mod tests {
             for i in 1..10 {
                 let mut bitboard = BitBoard::default();
                 bitboard.set(i, true);
-                vec.push(Node::new(Goban::new(bitboard, bitboard), n.depth + 1));
+                vec.push(Node::new(Goban::new(bitboard, bitboard), n.depth + 1, BitBoard::empty()));
             }
             vec
         };
-        let mut node = Node::new(Goban::default(), 0);
+        let mut node = Node::new(Goban::default(), 0, BitBoard::empty());
 
         // Act
         node.add_many_branches(closure, true);
