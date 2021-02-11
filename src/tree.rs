@@ -16,7 +16,7 @@ impl Tree
     pub fn new(root_item: Goban) -> Self {
         Self {
             depth: 0,
-            root: Node::new(root_item, 0, BitBoard::empty())
+            root: Node::new(root_item, 0, BitBoard::empty(), 0, 0)
         }
     }
 }
