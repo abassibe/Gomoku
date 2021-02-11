@@ -1,3 +1,5 @@
+use std::slice::Iter;
+
 use super::direction::Direction;
 
 const ARRAY_SIZE: usize = 4;
@@ -52,6 +54,10 @@ impl AxisIterator {
             index: 0,
             axises: [Direction::W, Direction::N, Direction::NW, Direction::NE]
         }
+    }
+
+    pub fn as_array_iter() -> Iter<'static, Direction> {
+        [Direction::W, Direction::N, Direction::NW, Direction::NE].iter()
     }
 }
 

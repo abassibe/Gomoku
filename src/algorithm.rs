@@ -1,5 +1,7 @@
 use std::rc::Rc;
 
+use crate::bitboard::{direction::Direction, new_pattern::*};
+
 use super::{
     tree::{Tree, node::Node},
     goban::{Goban, Fscore},
@@ -10,6 +12,9 @@ use super::{
 pub struct Algorithm
 {
     initial: Node,
+    patterns: NewPattern,
+    player_captures: u8,
+    opponent_captures: u8
 }
 
 impl Algorithm
@@ -102,6 +107,93 @@ impl Algorithm
             .collect()
     }
 
+    #[inline]
+    fn get_first_move(player: BitBoard, opponent: BitBoard) -> BitBoard {
+        match (player.is_empty(), opponent.is_empty()) {
+            (true, false) => (opponent + Direction::All) & !player,
+            (true, true) => BitBoard::CENTER_BIT_SET,
+            (false, _) => BitBoard::empty()
+        }
+    }
+
+    #[inline]
+    fn counter_five_aligned(&self, player: BitBoard, opponent: BitBoard, player_captures: u8) -> BitBoard {
+        let mut result = extract_five_align_breaking_moves(player, opponent, &self.patterns);
+
+        if result.is_empty() {
+            extract_winning_move_capture(player, opponent, player_captures, &self.patterns)
+        } else {
+            result
+        }
+    }
+
+    #[inline]
+    fn compute_illegal_moves(&self) -> BitBoard {
+        let goban = self.initial.get_item();
+        let player = *goban.get_player();
+        let opponent = *goban.get_enemy();
+
+        extract_illegal_moves(player, opponent, &self.patterns)
+    }
+
+    fn get_potential_moves(&self) -> BitBoard {
+        let goban = self.initial.get_item();
+        let player = *goban.get_player();
+        let opponent = *goban.get_enemy();
+        let player_captures = self.player_captures;
+        let opponent_captures = self.opponent_captures;
+        let open_cells = !(player | opponent);
+        let illegal_moves_complement = !self.compute_illegal_moves();
+
+        if player.is_empty() {
+            return open_cells & Self::get_first_move(player, opponent);
+        }
+
+        if opponent.contains_five_aligned() {
+            let result = self.counter_five_aligned(player, opponent, player_captures);
+            if result.is_any() {
+                return result & open_cells;
+            }
+        }
+
+        let result = extract_winning_moves_from_player(player, opponent, player_captures, opponent_captures, &self.patterns);
+        if result.is_any() {
+            return result;
+        }
+
+        let result = extract_winning_moves_from_player(opponent, player, opponent_captures, player_captures, &self.patterns);
+        if result.is_any() {
+            let (pattern, pattern_size, is_sym) = self.patterns[PatternName::Five];
+            return result | extract_missing_bit(player, opponent, pattern, pattern_size, is_sym);
+        }
+
+        let mut result = extract_threatening_moves_from_player(player, opponent, opponent_captures, &self.patterns);
+        result |= extract_capturing_moves(opponent, player, &self.patterns);
+        result |= extract_missing_bit(player, opponent, GET_MOVES_PATTERNS[0].0, GET_MOVES_PATTERNS[0].1, GET_MOVES_PATTERNS[0].2);
+        result |= extract_missing_bit(player, opponent, GET_MOVES_PATTERNS[1].0, GET_MOVES_PATTERNS[1].1, GET_MOVES_PATTERNS[1].2);
+        result |= extract_capturing_moves(player, opponent, &self.patterns);
+
+        if result.count_ones() > 4 {
+            return result & open_cells & illegal_moves_complement;
+        }
+
+        result |= extract_threatening_moves_from_opponent(player, opponent, GET_MOVES_PATTERNS[2].0, GET_MOVES_PATTERNS[2].1, GET_MOVES_PATTERNS[2].2);
+        result |= extract_missing_bit(player, opponent, GET_MOVES_PATTERNS[3].0, GET_MOVES_PATTERNS[3].1, GET_MOVES_PATTERNS[3].2);
+        result |= extract_missing_bit(player, opponent, GET_MOVES_PATTERNS[4].0, GET_MOVES_PATTERNS[4].1, GET_MOVES_PATTERNS[4].2);
+
+        if result.count_ones() > 4 {
+            return result & open_cells & illegal_moves_complement;
+        }
+
+        result |= extract_missing_bit(player, opponent, GET_MOVES_PATTERNS[5].0, GET_MOVES_PATTERNS[5].1, GET_MOVES_PATTERNS[5].2);
+
+        if result.count_ones() > 2 {
+            return result & open_cells & illegal_moves_complement;
+        }
+
+        (result | (player + Direction::All)) & open_cells & illegal_moves_complement
+    }
+
     // fn set_with_capture(state: BitBoard, to_play: &BitBoard) -> BitBoard {
     //     let next_state = 
     // }
@@ -123,6 +215,545 @@ mod tests {
     use crate::goban::Goban;
     use crate::bitboard::BitBoard;
     use crate::algorithm::Algorithm;
+
+    #[test]
+    fn test_get_potential_moves_with_one_unbreakable_five() {
+        // Arrange
+        let player = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000001010000000
+            0000000000000000000
+            0000000000000000000
+            0000000001000000000
+            0000000000100000000
+            0000000000010000000
+            0000000100000100000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let opponent = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000001000000
+            0000000000010000000
+            0000001110100000000
+            0000000001000000000
+            0000000010000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000011011000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let expected = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000100000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000100000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000100000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let mut algo = Algorithm::new();
+        algo.update_initial_state(Goban::new(player, opponent));
+
+        // Act
+        let result = algo.get_potential_moves();
+        println!("Here is the result:\n{}", result);
+
+        // Assert
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_get_potential_moves_with_one_breakable_five() {
+        // Arrange
+        let player = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000100000000000
+            0000000001010000000
+            0000000000000000000
+            0000000000000000000
+            0000000001000000000
+            0000000000100000000
+            0000000000010000000
+            0000000100000100000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let opponent = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000001000000
+            0000000000010000000
+            0000001110100000000
+            0000000001000000000
+            0000000010000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000011011000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let expected = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000100000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let mut algo = Algorithm::new();
+        algo.update_initial_state(Goban::new(player, opponent));
+
+        // Act
+        let result = algo.get_potential_moves();
+        println!("Here is the result:\n{}", result);
+
+        // Assert
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_get_potential_moves_with_multiple_threats_and_one_split_four() {
+        // Arrange
+        let player = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000001010000000
+            0000000000000000000
+            0000000000000000000
+            0000000001000000000
+            0000000000100000000
+            0000000000010000000
+            0000000100000100000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let opponent = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000001110100000000
+            0000000001000000000
+            0000000010000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000011011000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let expected = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000100000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let mut algo = Algorithm::new();
+        algo.update_initial_state(Goban::new(player, opponent));
+
+        // Act
+        let result = algo.get_potential_moves();
+        println!("Here is the result:\n{}", result);
+
+        // Assert
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_get_potential_moves_with_threat_from_opponent() {
+        // Arrange
+        let player = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000001000000000
+            0000000000100000000
+            0000000000010000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let opponent = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000100000000
+            0000000001000000000
+            0000000010000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let expected = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000010000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000100000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000001000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let mut algo = Algorithm::new();
+        algo.update_initial_state(Goban::new(player, opponent));
+
+        // Act
+        let result = algo.get_potential_moves();
+        println!("Here is the result:\n{}", result);
+
+        // Assert
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_get_potential_moves_with_first_turn_completed() {
+        // Arrange
+        let player = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000001000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let opponent = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000010000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let expected = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000001100000000
+            0000000010100000000
+            0000000011100000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let mut algo = Algorithm::new();
+        algo.update_initial_state(Goban::new(player, opponent));
+
+        // Act
+        let result = algo.get_potential_moves();
+        println!("Here is the result:\n{}", result);
+
+        // Assert
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_get_potential_moves_with_no_move_played() {
+        // Arrange
+        let player = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let opponent = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let expected = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000001000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let mut algo = Algorithm::new();
+        algo.update_initial_state(Goban::new(player, opponent));
+
+        // Act
+        let result = algo.get_potential_moves();
+        println!("Here is the result:\n{}", result);
+
+        // Assert
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_get_potential_moves_with_only_one_opponent_move() {
+        // Arrange
+        let player = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let opponent = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000001000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let expected = BitBoard::from_str("
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000011100000000
+            0000000010100000000
+            0000000011100000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+            0000000000000000000
+        ");
+        let mut algo = Algorithm::new();
+        algo.update_initial_state(Goban::new(player, opponent));
+
+        // Act
+        let result = algo.get_potential_moves();
+        println!("Here is the result:\n{}", result);
+
+        // Assert
+        assert_eq!(expected, result);
+    }
 
     #[test]
     // This test is quite time-consuming and serves basically no purpose at this point,
