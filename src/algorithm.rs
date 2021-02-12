@@ -25,8 +25,8 @@ impl Algorithm
     }
 
     /// Set the initial Node to a new state using the provided Goban.
-    pub fn update_initial_state(&mut self, initial_state: Goban) {
-        let new_initial_node = Node::new(initial_state, 0);
+    pub fn update_initial_state(&mut self, initial_state: Goban, last_move: BitBoard, player_captures: u8, opponent_captures:u8) {
+        let new_initial_node = Node::new(initial_state, 0, last_move, player_captures, opponent_captures);
         self.initial = new_initial_node;
     }
 
@@ -102,7 +102,7 @@ impl Algorithm
                 } else {
                     (*parent.get_item().get_player(), parent.get_item().get_enemy() | b)
                 };
-                Node::new(Goban::new(player, enemy), parent.get_depth() + 1)
+                Node::new(Goban::new(player, enemy), parent.get_depth() + 1, *b, 0, 0)
             })
             .collect()
     }
@@ -200,19 +200,20 @@ impl Algorithm
 
     /// This mehtod is likely to change in a near future because I'm not sure what to return.
     /// For now it returns a BitBoard that contains the next move to play.
-    pub fn get_next_move(&mut self) -> Option<BitBoard> {
+    pub fn get_next_move(&mut self) -> Option<Node> {
         let next_state = Self::minimax(&mut self.initial, 1, Fscore::MIN, Fscore::MAX, true);
         if next_state == self.initial {
             None
         } else {
-            Some(next_state.get_item().get_player() ^ self.initial.get_item().get_player())
+            Some(next_state)
+            // Some(next_state.get_item().get_player() ^ self.initial.get_item().get_player())
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::goban::Goban;
+    use crate::{goban::Goban, tree::node::Node};
     use crate::bitboard::BitBoard;
     use crate::algorithm::Algorithm;
 
@@ -283,7 +284,7 @@ mod tests {
             0000000000000000000
         ");
         let mut algo = Algorithm::new();
-        algo.update_initial_state(Goban::new(player, opponent));
+        algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty(), 0, 0);
 
         // Act
         let result = algo.get_potential_moves();
@@ -360,7 +361,7 @@ mod tests {
             0000000000000000000
         ");
         let mut algo = Algorithm::new();
-        algo.update_initial_state(Goban::new(player, opponent));
+        algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty(), 0, 0);
 
         // Act
         let result = algo.get_potential_moves();
@@ -437,7 +438,7 @@ mod tests {
             0000000000000000000
         ");
         let mut algo = Algorithm::new();
-        algo.update_initial_state(Goban::new(player, opponent));
+        algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty(), 0, 0);
 
         // Act
         let result = algo.get_potential_moves();
@@ -514,7 +515,7 @@ mod tests {
             0000000000000000000
         ");
         let mut algo = Algorithm::new();
-        algo.update_initial_state(Goban::new(player, opponent));
+        algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty(), 0, 0);
 
         // Act
         let result = algo.get_potential_moves();
@@ -591,7 +592,7 @@ mod tests {
             0000000000000000000
         ");
         let mut algo = Algorithm::new();
-        algo.update_initial_state(Goban::new(player, opponent));
+        algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty(), 0, 0);
 
         // Act
         let result = algo.get_potential_moves();
@@ -668,7 +669,7 @@ mod tests {
             0000000000000000000
         ");
         let mut algo = Algorithm::new();
-        algo.update_initial_state(Goban::new(player, opponent));
+        algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty(), 0, 0);
 
         // Act
         let result = algo.get_potential_moves();
@@ -745,7 +746,7 @@ mod tests {
             0000000000000000000
         ");
         let mut algo = Algorithm::new();
-        algo.update_initial_state(Goban::new(player, opponent));
+        algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty(), 0, 0);
 
         // Act
         let result = algo.get_potential_moves();
@@ -782,26 +783,29 @@ mod tests {
             0000000000000000000
             0000000000000000000
         "));
-        let initial = Goban::new(player, enemy);
+        let mut next_move = enemy;
         let mut algo = Algorithm::new();
+        let mut result_node = Node::default();
 
         for _ in 0..10 {
-            algo.update_initial_state(initial);
-            let next_move = algo.get_next_move();
-            if next_move.is_none() { break; }
-            let next_move = next_move.unwrap();
+            let initial = Goban::new(player, enemy);
+            algo.update_initial_state(initial, next_move, result_node.get_player_captures(), result_node.get_opponent_captures());
+            let next_move_opt = algo.get_next_move();
+            if next_move_opt.is_none() { break; }
+            result_node = next_move_opt.unwrap();
+            next_move = result_node.get_item().get_player() ^ initial.get_player();
             println!("Here is the next move to play for player:\n{}", next_move);
             player |= next_move;
             println!("Player's BitBoard:\n{}", player);
             let initial = Goban::new(enemy, player);
-            algo.update_initial_state(initial);
-            let next_move = algo.get_next_move();
-            if next_move.is_none() { break; }
-            let next_move = next_move.unwrap();
+            algo.update_initial_state(initial, next_move, result_node.get_opponent_captures(), result_node.get_player_captures());
+            let next_move_opt = algo.get_next_move();
+            if next_move_opt.is_none() { break; }
+            result_node = next_move_opt.unwrap();
+            next_move = result_node.get_item().get_player() ^ initial.get_player();
             println!("Here is the next move to play for enemy:\n{}", next_move);
             enemy |= next_move;
             println!("Enemy's BitBoard:\n{}", enemy);
-            let initial = Goban::new(player, enemy);
         }
         todo!();
     }
