@@ -32,7 +32,7 @@ impl Algorithm
     }
 
     // TODO: There is a lot of duplicated code in this function, we should refactor it.
-    fn minimax(node: &mut Node, depth: u32, mut alpha: Fscore, mut beta: Fscore, maximizing: bool) -> Node {
+    fn minimax(&self, node: &mut Node, depth: u32, mut alpha: Fscore, mut beta: Fscore, maximizing: bool) -> Node {
         let current_goban = node.get_item().clone();
         if depth == 0 {
             // TODO: We have to passe the potential next move to compute_item_fscore but we don't have it at this point
@@ -48,11 +48,11 @@ impl Algorithm
 
         if maximizing {
             fscore = Fscore::Value(isize::MIN);
-            node.add_many_branches(Self::node_generator, maximizing);
+            node.add_many_branches(self.node_generator(&node, maximizing));
             let children = node.get_branches();
             if let Some(children) = children {
                 for child in children {
-                    let grandchild = Self::minimax(&mut child.borrow_mut(), depth - 1, alpha, beta, !maximizing);
+                    let grandchild = self.minimax(&mut child.borrow_mut(), depth - 1, alpha, beta, !maximizing);
                     let grandchild_fscore = grandchild.get_item().get_fscore();
                     child.borrow_mut().set_item_fscore(grandchild_fscore);
                     if fscore < grandchild_fscore {
@@ -68,11 +68,11 @@ impl Algorithm
         }
         else {
             fscore = Fscore::Value(isize::MAX);
-            node.add_many_branches(Self::node_generator, maximizing);
+            node.add_many_branches(self.node_generator(&node, maximizing));
             let children = node.get_branches();
             if let Some(children) = children {
                 for child in children {
-                    let grandchild = Self::minimax(&mut child.borrow_mut(), depth - 1, alpha, beta, !maximizing);
+                    let grandchild = self.minimax(&mut child.borrow_mut(), depth - 1, alpha, beta, !maximizing);
                     let grandchild_fscore = grandchild.get_item().get_fscore();
                     child.borrow_mut().set_item_fscore(grandchild_fscore);
                     if fscore > grandchild_fscore {
@@ -90,20 +90,42 @@ impl Algorithm
         candidate
     }
 
-    fn node_generator(parent: &mut Node, maximazing: bool) -> Vec<Node> {
-        parent
-            .get_item()
-            .list_neighbours()
+    // TODO: Could be more efficient to calculate the score for each new node
+    // and then sort the resulting Vec<Node> according this score.
+    fn node_generator(&self, parent: &Node, maximazing: bool) -> Vec<Node> {
+        let parent_goban = parent.get_item();
+        let parent_player = parent_goban.get_player();
+        let parent_enemy = parent_goban.get_enemy();
+        let parent_player_captures = parent.get_player_captures();
+        let parent_enemy_captures = parent.get_opponent_captures();
+
+        self.get_potential_moves(parent)
             .enumerate()
             .iter()
             .map(|b| {
+                let mut player_captures = parent_player_captures;
+                let mut enemy_captures = parent_enemy_captures;
                 let (player, enemy) =
                 if maximazing {
-                    (parent.get_item().get_player() | b, *parent.get_item().get_enemy())
+                    let player_with_move = parent_player | b;
+                    let captured_by_player = extract_captured_by_move(player_with_move, *parent_enemy, *b, &self.patterns);
+                    if captured_by_player.is_any() {
+                        player_captures += (captured_by_player.count_ones() / 2) as u8;
+                        (player_with_move, parent_enemy ^ &captured_by_player)
+                    } else {
+                        (player_with_move, *parent_enemy)
+                    }
                 } else {
-                    (*parent.get_item().get_player(), parent.get_item().get_enemy() | b)
+                    let enemy_with_move = parent_enemy | b;
+                    let captured_by_enemy = extract_captured_by_move(enemy_with_move, *parent_player, *b, &self.patterns);
+                    if captured_by_enemy.is_any() {
+                        enemy_captures += (captured_by_enemy.count_ones() / 2) as u8;
+                        (parent_player ^ &captured_by_enemy, enemy_with_move)
+                    } else {
+                        (*parent_player, enemy_with_move)
+                    }
                 };
-                Node::new(Goban::new(player, enemy), parent.get_depth() + 1, *b, 0, 0)
+                Node::new(Goban::new(player, enemy), parent.get_depth() + 1, *b, player_captures, enemy_captures)
             })
             .collect()
     }
@@ -128,23 +150,14 @@ impl Algorithm
         }
     }
 
-    #[inline]
-    fn compute_illegal_moves(&self) -> BitBoard {
-        let goban = self.initial.get_item();
+    fn get_potential_moves(&self, parent: &Node) -> BitBoard {
+        let goban = parent.get_item();
         let player = *goban.get_player();
         let opponent = *goban.get_enemy();
-
-        extract_illegal_moves(player, opponent, &self.patterns)
-    }
-
-    fn get_potential_moves(&self) -> BitBoard {
-        let goban = self.initial.get_item();
-        let player = *goban.get_player();
-        let opponent = *goban.get_enemy();
-        let player_captures = self.player_captures;
-        let opponent_captures = self.opponent_captures;
+        let player_captures = parent.get_player_captures();
+        let opponent_captures = parent.get_opponent_captures();
         let open_cells = !(player | opponent);
-        let illegal_moves_complement = !self.compute_illegal_moves();
+        let illegal_moves_complement = !extract_illegal_moves(player, opponent, &self.patterns);
 
         if player.is_empty() {
             return open_cells & Self::get_first_move(player, opponent);
@@ -195,14 +208,13 @@ impl Algorithm
         (result | (player + Direction::All)) & open_cells & illegal_moves_complement
     }
 
-    // fn set_with_capture(state: BitBoard, to_play: &BitBoard) -> BitBoard {
-    //     let next_state = 
-    // }
-
+    // TODO: We maybe can do better here, self probably doesn't need to be mutable.
+    // Maybe we should pass the inital Node directly without passing by the initial property of Algorithm?
     /// This mehtod is likely to change in a near future because I'm not sure what to return.
     /// For now it returns a BitBoard that contains the next move to play.
     pub fn get_next_move(&mut self) -> Option<Node> {
-        let next_state = Self::minimax(&mut self.initial, 1, Fscore::MIN, Fscore::MAX, true);
+        let mut initial = self.initial.clone();
+        let next_state = self.minimax(&mut initial, 3, Fscore::MIN, Fscore::MAX, true);
         if next_state == self.initial {
             None
         } else {

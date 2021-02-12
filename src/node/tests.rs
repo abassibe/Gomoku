@@ -23,9 +23,10 @@ fn add_many_branches_with_valid_node_generator_should_add_branches()
         vec
     };
     let mut node = Node::new(Goban::default(), 0, BitBoard::empty(), 0, 0);
+    let new_branches = closure(&mut node, true);
 
     // Act
-    node.add_many_branches(closure, true);
+    node.add_many_branches(new_branches);
     let nb_branches = node.count_branch();
 
     // Assert
@@ -158,8 +159,9 @@ fn test_display_no_assert() {
         vec
     };
     let mut node = Node::new(Goban::default(), 0, BitBoard::empty(), 0, 0);
+    let new_branches = closure(&mut node, true);
 
     // Act
-    node.add_many_branches(closure, true);
+    node.add_many_branches(new_branches);
     println!("Here is a node with 9 branches:\n{}", node);
 }
