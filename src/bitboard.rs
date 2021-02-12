@@ -12,7 +12,6 @@ use axis::*;
 
 const BITS_IN_U128: usize = size_of::<u128>() * 8;
 const U8_FIRST_BIT: u8 = 1u8 << 7;
-const U8_TWO_FIRST_BITS: u8 = 3u8 << 6;
 
 // TODO: Implement method to get/set ~one or~ several bits by index
 // TODO: Implement method to get/set one or several bits by coordonate (X, Y flatten to index then call previous method above)
