@@ -135,8 +135,8 @@ impl Node {
     }
 
     /// A method that add many branches at once using the closure `generator`.
-    pub fn add_many_branches<F: Fn(&mut Self, bool) -> Vec<Node>>(&mut self, generator: F, maximizing: bool) {
-        let mut new_branches: BinaryHeap<Rc<RefCell<Node>>> = generator(self, maximizing).into_iter().map(|x| Rc::new(RefCell::new(x))).collect();
+    pub fn add_many_branches(&mut self, new_branches: Vec<Node>) {
+        let mut new_branches: BinaryHeap<Rc<RefCell<Node>>> = new_branches.into_iter().map(|x| Rc::new(RefCell::new(x))).collect();
 
         if !new_branches.is_empty() {
             let mut branches = self.branches.take().unwrap_or_default();
