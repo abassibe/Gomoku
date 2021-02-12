@@ -208,10 +208,6 @@ impl Algorithm
         (result | (player + Direction::All)) & open_cells & illegal_moves_complement
     }
 
-    // fn set_with_capture(state: BitBoard, to_play: &BitBoard) -> BitBoard {
-    //     let next_state = 
-    // }
-
     // TODO: We maybe can do better here, self probably doesn't need to be mutable.
     // Maybe we should pass the inital Node directly without passing by the initial property of Algorithm?
     /// This mehtod is likely to change in a near future because I'm not sure what to return.
