@@ -90,6 +90,8 @@ impl Algorithm
         candidate
     }
 
+    // TODO: Could be more efficient to calculate the score for each new node
+    // and then sort the resulting Vec<Node> according this score.
     fn node_generator(&self, parent: &Node, maximazing: bool) -> Vec<Node> {
         let parent_goban = parent.get_item();
         let parent_player = parent_goban.get_player();
