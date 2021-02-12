@@ -128,23 +128,14 @@ impl Algorithm
         }
     }
 
-    #[inline]
-    fn compute_illegal_moves(&self) -> BitBoard {
-        let goban = self.initial.get_item();
+    fn get_potential_moves(&self, parent: &Node) -> BitBoard {
+        let goban = parent.get_item();
         let player = *goban.get_player();
         let opponent = *goban.get_enemy();
-
-        extract_illegal_moves(player, opponent, &self.patterns)
-    }
-
-    fn get_potential_moves(&self) -> BitBoard {
-        let goban = self.initial.get_item();
-        let player = *goban.get_player();
-        let opponent = *goban.get_enemy();
-        let player_captures = self.player_captures;
-        let opponent_captures = self.opponent_captures;
+        let player_captures = parent.get_player_captures();
+        let opponent_captures = parent.get_opponent_captures();
         let open_cells = !(player | opponent);
-        let illegal_moves_complement = !self.compute_illegal_moves();
+        let illegal_moves_complement = !extract_illegal_moves(player, opponent, &self.patterns);
 
         if player.is_empty() {
             return open_cells & Self::get_first_move(player, opponent);

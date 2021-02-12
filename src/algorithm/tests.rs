@@ -72,7 +72,7 @@ fn test_get_potential_moves_with_one_unbreakable_five() {
     algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty(), 0, 0);
 
     // Act
-    let result = algo.get_potential_moves();
+    let result = algo.get_potential_moves(&algo.initial);
     println!("Here is the result:\n{}", result);
 
     // Assert
@@ -149,7 +149,7 @@ fn test_get_potential_moves_with_one_breakable_five() {
     algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty(), 0, 0);
 
     // Act
-    let result = algo.get_potential_moves();
+    let result = algo.get_potential_moves(&algo.initial);
     println!("Here is the result:\n{}", result);
 
     // Assert
@@ -226,7 +226,7 @@ fn test_get_potential_moves_with_multiple_threats_and_one_split_four() {
     algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty(), 0, 0);
 
     // Act
-    let result = algo.get_potential_moves();
+    let result = algo.get_potential_moves(&algo.initial);
     println!("Here is the result:\n{}", result);
 
     // Assert
@@ -303,7 +303,7 @@ fn test_get_potential_moves_with_threat_from_opponent() {
     algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty(), 0, 0);
 
     // Act
-    let result = algo.get_potential_moves();
+    let result = algo.get_potential_moves(&algo.initial);
     println!("Here is the result:\n{}", result);
 
     // Assert
@@ -380,7 +380,7 @@ fn test_get_potential_moves_with_first_turn_completed() {
     algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty(), 0, 0);
 
     // Act
-    let result = algo.get_potential_moves();
+    let result = algo.get_potential_moves(&algo.initial);
     println!("Here is the result:\n{}", result);
 
     // Assert
@@ -457,7 +457,7 @@ fn test_get_potential_moves_with_no_move_played() {
     algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty(), 0, 0);
 
     // Act
-    let result = algo.get_potential_moves();
+    let result = algo.get_potential_moves(&algo.initial);
     println!("Here is the result:\n{}", result);
 
     // Assert
@@ -534,7 +534,7 @@ fn test_get_potential_moves_with_only_one_opponent_move() {
     algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty(), 0, 0);
 
     // Act
-    let result = algo.get_potential_moves();
+    let result = algo.get_potential_moves(&algo.initial);
     println!("Here is the result:\n{}", result);
 
     // Assert
