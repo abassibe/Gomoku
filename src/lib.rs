@@ -101,17 +101,13 @@ fn launch_ai(input: Goban) -> (u32, u32) {
 
 fn get_win_coord(previous: BitBoard, current: BitBoard) -> (u32, u32) {
     let mut pos = previous ^ current;
-    let to_compare = BitBoard::FIRST_BIT_SET;
+    // println!("PREV:\n{}\nCUR:\n{}", previous, current);
+    println!("{}", pos);
 
-    let mut i = 0;
-    while (pos & to_compare).is_empty()
-    {
-        pos = pos << 1;
-        i += 1;
-        // println!("{}", pos);
-    }
-    println!("I is = {}, coord = {:?}", i, (i / 19, i % 19));
-    (i / 19, i % 19)
+    let i : u32 = *pos.get_bit_indexes().last().unwrap() as u32;
+    println!("I is = {}, coord = {:?}", i, (i / 20, i % 20));
+    // println!("{}", pos);
+    (i / 20, i % 20)
 }
 
 #[cfg(test)]
