@@ -7,6 +7,7 @@ import windowBuilding
 import buttonEventHandler
 import options
 import gameManager
+import rust_ext as rst
 from random import randint
 import time
 import rulesSet
@@ -89,11 +90,12 @@ def tmpAlgo(board, color, hint):
     tmp = window.gameManager.rules.getValidPoints(board, color)
     # if tmp == None:
     #     return 9, 9
+    print(board + "\n")
     return tmp[randint(0, len(tmp) - 1)]
 
 
 app = PyQt5.QtWidgets.QApplication(sys.argv)
 window = MainWindow()
-algoSubscribe(tmpAlgo)
+algoSubscribe(rst.get_next_move)
 window.show()
 app.exec()

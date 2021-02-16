@@ -89,8 +89,8 @@ impl fmt::Display for Fscore {
 #[derive(Clone, Debug, Default, Copy)]
 pub struct Goban
 {
+	pub board: BitBoard,
 	fscore: Fscore,
-	board: BitBoard,
 	player: BitBoard,
 	enemy: BitBoard,
 }

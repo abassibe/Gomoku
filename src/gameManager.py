@@ -88,7 +88,7 @@ class ComputerPlayer():
 class GameBoard():
     def __init__(self, window):
         self.window = window
-        self.grid = np.zeros(shape=(19, 19), dtype=int)
+        self.grid = np.zeros(shape=(19, 19), dtype=np.uint8)
         self.placedPoint = []
         self.placedHint = []
 
@@ -157,7 +157,7 @@ class GameBoard():
         self.window.update()
 
     def clear(self):
-        self.grid = np.zeros(shape=(19, 19), dtype=int)
+        self.grid = np.zeros(shape=(19, 19), dtype=np.uint8)
         for stone in self.placedPoint:
             stone.widget().clear()
         self.placedPoint = []
