@@ -9,11 +9,9 @@ use pyo3::prelude::{pymodule, Py, PyModule, PyResult, Python};
 use pyo3::{exceptions, PyAny};
 use pyo3::types::{PyBool};
 use goban::Goban;
-use rand::Rng;
 use crate::bitboard::BitBoard;
 use crate::algorithm::Algorithm;
 use crate::node::Node;
-use rayon::current_num_threads;
 
 // Comment rajouter une fonction python sur rust
 // Simplement rajouter dans le block pymodule une fonction rust avec obligatoirement une instance Python<'_>, et si applicable un PyResult pour le retour
@@ -30,12 +28,10 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         if board.len() != 361 {
             return Err(exceptions::PyTypeError::new_err(format!("Fatal Rust Error: Invalid board size (Expected 361, got {})", board.len())));
         }
-        let mut rng = rand::thread_rng();
 
         let goban = pystring_to_goban(vec_to_string(board), p_color);
         println!("\nCOLOR IS ={}\n\nPLAYER(AI)\n{}\nENEMY\n{}", p_color, goban.get_player(), goban.get_enemy());
 
-        // let ret = (rng.gen_range(1..18), rng.gen_range(1..18)); //placeholder
         if goban.board.is_empty() {
             return Ok((9u32, 9u32));
         }
@@ -51,16 +47,6 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         if board.len() != 361 {
             return Err(exceptions::PyTypeError::new_err(format!("Fatal Rust Error: Invalid board size (Expected 361, got {})", board.len())));
         }
-
-        let str_board: String = board.into_iter().enumerate().map(|(x, i)|{
-            if x % 19 == 0 {
-                "\n".to_owned() + &i.to_string()
-            }
-            else {
-                i.to_string()
-            }
-        }).collect::<String>();
-        println!("{}", BitBoard::from_str(&str_board));
         Ok(1u8)
     }
     Ok(())
