@@ -80,15 +80,15 @@ fn launch_ai(input: Goban) -> (u32, u32) {
     let mut algorithm = Algorithm::new();
     let mut ret_node = Node::default();
     algorithm.update_initial_state(input, *input.get_enemy(), ret_node.get_player_captures(), ret_node.get_opponent_captures());
-    let ret = algorithm.get_next_move().unwrap();
+    let ret = algorithm.get_next_move(5).unwrap();
 
     get_win_coord(input.board, ret.get_item().board)
 }
 
 fn get_win_coord(previous: BitBoard, current: BitBoard) -> (u32, u32) {
     let mut pos = previous ^ current;
-    // println!("PREV:\n{}\nCUR:\n{}", previous, current);
-    println!("{}", pos);
+    println!("PREV:\n{}\nCUR:\n{}", previous, current);
+    println!("UNIQUE POS:\n{}", pos);
 
     let i : u32 = *pos.get_bit_indexes().last().unwrap() as u32;
     println!("I is = {}, coord = {:?}", i, (i / 20, i % 20));

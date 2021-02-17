@@ -284,9 +284,9 @@ impl Algorithm
     // Maybe we should pass the inital Node directly without passing by the initial property of Algorithm?
     /// This mehtod is likely to change in a near future because I'm not sure what to return.
     /// For now it returns a BitBoard that contains the next move to play.
-    pub fn get_next_move(&mut self) -> Option<Node> {
+    pub fn get_next_move(&mut self, depth: u32) -> Option<Node> {
         let mut initial = self.initial.clone();
-        let next_state = self.minimax(&mut initial, 3, Fscore::MIN, Fscore::MAX, true);
+        let next_state = self.minimax(&mut initial, depth, Fscore::MIN, Fscore::MAX, true);
         if next_state == self.initial {
             None
         } else {
