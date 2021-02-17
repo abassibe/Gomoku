@@ -17,6 +17,10 @@ use crate::node::Node;
 // Simplement rajouter dans le block pymodule une fonction rust avec obligatoirement une instance Python<'_>, et si applicable un PyResult pour le retour
 // Presque n'importe quel type peut etre passé tant que c'est un type natif python/rust (check doc)
 // Pour compiler, maturin develop dans le terminal, qui genere un dylib dans le dossier target/debug qu'il faut mettre dans le meme dossier que gomoku.py
+
+const WHITE: u8 = 2;
+const BLACK: u8 = 1;
+
 #[pymodule]
 fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
 
@@ -63,16 +67,15 @@ fn vec_to_string(board: Vec<u8>) -> String {
     }).collect::<String>()
 }
 
-fn pystring_to_goban(str: String, p_color: u8) -> Goban {
-    if p_color == 1 {
-        let player = BitBoard::from_str(&str.replace("2", "0"));
-        let enemy = BitBoard::from_str(&str.replace("1", "0").replace("2", "1"));
+fn pystring_to_goban(str: String, human: u8) -> Goban {
+    let player = BitBoard::from_str(&str.replace("2", "0"));
+    let enemy = BitBoard::from_str(&str.replace("1", "0").replace("2", "1"));
+
+    if human == WHITE {
         Goban::new(player, enemy)
     }
     else {
-        let player = BitBoard::from_str(&str.replace("1", "0").replace("2", "1"));
-        let enemy = BitBoard::from_str(&str.replace("2", "0"));
-        Goban::new(player, enemy)
+        Goban::new(enemy, player)
     }
 }
 
