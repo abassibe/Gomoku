@@ -36,7 +36,7 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         let goban = pystring_to_goban(vec_to_string(board), p_color);
         println!("\nCOLOR IS ={}\n\nPLAYER(AI)\n{}\nENEMY\n{}", p_color, goban.get_player(), goban.get_enemy());
 
-        if goban.board.is_empty() {
+        if goban.get_board().is_empty() {
             return Ok((9u32, 9u32));
         }
         let ret = launch_ai(goban);
@@ -83,9 +83,9 @@ fn launch_ai(input: Goban) -> (u32, u32) {
     let mut algorithm = Algorithm::new();
     let mut ret_node = Node::default();
     algorithm.update_initial_state(input, *input.get_enemy(), ret_node.get_player_captures(), ret_node.get_opponent_captures());
-    let ret = algorithm.get_next_move(5).unwrap();
+    let ret = algorithm.get_next_move(6).unwrap();
 
-    get_win_coord(input.board, ret.get_item().board)
+    get_win_coord(*input.get_player(), *ret.get_item().get_player())
 }
 
 fn get_win_coord(previous: BitBoard, current: BitBoard) -> (u32, u32) {
