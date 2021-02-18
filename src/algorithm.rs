@@ -75,14 +75,15 @@ impl Algorithm
             result += four_cross_four.count_ones() as isize * 200;
         }
         let patterns = [
-            (self.patterns[PatternName::OpenThree], 50isize),
+            (self.patterns[PatternName::OpenThree], 90isize),
             (self.patterns[PatternName::OpenSplitThreeLeft], 40isize),
-            (self.patterns[PatternName::OpenFour], 400isize),
-            (self.patterns[PatternName::CloseFour], 50isize),
-            (self.patterns[PatternName::SplitFourRight], 50isize),
-            (self.patterns[PatternName::SplitFourLeft], 50isize),
-            (self.patterns[PatternName::SplitFourMiddle], 50isize),
-            (self.patterns[PatternName::Five], 500isize)
+            (self.patterns[PatternName::OpenSplitThreeRight], 40isize),
+            (self.patterns[PatternName::OpenFour], 600isize),
+            (self.patterns[PatternName::CloseFour], 100isize),
+            (self.patterns[PatternName::SplitFourRight], 100isize),
+            (self.patterns[PatternName::SplitFourLeft], 100isize),
+            (self.patterns[PatternName::SplitFourMiddle], 120isize),
+            (self.patterns[PatternName::Five], 1000isize)
         ];
         for &((pattern, pattern_size, is_sym), score) in patterns.iter() {
             let matched = match_pattern(*player, *enemy, pattern, pattern_size, is_sym);
