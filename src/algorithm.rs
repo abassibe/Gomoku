@@ -74,7 +74,7 @@ impl Algorithm
         if four_cross_four.is_any() {
             result += four_cross_four.count_ones() as isize * 200;
         }
-        let patterns = [
+        let patterns: [((u8, u8, bool), isize); 9] = [
             (self.patterns[PatternName::OpenThree], 90isize),
             (self.patterns[PatternName::OpenSplitThreeLeft], 40isize),
             (self.patterns[PatternName::OpenSplitThreeRight], 40isize),
