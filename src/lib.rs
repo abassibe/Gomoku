@@ -29,7 +29,7 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
 
 
     #[pyfn(m, "get_next_move")]
-    fn get_next_move(py: Python<'_>, goban: &PyArray2<u8>, p_color: u8, hint: &PyBool) -> PyResult<(u32, u32)> {
+    fn get_next_move(py: Python<'_>, goban: &PyArray2<u8>, p_color: u8, hint: &PyBool, human_capture: i32, ai_capture: i32) -> PyResult<(u32, u32)> {
         let board:Vec<u8> = goban.to_vec()?;
 
         if board.len() != 361 {
@@ -42,7 +42,7 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         if goban.get_board().is_empty() {
             return Ok((9u32, 9u32));
         }
-        let ret = launch_ai(goban);
+        let ret = launch_ai(goban, (ai_capture / 2) as u8, (human_capture / 2) as u8);
         Ok(ret)
     }
 
@@ -82,10 +82,10 @@ fn assign_color_to_ai(str: String, human: u8) -> Goban {
     }
 }
 
-fn launch_ai(input: Goban) -> (u32, u32) {
+fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8) -> (u32, u32) {
     let mut algorithm = Algorithm::new();
     let ret_node = Node::default();
-    algorithm.update_initial_state(input, *input.get_enemy(), ret_node.get_player_captures(), ret_node.get_opponent_captures());
+    algorithm.update_initial_state(input, *input.get_enemy(), player_captures, opponent_captures);
     let ret = algorithm.get_next_move(DEPTH).unwrap();
 
     get_win_coord(*input.get_player(), *ret.get_item().get_player())

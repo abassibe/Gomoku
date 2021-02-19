@@ -34,7 +34,7 @@ class HumanPlayer():
     def startTurn(self):
         self.window.layoutWidget.setCursor(self.cursor)
         if self.window.gameManager.hintButtonBool:
-            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True)
+            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount)
             self.window.gameManager.gameBoard.dropHint(x, y, self.color)
         self.window.layoutWidget.setCursor(self.cursor)
         windowBuilding.playerTurnEffect(self.window, self.color)
@@ -74,7 +74,7 @@ class ComputerPlayer():
     def startTurn(self):
         self.turnTime.start()
         self.startTime = time()
-        x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False)
+        x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount)
         self.turnTime.stop()
         if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) == None:
             return
