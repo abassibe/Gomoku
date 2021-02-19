@@ -74,16 +74,17 @@ impl Algorithm
         if four_cross_four.is_any() {
             result += four_cross_four.count_ones() as isize * 200;
         }
-        let patterns: [((u8, u8, bool), isize); 9] = [
-            (self.patterns[PatternName::OpenThree], 90isize),
-            (self.patterns[PatternName::OpenSplitThreeLeft], 40isize),
-            (self.patterns[PatternName::OpenSplitThreeRight], 40isize),
-            (self.patterns[PatternName::OpenFour], 600isize),
-            (self.patterns[PatternName::CloseFour], 100isize),
-            (self.patterns[PatternName::SplitFourRight], 100isize),
-            (self.patterns[PatternName::SplitFourLeft], 100isize),
-            (self.patterns[PatternName::SplitFourMiddle], 120isize),
-            (self.patterns[PatternName::Five], 1000isize)
+        let patterns: [((u8, u8, bool), isize); 10] = [
+            (self.patterns[PatternName::OpenThree], 200isize),
+            (self.patterns[PatternName::CloseThree], 50isize),
+            (self.patterns[PatternName::OpenSplitThreeLeft], 200isize),
+            (self.patterns[PatternName::OpenSplitThreeRight], 200isize),
+            (self.patterns[PatternName::OpenFour], 1000isize),
+            (self.patterns[PatternName::CloseFour], 500isize),
+            (self.patterns[PatternName::SplitFourRight], 500isize),
+            (self.patterns[PatternName::SplitFourLeft], 500isize),
+            (self.patterns[PatternName::SplitFourMiddle], 500isize),
+            (self.patterns[PatternName::Five], 10000isize)
         ];
         for &((pattern, pattern_size, is_sym), score) in patterns.iter() {
             let matched = match_pattern(*player, *enemy, pattern, pattern_size, is_sym);
@@ -93,7 +94,7 @@ impl Algorithm
             } else {
                 0
             };
-            result += (matched.count_ones() as isize - nb_captures) * score + nb_captures * score;
+            result += ((matched.count_ones() as isize - nb_captures) * score) + (nb_captures * score);
         }
         result += extract_capturing_moves(*player, *enemy, &self.patterns).count_ones() as isize * 10;
         result += (player_captures as isize).pow(2) * 20;
@@ -177,25 +178,25 @@ impl Algorithm
                 let mut player_captures = parent_player_captures;
                 let mut enemy_captures = parent_enemy_captures;
                 let (player, enemy) =
-                if maximazing {
-                    let player_with_move = parent_player | b;
-                    let captured_by_player = extract_captured_by_move(player_with_move, *parent_enemy, *b, &self.patterns);
-                    if captured_by_player.is_any() {
-                        player_captures += (captured_by_player.count_ones() / 2) as u8;
-                        (player_with_move, parent_enemy ^ &captured_by_player)
+                    if maximazing {
+                        let player_with_move = parent_player | b;
+                        let captured_by_player = extract_captured_by_move(player_with_move, *parent_enemy, *b, &self.patterns);
+                        if captured_by_player.is_any() {
+                            player_captures += (captured_by_player.count_ones() / 2) as u8;
+                            (player_with_move, parent_enemy ^ &captured_by_player)
+                        } else {
+                            (player_with_move, *parent_enemy)
+                        }
                     } else {
-                        (player_with_move, *parent_enemy)
-                    }
-                } else {
-                    let enemy_with_move = parent_enemy | b;
-                    let captured_by_enemy = extract_captured_by_move(enemy_with_move, *parent_player, *b, &self.patterns);
-                    if captured_by_enemy.is_any() {
-                        enemy_captures += (captured_by_enemy.count_ones() / 2) as u8;
-                        (parent_player ^ &captured_by_enemy, enemy_with_move)
-                    } else {
-                        (*parent_player, enemy_with_move)
-                    }
-                };
+                        let enemy_with_move = parent_enemy | b;
+                        let captured_by_enemy = extract_captured_by_move(enemy_with_move, *parent_player, *b, &self.patterns);
+                        if captured_by_enemy.is_any() {
+                            enemy_captures += (captured_by_enemy.count_ones() / 2) as u8;
+                            (parent_player ^ &captured_by_enemy, enemy_with_move)
+                        } else {
+                            (*parent_player, enemy_with_move)
+                        }
+                    };
                 Node::new(Goban::new(player, enemy), parent.get_depth() + 1, *b, player_captures, enemy_captures)
             })
             .collect()
