@@ -29,6 +29,8 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
 
 
     #[pyfn(m, "get_next_move")]
+    /// Interfacing function.
+    /// Takes the Python GIL, the board in the shape of a 19*19 numpy 2d array, the color of the human player, a boolean that indicates if this is a hint request, and the number of captures made by the human and the ai.
     fn get_next_move(py: Python<'_>, goban: &PyArray2<u8>, p_color: u8, hint: &PyBool, human_capture: i32, ai_capture: i32) -> PyResult<(u32, u32)> {
         let board:Vec<u8> = goban.to_vec()?;
 
@@ -59,6 +61,7 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     Ok(())
 }
 
+/// Turns the PyArray sent by python into a string that can be turned into a bitboard.
 fn vec_to_string(board: Vec<u8>) -> String {
 
     board.into_iter().enumerate().map(|(x, i)| {
@@ -70,6 +73,7 @@ fn vec_to_string(board: Vec<u8>) -> String {
     }).collect::<String>()
 }
 
+/// Turns the string into two bitboards (player, enemy)
 fn assign_color_to_ai(str: String, human: u8) -> Goban {
     let player = BitBoard::from_str(&str.replace("2", "0"));
     let enemy = BitBoard::from_str(&str.replace("1", "0").replace("2", "1"));
@@ -84,7 +88,6 @@ fn assign_color_to_ai(str: String, human: u8) -> Goban {
 
 fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8) -> (u32, u32) {
     let mut algorithm = Algorithm::new();
-    let ret_node = Node::default();
     algorithm.update_initial_state(input, *input.get_enemy(), player_captures, opponent_captures);
     let ret = algorithm.get_next_move(DEPTH).unwrap();
 
