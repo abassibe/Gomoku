@@ -18,8 +18,9 @@ mod algorithm;
 // Comment rajouter une fonction python sur rust
 // Simplement rajouter dans le block pymodule une fonction rust avec obligatoirement une instance Python<'_>, et si applicable un PyResult pour le retour
 // Presque n'importe quel type peut etre passé tant que c'est un type natif python/rust (check doc)
-// Pour compiler, maturin develop dans le terminal, qui genere un dylib dans le dossier target/debug qu'il faut mettre dans le meme dossier que gomoku.py
+// Pour compiler, maturin develop dans le terminal, qui genere un dylib dans le dossier target/debug qu'il faut mettre dans le dossier root du projet.
 
+const DEPTH: u32 = 6;
 const WHITE: u8 = 2;
 const BLACK: u8 = 1;
 
@@ -35,7 +36,7 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
             return Err(exceptions::PyTypeError::new_err(format!("Fatal Rust Error: Invalid board size (Expected 361, got {})", board.len())));
         }
 
-        let goban = pystring_to_goban(vec_to_string(board), p_color);
+        let goban = assign_color_to_ai(vec_to_string(board), p_color);
         println!("\nCOLOR IS ={}\n\nPLAYER(AI)\n{}\nENEMY\n{}", p_color, goban.get_player(), goban.get_enemy());
 
         if goban.get_board().is_empty() {
@@ -69,7 +70,7 @@ fn vec_to_string(board: Vec<u8>) -> String {
     }).collect::<String>()
 }
 
-fn pystring_to_goban(str: String, human: u8) -> Goban {
+fn assign_color_to_ai(str: String, human: u8) -> Goban {
     let player = BitBoard::from_str(&str.replace("2", "0"));
     let enemy = BitBoard::from_str(&str.replace("1", "0").replace("2", "1"));
 
@@ -83,15 +84,15 @@ fn pystring_to_goban(str: String, human: u8) -> Goban {
 
 fn launch_ai(input: Goban) -> (u32, u32) {
     let mut algorithm = Algorithm::new();
-    let mut ret_node = Node::default();
+    let ret_node = Node::default();
     algorithm.update_initial_state(input, *input.get_enemy(), ret_node.get_player_captures(), ret_node.get_opponent_captures());
-    let ret = algorithm.get_next_move(6).unwrap();
+    let ret = algorithm.get_next_move(DEPTH).unwrap();
 
     get_win_coord(*input.get_player(), *ret.get_item().get_player())
 }
 
 fn get_win_coord(previous: BitBoard, current: BitBoard) -> (u32, u32) {
-    let mut pos = previous ^ current;
+    let pos = previous ^ current;
     println!("PREV:\n{}\nCUR:\n{}", previous, current);
     println!("UNIQUE POS:\n{}", pos);
 
