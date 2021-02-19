@@ -1,17 +1,19 @@
+use numpy::PyArray2;
+use pyo3::exceptions;
+use pyo3::prelude::{pymodule, PyModule, PyResult, Python};
+use pyo3::types::PyBool;
+
+use goban::Goban;
+
+use crate::algorithm::Algorithm;
+use crate::bitboard::BitBoard;
+use crate::node::Node;
+
 mod goban;
 mod bitboard;
 mod stone;
 mod node;
 mod algorithm;
-
-use numpy::{PyArray2};
-use pyo3::prelude::{pymodule, Py, PyModule, PyResult, Python};
-use pyo3::{exceptions, PyAny};
-use pyo3::types::{PyBool};
-use goban::Goban;
-use crate::bitboard::BitBoard;
-use crate::algorithm::Algorithm;
-use crate::node::Node;
 
 // Comment rajouter une fonction python sur rust
 // Simplement rajouter dans le block pymodule une fonction rust avec obligatoirement une instance Python<'_>, et si applicable un PyResult pour le retour
