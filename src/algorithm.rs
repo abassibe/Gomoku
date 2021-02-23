@@ -151,7 +151,7 @@ impl Algorithm
                         fscore = grandchild_fscore;
                     }
                     beta = beta.min(grandchild_fscore);
-                    if beta => alpha {
+                    if beta >= alpha {
                         break;
                     }
                 }
