@@ -10,6 +10,16 @@ const EDGE_MASK: BitBoard = BitBoard::new(
         207692072411988285641522779730903040,
         53169170537469001124229831611119566816
     );
+pub static HEURISTIC_PATTERNS: [(u8, u8, bool); 8] = [
+    (0b11111000, 5, true),
+    (0b01111000, 6, true),
+    (0b01110000, 5, true),
+    (0b01101000, 6, false),
+    (0b11110000, 5, false),
+    (0b10111000, 5, false),
+    (0b11011000, 5, false),
+    (0b11101000, 5, false)
+];
 pub static GET_MOVES_PATTERNS: [(u8, u8, bool); 6] = [
     (0b11111000, 5, true),
     (0b01111000, 6, true),
@@ -68,9 +78,9 @@ impl NewPattern {
         hashmap.insert(PatternName::CloseSplitThreeRight,   (0b11010000, 5, false));
         hashmap.insert(PatternName::CloseSplitThreeLeft,    (0b10110000, 5, false));
         hashmap.insert(PatternName::CloseFour,              (0b11110000, 5, false));
-        hashmap.insert(PatternName::SplitFourLeft,          (0b01011100, 6, false));
-        hashmap.insert(PatternName::SplitFourMiddle,        (0b01101100, 6, false));
-        hashmap.insert(PatternName::SplitFourRight,         (0b01110100, 6, false));
+        hashmap.insert(PatternName::SplitFourLeft,          (0b10111000, 5, false));
+        hashmap.insert(PatternName::SplitFourMiddle,        (0b11011000, 5, false));
+        hashmap.insert(PatternName::SplitFourRight,         (0b11101000, 5, false));
         hashmap.insert(PatternName::CloseSplitFourRight,    (0b11101000, 5, false));
         hashmap.insert(PatternName::Five,                   (0b11111000, 5, true));
 

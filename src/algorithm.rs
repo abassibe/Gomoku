@@ -31,13 +31,85 @@ impl Algorithm
         self.initial = new_initial_node;
     }
 
+    fn compute_and_set_fscore(&self, node: &mut Node) -> Fscore {
+        let player_score = self.compute_score(node, false);
+        let enemy_score = self.compute_score(node, true);
+        let global_score = match (player_score, enemy_score) {
+            (Fscore::Win, _) => Fscore::Win,
+            (_, Fscore::Win) => Fscore::Value(isize::MIN),
+            (Fscore::Uninitialized, Fscore::Value(score)) => Fscore::Value(-score),
+            (Fscore::Value(player_value), Fscore::Value(enemy_value)) => Fscore::Value(player_value - enemy_value),
+            (Fscore::Value(player_value), _) => Fscore::Value(player_value),
+            (Fscore::Uninitialized, Fscore::Uninitialized) => Fscore::Uninitialized
+        };
+        node.set_item_fscore(global_score);
+
+        global_score
+    }
+
+    // TODO: Missing tests
+    // FIXME: This method has never been tested.
+    fn compute_score(&self, node: &Node, player_is_enemy: bool) -> Fscore {
+        let goban = node.get_item();
+        let (player, enemy, player_captures, enemy_captures) = if player_is_enemy {
+            (goban.get_enemy(), goban.get_player(), node.get_opponent_captures(), node.get_player_captures())
+        } else {
+            (goban.get_player(), goban.get_enemy(), node.get_player_captures(), node.get_opponent_captures())
+        };
+        let mut result = 0isize;
+
+        if player_captures >= 5 {
+            return Fscore::Win;
+        }
+        if extract_five_aligned(player ^ &extract_captures(*enemy, *player, &self.patterns)).is_any()
+            && extract_winning_move_capture(*enemy, *player, node.get_opponent_captures(), &self.patterns).is_empty()
+        {
+            return Fscore::Win;
+        }
+        let three_cross_four = extract_missing_bit_cross_three_with_four(*player, *enemy);
+        if three_cross_four.is_any() {
+            result += three_cross_four.count_ones() as isize * 100;
+        }
+        let four_cross_four = extract_missing_bit_cross_four_with_four(*player, *enemy);
+        if four_cross_four.is_any() {
+            result += four_cross_four.count_ones() as isize * 200;
+        }
+        let patterns: [((u8, u8, bool), isize); 10] = [
+            (self.patterns[PatternName::OpenThree], 200isize),
+            (self.patterns[PatternName::CloseThree], 50isize),
+            (self.patterns[PatternName::OpenSplitThreeLeft], 200isize),
+            (self.patterns[PatternName::OpenSplitThreeRight], 200isize),
+            (self.patterns[PatternName::OpenFour], 1000isize),
+            (self.patterns[PatternName::CloseFour], 500isize),
+            (self.patterns[PatternName::SplitFourRight], 500isize),
+            (self.patterns[PatternName::SplitFourLeft], 500isize),
+            (self.patterns[PatternName::SplitFourMiddle], 500isize),
+            (self.patterns[PatternName::Five], 10000isize)
+        ];
+        for &((pattern, pattern_size, is_sym), score) in patterns.iter() {
+            let matched = match_pattern(*player, *enemy, pattern, pattern_size, is_sym);
+            let matched_captures = match_pattern(extract_captures(*enemy, *player, &self.patterns) ^ *player, *enemy, pattern, pattern_size, is_sym);
+            let nb_captures = if matched_captures.is_any() {
+                matched_captures.count_ones() as isize
+            } else {
+                0
+            };
+            result += ((matched.count_ones() as isize - nb_captures) * score) + (nb_captures * score);
+        }
+        result += extract_capturing_moves(*player, *enemy, &self.patterns).count_ones() as isize * 10;
+        result += (player_captures as isize).pow(2) * 20;
+
+        Fscore::Value(result)
+    }
+
     // TODO: There is a lot of duplicated code in this function, we should refactor it.
     fn minimax(&self, node: &mut Node, depth: u32, mut alpha: Fscore, mut beta: Fscore, maximizing: bool) -> Node {
         let current_goban = node.get_item().clone();
         if depth == 0 {
             // TODO: We have to passe the potential next move to compute_item_fscore but we don't have it at this point
             // and I'm not even sure we actually need it, maybe we should remove it completely?
-            node.compute_item_fscore(&current_goban, current_goban.get_player(), depth as usize);
+            // node.compute_item_fscore(&current_goban, current_goban.get_player(), depth as usize);
+            self.compute_and_set_fscore(node);
             return node.clone();
         }
         let mut candidate = node.clone();
@@ -106,25 +178,25 @@ impl Algorithm
                 let mut player_captures = parent_player_captures;
                 let mut enemy_captures = parent_enemy_captures;
                 let (player, enemy) =
-                if maximazing {
-                    let player_with_move = parent_player | b;
-                    let captured_by_player = extract_captured_by_move(player_with_move, *parent_enemy, *b, &self.patterns);
-                    if captured_by_player.is_any() {
-                        player_captures += (captured_by_player.count_ones() / 2) as u8;
-                        (player_with_move, parent_enemy ^ &captured_by_player)
+                    if maximazing {
+                        let player_with_move = parent_player | b;
+                        let captured_by_player = extract_captured_by_move(player_with_move, *parent_enemy, *b, &self.patterns);
+                        if captured_by_player.is_any() {
+                            player_captures += (captured_by_player.count_ones() / 2) as u8;
+                            (player_with_move, parent_enemy ^ &captured_by_player)
+                        } else {
+                            (player_with_move, *parent_enemy)
+                        }
                     } else {
-                        (player_with_move, *parent_enemy)
-                    }
-                } else {
-                    let enemy_with_move = parent_enemy | b;
-                    let captured_by_enemy = extract_captured_by_move(enemy_with_move, *parent_player, *b, &self.patterns);
-                    if captured_by_enemy.is_any() {
-                        enemy_captures += (captured_by_enemy.count_ones() / 2) as u8;
-                        (parent_player ^ &captured_by_enemy, enemy_with_move)
-                    } else {
-                        (*parent_player, enemy_with_move)
-                    }
-                };
+                        let enemy_with_move = parent_enemy | b;
+                        let captured_by_enemy = extract_captured_by_move(enemy_with_move, *parent_player, *b, &self.patterns);
+                        if captured_by_enemy.is_any() {
+                            enemy_captures += (captured_by_enemy.count_ones() / 2) as u8;
+                            (parent_player ^ &captured_by_enemy, enemy_with_move)
+                        } else {
+                            (*parent_player, enemy_with_move)
+                        }
+                    };
                 Node::new(Goban::new(player, enemy), parent.get_depth() + 1, *b, player_captures, enemy_captures)
             })
             .collect()
@@ -208,13 +280,15 @@ impl Algorithm
         (result | (player + Direction::All)) & open_cells & illegal_moves_complement
     }
 
+
+
     // TODO: We maybe can do better here, self probably doesn't need to be mutable.
     // Maybe we should pass the inital Node directly without passing by the initial property of Algorithm?
     /// This mehtod is likely to change in a near future because I'm not sure what to return.
     /// For now it returns a BitBoard that contains the next move to play.
-    pub fn get_next_move(&mut self) -> Option<Node> {
+    pub fn get_next_move(&mut self, depth: u32) -> Option<Node> {
         let mut initial = self.initial.clone();
-        let next_state = self.minimax(&mut initial, 3, Fscore::MIN, Fscore::MAX, true);
+        let next_state = self.minimax(&mut initial, depth, Fscore::MIN, Fscore::MAX, true);
         if next_state == self.initial {
             None
         } else {

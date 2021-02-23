@@ -14,9 +14,9 @@ fn test_pattern_index() {
         (0b11010000, 5, false),
         (0b10110000, 5, false),
         (0b11110000, 5, false),
-        (0b01011100, 6, false),
-        (0b01101100, 6, false),
-        (0b01110100, 6, false),
+        (0b10111000, 5, false),
+        (0b11011000, 5, false),
+        (0b11101000, 5, false),
         (0b11101000, 5, false),
         (0b11111000, 5, true)
     ];
