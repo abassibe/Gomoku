@@ -173,7 +173,7 @@ fn test_method_match_in_doesnt_match_partial_pattern() {
     let enemy = BitBoard::empty();
     let goban = Goban::new(player, enemy);
     let expected: Option<Vec<bool>> = None;
-    // This is the max pos the pattern can goes at
+    // This is the max pos the pattern can go at
     let expected_pos = (14u8, 14u8);
 
     // Act

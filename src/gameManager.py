@@ -42,7 +42,7 @@ class HumanPlayer():
         self.startTime = time()
 
     def endTurn(self, x, y):
-        if self.window.gameManager.gameBoard.placeStone(x, y, self.color, False) == None:
+        if self.window.gameManager.gameBoard.placeStone(x, y, self.color, False) is None:
             return
         self.turnTime.stop()
         self.playerCapture.setText(str(self.stoneRemovedCount) + "/10")
@@ -76,7 +76,7 @@ class ComputerPlayer():
         self.startTime = time()
         x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount)
         self.turnTime.stop()
-        if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) == None:
+        if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) is None:
             return
         self.playerCapture.setText(str(self.stoneRemovedCount) + "/10")
         self.window.gameManager.playerTurn = not self.window.gameManager.playerTurn

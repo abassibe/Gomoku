@@ -14,8 +14,8 @@ const BITS_IN_U128: usize = size_of::<u128>() * 8;
 const U8_FIRST_BIT: u8 = 1u8 << 7;
 
 // TODO: Implement method to get/set ~one or~ several bits by index
-// TODO: Implement method to get/set one or several bits by coordonate (X, Y flatten to index then call previous method above)
-// TODO: Implement mehtod to perform pattern matching!
+// TODO: Implement method to get/set one or several bits by a coordinate (X, Y flatten to index then call previous method above)
+// TODO: Implement method to perform a pattern match!
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct BitBoard {
     b: [u128; 3]
@@ -605,7 +605,7 @@ impl Mul for BitBoard {
 impl Shl<u32> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the left on a `BitBoard` using a u32.
+    /// Perform bitshift operation to the left on a `BitBoard` using an u32.
     fn shl(self, rhs: u32) -> Self::Output {
         self.shift_left(rhs as usize)
     }
@@ -614,7 +614,7 @@ impl Shl<u32> for BitBoard {
 impl Shl<u32> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the left on a `BitBoard`'s reference using a u32.
+    /// Perform bitshift operation to the left on a `BitBoard`'s reference using an u32.
     fn shl(self, rhs: u32) -> Self::Output {
         self.shift_left(rhs as usize)
     }
@@ -623,7 +623,7 @@ impl Shl<u32> for &BitBoard {
 impl Shl<usize> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the left on a `BitBoard` using a usize.
+    /// Perform bitshift operation to the left on a `BitBoard` using an usize.
     fn shl(self, rhs: usize) -> Self::Output {
         self.shift_left(rhs)
     }
@@ -632,7 +632,7 @@ impl Shl<usize> for BitBoard {
 impl Shl<usize> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the left on a `BitBoard`'s reference using a usize.
+    /// Perform bitshift operation to the left on a `BitBoard`'s reference using an usize.
     fn shl(self, rhs: usize) -> Self::Output {
         self.shift_left(rhs)
     }
@@ -641,7 +641,7 @@ impl Shl<usize> for &BitBoard {
 impl Shl<i32> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the left on a `BitBoard` using a i32.
+    /// Perform bitshift operation to the left on a `BitBoard` using an i32.
     fn shl(self, rhs: i32) -> Self::Output {
         if rhs.is_negative() {
             self.shift_right(rhs.abs() as usize)
@@ -654,7 +654,7 @@ impl Shl<i32> for BitBoard {
 impl Shl<i32> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the left on a `BitBoard`'s reference using a i32.
+    /// Perform bitshift operation to the left on a `BitBoard`'s reference using an i32.
     fn shl(self, rhs: i32) -> Self::Output {
         if rhs.is_negative() {
             self.shift_right(rhs.abs() as usize)
@@ -687,7 +687,7 @@ impl Shl<Direction> for &BitBoard {
 impl Shr<u32> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the right on a `BitBoard` using a u32.
+    /// Perform bitshift operation to the right on a `BitBoard` using an u32.
     fn shr(self, rhs: u32) -> Self::Output {
         self.shift_right(rhs as usize)
     }
@@ -696,7 +696,7 @@ impl Shr<u32> for BitBoard {
 impl Shr<u32> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the right on a `BitBoard`'s reference using a u32.
+    /// Perform bitshift operation to the right on a `BitBoard`'s reference using an u32.
     fn shr(self, rhs: u32) -> Self::Output {
         self.shift_right(rhs as usize)
     }
@@ -705,7 +705,7 @@ impl Shr<u32> for &BitBoard {
 impl Shr<usize> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the right on a `BitBoard` using a usize.
+    /// Perform bitshift operation to the right on a `BitBoard` using an usize.
     fn shr(self, rhs: usize) -> Self::Output {
         self.shift_right(rhs)
     }
@@ -714,7 +714,7 @@ impl Shr<usize> for BitBoard {
 impl Shr<usize> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the right on a `BitBoard`'s reference using a usize.
+    /// Perform bitshift operation to the right on a `BitBoard`'s reference using an usize.
     fn shr(self, rhs: usize) -> Self::Output {
         self.shift_right(rhs)
     }
@@ -723,7 +723,7 @@ impl Shr<usize> for &BitBoard {
 impl Shr<i32> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the right on a `BitBoard` using a i32.
+    /// Perform bitshift operation to the right on a `BitBoard` using an i32.
     fn shr(self, rhs: i32) -> Self::Output {
         if rhs.is_negative() {
             self.shift_left(rhs.abs() as usize)
@@ -736,7 +736,7 @@ impl Shr<i32> for BitBoard {
 impl Shr<i32> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the right on a `BitBoard`'s reference using a i32.
+    /// Perform bitshift operation to the right on a `BitBoard`'s reference using an i32.
     fn shr(self, rhs: i32) -> Self::Output {
         if rhs.is_negative() {
             self.shift_left(rhs.abs() as usize)
@@ -1066,7 +1066,7 @@ impl Index<i32> for BitBoard {
 impl Index<(usize, usize)> for BitBoard {
     type Output = bool;
 
-    // Here we assume that (0, 0) is at the top left corner of the board
+    // Here we assume that (0, 0) is in the top left corner of the board
     // with x for the horizontal axis
     // and y for the vertical axis
     fn index(&self, coord: (usize, usize)) -> &Self::Output {
@@ -1082,7 +1082,7 @@ impl Index<(usize, usize)> for BitBoard {
 impl Index<(u32, u32)> for BitBoard {
     type Output = bool;
 
-    // Here we assume that (0, 0) is at the top left corner of the board
+    // Here we assume that (0, 0) is in the top left corner of the board
     // with x for the horizontal axis
     // and y for the vertical axis
     fn index(&self, coord: (u32, u32)) -> &Self::Output {

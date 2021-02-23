@@ -7,7 +7,6 @@ use goban::Goban;
 
 use crate::algorithm::Algorithm;
 use crate::bitboard::BitBoard;
-use crate::node::Node;
 
 mod goban;
 mod bitboard;

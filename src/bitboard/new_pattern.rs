@@ -110,7 +110,7 @@ impl Default for NewPattern {
 
 // TODO: Implement the missing methods (get the potential next moves according to the threats/opportunities, ...) in the right mod directly this time
 // TODO: Test all this as much as possible
-// TODO: Move the tests in a dedicated mod. Move every tests in a dedicated direcotry/files.
+// TODO: Move the tests in a dedicated mod. Move every test in a dedicated directory/files.
 // TODO: Handle captures when generating moves
 #[inline]
 pub fn match_pattern_base(
@@ -368,8 +368,8 @@ pub fn extract_missing_bit_cross_four_with_four(player: BitBoard, opponent: BitB
     result & open_cells
 }
 
-// FIXME: It seems that this fonction doesn't concider the edges as occupied places
-// thus the patterns for close (CloseThree, CloseSplitThreeLeft, CloseSplitThreeRight & CloseFour)
+// FIXME: It seems that this function doesn't consider the edges as occupied places
+// thus, the patterns for close (CloseThree, CloseSplitThreeLeft, CloseSplitThreeRight & CloseFour)
 // will not match when the close side is right next to an edge (it wouldn't match either when the open side is
 // right next to an edge, even is the close side is next to an opponent stone).
 // Take a look at the `test_pattern_matching_extract_missing_bit_with_close_three()` test function for more detail.
@@ -456,7 +456,7 @@ pub fn extract_captures(player: BitBoard, opponent: BitBoard, patterns: &NewPatt
 
 /// **WARNING**: This function also returns the moves that capture the last or first bit of an alignment of 6 or +
 /// which means that it's possible for that function to return a move that will NOT actually break the alignment
-/// for the an alignment of 6 or +.
+/// for the alignment of 6 or +.
 pub fn extract_five_align_breaking_moves(player: BitBoard, opponent: BitBoard, patterns: &NewPattern) -> BitBoard {
     let mut result = BitBoard::empty();
     let open_cells = !(player | opponent);

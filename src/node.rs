@@ -24,7 +24,7 @@ pub type Branches = BinaryHeap<Rc<RefCell<Node>>>;
 ///     branches: Option<Branches>
 /// } 
 /// ```
-/// `item` is the inner value which is holded by a Node.
+/// `item` is the inner value which is held by a Node.
 /// 
 /// `branches` is a [`BinaryHeap`], wrapped in an [`Option`], which hold child nodes.
 /// The type `Branches` is used for convenience and is just an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
@@ -34,7 +34,7 @@ pub type Branches = BinaryHeap<Rc<RefCell<Node>>>;
 #[derive(Debug, Clone, Default)]
 pub struct Node
 {
-    /// `item` is the inner value which is holded by a Node.
+    /// `item` is the inner value which is held by a Node.
     item: Goban,
     depth: usize,
     last_move: BitBoard,

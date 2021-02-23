@@ -27,7 +27,7 @@ impl Fscore {
 	}
 
 	pub fn is_initialized(&self) -> bool {
-		!(*self == Fscore::Uninitialized)
+		*self != Fscore::Uninitialized
 	}
 }
 
@@ -37,8 +37,8 @@ impl Default for Fscore {
 
 impl Ord for Fscore {
 	fn cmp(&self, other: &Self) -> Ordering {
-		let self_has_value = if let Fscore::Value(_) = self { true } else { false };
-		let other_has_value = if let Fscore::Value(_) = other { true } else { false };
+		let self_has_value = matches!(self, Fscore::Value(_));
+		let other_has_value = matches!(other, Fscore::Value(_));
 		if !self_has_value || !other_has_value {
 			let self_as_u8: u8 = self.into();
 			return self_as_u8.cmp(&other.into());

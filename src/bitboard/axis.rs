@@ -5,7 +5,7 @@ use super::direction::Direction;
 const ARRAY_SIZE: usize = 4;
 
 /// The enum which represent either one of the four possible axis.
-/// Which repectively are:
+/// Which respectively are:
 /// - West <-> East
 /// - North <-> South
 /// - North West <-> South East
@@ -37,22 +37,22 @@ impl From<Direction> for Axis {
     }
 }
 
-/// This is the struct which wraps around Axis to make it itarable.
-/// When iterate over an AxisIterator, the values that pop out should repectively be:
+/// This is the struct which wraps around Axis to make it iterable.
+/// When iterate over an AxisIterator, the values that pop out should respectively be:
 ///  - `Direction::W`
 ///  - `Direction::N`
 ///  - `Direction::NW`
 ///  - `Direction::NE`
 pub struct AxisIterator {
     index: usize,
-    axises: [Direction; ARRAY_SIZE]
+    axes: [Direction; ARRAY_SIZE]
 }
 
 impl AxisIterator {
     pub fn new() -> Self {
         Self {
             index: 0,
-            axises: [Direction::W, Direction::N, Direction::NW, Direction::NE]
+            axes: [Direction::W, Direction::N, Direction::NW, Direction::NE]
         }
     }
 
@@ -69,7 +69,7 @@ impl Iterator for AxisIterator {
             return None;
         }
 
-        let direction = self.axises[self.index];
+        let direction = self.axes[self.index];
         self.index += 1;
         Some(direction)
     }

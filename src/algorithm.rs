@@ -104,9 +104,8 @@ impl Algorithm
 
     // TODO: There is a lot of duplicated code in this function, we should refactor it.
     fn minimax(&self, node: &mut Node, depth: u32, mut alpha: Fscore, mut beta: Fscore, maximizing: bool) -> Node {
-        let current_goban = node.get_item().clone();
         if depth == 0 {
-            // TODO: We have to passe the potential next move to compute_item_fscore but we don't have it at this point
+            // TODO: We have to pass the potential next move to compute_item_fscore, but we don't have it at this point
             // and I'm not even sure we actually need it, maybe we should remove it completely?
             // node.compute_item_fscore(&current_goban, current_goban.get_player(), depth as usize);
             self.compute_and_set_fscore(node);
@@ -213,7 +212,7 @@ impl Algorithm
 
     #[inline]
     fn counter_five_aligned(&self, player: BitBoard, opponent: BitBoard, player_captures: u8) -> BitBoard {
-        let mut result = extract_five_align_breaking_moves(player, opponent, &self.patterns);
+        let result = extract_five_align_breaking_moves(player, opponent, &self.patterns);
 
         if result.is_empty() {
             extract_winning_move_capture(player, opponent, player_captures, &self.patterns)
@@ -283,9 +282,9 @@ impl Algorithm
 
 
     // TODO: We maybe can do better here, self probably doesn't need to be mutable.
-    // Maybe we should pass the inital Node directly without passing by the initial property of Algorithm?
-    /// This mehtod is likely to change in a near future because I'm not sure what to return.
-    /// For now it returns a BitBoard that contains the next move to play.
+    // Maybe we should pass the initial Node directly without passing by the initial property of Algorithm?
+    /// This method is likely to change in a near future because I'm not sure what to return.
+    /// For now, it returns a BitBoard that contains the next move to play.
     pub fn get_next_move(&mut self, depth: u32) -> Option<Node> {
         let mut initial = self.initial.clone();
         let next_state = self.minimax(&mut initial, depth, Fscore::MIN, Fscore::MAX, true);

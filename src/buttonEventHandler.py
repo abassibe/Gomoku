@@ -6,9 +6,9 @@ import windowBuilding
 import gameManager
 import numpy as np
 
-
 _hintButtonBool = False
 helpDialog = None
+
 
 def helpButton():
     global helpDialog
@@ -75,7 +75,9 @@ def hintEvent(hintButton, window):
                 color = window.gameManager.player1.color
             else:
                 color = window.gameManager.player2.color
-            x, y = window.algoPointer(window.gameManager.gameBoard.grid, color, True, window.gameManager.player1.stoneRemovedCount, window.gameManager.player2.stoneRemovedCount)
+            x, y = window.algoPointer(window.gameManager.gameBoard.grid, color, True,
+                                      window.gameManager.player1.stoneRemovedCount,
+                                      window.gameManager.player2.stoneRemovedCount)
             window.gameManager.gameBoard.dropHint(x, y, color)
     else:
         effect.setColor(QtGui.QColor(0, 0, 0, 90))
@@ -85,7 +87,7 @@ def hintEvent(hintButton, window):
         _hintButtonBool = False
         if window.gameManager:
             window.gameManager.gameBoard.clearHint()
-    if window.gameManager != None:
+    if window.gameManager is not None:
         window.gameManager.hintButtonBool = _hintButtonBool
 
 
@@ -97,7 +99,7 @@ def releaseGUButton(window, effect):
 
 
 def giveUpEvent(window):
-    if window.gameManager == None or window.gameManager.gameRuning == False:
+    if window.gameManager is None or window.gameManager.gameRuning == False:
         return
 
     window.layoutWidget.unsetCursor()
@@ -121,7 +123,7 @@ def releaseNGButton(window, effect):
 
 def newGameEvent(window, option):
     global _hintButtonBool
-    if window.gameManager != None and window.gameManager.gameRuning == True:
+    if window.gameManager is not None and window.gameManager.gameRuning == True:
         return
 
     if window.gameManager:

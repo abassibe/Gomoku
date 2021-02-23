@@ -111,7 +111,7 @@ impl Pattern {
     /// If this move would make the pattern to goes out of the board,
     /// then the pattern is moved back to the left-most position and moved
     /// down by one line.
-    /// If the pattern can't move any more, this method returns `false`.
+    /// If the pattern can't move anymore, this method returns `false`.
     /// It returns `true` in any other cases.
     fn try_move_by_one(&mut self) -> bool {
         let moved = self.current >> Direction::E;
@@ -131,6 +131,6 @@ impl Pattern {
             return true;
         }
 
-        return false;
+        false
     }
 }
