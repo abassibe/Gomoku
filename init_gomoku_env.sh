@@ -6,5 +6,4 @@ echo "source $HOME/.cargo/env" >> ~/.zshrc
 cargo install maturin
 echo "\n\033[1;3mCrates Install/Update\033[0m ✅\n\033[1;3mMaturin Installed\033[0m ✅."
 echo "\n\033[1;3mSwitching to venv\033[0m"
-source bin/activate
 echo "Now run : source bin/activate.\nAfter the source you are ready to run the project, use : sh lauch_gomoku.sh"

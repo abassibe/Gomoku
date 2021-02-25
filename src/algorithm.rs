@@ -289,6 +289,7 @@ impl Algorithm
         let mut initial = self.initial.clone();
         let next_state = self.minimax(&mut initial, depth, Fscore::MIN, Fscore::MAX, true);
         if next_state == self.initial {
+            println!("{}", next_state); //to remove
             None
         } else {
             Some(next_state)
