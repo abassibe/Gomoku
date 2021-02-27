@@ -17,9 +17,10 @@ class HumanPlayer():
         self.timerText = None
         self.startTime = 0.0
         if color == 1:
-            self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("../../ressources/pictures/blackStone.png"))))
+            self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/blackStone.png"))))
         else:
-            self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("../../ressources/pictures/whiteStone.png"))))
+            self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/whiteStone.png"))))
+        print(self.cursor)
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.timerText))
         self.playerCapture = None
         self.stoneRemovedCount = 0
@@ -31,10 +32,10 @@ class HumanPlayer():
         else:
             self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt \"SF Wasabi\";")
 
-    async def startTurn(self):
+    def startTurn(self):
         self.window.layoutWidget.setCursor(self.cursor)
         if self.window.gameManager.hintButtonBool:
-            x, y = await self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount)
+            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount)
             self.window.gameManager.gameBoard.dropHint(x, y, self.color)
         self.window.layoutWidget.setCursor(self.cursor)
         windowBuilding.playerTurnEffect(self.window, self.color)
