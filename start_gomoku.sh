@@ -5,5 +5,5 @@ maturin develop --release
 if test -f "$DYLIB"; then
     mv $DYLIB .
 fi
-python3 $PYTHON
-#maturin develop --release && mv target/debug/librust_ext.dylib . && python3 src/PyInterface/gomoku.py
+bin/python3.9 $PYTHON
+#maturin develop --release && mv target/debug/librust_ext.dylib . && bin/python3.9 src/PyInterface/gomoku.py
