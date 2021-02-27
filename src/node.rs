@@ -2,16 +2,19 @@
 mod tests;
 
 use std::{
-    rc::Rc,
     cell::RefCell,
-    fmt::Debug,
+    cmp::{Eq, Ordering},
     collections::BinaryHeap,
-    cmp::{Ordering, Eq},
+    fmt,
+    fmt::Debug,
     hash::{Hash, Hasher},
-    fmt
+    rc::Rc,
 };
 
-use crate::{bitboard::BitBoard, goban::{Fscore, Goban}};
+use crate::{
+    bitboard::BitBoard,
+    goban::{Fscore, Goban},
+};
 
 /// This type is an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
 pub type Branches = BinaryHeap<Rc<RefCell<Node>>>;
@@ -22,18 +25,17 @@ pub type Branches = BinaryHeap<Rc<RefCell<Node>>>;
 /// {
 ///     item: Goban,
 ///     branches: Option<Branches>
-/// } 
+/// }
 /// ```
 /// `item` is the inner value which is held by a Node.
-/// 
+///
 /// `branches` is a [`BinaryHeap`], wrapped in an [`Option`], which hold child nodes.
 /// The type `Branches` is used for convenience and is just an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
-/// 
+///
 /// [`BinaryHeap`]: https://doc.rust-lang.org/std/collections/struct.BinaryHeap.html
 /// [`Option`]: https://doc.rust-lang.org/std/option/enum.Option.html
 #[derive(Debug, Clone, Default)]
-pub struct Node
-{
+pub struct Node {
     /// `item` is the inner value which is held by a Node.
     item: Goban,
     depth: usize,
@@ -78,14 +80,20 @@ impl Hash for Node {
 }
 
 impl Node {
-    pub fn new(item: Goban, depth: usize, last_move: BitBoard, player_captures: u8, opponent_captures: u8) -> Self {
+    pub fn new(
+        item: Goban,
+        depth: usize,
+        last_move: BitBoard,
+        player_captures: u8,
+        opponent_captures: u8,
+    ) -> Self {
         Self {
             item,
             depth,
             last_move,
             player_captures,
             opponent_captures,
-            branches: None
+            branches: None,
         }
     }
 
@@ -109,12 +117,23 @@ impl Node {
         self.item.set_fscore(fscore);
     }
 
-    pub fn compute_item_fscore(&mut self, previous_state: &Goban, to_play: &BitBoard, depth: usize) -> Fscore {
+    pub fn compute_item_fscore(
+        &mut self,
+        previous_state: &Goban,
+        to_play: &BitBoard,
+        depth: usize,
+    ) -> Fscore {
         self.item.compute_fscore(previous_state, to_play, depth)
     }
 
     pub fn add_branch(&mut self, item: Goban, last_move: BitBoard) -> Rc<RefCell<Self>> {
-        let new_node = Rc::new(RefCell::new(Self::new(item, self.depth + 1, last_move, self.player_captures, self.opponent_captures)));
+        let new_node = Rc::new(RefCell::new(Self::new(
+            item,
+            self.depth + 1,
+            last_move,
+            self.player_captures,
+            self.opponent_captures,
+        )));
         let mut branches = self.branches.take().unwrap_or_default();
 
         branches.push(Rc::clone(&new_node));
@@ -136,7 +155,10 @@ impl Node {
 
     /// A method that add many branches at once using the closure `generator`.
     pub fn add_many_branches(&mut self, new_branches: Vec<Node>) {
-        let mut new_branches: BinaryHeap<Rc<RefCell<Node>>> = new_branches.into_iter().map(|x| Rc::new(RefCell::new(x))).collect();
+        let mut new_branches: BinaryHeap<Rc<RefCell<Node>>> = new_branches
+            .into_iter()
+            .map(|x| Rc::new(RefCell::new(x)))
+            .collect();
 
         if !new_branches.is_empty() {
             let mut branches = self.branches.take().unwrap_or_default();

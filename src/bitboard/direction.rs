@@ -1,5 +1,5 @@
 use super::axis::Axis;
-use std::{slice::Iter, fmt};
+use std::{fmt, slice::Iter};
 
 const ARRAY_SIZE: usize = 8;
 
@@ -14,7 +14,7 @@ pub enum Direction {
     NW,
     SE,
     SW,
-    All
+    All,
 }
 
 impl Direction {
@@ -28,7 +28,7 @@ impl Direction {
             Direction::SW => Axis::DiagUpRight,
             Direction::NW => Axis::DiagUpLeft,
             Direction::SE => Axis::DiagUpLeft,
-            Direction::All => Axis::All
+            Direction::All => Axis::All,
         }
     }
 
@@ -42,7 +42,7 @@ impl Direction {
             Direction::SW => Direction::NE,
             Direction::NW => Direction::SE,
             Direction::SE => Direction::NW,
-            Direction::All => Direction::All
+            Direction::All => Direction::All,
         }
     }
 }
@@ -57,14 +57,14 @@ impl fmt::Display for Direction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let stringified = match self {
             Direction::N => "North",
-            Direction::S=> "South",
-            Direction::E=> "East",
-            Direction::W=> "West",
-            Direction::NE=> "North East",
-            Direction::NW=> "North West",
-            Direction::SE=> "South East",
-            Direction::SW=> "South West",
-            Direction::All=> "All directions"
+            Direction::S => "South",
+            Direction::E => "East",
+            Direction::W => "West",
+            Direction::NE => "North East",
+            Direction::NW => "North West",
+            Direction::SE => "South East",
+            Direction::SW => "South West",
+            Direction::All => "All directions",
         };
         write!(f, "{}", stringified)
     }
@@ -75,7 +75,7 @@ impl fmt::Display for Direction {
 pub struct DirectionIterator {
     index_forward: isize,
     index_backward: isize,
-    directions: [Direction; ARRAY_SIZE]
+    directions: [Direction; ARRAY_SIZE],
 }
 
 impl DirectionIterator {
@@ -83,12 +83,31 @@ impl DirectionIterator {
         Self {
             index_forward: 0,
             index_backward: ARRAY_SIZE as isize - 1,
-            directions: [Direction::N, Direction::S, Direction::E, Direction::W, Direction::NE, Direction::NW, Direction::SE, Direction::SW]
+            directions: [
+                Direction::N,
+                Direction::S,
+                Direction::E,
+                Direction::W,
+                Direction::NE,
+                Direction::NW,
+                Direction::SE,
+                Direction::SW,
+            ],
         }
     }
 
     pub fn as_array_iter() -> Iter<'static, Direction> {
-        [Direction::N, Direction::S, Direction::E, Direction::W, Direction::NE, Direction::NW, Direction::SE, Direction::SW].iter()
+        [
+            Direction::N,
+            Direction::S,
+            Direction::E,
+            Direction::W,
+            Direction::NE,
+            Direction::NW,
+            Direction::SE,
+            Direction::SW,
+        ]
+        .iter()
     }
 }
 

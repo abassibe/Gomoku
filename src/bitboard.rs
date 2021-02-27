@@ -1,14 +1,22 @@
 pub(crate) mod axis;
 pub(crate) mod direction;
-pub(crate) mod pattern;
 pub(crate) mod new_pattern;
+pub(crate) mod pattern;
 
 #[cfg(test)]
 mod tests;
 
-use std::{ops::Mul, fmt, mem::size_of, ops::{Add, BitAnd, BitOr, BitXor, Not, Shl, Shr, Sub, BitOrAssign, BitXorAssign, BitAndAssign, Index}};
-use direction::*;
 use axis::*;
+use direction::*;
+use std::{
+    fmt,
+    mem::size_of,
+    ops::Mul,
+    ops::{
+        Add, BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Index, Not, Shl, Shr,
+        Sub,
+    },
+};
 
 const BITS_IN_U128: usize = size_of::<u128>() * 8;
 const U8_FIRST_BIT: u8 = 1u8 << 7;
@@ -18,7 +26,7 @@ const U8_FIRST_BIT: u8 = 1u8 << 7;
 // TODO: Implement method to perform a pattern match!
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct BitBoard {
-    b: [u128; 3]
+    b: [u128; 3],
 }
 
 // ----------------------------------------
@@ -72,7 +80,9 @@ impl BitBoard {
     // ------------
     // #region Constructors
     pub const fn new(one: u128, two: u128, three: u128) -> Self {
-        Self { b: [one, two, three] }
+        Self {
+            b: [one, two, three],
+        }
     }
 
     pub fn from_array(from: [u128; 3]) -> Self {
@@ -88,27 +98,28 @@ impl BitBoard {
     }
 
     pub fn from_str(from: &str) -> Self {
-        let mut one_line_str: String = from.split_ascii_whitespace()
-            .fold(String::new(), |mut r, n| {
-                r.push_str(n);
-                if n.len() == 19 {
-                    r.push('0');
-                }
-                r
-            });
+        let mut one_line_str: String =
+            from.split_ascii_whitespace()
+                .fold(String::new(), |mut r, n| {
+                    r.push_str(n);
+                    if n.len() == 19 {
+                        r.push('0');
+                    }
+                    r
+                });
         let bits_count = one_line_str.len();
         for _ in 0..(BITS_IN_U128 * 3) - bits_count {
             one_line_str.push('0');
         }
         // let mut bins = vec![String::from("0b"), String::from("0b"), String::from("0b")];
-        let mut bins: Vec<&str> = vec!();
+        let mut bins: Vec<&str> = vec![];
         for i in 0..3 {
             bins.push(&one_line_str[BITS_IN_U128 * i..BITS_IN_U128 * (i + 1)]);
         }
         BitBoard::from_array([
             u128::from_str_radix(bins[0], 2).unwrap(),
             u128::from_str_radix(bins[1], 2).unwrap(),
-            u128::from_str_radix(bins[2], 2).unwrap()
+            u128::from_str_radix(bins[2], 2).unwrap(),
         ])
     }
     // #endregion Constructors
@@ -136,7 +147,7 @@ impl BitBoard {
     /// Returns `true` if **every** bits are set to 1 in the bitboard.
     /// Returns `false` otherwise.
     pub fn is_full(&self) -> bool {
-        self & &BitBoard::ENDLINE_DELIMITER_MASK == BitBoard::ENDLINE_DELIMITER_MASK 
+        self & &BitBoard::ENDLINE_DELIMITER_MASK == BitBoard::ENDLINE_DELIMITER_MASK
     }
 
     /// Returns `true` if **no** bits are set to 1 in the bitboard.
@@ -185,7 +196,9 @@ impl BitBoard {
     // Count bits
     // ----------
     pub fn count_ones(&self) -> u16 {
-        self.b.iter().fold(0, |acc: u16, &x| acc + x.count_ones() as u16)
+        self.b
+            .iter()
+            .fold(0, |acc: u16, &x| acc + x.count_ones() as u16)
     }
 
     // ----------
@@ -199,7 +212,7 @@ impl BitBoard {
         }
         let requested_bit = match bit_index.is_negative() {
             true => BitBoard::from_array([0, 0, 1]) << (bit_index.abs() - 1) as usize,
-            false => BitBoard::from_array([1 << 127, 0, 0]) >> bit_index as usize
+            false => BitBoard::from_array([1 << 127, 0, 0]) >> bit_index as usize,
         };
         let is_bit_set = (*self & requested_bit).is_any();
         let mut new_self = self;
@@ -228,7 +241,6 @@ impl BitBoard {
         result
     }
 
-
     // ---------------------------------------
     // Implementation of bitshift for BitBoard
     // ---------------------------------------
@@ -246,16 +258,17 @@ impl BitBoard {
         let inner_lshift = by % BITS_IN_U128;
         let inner_rshift = BITS_IN_U128 - inner_lshift;
         let value_off = by / BITS_IN_U128;
-        for (dest_i, src_i) in (0..=(max_index - value_off)).rev().zip((0..=max_index).rev()) {
+        for (dest_i, src_i) in (0..=(max_index - value_off))
+            .rev()
+            .zip((0..=max_index).rev())
+        {
             if src_i < max_index && inner_rshift < BITS_IN_U128 {
                 new_bits[dest_i] = bits[src_i + 1] >> inner_rshift
             }
             new_bits[dest_i] |= bits[src_i] << inner_lshift;
         }
 
-        Self {
-            b: new_bits
-        }
+        Self { b: new_bits }
     }
 
     /// Returns the same BitBoard without the edge delimiter bits
@@ -297,7 +310,10 @@ impl BitBoard {
         let inner_lshift = by % BITS_IN_U128;
         let inner_rshift = BITS_IN_U128 - inner_lshift;
         let value_off = by / BITS_IN_U128;
-        for (dest_i, src_i) in (0..=(max_index - value_off)).rev().zip((0..=max_index).rev()) {
+        for (dest_i, src_i) in (0..=(max_index - value_off))
+            .rev()
+            .zip((0..=max_index).rev())
+        {
             if src_i < max_index && inner_rshift < BITS_IN_U128 {
                 new_bits[dest_i] = bits[src_i + 1] >> inner_rshift
             } else if src_i == max_index {
@@ -306,9 +322,7 @@ impl BitBoard {
             new_bits[dest_i] |= bits[src_i] << inner_lshift;
         }
 
-        Self {
-            b: new_bits
-        }.add_edge_delimiters()
+        Self { b: new_bits }.add_edge_delimiters()
     }
 
     #[inline]
@@ -331,9 +345,7 @@ impl BitBoard {
             new_bits[dest_i] |= bits[src_i] >> inner_rshift;
         }
 
-        Self {
-            b: new_bits
-        }
+        Self { b: new_bits }
     }
 
     fn replicate_as_row(&mut self, mut row: u128) {
@@ -466,8 +478,9 @@ impl BitBoard {
             Direction::NW => board << Self::MOVE_UP_DOWN_SHIFT_VALUE + 1,
             Direction::SE => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE + 1,
             Direction::SW => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE - 1,
-            Direction::All => unimplemented!("You MUST not use Direction::All with this method")
-        }.apply_endline_delimiter_mask()
+            Direction::All => unimplemented!("You MUST not use Direction::All with this method"),
+        }
+        .apply_endline_delimiter_mask()
     }
 
     // TODO: Add tests for this method.
@@ -489,8 +502,9 @@ impl BitBoard {
             Direction::NW => board << (Self::MOVE_UP_DOWN_SHIFT_VALUE + 1) * by,
             Direction::SE => board >> (Self::MOVE_UP_DOWN_SHIFT_VALUE + 1) * by,
             Direction::SW => board >> (Self::MOVE_UP_DOWN_SHIFT_VALUE - 1) * by,
-            Direction::All => unimplemented!("You MUST not use Direction::All with this method")
-        }.apply_endline_delimiter_mask()
+            Direction::All => unimplemented!("You MUST not use Direction::All with this method"),
+        }
+        .apply_endline_delimiter_mask()
     }
 
     /// This method cleans all the bits set in the 20eme column
@@ -516,8 +530,8 @@ impl BitBoard {
                     result |= self << d;
                 }
                 result
-            },
-            d => *self | (self << d)
+            }
+            d => *self | (self << d),
         }
     }
 
@@ -532,8 +546,8 @@ impl BitBoard {
                     result |= self << d;
                 }
                 result
-            },
-            d => *self | (self << d.to_direction())
+            }
+            d => *self | (self << d.to_direction()),
         }
     }
 
@@ -551,8 +565,8 @@ impl BitBoard {
                     result &= self << d;
                 }
                 result
-            },
-            d => *self & (self << d)
+            }
+            d => *self & (self << d),
         }
     }
 
@@ -568,8 +582,8 @@ impl BitBoard {
                     result &= self << d;
                 }
                 result
-            },
-            d => *self & (self << d.to_direction())
+            }
+            d => *self & (self << d.to_direction()),
         }
     }
 }
@@ -591,11 +605,13 @@ impl Mul for BitBoard {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self {
-        BitBoard { b: [
-            self.b[0].overflowing_mul(rhs.b[0]).0,
-            self.b[1].overflowing_mul(rhs.b[1]).0,
-            self.b[2].overflowing_mul(rhs.b[2]).0
-        ]}
+        BitBoard {
+            b: [
+                self.b[0].overflowing_mul(rhs.b[0]).0,
+                self.b[1].overflowing_mul(rhs.b[1]).0,
+                self.b[2].overflowing_mul(rhs.b[2]).0,
+            ],
+        }
     }
 }
 
@@ -772,7 +788,13 @@ impl BitOr for BitBoard {
 
     /// Perform bitwise operation OR between two `BitBoards`.
     fn bitor(self, rhs: Self) -> Self::Output {
-        Self::Output { b: [self.b[0] | rhs.b[0], self.b[1] | rhs.b[1], self.b[2] | rhs.b[2]] }
+        Self::Output {
+            b: [
+                self.b[0] | rhs.b[0],
+                self.b[1] | rhs.b[1],
+                self.b[2] | rhs.b[2],
+            ],
+        }
     }
 }
 
@@ -781,7 +803,13 @@ impl BitOr for &BitBoard {
 
     /// Perform bitwise operation OR between two `BitBoard`'s references.
     fn bitor(self, rhs: Self) -> Self::Output {
-        Self::Output { b: [self.b[0] | rhs.b[0], self.b[1] | rhs.b[1], self.b[2] | rhs.b[2]] }
+        Self::Output {
+            b: [
+                self.b[0] | rhs.b[0],
+                self.b[1] | rhs.b[1],
+                self.b[2] | rhs.b[2],
+            ],
+        }
     }
 }
 
@@ -808,7 +836,13 @@ impl BitXor for BitBoard {
 
     /// Perform bitwise operation XOR between two `BitBoard`s.
     fn bitxor(self, rhs: Self) -> Self::Output {
-        Self::Output { b: [self.b[0] ^ rhs.b[0], self.b[1] ^ rhs.b[1], self.b[2] ^ rhs.b[2]] }
+        Self::Output {
+            b: [
+                self.b[0] ^ rhs.b[0],
+                self.b[1] ^ rhs.b[1],
+                self.b[2] ^ rhs.b[2],
+            ],
+        }
     }
 }
 
@@ -817,7 +851,13 @@ impl BitXor for &BitBoard {
 
     /// Perform bitwise operation XOR between two `BitBoard`'s references.
     fn bitxor(self, rhs: Self) -> Self::Output {
-        Self::Output { b: [self.b[0] ^ rhs.b[0], self.b[1] ^ rhs.b[1], self.b[2] ^ rhs.b[2]] }
+        Self::Output {
+            b: [
+                self.b[0] ^ rhs.b[0],
+                self.b[1] ^ rhs.b[1],
+                self.b[2] ^ rhs.b[2],
+            ],
+        }
     }
 }
 
@@ -853,7 +893,13 @@ impl BitAnd for BitBoard {
 
     /// Perform bitwise operation AND between two `BitBoards`.
     fn bitand(self, rhs: Self) -> Self::Output {
-        Self::Output { b: [self.b[0] & rhs.b[0], self.b[1] & rhs.b[1], self.b[2] & rhs.b[2]] }
+        Self::Output {
+            b: [
+                self.b[0] & rhs.b[0],
+                self.b[1] & rhs.b[1],
+                self.b[2] & rhs.b[2],
+            ],
+        }
     }
 }
 
@@ -862,7 +908,13 @@ impl BitAnd for &BitBoard {
 
     /// Perform bitwise operation AND between two `BitBoard`'s references.
     fn bitand(self, rhs: Self) -> Self::Output {
-        Self::Output { b: [self.b[0] & rhs.b[0], self.b[1] & rhs.b[1], self.b[2] & rhs.b[2]] }
+        Self::Output {
+            b: [
+                self.b[0] & rhs.b[0],
+                self.b[1] & rhs.b[1],
+                self.b[2] & rhs.b[2],
+            ],
+        }
     }
 }
 
@@ -898,7 +950,10 @@ impl Not for BitBoard {
 
     /// Perform bitwise operation NOT on a `BitBoard`.
     fn not(self) -> Self::Output {
-        *Self::Output { b: [!self.b[0], !self.b[1], !self.b[2]] }.apply_endline_delimiter_mask()
+        *Self::Output {
+            b: [!self.b[0], !self.b[1], !self.b[2]],
+        }
+        .apply_endline_delimiter_mask()
     }
 }
 
@@ -907,7 +962,10 @@ impl Not for &BitBoard {
 
     /// Perform bitwise operation NOT on a `BitBoard`'s reference.
     fn not(self) -> Self::Output {
-        *BitBoard { b: [!self.b[0], !self.b[1], !self.b[2]] }.apply_endline_delimiter_mask()
+        *BitBoard {
+            b: [!self.b[0], !self.b[1], !self.b[2]],
+        }
+        .apply_endline_delimiter_mask()
     }
 }
 // #endregion Trait bitwise op
@@ -1018,8 +1076,7 @@ impl Index<usize> for BitBoard {
         let requested_bit = BitBoard::from_array([1 << 127, 0, 0]) >> index;
         if (self & &requested_bit).is_any() {
             &Self::INDEX_RETURN_TRUE
-        }
-        else {
+        } else {
             &Self::INDEX_RETURN_FALSE
         }
     }
@@ -1036,12 +1093,11 @@ impl Index<isize> for BitBoard {
         }
         let requested_bit = match index.is_negative() {
             true => BitBoard::from_array([0, 0, 1]) << (index.abs() - 1) as usize,
-            false => BitBoard::from_array([1 << 127, 0, 0]) >> index as usize
+            false => BitBoard::from_array([1 << 127, 0, 0]) >> index as usize,
         };
         if (self & &requested_bit).is_any() {
             &Self::INDEX_RETURN_TRUE
-        }
-        else {
+        } else {
             &Self::INDEX_RETURN_FALSE
         }
     }
