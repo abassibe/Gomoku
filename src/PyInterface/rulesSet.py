@@ -145,7 +145,7 @@ class Rules():
             elif start_y > end_y:
                 start_y -= 1
         self.hasSameColorNeighbor(board, start_x, start_y, color, result)
-        if result != []:
+        if result:
             self.isWinner = color
         return result
 

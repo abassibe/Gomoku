@@ -34,7 +34,7 @@ class HumanPlayer():
     def startTurn(self):
         self.window.layoutWidget.setCursor(self.cursor)
         if self.window.gameManager.hintButtonBool:
-            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True)
+            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount)
             self.window.gameManager.gameBoard.dropHint(x, y, self.color)
         self.window.layoutWidget.setCursor(self.cursor)
         windowBuilding.playerTurnEffect(self.window, self.color)
@@ -42,7 +42,7 @@ class HumanPlayer():
         self.startTime = time()
 
     def endTurn(self, x, y):
-        if self.window.gameManager.gameBoard.placeStone(x, y, self.color, False) == None:
+        if self.window.gameManager.gameBoard.placeStone(x, y, self.color, False) is None:
             return
         self.turnTime.stop()
         self.playerCapture.setText(str(self.stoneRemovedCount) + "/10")
@@ -74,9 +74,9 @@ class ComputerPlayer():
     def startTurn(self):
         self.turnTime.start()
         self.startTime = time()
-        x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False)
+        x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount)
         self.turnTime.stop()
-        if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) == None:
+        if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) is None:
             return
         self.playerCapture.setText(str(self.stoneRemovedCount) + "/10")
         self.window.gameManager.playerTurn = not self.window.gameManager.playerTurn
@@ -88,7 +88,7 @@ class ComputerPlayer():
 class GameBoard():
     def __init__(self, window):
         self.window = window
-        self.grid = np.zeros(shape=(19, 19), dtype=int)
+        self.grid = np.zeros(shape=(19, 19), dtype=np.uint8)
         self.placedPoint = []
         self.placedHint = []
 
@@ -157,7 +157,7 @@ class GameBoard():
         self.window.update()
 
     def clear(self):
-        self.grid = np.zeros(shape=(19, 19), dtype=int)
+        self.grid = np.zeros(shape=(19, 19), dtype=np.uint8)
         for stone in self.placedPoint:
             stone.widget().clear()
         self.placedPoint = []
@@ -187,7 +187,6 @@ class GameBoard():
         return self.window.gameManager.rules.checkBasicRule(self.grid, x, y, color)
 
     def isWinner(self):
-        return None, None
         if self.window.gameManager.player1.stoneRemovedCount >= 10:
             return self.window.gameManager.player1.color, self.window.gameManager.player1.color
         elif self.window.gameManager.player2.stoneRemovedCount >= 10:

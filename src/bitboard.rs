@@ -1,23 +1,21 @@
 pub(crate) mod axis;
 pub(crate) mod direction;
 pub(crate) mod pattern;
+pub(crate) mod new_pattern;
 
 #[cfg(test)]
 mod tests;
 
-use std::{
-    fmt,
-    mem::size_of,
-    ops::{Add, BitAnd, BitOr, BitXor, Not, Shl, Shr, Sub, BitOrAssign, BitXorAssign, BitAndAssign, Index}
-};
+use std::{ops::Mul, fmt, mem::size_of, ops::{Add, BitAnd, BitOr, BitXor, Not, Shl, Shr, Sub, BitOrAssign, BitXorAssign, BitAndAssign, Index}};
 use direction::*;
 use axis::*;
 
 const BITS_IN_U128: usize = size_of::<u128>() * 8;
+const U8_FIRST_BIT: u8 = 1u8 << 7;
 
 // TODO: Implement method to get/set ~one or~ several bits by index
-// TODO: Implement method to get/set one or several bits by coordonate (X, Y flatten to index then call previous method above)
-// TODO: Implement mehtod to perform pattern matching!
+// TODO: Implement method to get/set one or several bits by a coordinate (X, Y flatten to index then call previous method above)
+// TODO: Implement method to perform a pattern match!
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct BitBoard {
     b: [u128; 3]
@@ -52,12 +50,28 @@ impl BitBoard {
         ]
     };
     const U128_FIRST_BIT_SET: u128 = 0b10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;
+    const FIRST_LINE_MASK: Self = Self {
+        b: [
+            0b11111111111111111110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+            0,
+            0
+        ]
+    };
+    pub const CENTER_BIT_SET: Self = Self {
+        b: [
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000,
+            0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+        ]
+    };
+    const EMPTY_BITBOARD: BitBoard = Self { b: [0, 0, 0] };
+    const FULL_BITBOARD: BitBoard = Self::ENDLINE_DELIMITER_MASK;
 
     // ------------
     // Constructors
     // ------------
     // #region Constructors
-    pub fn new(one: u128, two: u128, three: u128) -> Self {
+    pub const fn new(one: u128, two: u128, three: u128) -> Self {
         Self { b: [one, two, three] }
     }
 
@@ -66,7 +80,7 @@ impl BitBoard {
     }
 
     pub fn full() -> Self {
-        !Self::default()
+        Self::FULL_BITBOARD
     }
 
     pub fn empty() -> Self {
@@ -141,6 +155,22 @@ impl BitBoard {
     /// Returns `false` otherwise.
     pub fn is_any(&self) -> bool {
         !self.is_empty()
+    }
+
+    pub fn contains_five_aligned(&self) -> bool {
+        for direction in DirectionIterator::new() {
+            let mut tmp = *self;
+            let mut i = 1;
+            while tmp.is_any() {
+                tmp &= tmp << direction;
+                if i >= 5 {
+                    return true;
+                }
+                i += 1;
+            }
+        }
+
+        false
     }
     // #endregion Test methods
 
@@ -228,6 +258,59 @@ impl BitBoard {
         }
     }
 
+    /// Returns the same BitBoard without the edge delimiter bits
+    fn remove_edge_delimiters(mut self) -> Self {
+        let mut i = 0u32;
+        let mut new_bitboard = BitBoard::default();
+
+        while self.is_any() {
+            new_bitboard |= (self & BitBoard::FIRST_LINE_MASK) >> 19 * i;
+            self = self << 20;
+            i += 1;
+        }
+
+        new_bitboard
+    }
+
+    fn add_edge_delimiters(mut self) -> Self {
+        let mut i = 0u32;
+        let mut new_bitboard = BitBoard::default();
+
+        while self.is_any() {
+            new_bitboard |= (self & BitBoard::FIRST_LINE_MASK) >> 20 * i;
+            self = self << 19;
+            i += 1;
+        }
+
+        new_bitboard
+    }
+
+    fn rotate_left(&self, by: usize) -> Self {
+        let bits = self.remove_edge_delimiters().b;
+        let max_index = bits.len() - 1;
+        let mut new_bits: [u128; 3] = [0, 0, 0];
+
+        if by >= BITS_IN_U128 * (max_index + 1) {
+            return Self::default();
+        }
+
+        let inner_lshift = by % BITS_IN_U128;
+        let inner_rshift = BITS_IN_U128 - inner_lshift;
+        let value_off = by / BITS_IN_U128;
+        for (dest_i, src_i) in (0..=(max_index - value_off)).rev().zip((0..=max_index).rev()) {
+            if src_i < max_index && inner_rshift < BITS_IN_U128 {
+                new_bits[dest_i] = bits[src_i + 1] >> inner_rshift
+            } else if src_i == max_index {
+                new_bits[dest_i] = bits[0] >> inner_rshift - 23
+            }
+            new_bits[dest_i] |= bits[src_i] << inner_lshift;
+        }
+
+        Self {
+            b: new_bits
+        }.add_edge_delimiters()
+    }
+
     #[inline]
     fn shift_right(&self, by: usize) -> Self {
         let bits = self.b;
@@ -241,7 +324,7 @@ impl BitBoard {
         let inner_rshift = by % BITS_IN_U128;
         let inner_lshift = BITS_IN_U128 - inner_rshift;
         let value_off = by / BITS_IN_U128;
-        for (dest_i, src_i) in (value_off..=max_index).zip((0..=max_index)) {
+        for (dest_i, src_i) in (value_off..=max_index).zip(0..=max_index) {
             if src_i > usize::MIN && inner_lshift < BITS_IN_U128 {
                 new_bits[dest_i] = bits[src_i - 1] << inner_lshift
             }
@@ -252,6 +335,124 @@ impl BitBoard {
             b: new_bits
         }
     }
+
+    fn replicate_as_row(&mut self, mut row: u128) {
+        let mut offset = 19i32;
+        let nb_bits = BITS_IN_U128 as i32;
+        let nb_cols = BitBoard::NUMBER_OF_COLS as i32 + 1;
+
+        row >>= nb_bits - (nb_cols - 1);
+        self.b = [0, 0, 0];
+
+        for i in 0..self.b.len() {
+            let mut j = 0;
+            let mut shift = 1i32;
+            while shift.is_positive() {
+                shift = nb_bits - offset - (nb_cols * j);
+                self.b[i] |= if shift.is_positive() {
+                    row << shift
+                } else {
+                    row >> -shift
+                };
+                j += 1;
+            }
+            offset = -shift;
+        }
+    }
+
+    pub fn rotate_45(&self) -> Self {
+        let mut result = BitBoard::empty();
+        let mut mask = BitBoard::empty();
+        let mut pattern = 1 << (BITS_IN_U128 - 1);
+
+        for i in 0..19 {
+            mask.replicate_as_row(pattern);
+            result |= (self >> (20 * i) | self << (20 * (20 - i))) & mask;
+            pattern >>= 1;
+        }
+
+        result
+    }
+
+    fn rotate_315(&self) -> Self {
+        let mut result = BitBoard::empty();
+        let mut mask = BitBoard::empty();
+        let mut pattern = 1 << (BITS_IN_U128 - 1);
+
+        for i in 0..19 {
+            mask.replicate_as_row(pattern);
+            result |= (self << (20 * i) | self >> (20 * (20 - i))) & mask;
+            pattern >>= 1;
+        }
+
+        result
+    }
+
+    // fn rotate_45(&self) -> Self {
+    //     let mut new_bitboard = BitBoard::default();
+    //     let mut initial_mask = BitBoard::FIRST_BIT_SET;
+
+    //     for i in 0..BitBoard::NUMBER_OF_COLS {
+    //         let mask = initial_mask.broadcast_row();
+    //         new_bitboard |= ((self >> (BitBoard::NUMBER_OF_COLS * i) | self << (BitBoard::NUMBER_OF_COLS * (BitBoard::NUMBER_OF_COLS - i)))) & mask;
+    //         initial_mask = initial_mask >> 1;
+    //         println!("new_bitboard in rotate_45(), loop #{}:\n{}", i, new_bitboard);
+    //     }
+
+    //     new_bitboard
+    // }
+
+    // fn rotate_right_with_edge(&self, by: usize) -> Self {
+    //     let bits = self.b;
+    //     let max_index = bits.len() - 1;
+    //     let mut new_bits: [u128; 3] = [0, 0, 0];
+
+    //     if by >= BITS_IN_U128 * (max_index + 1) {
+    //         return Self::default();
+    //     }
+
+    //     let inner_rshift = by % BITS_IN_U128;
+    //     let inner_lshift = BITS_IN_U128 - inner_rshift;
+    //     let value_off = by / BITS_IN_U128;
+    //     for (dest_i, src_i) in (value_off..=max_index).zip(0..=max_index) {
+    //         if src_i > usize::MIN && inner_lshift < BITS_IN_U128 {
+    //             new_bits[dest_i] = bits[src_i - 1] << inner_lshift
+    //         } else if src_i == max_index {
+    //             new_bits[dest_i] = bits[max_index] << inner_lshift
+    //         }
+    //         new_bits[dest_i] |= bits[src_i] >> inner_rshift;
+    //     }
+
+    //     Self {
+    //         b: new_bits
+    //     }
+    // }
+
+    // fn rotate_right(&self, by: usize) -> Self {
+    //     let bits = self.remove_edge_delimiters().b;
+    //     let max_index = bits.len() - 1;
+    //     let mut new_bits: [u128; 3] = [0, 0, 0];
+
+    //     if by >= BITS_IN_U128 * (max_index + 1) {
+    //         return Self::default();
+    //     }
+
+    //     let inner_rshift = by % BITS_IN_U128;
+    //     let inner_lshift = BITS_IN_U128 - inner_rshift;
+    //     let value_off = by / BITS_IN_U128;
+    //     for (dest_i, src_i) in (value_off..=max_index).zip(0..=max_index) {
+    //         if src_i > usize::MIN && inner_lshift < BITS_IN_U128 {
+    //             new_bits[dest_i] = bits[src_i - 1] << inner_lshift
+    //         } else if src_i == max_index {
+    //             new_bits[dest_i] = bits[max_index] << inner_lshift - 23
+    //         }
+    //         new_bits[dest_i] |= bits[src_i] >> inner_rshift;
+    //     }
+
+    //     Self {
+    //         b: new_bits
+    //     }.add_edge_delimiters()
+    // }
 
     // TODO: Missing doc here
     fn shift_direction(&self, direction: Direction) -> Self {
@@ -265,6 +466,29 @@ impl BitBoard {
             Direction::NW => board << Self::MOVE_UP_DOWN_SHIFT_VALUE + 1,
             Direction::SE => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE + 1,
             Direction::SW => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE - 1,
+            Direction::All => unimplemented!("You MUST not use Direction::All with this method")
+        }.apply_endline_delimiter_mask()
+    }
+
+    // TODO: Add tests for this method.
+    fn shift_direction_by(&self, direction: Direction, by: u8) -> Self {
+        // Since we multiply the value by which we want to shift by `by`,
+        // if `by` is `0` then there is nothing to do.
+        if by == 0 {
+            return *self;
+        }
+
+        let board = *self;
+        let by = by as u32;
+        *match direction {
+            Direction::N => board << Self::MOVE_UP_DOWN_SHIFT_VALUE * by,
+            Direction::S => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE * by,
+            Direction::E => board >> 1 * by,
+            Direction::W => board << 1 * by,
+            Direction::NE => board << (Self::MOVE_UP_DOWN_SHIFT_VALUE - 1) * by,
+            Direction::NW => board << (Self::MOVE_UP_DOWN_SHIFT_VALUE + 1) * by,
+            Direction::SE => board >> (Self::MOVE_UP_DOWN_SHIFT_VALUE + 1) * by,
+            Direction::SW => board >> (Self::MOVE_UP_DOWN_SHIFT_VALUE - 1) * by,
             Direction::All => unimplemented!("You MUST not use Direction::All with this method")
         }.apply_endline_delimiter_mask()
     }
@@ -359,9 +583,19 @@ impl BitBoard {
 impl Default for BitBoard {
     /// Create a new instance of an empty `BitBoard`
     fn default() -> Self {
-        Self {
-            b: [0, 0, 0]
-        }
+        Self::EMPTY_BITBOARD
+    }
+}
+
+impl Mul for BitBoard {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self {
+        BitBoard { b: [
+            self.b[0].overflowing_mul(rhs.b[0]).0,
+            self.b[1].overflowing_mul(rhs.b[1]).0,
+            self.b[2].overflowing_mul(rhs.b[2]).0
+        ]}
     }
 }
 
@@ -371,7 +605,7 @@ impl Default for BitBoard {
 impl Shl<u32> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the left on a `BitBoard` using a u32.
+    /// Perform bitshift operation to the left on a `BitBoard` using an u32.
     fn shl(self, rhs: u32) -> Self::Output {
         self.shift_left(rhs as usize)
     }
@@ -380,7 +614,7 @@ impl Shl<u32> for BitBoard {
 impl Shl<u32> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the left on a `BitBoard`'s reference using a u32.
+    /// Perform bitshift operation to the left on a `BitBoard`'s reference using an u32.
     fn shl(self, rhs: u32) -> Self::Output {
         self.shift_left(rhs as usize)
     }
@@ -389,7 +623,7 @@ impl Shl<u32> for &BitBoard {
 impl Shl<usize> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the left on a `BitBoard` using a usize.
+    /// Perform bitshift operation to the left on a `BitBoard` using an usize.
     fn shl(self, rhs: usize) -> Self::Output {
         self.shift_left(rhs)
     }
@@ -398,7 +632,7 @@ impl Shl<usize> for BitBoard {
 impl Shl<usize> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the left on a `BitBoard`'s reference using a usize.
+    /// Perform bitshift operation to the left on a `BitBoard`'s reference using an usize.
     fn shl(self, rhs: usize) -> Self::Output {
         self.shift_left(rhs)
     }
@@ -407,7 +641,7 @@ impl Shl<usize> for &BitBoard {
 impl Shl<i32> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the left on a `BitBoard` using a i32.
+    /// Perform bitshift operation to the left on a `BitBoard` using an i32.
     fn shl(self, rhs: i32) -> Self::Output {
         if rhs.is_negative() {
             self.shift_right(rhs.abs() as usize)
@@ -420,7 +654,7 @@ impl Shl<i32> for BitBoard {
 impl Shl<i32> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the left on a `BitBoard`'s reference using a i32.
+    /// Perform bitshift operation to the left on a `BitBoard`'s reference using an i32.
     fn shl(self, rhs: i32) -> Self::Output {
         if rhs.is_negative() {
             self.shift_right(rhs.abs() as usize)
@@ -453,7 +687,7 @@ impl Shl<Direction> for &BitBoard {
 impl Shr<u32> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the right on a `BitBoard` using a u32.
+    /// Perform bitshift operation to the right on a `BitBoard` using an u32.
     fn shr(self, rhs: u32) -> Self::Output {
         self.shift_right(rhs as usize)
     }
@@ -462,7 +696,7 @@ impl Shr<u32> for BitBoard {
 impl Shr<u32> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the right on a `BitBoard`'s reference using a u32.
+    /// Perform bitshift operation to the right on a `BitBoard`'s reference using an u32.
     fn shr(self, rhs: u32) -> Self::Output {
         self.shift_right(rhs as usize)
     }
@@ -471,7 +705,7 @@ impl Shr<u32> for &BitBoard {
 impl Shr<usize> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the right on a `BitBoard` using a usize.
+    /// Perform bitshift operation to the right on a `BitBoard` using an usize.
     fn shr(self, rhs: usize) -> Self::Output {
         self.shift_right(rhs)
     }
@@ -480,7 +714,7 @@ impl Shr<usize> for BitBoard {
 impl Shr<usize> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the right on a `BitBoard`'s reference using a usize.
+    /// Perform bitshift operation to the right on a `BitBoard`'s reference using an usize.
     fn shr(self, rhs: usize) -> Self::Output {
         self.shift_right(rhs)
     }
@@ -489,7 +723,7 @@ impl Shr<usize> for &BitBoard {
 impl Shr<i32> for BitBoard {
     type Output = Self;
 
-    /// Perform bitshift operation to the right on a `BitBoard` using a i32.
+    /// Perform bitshift operation to the right on a `BitBoard` using an i32.
     fn shr(self, rhs: i32) -> Self::Output {
         if rhs.is_negative() {
             self.shift_left(rhs.abs() as usize)
@@ -502,7 +736,7 @@ impl Shr<i32> for BitBoard {
 impl Shr<i32> for &BitBoard {
     type Output = BitBoard;
 
-    /// Perform bitshift operation to the right on a `BitBoard`'s reference using a i32.
+    /// Perform bitshift operation to the right on a `BitBoard`'s reference using an i32.
     fn shr(self, rhs: i32) -> Self::Output {
         if rhs.is_negative() {
             self.shift_left(rhs.abs() as usize)
@@ -832,7 +1066,7 @@ impl Index<i32> for BitBoard {
 impl Index<(usize, usize)> for BitBoard {
     type Output = bool;
 
-    // Here we assume that (0, 0) is at the top left corner of the board
+    // Here we assume that (0, 0) is in the top left corner of the board
     // with x for the horizontal axis
     // and y for the vertical axis
     fn index(&self, coord: (usize, usize)) -> &Self::Output {
@@ -848,7 +1082,7 @@ impl Index<(usize, usize)> for BitBoard {
 impl Index<(u32, u32)> for BitBoard {
     type Output = bool;
 
-    // Here we assume that (0, 0) is at the top left corner of the board
+    // Here we assume that (0, 0) is in the top left corner of the board
     // with x for the horizontal axis
     // and y for the vertical axis
     fn index(&self, coord: (u32, u32)) -> &Self::Output {
