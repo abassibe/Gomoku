@@ -5,8 +5,10 @@ import buttonEventHandler
 
 mainWindow_en_EN = {}
 dialog_en_EN = {}
+howtoplay_en_EN = {}
 mainWindow_fr_FR = {}
 dialog_fr_FR = {}
+howtoplay_fr_FR = {}
 p1Turn = "Player turn"
 p2Turn = ""
 p1Win = "Black Win"
@@ -254,6 +256,9 @@ def parseTranslationFile():
         elif line == "#dialog.ui":
             toFill = dialog_en_EN
             continue
+        elif line == "#howtoplay.ui":
+            toFill = howtoplay_en_EN
+            continue
         splited = line.split('=')
         for arg in splited[1:]:
             tmp.append(arg)
@@ -263,6 +268,7 @@ def parseTranslationFile():
     tmp = []
     toFill = {}
     for line in f:
+        line = line.replace("\\n", "\n")
         line = line[:-1]
         if line == "#mainwindow.ui":
             toFill = mainWindow_fr_FR
@@ -270,11 +276,29 @@ def parseTranslationFile():
         elif line == "#dialog.ui":
             toFill = dialog_fr_FR
             continue
+        elif line == "#howtoplay.ui":
+            toFill = howtoplay_fr_FR
+            continue
         splited = line.split('=')
         for arg in splited[1:]:
             tmp.append(arg)
         toFill[splited[0]] = tmp
         tmp = []
+
+
+def howtoplayTranslate(option):
+    window = buttonEventHandler.helpDialog
+
+    translationSet = {}
+    if option.langage == "English" or option.langage == "Anglais":
+        translationSet = howtoplay_en_EN
+    else:
+        translationSet = howtoplay_fr_FR
+    for key, value in translationSet.items():
+        try:
+            window.__getattribute__(key).setText(value[0])
+        except:
+            exit("Translation error")
 
 
 def mainWindowTranslate(window, option):
