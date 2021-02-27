@@ -93,6 +93,10 @@ class GameBoard():
         self.placedPoint = []
         self.placedHint = []
 
+    def highLightWinningLine(self, x, y):
+        widget = self.window.__getattr__("centralwidget")
+        widget.drawLine(10, 10, 200, 200)
+
     def placeStone(self, x, y, color, computerMove):
         scaledX = 0
         scaledY = 0
@@ -135,6 +139,8 @@ class GameBoard():
             self.window.gameManager.end()
             self.window.layoutWidget.unsetCursor()
             windowBuilding.winDraw(self.window, 1, color)
+            self.highLightWinningLine(x, y)
+            print("DRAWN")
             return True
         self.window.update()
         return True

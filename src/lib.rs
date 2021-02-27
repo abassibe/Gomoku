@@ -19,7 +19,7 @@ mod algorithm;
 // Presque n'importe quel type peut etre passé tant que c'est un type natif python/rust (check doc)
 // Pour compiler, maturin develop dans le terminal, qui genere un dylib dans le dossier target/debug qu'il faut mettre dans le dossier root du projet.
 
-const DEPTH: u32 = 1;
+const DEPTH: u32 = 4; //VALEUR A CHANGER POUR LA PROFONDEUR DE RECHERCHE
 const WHITE: u8 = 2;
 const BLACK: u8 = 1;
 
@@ -38,7 +38,6 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         }
 
         let goban = assign_color_to_ai(vec_to_string(board), p_color);
-        println!("\nCOLOR IS ={}\n\nPLAYER(AI)\n{}\nENEMY\n{}", p_color, goban.get_player(), goban.get_enemy());
 
         if goban.get_board().is_empty() {
             return Ok((9u32, 9u32));
@@ -81,7 +80,6 @@ fn assign_color_to_ai(str: String, human: u8) -> Goban {
         Goban::new(player, enemy)
     }
     else {
-        println!("Goban after color assign : \n{:?}", Goban::new(enemy, player)); //to remove
         Goban::new(enemy, player)
     }
 }
@@ -90,21 +88,13 @@ fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8) -> (u32, 
     let mut algorithm = Algorithm::new();
     algorithm.update_initial_state(input, *input.get_enemy(), player_captures, opponent_captures);
     let ret = algorithm.get_next_move(DEPTH).unwrap();
-    println!("RET = \n{:?}", ret);
-
-    println!("Get win coord inside launch_ai : "); //to remove
-    println!("{:?}", get_win_coord(*input.get_player(), *ret.get_item().get_player())); //to remove
     get_win_coord(*input.get_player(), *ret.get_item().get_player())
 }
 
 fn get_win_coord(previous: BitBoard, current: BitBoard) -> (u32, u32) {
     let pos = previous ^ current;
-    println!("PREV:\n{}\nCUR:\n{}", previous, current);
-    println!("UNIQUE POS:\n{}", pos);
 
     let i : u32 = *pos.get_bit_indexes().last().unwrap() as u32;
-    println!("I is = {}, coord = {:?}", i, (i / 20, i % 20));
-    // println!("{}", pos);
     (i / 20, i % 20)
 }
 
