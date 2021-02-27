@@ -20,5 +20,5 @@ src/PyInterface/__pycache__/
 /librust_ext.dylib
 /rust_ext.dll
 lib
-bin
 pyvenv.cfg
+/bin/
