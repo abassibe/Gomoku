@@ -13,12 +13,12 @@ helpDialog = None
 def helpButton():
     global helpDialog
 
-    if helpDialog is None:
-        helpDialog = uic.loadUi(str(pathlib.Path("GUI/howtoplay.ui")))
     helpDialog.exec()
 
 
 def optionsEvent(window, option):
+    global helpDialog
+
     if window.gameManager != None and window.gameManager.gameRuning:
         return
     effect = QtWidgets.QGraphicsDropShadowEffect()
@@ -30,6 +30,8 @@ def optionsEvent(window, option):
 
     dialog = uic.loadUi(str(pathlib.Path("GUI/dialog.ui")))
     dialog.ruleCheckbox1.setEnabled(False)
+    if helpDialog is None:
+        helpDialog = uic.loadUi(str(pathlib.Path("GUI/howtoplay.ui")))
     dialog.helpButton.clicked.connect(lambda x: helpButton())
     windowBuilding.dialogTranslate(dialog, option.langage)
     if option.gameMode == "PVE":
