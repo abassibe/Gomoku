@@ -239,7 +239,7 @@ impl BitAnd<BitBoard> for Goban {
     type Output = BitBoard;
 
     fn bitand(self, rhs: BitBoard) -> Self::Output {
-        self.board | rhs
+        self.board & rhs
     }
 }
 
@@ -247,7 +247,7 @@ impl BitXor<BitBoard> for Goban {
     type Output = BitBoard;
 
     fn bitxor(self, rhs: BitBoard) -> Self::Output {
-        self.board | rhs
+        self.board ^ rhs
     }
 }
 
