@@ -13,6 +13,7 @@ mod bitboard;
 mod goban;
 mod node;
 mod stone;
+mod fscore;
 
 // Comment rajouter une fonction python sur rust
 // Simplement rajouter dans le block pymodule une fonction rust avec obligatoirement une instance Python<'_>, et si applicable un PyResult pour le retour

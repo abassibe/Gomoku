@@ -1,13 +1,14 @@
-#[cfg(test)]
-mod tests;
-
 use crate::bitboard::{direction::Direction, new_pattern::*};
+use crate::fscore::Fscore;
 
 use super::{
     bitboard::BitBoard,
-    goban::{Fscore, Goban},
+    goban::Goban,
     node::Node,
 };
+
+#[cfg(test)]
+mod tests;
 
 #[derive(Default)]
 pub struct Algorithm {

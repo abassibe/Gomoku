@@ -1,6 +1,3 @@
-#[cfg(test)]
-mod tests;
-
 use std::{
     cell::RefCell,
     cmp::{Eq, Ordering},
@@ -13,8 +10,12 @@ use std::{
 
 use crate::{
     bitboard::BitBoard,
-    goban::{Fscore, Goban},
+    goban::Goban,
 };
+use crate::fscore::Fscore;
+
+#[cfg(test)]
+mod tests;
 
 /// This type is an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
 pub type Branches = BinaryHeap<Rc<RefCell<Node>>>;

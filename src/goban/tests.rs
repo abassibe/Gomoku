@@ -1,7 +1,7 @@
 use crate::bitboard::BitBoard;
 use crate::goban::Goban;
 
-use super::Fscore;
+use crate::fscore::Fscore;
 
 #[test]
 fn test_goban_neighbour_layers_simple()
