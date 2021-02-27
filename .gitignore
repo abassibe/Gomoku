@@ -19,3 +19,4 @@ src/__pycache__/
 .idea/shelf/
 /librust_ext.dylib
 /rust_ext.dll
+/bin/
