@@ -129,7 +129,7 @@ impl BitBoard {
         let mut index = 0u32;
 
         while self.is_any() {
-            if (&self & &Self::FIRST_BIT_SET).is_any() {
+            if (self & Self::FIRST_BIT_SET).is_any() {
                 list.push(Self::FIRST_BIT_SET >> index);
             }
 
