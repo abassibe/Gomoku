@@ -12,7 +12,7 @@ use crate::{
     bitboard::BitBoard,
     goban::Goban,
 };
-use crate::fscore::Fscore;
+use crate::goban::fscore::Fscore;
 
 #[cfg(test)]
 mod tests;
