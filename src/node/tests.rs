@@ -17,11 +17,11 @@ fn add_many_branches_with_valid_node_generator_should_add_branches()
         for i in 1..10 {
             let mut bitboard = BitBoard::default();
             bitboard.set(i, true);
-            vec.push(Node::new(Goban::new(bitboard, bitboard), n.depth + 1, BitBoard::empty(), 0, 0));
+            vec.push(Node::new(Goban::new(bitboard, bitboard), n.depth + 1, BitBoard::empty(), false,0, 0));
         }
         vec
     };
-    let mut node = Node::new(Goban::default(), 0, BitBoard::empty(), 0, 0);
+    let mut node = Node::new(Goban::default(), 0, BitBoard::empty(), false,0, 0);
     let new_branches = closure(&mut node, true);
 
     // Act
@@ -40,6 +40,7 @@ fn count_branch_with_0_branch_should_return_0() {
         item: Goban::new(bitboard, bitboard),
         depth: 0,
         last_move: BitBoard::empty(),
+        is_players_move: false,
         player_captures: 0,
         opponent_captures: 0,
         branches: Some(Branches::new())
@@ -60,6 +61,7 @@ fn count_branch_with_no_branch_should_return_0() {
         item: Goban::new(bitboard, bitboard),
         depth: 0,
         last_move: BitBoard::empty(),
+        is_players_move: false,
         player_captures: 0,
         opponent_captures: 0,
         branches: None
@@ -81,6 +83,7 @@ fn count_branch_with_3_branches_should_return_3() {
             item: Goban::new(bitboards[0], bitboards[1]),
             depth: 1,
             last_move: BitBoard::empty(),
+            is_players_move: false,
             player_captures: 0,
             opponent_captures: 0,
             branches: None
@@ -89,6 +92,7 @@ fn count_branch_with_3_branches_should_return_3() {
             item: Goban::new(bitboards[1], bitboards[0]),
             depth: 1,
             last_move: BitBoard::empty(),
+            is_players_move: false,
             player_captures: 0,
             opponent_captures: 0,
             branches: None
@@ -97,6 +101,7 @@ fn count_branch_with_3_branches_should_return_3() {
             item: Goban::new(bitboards[0], bitboards[0]),
             depth: 1,
             last_move: BitBoard::empty(),
+            is_players_move: false,
             player_captures: 0,
             opponent_captures: 0,
             branches: None
@@ -110,6 +115,7 @@ fn count_branch_with_3_branches_should_return_3() {
         item: Goban::new(bitboards[1], bitboards[1]),
         depth: 0,
         last_move: BitBoard::empty(),
+        is_players_move: false,
         player_captures: 0,
         opponent_captures: 0,
         branches: Some(branches)
@@ -130,13 +136,14 @@ fn add_branch_should_add_a_branch() {
         item: Goban::new(bitboards[0], bitboards[1]),
         depth: 0,
         last_move: BitBoard::empty(),
+        is_players_move: false,
         player_captures: 0,
         opponent_captures: 0,
         branches: None
     };
 
     // Act
-    let new_node = node.add_branch(Goban::new(bitboards[1], bitboards[0]), BitBoard::empty());
+    let new_node = node.add_branch(Goban::new(bitboards[1], bitboards[0]), BitBoard::empty(), false);
     let nb_branches = node.count_branch();
 
     // Assert
@@ -153,11 +160,11 @@ fn test_display_no_assert() {
         for i in 1..10 {
             let mut bitboard = BitBoard::default();
             bitboard.set(i, true);
-            vec.push(Node::new(Goban::new(bitboard, bitboard), n.depth + 1, BitBoard::empty(), 0, 0));
+            vec.push(Node::new(Goban::new(bitboard, bitboard), n.depth + 1, BitBoard::empty(), false,0, 0));
         }
         vec
     };
-    let mut node = Node::new(Goban::default(), 0, BitBoard::empty(), 0, 0);
+    let mut node = Node::new(Goban::default(), 0, BitBoard::empty(), false, 0, 0);
     let new_branches = closure(&mut node, true);
 
     // Act
