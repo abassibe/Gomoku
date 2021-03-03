@@ -16,7 +16,7 @@ pub enum Axis {
     Vertical,
     DiagUpLeft,
     DiagUpRight,
-    All,
+    All
 }
 
 impl Axis {
@@ -26,7 +26,7 @@ impl Axis {
             Axis::Vertical => Direction::N,
             Axis::DiagUpLeft => Direction::NW,
             Axis::DiagUpRight => Direction::NE,
-            Axis::All => Direction::All,
+            Axis::All => Direction::All
         }
     }
 }
@@ -45,14 +45,14 @@ impl From<Direction> for Axis {
 ///  - `Direction::NE`
 pub struct AxisIterator {
     index: usize,
-    axes: [Direction; ARRAY_SIZE],
+    axes: [Direction; ARRAY_SIZE]
 }
 
 impl AxisIterator {
     pub fn new() -> Self {
         Self {
             index: 0,
-            axes: [Direction::W, Direction::N, Direction::NW, Direction::NE],
+            axes: [Direction::W, Direction::N, Direction::NW, Direction::NE]
         }
     }
 

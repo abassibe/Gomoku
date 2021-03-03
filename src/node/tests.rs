@@ -5,7 +5,6 @@ use std::{
 };
 
 use crate::{bitboard::BitBoard, goban::Goban};
-
 use super::{Node, Branches};
 
 #[test]

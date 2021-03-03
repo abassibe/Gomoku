@@ -12,9 +12,9 @@ use std::{
 	mem::size_of,
 	ops::Mul,
 	ops::{
-		Add, BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Index, Not, Shl, Shr,
-		Sub,
-	},
+		Add, BitAnd, BitAndAssign, BitOr, BitOrAssign,
+		BitXor, BitXorAssign, Index, Not, Shl, Shr, Sub
+	}
 };
 
 const BITS_IN_U128: usize = size_of::<u128>() * 8;

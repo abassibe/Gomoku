@@ -11,7 +11,7 @@ impl Algorithm {
         depth: u32,
         mut alpha: Fscore,
         mut beta: Fscore,
-        maximizing: bool,
+        maximizing: bool
     ) -> Node {
         if depth == 0 {
             // TODO: We have to pass the potential next move to compute_item_fscore, but we don't have it at this point

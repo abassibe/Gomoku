@@ -5,7 +5,7 @@ use std::fmt;
 pub enum Fscore {
     Uninitialized,
     Value(isize),
-    Win,
+    Win
 }
 
 impl Fscore {
@@ -61,7 +61,7 @@ impl Into<u8> for Fscore {
         match self {
             Fscore::Uninitialized => 0,
             Fscore::Value(_) => 1,
-            Fscore::Win => 2,
+            Fscore::Win => 2
         }
     }
 }
@@ -71,7 +71,7 @@ impl Into<u8> for &Fscore {
         match self {
             Fscore::Uninitialized => 0,
             Fscore::Value(_) => 1,
-            Fscore::Win => 2,
+            Fscore::Win => 2
         }
     }
 }
@@ -84,7 +84,7 @@ impl fmt::Display for Fscore {
             match self {
                 Fscore::Uninitialized => "Uninitialized".into(),
                 Fscore::Value(x) => x.to_string(),
-                Fscore::Win => "Win".into(),
+                Fscore::Win => "Win".into()
             }
         )
     }

@@ -18,7 +18,7 @@ pub struct Goban {
 	board: BitBoard,
 	fscore: Fscore,
 	player: BitBoard,
-	enemy: BitBoard,
+	enemy: BitBoard
 }
 
 
@@ -28,7 +28,7 @@ impl Goban {
 			fscore: Fscore::Uninitialized,
 			player,
 			enemy,
-			board: player | enemy,
+			board: player | enemy
 		}
 	}
 
