@@ -12,7 +12,7 @@ pub struct Algorithm {
     initial: Node,
     patterns: NewPattern,
     player_captures: u8,
-    opponent_captures: u8,
+    opponent_captures: u8
 }
 
 impl Algorithm {
@@ -22,8 +22,7 @@ impl Algorithm {
     }
 
     /// Set the initial Node to a new state using the provided Goban.
-    pub fn update_initial_state(
-        &mut self,
+    pub fn update_initial_state(&mut self,
         initial_state: Goban,
         last_move: BitBoard,
         player_captures: u8,
@@ -47,9 +46,7 @@ impl Algorithm {
             (Fscore::Win, _) => Fscore::Win,
             (_, Fscore::Win) => Fscore::Value(isize::MIN),
             (Fscore::Uninitialized, Fscore::Value(score)) => Fscore::Value(-score),
-            (Fscore::Value(player_value), Fscore::Value(enemy_value)) => {
-                Fscore::Value(player_value - enemy_value)
-            }
+            (Fscore::Value(player_value), Fscore::Value(enemy_value)) => Fscore::Value(player_value - enemy_value),
             (Fscore::Value(player_value), _) => Fscore::Value(player_value),
             (Fscore::Uninitialized, Fscore::Uninitialized) => Fscore::Uninitialized,
         };
@@ -88,7 +85,7 @@ impl Algorithm {
                 *enemy,
                 *player,
                 node.get_opponent_captures(),
-                &self.patterns,
+                &self.patterns
             )
             .is_empty()
         {
@@ -112,7 +109,7 @@ impl Algorithm {
             (self.patterns[PatternName::SplitFourRight], 500isize),
             (self.patterns[PatternName::SplitFourLeft], 500isize),
             (self.patterns[PatternName::SplitFourMiddle], 500isize),
-            (self.patterns[PatternName::Five], 10000isize),
+            (self.patterns[PatternName::Five], 10000isize)
         ];
         for &((pattern, pattern_size, is_sym), score) in patterns.iter() {
             let matched = match_pattern(*player, *enemy, pattern, pattern_size, is_sym);
@@ -131,8 +128,7 @@ impl Algorithm {
             result +=
                 ((matched.count_ones() as isize - nb_captures) * score) + (nb_captures * score);
         }
-        result +=
-            extract_capturing_moves(*player, *enemy, &self.patterns).count_ones() as isize * 10;
+        result += extract_capturing_moves(*player, *enemy, &self.patterns).count_ones() as isize * 10;
         result += (player_captures as isize).pow(2) * 20;
 
         Fscore::Value(result)
@@ -159,7 +155,7 @@ impl Algorithm {
                         player_with_move,
                         *parent_enemy,
                         *b,
-                        &self.patterns,
+                        &self.patterns
                     );
                     if captured_by_player.is_any() {
                         player_captures += (captured_by_player.count_ones() / 2) as u8;
@@ -173,7 +169,7 @@ impl Algorithm {
                         enemy_with_move,
                         *parent_player,
                         *b,
-                        &self.patterns,
+                        &self.patterns
                     );
                     if captured_by_enemy.is_any() {
                         enemy_captures += (captured_by_enemy.count_ones() / 2) as u8;
@@ -187,7 +183,7 @@ impl Algorithm {
                     parent.get_depth() + 1,
                     *b,
                     player_captures,
-                    enemy_captures,
+                    enemy_captures
                 )
             })
             .collect()
@@ -198,7 +194,7 @@ impl Algorithm {
         match (player.is_empty(), opponent.is_empty()) {
             (true, false) => (opponent + Direction::All) & !player,
             (true, true) => BitBoard::CENTER_BIT_SET,
-            (false, _) => BitBoard::empty(),
+            (false, _) => BitBoard::empty()
         }
     }
 
@@ -243,7 +239,7 @@ impl Algorithm {
             opponent,
             player_captures,
             opponent_captures,
-            &self.patterns,
+            &self.patterns
         );
         if result.is_any() {
             return result;
@@ -254,7 +250,7 @@ impl Algorithm {
             player,
             opponent_captures,
             player_captures,
-            &self.patterns,
+            &self.patterns
         );
         if result.is_any() {
             let (pattern, pattern_size, is_sym) = self.patterns[PatternName::Five];
@@ -265,7 +261,7 @@ impl Algorithm {
             player,
             opponent,
             opponent_captures,
-            &self.patterns,
+            &self.patterns
         );
         result |= extract_capturing_moves(opponent, player, &self.patterns);
         result |= extract_missing_bit(
@@ -293,21 +289,21 @@ impl Algorithm {
             opponent,
             GET_MOVES_PATTERNS[2].0,
             GET_MOVES_PATTERNS[2].1,
-            GET_MOVES_PATTERNS[2].2,
+            GET_MOVES_PATTERNS[2].2
         );
         result |= extract_missing_bit(
             player,
             opponent,
             GET_MOVES_PATTERNS[3].0,
             GET_MOVES_PATTERNS[3].1,
-            GET_MOVES_PATTERNS[3].2,
+            GET_MOVES_PATTERNS[3].2
         );
         result |= extract_missing_bit(
             player,
             opponent,
             GET_MOVES_PATTERNS[4].0,
             GET_MOVES_PATTERNS[4].1,
-            GET_MOVES_PATTERNS[4].2,
+            GET_MOVES_PATTERNS[4].2
         );
 
         if result.count_ones() > 4 {
@@ -319,7 +315,7 @@ impl Algorithm {
             opponent,
             GET_MOVES_PATTERNS[5].0,
             GET_MOVES_PATTERNS[5].1,
-            GET_MOVES_PATTERNS[5].2,
+            GET_MOVES_PATTERNS[5].2
         );
 
         if result.count_ones() > 2 {
