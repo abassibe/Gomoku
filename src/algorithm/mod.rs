@@ -26,14 +26,14 @@ impl Algorithm {
         initial_state: Goban,
         last_move: BitBoard,
         player_captures: u8,
-        opponent_captures: u8,
+        opponent_captures: u8
     ) {
         let new_initial_node = Node::new(
             initial_state,
             0,
             last_move,
             player_captures,
-            opponent_captures,
+            opponent_captures
         );
         self.initial = new_initial_node;
     }
@@ -48,7 +48,7 @@ impl Algorithm {
             (Fscore::Uninitialized, Fscore::Value(score)) => Fscore::Value(-score),
             (Fscore::Value(player_value), Fscore::Value(enemy_value)) => Fscore::Value(player_value - enemy_value),
             (Fscore::Value(player_value), _) => Fscore::Value(player_value),
-            (Fscore::Uninitialized, Fscore::Uninitialized) => Fscore::Uninitialized,
+            (Fscore::Uninitialized, Fscore::Uninitialized) => Fscore::Uninitialized
         };
         node.set_item_fscore(global_score);
 
@@ -64,14 +64,14 @@ impl Algorithm {
                 goban.get_enemy(),
                 goban.get_player(),
                 node.get_opponent_captures(),
-                node.get_player_captures(),
+                node.get_player_captures()
             )
         } else {
             (
                 goban.get_player(),
                 goban.get_enemy(),
                 node.get_player_captures(),
-                node.get_opponent_captures(),
+                node.get_opponent_captures()
             )
         };
         let mut result = 0isize;
@@ -118,7 +118,7 @@ impl Algorithm {
                 *enemy,
                 pattern,
                 pattern_size,
-                is_sym,
+                is_sym
             );
             let nb_captures = if matched_captures.is_any() {
                 matched_captures.count_ones() as isize
@@ -203,8 +203,7 @@ impl Algorithm {
         &self,
         player: BitBoard,
         opponent: BitBoard,
-        player_captures: u8,
-    ) -> BitBoard {
+        player_captures: u8) -> BitBoard {
         let result = extract_five_align_breaking_moves(player, opponent, &self.patterns);
 
         if result.is_empty() {
@@ -269,14 +268,14 @@ impl Algorithm {
             opponent,
             GET_MOVES_PATTERNS[0].0,
             GET_MOVES_PATTERNS[0].1,
-            GET_MOVES_PATTERNS[0].2,
+            GET_MOVES_PATTERNS[0].2
         );
         result |= extract_missing_bit(
             player,
             opponent,
             GET_MOVES_PATTERNS[1].0,
             GET_MOVES_PATTERNS[1].1,
-            GET_MOVES_PATTERNS[1].2,
+            GET_MOVES_PATTERNS[1].2
         );
         result |= extract_capturing_moves(player, opponent, &self.patterns);
 
