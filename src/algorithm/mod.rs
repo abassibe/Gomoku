@@ -23,10 +23,10 @@ impl Algorithm {
 
     /// Set the initial Node to a new state using the provided Goban.
     pub fn update_initial_state(&mut self,
-        initial_state: Goban,
-        last_move: BitBoard,
-        player_captures: u8,
-        opponent_captures: u8
+                                initial_state: Goban,
+                                last_move: BitBoard,
+                                player_captures: u8,
+                                opponent_captures: u8
     ) {
         let new_initial_node = Node::new(
             initial_state,
@@ -60,18 +60,9 @@ impl Algorithm {
     fn compute_score(&self, node: &Node, player_is_enemy: bool) -> Fscore {
         let goban = node.get_item();
         let (player, enemy, player_captures, enemy_captures) = if player_is_enemy {
-            (
-                goban.get_enemy(),
-                goban.get_player(),
-                node.get_opponent_captures(),
-                node.get_player_captures()
-            )
+            (goban.get_enemy(), goban.get_player(), node.get_opponent_captures(), node.get_player_captures())
         } else {
-            (
-                goban.get_player(),
-                goban.get_enemy(),
-                node.get_player_captures(),
-                node.get_opponent_captures()
+            (goban.get_player(), goban.get_enemy(), node.get_player_captures(), node.get_opponent_captures()
             )
         };
         let mut result = 0isize;
@@ -82,11 +73,11 @@ impl Algorithm {
         if extract_five_aligned(player ^ &extract_captures(*enemy, *player, &self.patterns))
             .is_any()
             && extract_winning_move_capture(
-                *enemy,
-                *player,
-                node.get_opponent_captures(),
-                &self.patterns
-            )
+            *enemy,
+            *player,
+            node.get_opponent_captures(),
+            &self.patterns
+        )
             .is_empty()
         {
             return Fscore::Win;
