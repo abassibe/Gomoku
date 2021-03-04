@@ -476,8 +476,7 @@ impl BitBoard {
 			Direction::SE => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE + 1,
 			Direction::SW => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE - 1,
 			Direction::All => unimplemented!("You MUST not use Direction::All with this method"),
-		}
-			.apply_endline_delimiter_mask()
+		}.apply_endline_delimiter_mask()
 	}
 
 	// TODO: Add tests for this method.
@@ -500,8 +499,7 @@ impl BitBoard {
 			Direction::SE => board >> (Self::MOVE_UP_DOWN_SHIFT_VALUE + 1) * by,
 			Direction::SW => board >> (Self::MOVE_UP_DOWN_SHIFT_VALUE - 1) * by,
 			Direction::All => unimplemented!("You MUST not use Direction::All with this method"),
-		}
-			.apply_endline_delimiter_mask()
+		}.apply_endline_delimiter_mask()
 	}
 
 	/// This method cleans all the bits set in the 20eme column
