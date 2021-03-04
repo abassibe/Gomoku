@@ -51,8 +51,7 @@ impl Algorithm {
         let (player, enemy, player_captures, enemy_captures) = if player_is_enemy {
             (goban.get_enemy(), goban.get_player(), node.get_opponent_captures(), node.get_player_captures())
         } else {
-            (goban.get_player(), goban.get_enemy(), node.get_player_captures(), node.get_opponent_captures()
-            )
+            (goban.get_player(), goban.get_enemy(), node.get_player_captures(), node.get_opponent_captures())
         };
         let mut result = 0isize;
 
