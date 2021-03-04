@@ -47,7 +47,7 @@ class HumanPlayer():
     def startTurn(self):
         self.window.layoutWidget.setCursor(self.cursor)
         if self.window.gameManager.hintButtonBool:
-            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount)
+            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, self.get_last_human_move())
             self.set_last_human_move((x, y)) ## setting new last_move value with x and y as a tuple
             self.window.gameManager.gameBoard.dropHint(x, y, self.color)
         self.window.layoutWidget.setCursor(self.cursor)
@@ -74,6 +74,9 @@ class ComputerPlayer():
         self.colorLabel = window.playerTwoLabel
         self.window = window
         self.startTime = 0.0
+
+        self.last_ai_move = (0, 0)
+
         if self.color == 1:
             self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt \"SF Wasabi\";")
         else:
@@ -82,13 +85,20 @@ class ComputerPlayer():
         self.playerCapture = None
         self.stoneRemovedCount = 0
 
+    def set_last_ai_move(self, update):
+        self.last_ai_move = update
+
+    def get_last_ai_move(self):
+        return self.last_ai_move
+
     def start(self):
         self.window.playerTwoTimer.setText("00:00:00")
 
     def startTurn(self):
         self.turnTime.start()
         self.startTime = time()
-        x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount)
+        x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, self.get_last_ai_move())
+        self.set_last_ai_move((x, y))
         self.turnTime.stop()
         if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) is None:
             return
