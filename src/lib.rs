@@ -33,7 +33,7 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         p_color: u8,
         hint: &PyBool,
         human_capture: i32,
-        ai_capture: i32,
+        ai_capture: i32
     ) -> PyResult<(u32, u32)> {
         let board: Vec<u8> = goban.to_vec()?;
 
@@ -96,10 +96,7 @@ fn assign_color_to_ai(str: String, human: u8) -> Goban {
     if human == WHITE {
         Goban::new(player, enemy)
     } else {
-        println!(
-            "Goban after color assign : \n{:?}",
-            Goban::new(enemy, player)
-        ); //to remove
+        println!("Goban after color assign : \n{:?}", Goban::new(enemy, player)); //to remove
         Goban::new(enemy, player)
     }
 }
@@ -110,16 +107,13 @@ fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8) -> (u32, 
         input,
         *input.get_enemy(),
         player_captures,
-        opponent_captures,
+        opponent_captures
     );
     let ret = algorithm.get_next_move(DEPTH).unwrap();
     // println!("RET = \n{:?}", ret);
 
     println!("Get win coord inside launch_ai : "); //to remove
-    println!(
-        "{:?}",
-        get_win_coord(*input.get_player(), *ret.get_item().get_player())
-    ); //to remove
+    println!("{:?}", get_win_coord(*input.get_player(), *ret.get_item().get_player())); //to remove
     get_win_coord(*input.get_player(), *ret.get_item().get_player())
 }
 
@@ -133,6 +127,3 @@ fn get_win_coord(previous: BitBoard, current: BitBoard) -> (u32, u32) {
     // println!("{}", pos);
     (i / 20, i % 20)
 }
-
-#[cfg(test)]
-mod tests {}
