@@ -61,12 +61,11 @@ impl Algorithm {
         if extract_five_aligned(player ^ &extract_captures(*enemy, *player, &self.patterns))
             .is_any()
             && extract_winning_move_capture(
-            *enemy,
-            *player,
-            node.get_opponent_captures(),
-            &self.patterns
-        )
-            .is_empty()
+                *enemy,
+                *player,
+                node.get_opponent_captures(),
+                &self.patterns
+            ).is_empty()
         {
             return Fscore::Win;
         }
