@@ -65,10 +65,8 @@ impl Goban {
 				total += match self.check_surround(final_line, dir) {
 					2 => len,
 					1 => len / 2,
-					_ => 0,
+					_ => 0
 				};
-				// println!("Change Direction (Current: {:?})\nTotal = {}\n", dir, total);
-				// println!("^-------------------------^\n{}v-------------------------v", final_line);
 			}
 		}
 		Fscore::Value(total)
@@ -95,7 +93,7 @@ impl Goban {
 		self.fscore = match previous_state.compute_heuristic(to_play) {
 			Fscore::Win => Fscore::Win,
 			Fscore::Value(x) => Fscore::Value(x + depth as isize),
-			uninit => uninit,
+			uninit => uninit
 		};
 		self.fscore
 	}
