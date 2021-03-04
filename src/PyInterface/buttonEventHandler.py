@@ -79,7 +79,7 @@ def hintEvent(hintButton, window):
                 color = window.gameManager.player2.color
             x, y = window.algoPointer(window.gameManager.gameBoard.grid, color, True,
                                       window.gameManager.player1.stoneRemovedCount,
-                                      window.gameManager.player2.stoneRemovedCount)
+                                      window.gameManager.player2.stoneRemovedCount) 
             window.gameManager.gameBoard.dropHint(x, y, color)
     else:
         effect.setColor(QtGui.QColor(0, 0, 0, 90))

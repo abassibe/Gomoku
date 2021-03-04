@@ -27,16 +27,10 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     #[pyfn(m, "get_next_move")]
     /// Interfacing function.
     /// Takes the Python GIL, the board in the shape of a 19*19 numpy 2d array, the color of the human player, a boolean that indicates if this is a hint request, and the number of captures made by the human and the ai.
-    fn get_next_move(
-        py: Python<'_>,
-        goban: &PyArray2<u8>,
-        p_color: u8,
-        hint: &PyBool,
-        human_capture: i32,
-        ai_capture: i32
-    ) -> PyResult<(u32, u32)> {
-        let board: Vec<u8> = goban.to_vec()?;
+    fn get_next_move(py: Python<'_>, goban: &PyArray2<u8>, p_color: u8, hint: &PyBool, human_capture: i32, ai_capture: i32, last_human_move : (u16, u16)) -> PyResult<(u32, u32)> {
+        let board:Vec<u8> = goban.to_vec()?;
 
+        println!("last human move = ({} : {})", last_human_move.0, last_human_move.1);
         if board.len() != 361 {
             return Err(exceptions::PyTypeError::new_err(format!(
                 "Fatal Rust Error: Invalid board size (Expected 361, got {})",
