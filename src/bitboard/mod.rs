@@ -80,7 +80,7 @@ impl BitBoard {
 	// #region Constructors
 	pub const fn new(one: u128, two: u128, three: u128) -> Self {
 		Self {
-			b: [one, two, three],
+			b: [one, two, three]
 		}
 	}
 
@@ -116,7 +116,7 @@ impl BitBoard {
 		BitBoard::from_array([
 			u128::from_str_radix(bins[0], 2).unwrap(),
 			u128::from_str_radix(bins[1], 2).unwrap(),
-			u128::from_str_radix(bins[2], 2).unwrap(),
+			u128::from_str_radix(bins[2], 2).unwrap()
 		])
 	}
 	// #endregion Constructors
@@ -472,7 +472,7 @@ impl BitBoard {
 			Direction::NW => board << Self::MOVE_UP_DOWN_SHIFT_VALUE + 1,
 			Direction::SE => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE + 1,
 			Direction::SW => board >> Self::MOVE_UP_DOWN_SHIFT_VALUE - 1,
-			Direction::All => unimplemented!("You MUST not use Direction::All with this method"),
+			Direction::All => unimplemented!("You MUST not use Direction::All with this method")
 		}.apply_endline_delimiter_mask()
 	}
 
@@ -495,7 +495,7 @@ impl BitBoard {
 			Direction::NW => board << (Self::MOVE_UP_DOWN_SHIFT_VALUE + 1) * by,
 			Direction::SE => board >> (Self::MOVE_UP_DOWN_SHIFT_VALUE + 1) * by,
 			Direction::SW => board >> (Self::MOVE_UP_DOWN_SHIFT_VALUE - 1) * by,
-			Direction::All => unimplemented!("You MUST not use Direction::All with this method"),
+			Direction::All => unimplemented!("You MUST not use Direction::All with this method")
 		}.apply_endline_delimiter_mask()
 	}
 
@@ -522,8 +522,8 @@ impl BitBoard {
 					result |= self << d;
 				}
 				result
-			}
-			d => *self | (self << d),
+			},
+			d => *self | (self << d)
 		}
 	}
 
@@ -538,8 +538,8 @@ impl BitBoard {
 					result |= self << d;
 				}
 				result
-			}
-			d => *self | (self << d.to_direction()),
+			},
+			d => *self | (self << d.to_direction())
 		}
 	}
 
@@ -557,8 +557,8 @@ impl BitBoard {
 					result &= self << d;
 				}
 				result
-			}
-			d => *self & (self << d),
+			},
+			d => *self & (self << d)
 		}
 	}
 
@@ -574,8 +574,8 @@ impl BitBoard {
 					result &= self << d;
 				}
 				result
-			}
-			d => *self & (self << d.to_direction()),
+			},
+			d => *self & (self << d.to_direction())
 		}
 	}
 }
@@ -601,8 +601,8 @@ impl Mul for BitBoard {
 			b: [
 				self.b[0].overflowing_mul(rhs.b[0]).0,
 				self.b[1].overflowing_mul(rhs.b[1]).0,
-				self.b[2].overflowing_mul(rhs.b[2]).0,
-			],
+				self.b[2].overflowing_mul(rhs.b[2]).0
+			]
 		}
 	}
 }
@@ -784,8 +784,8 @@ impl BitOr for BitBoard {
 			b: [
 				self.b[0] | rhs.b[0],
 				self.b[1] | rhs.b[1],
-				self.b[2] | rhs.b[2],
-			],
+				self.b[2] | rhs.b[2]
+			]
 		}
 	}
 }
@@ -799,8 +799,8 @@ impl BitOr for &BitBoard {
 			b: [
 				self.b[0] | rhs.b[0],
 				self.b[1] | rhs.b[1],
-				self.b[2] | rhs.b[2],
-			],
+				self.b[2] | rhs.b[2]
+			]
 		}
 	}
 }
@@ -832,8 +832,8 @@ impl BitXor for BitBoard {
 			b: [
 				self.b[0] ^ rhs.b[0],
 				self.b[1] ^ rhs.b[1],
-				self.b[2] ^ rhs.b[2],
-			],
+				self.b[2] ^ rhs.b[2]
+			]
 		}
 	}
 }
@@ -847,8 +847,8 @@ impl BitXor for &BitBoard {
 			b: [
 				self.b[0] ^ rhs.b[0],
 				self.b[1] ^ rhs.b[1],
-				self.b[2] ^ rhs.b[2],
-			],
+				self.b[2] ^ rhs.b[2]
+			]
 		}
 	}
 }
@@ -889,8 +889,8 @@ impl BitAnd for BitBoard {
 			b: [
 				self.b[0] & rhs.b[0],
 				self.b[1] & rhs.b[1],
-				self.b[2] & rhs.b[2],
-			],
+				self.b[2] & rhs.b[2]
+			]
 		}
 	}
 }
@@ -904,8 +904,8 @@ impl BitAnd for &BitBoard {
 			b: [
 				self.b[0] & rhs.b[0],
 				self.b[1] & rhs.b[1],
-				self.b[2] & rhs.b[2],
-			],
+				self.b[2] & rhs.b[2]
+			]
 		}
 	}
 }
@@ -943,7 +943,7 @@ impl Not for BitBoard {
 	/// Perform bitwise operation NOT on a `BitBoard`.
 	fn not(self) -> Self::Output {
 		*Self::Output {
-			b: [!self.b[0], !self.b[1], !self.b[2]],
+			b: [!self.b[0], !self.b[1], !self.b[2]]
 		}.apply_endline_delimiter_mask()
 	}
 }
@@ -954,7 +954,7 @@ impl Not for &BitBoard {
 	/// Perform bitwise operation NOT on a `BitBoard`'s reference.
 	fn not(self) -> Self::Output {
 		*BitBoard {
-			b: [!self.b[0], !self.b[1], !self.b[2]],
+			b: [!self.b[0], !self.b[1], !self.b[2]]
 		}.apply_endline_delimiter_mask()
 	}
 }

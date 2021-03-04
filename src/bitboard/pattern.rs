@@ -61,7 +61,7 @@ pub enum PatternName {
 
 #[derive(Debug)]
 pub struct NewPattern {
-    patterns: HashMap<PatternName, (u8, u8, bool)>,
+    patterns: HashMap<PatternName, (u8, u8, bool)>
 }
 
 impl NewPattern {
@@ -124,10 +124,7 @@ pub fn match_pattern_base(
     let (mut result, mut edge_mask) = if closure_bits == U8_FIRST_BIT {
         (opponent, BitBoard::empty())
     } else {
-        (
-            BitBoard::full(),
-            EDGE_MASK << direction << direction.to_invert(),
-        )
+        (BitBoard::full(), EDGE_MASK << direction << direction.to_invert())
     };
     let mut x = 0;
 
@@ -487,7 +484,7 @@ pub fn extract_missing_bit(
                 tmp,
                 pattern_size,
                 pattern_size - i - 1,
-                closure_bits,
+                closure_bits
             );
         } else {
             result |= match_pattern_all_directions(
@@ -496,7 +493,7 @@ pub fn extract_missing_bit(
                 tmp,
                 pattern_size,
                 pattern_size - i - 1,
-                closure_bits,
+                closure_bits
             );
         }
     }
@@ -611,7 +608,7 @@ pub fn extract_five_align_breaking_moves(
             0,
             U8_FIRST_BIT,
             open_cells,
-            direction,
+            direction
         );
         // TODO: We probably can do much better in term of perf here
         let tmp = (((tmp >> inverted_direction) & opponent_fives) >> direction)
