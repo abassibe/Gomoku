@@ -97,15 +97,13 @@ impl BitBoard {
 	}
 
 	pub fn from_str(from: &str) -> Self {
-		let mut one_line_str: String =
-			from.split_ascii_whitespace()
-			    .fold(String::new(), |mut r, n| {
-				    r.push_str(n);
-				    if n.len() == 19 {
-					    r.push('0');
-				    }
-				    r
-			    });
+		let mut one_line_str: String = from.split_ascii_whitespace().fold(String::new(), |mut r, n| {
+			r.push_str(n);
+			if n.len() == 19 {
+				r.push('0');
+			}
+			r
+		});
 		let bits_count = one_line_str.len();
 		for _ in 0..(BITS_IN_U128 * 3) - bits_count {
 			one_line_str.push('0');
