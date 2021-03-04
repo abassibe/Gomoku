@@ -944,8 +944,7 @@ impl Not for BitBoard {
 	fn not(self) -> Self::Output {
 		*Self::Output {
 			b: [!self.b[0], !self.b[1], !self.b[2]],
-		}
-			.apply_endline_delimiter_mask()
+		}.apply_endline_delimiter_mask()
 	}
 }
 
@@ -956,8 +955,7 @@ impl Not for &BitBoard {
 	fn not(self) -> Self::Output {
 		*BitBoard {
 			b: [!self.b[0], !self.b[1], !self.b[2]],
-		}
-			.apply_endline_delimiter_mask()
+		}.apply_endline_delimiter_mask()
 	}
 }
 // #endregion Trait bitwise op
