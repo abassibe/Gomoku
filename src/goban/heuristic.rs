@@ -74,14 +74,12 @@ impl Goban {
 
 	// TODO Reimplement neighbour layering somehow? -> I think this won't be necessary
 	pub fn compute_heuristic(&self, to_play: &BitBoard) -> Fscore {
-		// (self.neighbour_layering(to_play) - self.line_detection()) as u64
 		match self.line_detection() {
 			Fscore::Win => Fscore::Win,
 			Fscore::Value(x) => {
 				let neighbour_layering = self.neighbour_layering(to_play) * 10;
-				Fscore::Value(neighbour_layering - x)
-			}
-			uninit => uninit,
+				Fscore::Value(neighbour_layering - x) },
+			uninit => uninit
 		}
 	}
 
