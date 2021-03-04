@@ -5,12 +5,12 @@ use std::{
     fmt,
     fmt::Debug,
     hash::{Hash, Hasher},
-    rc::Rc,
+    rc::Rc
 };
 
 use crate::{
     bitboard::BitBoard,
-    goban::Goban,
+    goban::Goban
 };
 use crate::goban::fscore::Fscore;
 
@@ -45,7 +45,7 @@ pub struct Node {
     opponent_captures: u8,
     /// `branches` is a [`BinaryHeap`], wrapped in an [`Option`], which hold child nodes.
     /// The type `Branches` is used for convenience and is just an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
-    branches: Option<Branches>,
+    branches: Option<Branches>
 }
 
 impl fmt::Display for Node {
@@ -86,7 +86,7 @@ impl Node {
         depth: usize,
         last_move: BitBoard,
         player_captures: u8,
-        opponent_captures: u8,
+        opponent_captures: u8
     ) -> Self {
         Self {
             item,
@@ -94,7 +94,7 @@ impl Node {
             last_move,
             player_captures,
             opponent_captures,
-            branches: None,
+            branches: None
         }
     }
 
@@ -122,7 +122,7 @@ impl Node {
         &mut self,
         previous_state: &Goban,
         to_play: &BitBoard,
-        depth: usize,
+        depth: usize
     ) -> Fscore {
         self.item.compute_fscore(previous_state, to_play, depth)
     }
@@ -133,7 +133,7 @@ impl Node {
             self.depth + 1,
             last_move,
             self.player_captures,
-            self.opponent_captures,
+            self.opponent_captures
         )));
         let mut branches = self.branches.take().unwrap_or_default();
 
