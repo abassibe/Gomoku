@@ -255,10 +255,7 @@ impl BitBoard {
 		let inner_lshift = by % BITS_IN_U128;
 		let inner_rshift = BITS_IN_U128 - inner_lshift;
 		let value_off = by / BITS_IN_U128;
-		for (dest_i, src_i) in (0..=(max_index - value_off))
-			.rev()
-			.zip((0..=max_index).rev())
-		{
+		for (dest_i, src_i) in (0..=(max_index - value_off)).rev().zip((0..=max_index).rev()) {
 			if src_i < max_index && inner_rshift < BITS_IN_U128 {
 				new_bits[dest_i] = bits[src_i + 1] >> inner_rshift
 			}
