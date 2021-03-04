@@ -5,7 +5,7 @@ use super::{bitboard::BitBoard, goban::Goban, node::Node};
 
 #[cfg(test)]
 mod tests;
-mod minmax;
+mod minimax;
 
 #[derive(Default)]
 pub struct Algorithm {
