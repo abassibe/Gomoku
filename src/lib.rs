@@ -30,7 +30,6 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     fn get_next_move(py: Python<'_>, goban: &PyArray2<u8>, p_color: u8, hint: &PyBool, human_capture: i32, ai_capture: i32, last_move : Option<(u16, u16)>) -> PyResult<(u32, u32)> {
         let board:Vec<u8> = goban.to_vec()?;
 
-        println!("last move : ({} {})", last_move.unwrap_or_default().0, last_move.unwrap_or_default().1);
         if board.len() != 361 {
             return Err(exceptions::PyTypeError::new_err(format!(
                 "Fatal Rust Error: Invalid board size (Expected 361, got {})",

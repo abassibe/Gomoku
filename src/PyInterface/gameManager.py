@@ -6,6 +6,7 @@ import windowBuilding
 import rulesSet
 import numpy as np
 
+last_move = (0, 0)
 
 class HumanPlayer():
     def __init__(self, window, color):
@@ -17,8 +18,6 @@ class HumanPlayer():
         self.timerText = None
         self.startTime = 0.0
 
-        self.last_human_move = (None, None) #Tuple last human move, send to rust to properly check the game ending moves
-
         if color == 1:
             self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/blackStone.png"))))
         else:
@@ -27,15 +26,6 @@ class HumanPlayer():
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.timerText))
         self.playerCapture = None
         self.stoneRemovedCount = 0
-
-    def set_last_human_move(self, last_move):
-        self.last_human_move = last_move
-
-    def get_last_human_move(self):
-        """Function call to give rust the last move played by the human player
-            since Python is the only one who knows what the player last played, 
-            rust knows what is the last AI move but not what is the last player move"""
-        return self.last_human_move
 
     def start(self):
         self.timerText.setText("00:00:00")
@@ -46,9 +36,12 @@ class HumanPlayer():
 
     def startTurn(self):
         self.window.layoutWidget.setCursor(self.cursor)
+        global last_move
         if self.window.gameManager.hintButtonBool:
-            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, self.get_last_human_move())
-            self.set_last_human_move((x, y)) ## setting new last_move value with x and y as a tuple
+            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True,\
+                    self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move)
+            last_move = (x, y)
+            print("last_move ", last_move)
             self.window.gameManager.gameBoard.dropHint(x, y, self.color)
         self.window.layoutWidget.setCursor(self.cursor)
         windowBuilding.playerTurnEffect(self.window, self.color)
@@ -75,8 +68,6 @@ class ComputerPlayer():
         self.window = window
         self.startTime = 0.0
 
-        self.last_ai_move = (0, 0)
-
         if self.color == 1:
             self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt \"SF Wasabi\";")
         else:
@@ -85,20 +76,17 @@ class ComputerPlayer():
         self.playerCapture = None
         self.stoneRemovedCount = 0
 
-    def set_last_ai_move(self, update):
-        self.last_ai_move = update
-
-    def get_last_ai_move(self):
-        return self.last_ai_move
-
     def start(self):
         self.window.playerTwoTimer.setText("00:00:00")
 
     def startTurn(self):
         self.turnTime.start()
         self.startTime = time()
-        x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, self.get_last_ai_move())
-        self.set_last_ai_move((x, y))
+        global last_move
+        x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False,\
+                self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move)
+        last_move = (x, y)
+        print("last_move ", last_move)
         self.turnTime.stop()
         if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) is None:
             return
