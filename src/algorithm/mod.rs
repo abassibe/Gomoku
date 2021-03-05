@@ -22,8 +22,8 @@ impl Algorithm {
     }
 
     /// Set the initial Node to a new state using the provided Goban.
-    pub fn update_initial_state(&mut self, initial_state: Goban, last_move: BitBoard, player_captures: u8, opponent_captures: u8) {
-        let new_initial_node = Node::new( initial_state, 0, last_move, player_captures, opponent_captures);
+    pub fn update_initial_state(&mut self, initial_state: Goban, last_move: BitBoard, player_captures: u8, opponent_captures:u8) {
+        let new_initial_node = Node::new(initial_state, 0, last_move, false, player_captures, opponent_captures);
         self.initial = new_initial_node;
     }
 
@@ -35,6 +35,7 @@ impl Algorithm {
             (Fscore::Win, _) => Fscore::Win,
             (_, Fscore::Win) => Fscore::Value(isize::MIN),
             (Fscore::Uninitialized, Fscore::Value(score)) => Fscore::Value(-score),
+            // (Fscore::Value(player_value), Fscore::Value(enemy_value)) => Fscore::Value(player_value - (enemy_value as f64 * 1.5).round() as isize),
             (Fscore::Value(player_value), Fscore::Value(enemy_value)) => Fscore::Value(player_value - enemy_value),
             (Fscore::Value(player_value), _) => Fscore::Value(player_value),
             (Fscore::Uninitialized, Fscore::Uninitialized) => Fscore::Uninitialized
@@ -71,25 +72,29 @@ impl Algorithm {
         }
         let three_cross_four = extract_missing_bit_cross_three_with_four(*player, *enemy);
         if three_cross_four.is_any() {
-            result += three_cross_four.count_ones() as isize * 100;
+            result += three_cross_four.count_ones() as isize * if node.is_players_last_move() { 500 } else { 1000 };
+            // result += three_cross_four.count_ones() as isize * 100;
         }
         let four_cross_four = extract_missing_bit_cross_four_with_four(*player, *enemy);
         if four_cross_four.is_any() {
-            result += four_cross_four.count_ones() as isize * 200;
+            result += four_cross_four.count_ones() as isize * if node.is_players_last_move() { 750 } else { 1200 };
+            // result += four_cross_four.count_ones() as isize * 200;
         }
+        // TODO: Let this be a global static
         let patterns: [((u8, u8, bool), isize); 10] = [
-            (self.patterns[PatternName::OpenThree], 200isize),
+            (self.patterns[PatternName::OpenThree], 500isize),
             (self.patterns[PatternName::CloseThree], 50isize),
-            (self.patterns[PatternName::OpenSplitThreeLeft], 200isize),
-            (self.patterns[PatternName::OpenSplitThreeRight], 200isize),
-            (self.patterns[PatternName::OpenFour], 1000isize),
-            (self.patterns[PatternName::CloseFour], 500isize),
-            (self.patterns[PatternName::SplitFourRight], 500isize),
-            (self.patterns[PatternName::SplitFourLeft], 500isize),
-            (self.patterns[PatternName::SplitFourMiddle], 500isize),
-            (self.patterns[PatternName::Five], 10000isize)
+            (self.patterns[PatternName::OpenSplitThreeLeft], 490isize),
+            (self.patterns[PatternName::OpenSplitThreeRight], 490isize),
+            (self.patterns[PatternName::OpenFour], 1100isize),
+            (self.patterns[PatternName::CloseFour], 1000isize),
+            (self.patterns[PatternName::SplitFourRight], 1000isize),
+            (self.patterns[PatternName::SplitFourLeft], 1000isize),
+            (self.patterns[PatternName::SplitFourMiddle], 1000isize),
+            (self.patterns[PatternName::Five], 5000isize)
         ];
         for &((pattern, pattern_size, is_sym), score) in patterns.iter() {
+            let score = if node.is_players_last_move() { score / 10 } else { score };
             let matched = match_pattern(*player, *enemy, pattern, pattern_size, is_sym);
             let matched_captures = match_pattern(
                 extract_captures(*enemy, *player, &self.patterns) ^ *player,
@@ -127,42 +132,27 @@ impl Algorithm {
             .map(|b| {
                 let mut player_captures = parent_player_captures;
                 let mut enemy_captures = parent_enemy_captures;
-                let (player, enemy) = if maximazing {
-                    let player_with_move = parent_player | b;
-                    let captured_by_player = extract_captured_by_move(
-                        player_with_move,
-                        *parent_enemy,
-                        *b,
-                        &self.patterns
-                    );
-                    if captured_by_player.is_any() {
-                        player_captures += (captured_by_player.count_ones() / 2) as u8;
-                        (player_with_move, parent_enemy ^ &captured_by_player)
+                let (player, enemy, is_players_move) =
+                    if maximazing {
+                        let player_with_move = parent_player | b;
+                        let captured_by_player = extract_captured_by_move(player_with_move, *parent_enemy, *b, &self.patterns);
+                        if captured_by_player.is_any() {
+                            player_captures += (captured_by_player.count_ones() / 2) as u8;
+                            (player_with_move, parent_enemy ^ &captured_by_player, true)
+                        } else {
+                            (player_with_move, *parent_enemy, true)
+                        }
                     } else {
-                        (player_with_move, *parent_enemy)
-                    }
-                } else {
-                    let enemy_with_move = parent_enemy | b;
-                    let captured_by_enemy = extract_captured_by_move(
-                        enemy_with_move,
-                        *parent_player,
-                        *b,
-                        &self.patterns
-                    );
-                    if captured_by_enemy.is_any() {
-                        enemy_captures += (captured_by_enemy.count_ones() / 2) as u8;
-                        (parent_player ^ &captured_by_enemy, enemy_with_move)
-                    } else {
-                        (*parent_player, enemy_with_move)
-                    }
-                };
-                Node::new(
-                    Goban::new(player, enemy),
-                    parent.get_depth() + 1,
-                    *b,
-                    player_captures,
-                    enemy_captures
-                )
+                        let enemy_with_move = parent_enemy | b;
+                        let captured_by_enemy = extract_captured_by_move(enemy_with_move, *parent_player, *b, &self.patterns);
+                        if captured_by_enemy.is_any() {
+                            enemy_captures += (captured_by_enemy.count_ones() / 2) as u8;
+                            (parent_player ^ &captured_by_enemy, enemy_with_move, false)
+                        } else {
+                            (*parent_player, enemy_with_move, false)
+                        }
+                    };
+                Node::new(Goban::new(player, enemy), parent.get_depth() + 1, *b, is_players_move, player_captures, enemy_captures)
             })
             .collect()
     }
@@ -189,6 +179,54 @@ impl Algorithm {
         } else {
             result
         }
+    }
+
+    fn is_game_over(&self, current: &Node) -> bool {
+        let goban = current.get_item();
+        let (player, opponent, player_captures, opponent_captures) = if current.is_players_last_move() {
+            (goban.get_player(), goban.get_enemy(), current.get_player_captures(), current.get_opponent_captures())
+        } else {
+            (goban.get_enemy(), goban.get_player(), current.get_opponent_captures(), current.get_player_captures())
+        };
+        let last_move = current.get_last_move();
+
+        // Current player wins by capture
+        if player_captures >= 5 {
+            return true;
+        }
+        // Current opponent wins by unbroken 5 alignment
+        // TODO: We probably want to extract the breaking moves here instead of the 5 alignment.
+        if opponent.contains_five_aligned() && (extract_five_aligned(*opponent) & last_move).is_empty() {
+            return true;
+        }
+        if !player.contains_five_aligned() {
+            // Game is over because there is no more empty cells to play
+            if goban.get_board().is_full() {
+                return true;
+            }
+            // The game is not over yet
+            else {
+                return false;
+            }
+        }
+        // Player wins by unbroken 5 alignment
+        if (extract_five_aligned(*player) & last_move).is_empty() {
+            return true;
+        }
+        // Opponent wins by unbroken 5 alignment
+        if opponent.contains_five_aligned() {
+            return true;
+        }
+        // Opponent still can break player's 5 alignment
+        if extract_five_align_breaking_moves(*opponent, *player, &self.patterns).is_any() {
+            return false;
+        }
+        // Opponent still can win by capture
+        if extract_winning_move_capture(*opponent, *player, opponent_captures, &self.patterns).is_any() {
+            return false;
+        }
+        // Player wins by unbreakable alignment
+        return true;
     }
 
     fn get_potential_moves(&self, parent: &Node) -> BitBoard {

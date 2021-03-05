@@ -40,6 +40,7 @@ pub struct Node {
     /// `item` is the inner value which is held by a Node.
     item: Goban,
     depth: usize,
+    is_players_move: bool,
     last_move: BitBoard,
     player_captures: u8,
     opponent_captures: u8,
@@ -81,17 +82,12 @@ impl Hash for Node {
 }
 
 impl Node {
-    pub fn new(
-        item: Goban,
-        depth: usize,
-        last_move: BitBoard,
-        player_captures: u8,
-        opponent_captures: u8
-    ) -> Self {
+    pub fn new(item: Goban, depth: usize, last_move: BitBoard, is_players_move: bool, player_captures: u8, opponent_captures: u8) -> Self {
         Self {
             item,
             depth,
             last_move,
+            is_players_move,
             player_captures,
             opponent_captures,
             branches: None
@@ -106,12 +102,20 @@ impl Node {
         self.depth
     }
 
+    pub fn get_last_move(&self) -> BitBoard {
+        self.last_move
+    }
+
     pub fn get_player_captures(&self) -> u8 {
         self.player_captures
     }
 
     pub fn get_opponent_captures(&self) -> u8 {
         self.opponent_captures
+    }
+
+    pub fn is_players_last_move(&self) -> bool {
+        self.is_players_move
     }
 
     pub fn set_item_fscore(&mut self, fscore: Fscore) {
@@ -127,14 +131,8 @@ impl Node {
         self.item.compute_fscore(previous_state, to_play, depth)
     }
 
-    pub fn add_branch(&mut self, item: Goban, last_move: BitBoard) -> Rc<RefCell<Self>> {
-        let new_node = Rc::new(RefCell::new(Self::new(
-            item,
-            self.depth + 1,
-            last_move,
-            self.player_captures,
-            self.opponent_captures
-        )));
+    pub fn add_branch(&mut self, item: Goban, last_move: BitBoard, is_players_move: bool) -> Rc<RefCell<Self>> {
+        let new_node = Rc::new(RefCell::new(Self::new(item, self.depth + 1, last_move, is_players_move, self.player_captures, self.opponent_captures)));
         let mut branches = self.branches.take().unwrap_or_default();
 
         branches.push(Rc::clone(&new_node));
