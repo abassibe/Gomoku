@@ -5,7 +5,7 @@ use crate::node::Node;
 // Not sure if this is a good idea, just trying it out.
 impl Algorithm {
     // TODO: There is a lot of duplicated code in this function, we should refactor it.
-    fn minimax(&self, node: &mut Node, depth: u32, mut alpha: Fscore, mut beta: Fscore, maximizing: bool) -> Node {
+    pub(super) fn minimax(&self, node: &mut Node, depth: u32, mut alpha: Fscore, mut beta: Fscore, maximizing: bool) -> Node {
         if depth == 0 {
             // TODO: We have to pass the potential next move to compute_item_fscore, but we don't have it at this point
             // and I'm not even sure we actually need it, maybe we should remove it completely?
