@@ -43,7 +43,11 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         if goban.get_board().is_empty() {
             return Ok((9u32, 9u32));
         }
-        let ret = launch_ai(goban, (ai_capture / 2) as u8, (human_capture / 2) as u8);
+        let mut last_move = BitBoard::empty();
+        if let Some((x, y)) = last_move_human.or(last_move_ai) {
+            last_move.set((y * BitBoard::MOVE_UP_DOWN_SHIFT_VALUE as u16 + x) as isize, true);
+        }
+        let ret = launch_ai(goban, (ai_capture / 2) as u8, (human_capture / 2) as u8, last_move);
         Ok(ret)
     }
 
@@ -89,9 +93,9 @@ fn assign_color_to_ai(str: String, human: u8) -> Goban {
     }
 }
 
-fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8) -> (u32, u32) {
+fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8, last_move: BitBoard) -> (u32, u32) {
     let mut algorithm = Algorithm::new();
-    algorithm.update_initial_state(input, BitBoard::empty(), player_captures, opponent_captures);
+    algorithm.update_initial_state(input, last_move, player_captures, opponent_captures);
     let ret = algorithm.get_next_move(DEPTH).unwrap();
     // println!("RET = \n{:?}", ret);
 
