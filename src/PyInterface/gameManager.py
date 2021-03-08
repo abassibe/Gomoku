@@ -254,7 +254,7 @@ class GameManager():
         self.window.playerOneTimer.setText("00:00:00")
         self.window.playerTwoTimer.setText("00:00:00")
         self.window.player1Capture.setText("0/10")
-        self.window.player1Capture.setText("0/10")
+        self.window.player2Capture.setText("0/10")
         self.gameBoard = GameBoard(window)
         self.turnCount = 0
         self.gameRuning = False
