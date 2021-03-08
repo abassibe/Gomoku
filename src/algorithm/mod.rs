@@ -39,7 +39,6 @@ impl Algorithm {
             (Fscore::Value(player_value), _) => Fscore::Value(player_value),
             (Fscore::Uninitialized, Fscore::Uninitialized) => Fscore::Uninitialized
         };
-        println!("In compute_and_set_fscore, player's board with score {}:\n{}\nopponent's board with score {}:\n{}", player_score, node.get_item().get_player(), enemy_score, node.get_item().get_enemy());
         node.set_item_fscore(global_score);
 
         global_score

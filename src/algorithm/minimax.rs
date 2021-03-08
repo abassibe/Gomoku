@@ -14,15 +14,8 @@ impl Algorithm {
             return node.clone();
         }
         let mut candidate = node.clone();
-        // let mut fscore = node.get_item().get_fscore();
-        // if fscore.is_win() {
-        //     return candidate;
-        // }
 
         if maximizing {
-
-            println!("Maximazing player:\n{}", node.get_item().get_player());
-
             let mut fscore = Fscore::Value(isize::MIN);
             node.add_many_branches(self.node_generator(&node, maximizing));
             let children = node.get_branches();
@@ -42,9 +35,6 @@ impl Algorithm {
                 }
             }
         } else {
-
-            println!("Minimazing opponent:\n{}", node.get_item().get_enemy());
-
             let mut fscore = Fscore::Value(isize::MAX);
             node.add_many_branches(self.node_generator(&node, maximizing));
             let children = node.get_branches();
