@@ -18,7 +18,7 @@ mod node;
 // Presque n'importe quel type peut etre passé tant que c'est un type natif python/rust (check doc)
 // Pour compiler, maturin develop dans le terminal, qui genere un dylib dans le dossier target/debug qu'il faut mettre dans le dossier root du projet.
 
-const DEPTH: u32 = 9;
+const DEPTH: u32 = 4;
 const WHITE: u8 = 2;
 const BLACK: u8 = 1;
 
@@ -103,12 +103,7 @@ fn assign_color_to_ai(str: String, human: u8) -> Goban {
 
 fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8) -> (u32, u32) {
     let mut algorithm = Algorithm::new();
-    algorithm.update_initial_state(
-        input,
-        *input.get_enemy(),
-        player_captures,
-        opponent_captures
-    );
+    algorithm.update_initial_state(input, BitBoard::empty(), player_captures, opponent_captures);
     let ret = algorithm.get_next_move(DEPTH).unwrap();
     // println!("RET = \n{:?}", ret);
 
