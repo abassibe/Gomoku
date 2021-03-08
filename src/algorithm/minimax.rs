@@ -6,23 +6,24 @@ use crate::node::Node;
 impl Algorithm {
     // TODO: There is a lot of duplicated code in this function, we should refactor it.
     pub(super) fn minimax(&self, node: &mut Node, depth: u32, mut alpha: Fscore, mut beta: Fscore, maximizing: bool) -> Node {
-        if depth == 0 {
+        if depth == 0 || self.is_game_over(node) {
             // TODO: We have to pass the potential next move to compute_item_fscore, but we don't have it at this point
             // and I'm not even sure we actually need it, maybe we should remove it completely?
             // node.compute_item_fscore(&current_goban, current_goban.get_player(), depth as usize);
-            self.compute_and_set_fscore(node);
+            self.compute_and_set_fscore(node, depth);
             return node.clone();
         }
         let mut candidate = node.clone();
-        let mut fscore = node.get_item().get_fscore();
+        // let mut fscore = node.get_item().get_fscore();
         // if fscore.is_win() {
-        if self.is_game_over(node) {
-            self.compute_and_set_fscore(&mut candidate);
-            return candidate;
-        }
+        //     return candidate;
+        // }
 
         if maximizing {
-            fscore = Fscore::Value(isize::MIN);
+
+            println!("Maximazing player:\n{}", node.get_item().get_player());
+
+            let mut fscore = Fscore::Value(isize::MIN);
             node.add_many_branches(self.node_generator(&node, maximizing));
             let children = node.get_branches();
             if let Some(children) = children {
@@ -41,7 +42,10 @@ impl Algorithm {
                 }
             }
         } else {
-            fscore = Fscore::Value(isize::MAX);
+
+            println!("Minimazing opponent:\n{}", node.get_item().get_enemy());
+
+            let mut fscore = Fscore::Value(isize::MAX);
             node.add_many_branches(self.node_generator(&node, maximizing));
             let children = node.get_branches();
             if let Some(children) = children {

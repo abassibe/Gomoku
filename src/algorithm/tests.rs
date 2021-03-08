@@ -3,6 +3,83 @@ use crate::bitboard::BitBoard;
 use crate::algorithm::Algorithm;
 
 #[test]
+fn test_get_potential_moves_with_one_open_two() {
+    // Arrange
+    let player = BitBoard::from_str("
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000001000000
+        0000000000000000000
+        0000000000100000000
+        0000000001000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+    ");
+    let opponent = BitBoard::from_str("
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000010000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+    ");
+    let expected = BitBoard::from_str("
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+        0000000000000000000
+    ");
+    let mut algo = Algorithm::new();
+    algo.update_initial_state(Goban::new(player, opponent), BitBoard::empty(), 0, 0);
+
+    // Act
+    let result = algo.get_potential_moves(&algo.initial);
+    println!("Here is the result:\n{}", result);
+
+    // Assert
+    assert_eq!(expected, result);
+}
+
+#[test]
 fn test_get_potential_moves_with_one_unbreakable_five() {
     // Arrange
     let player = BitBoard::from_str("
@@ -555,10 +632,10 @@ fn test_algorithm()
         0000000000000000000
         0000000000000000000
         0000000000000000000
-        0000000000100000000
-        0000000000100000000
-        0000000000100000000
-        0000000000100000000
+        0000000000000000000
+        0000000011000000000
+        0000000000000000000
+        0000000000000000000
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -575,10 +652,10 @@ fn test_algorithm()
         0000000000000000000
         0000000000000000000
         0000000000000000000
-        0000000001000000000
-        0000000001000000000
-        0000000001000000000
-        0000000001000000000
+        0000000000000000000
+        0000000000010000000
+        0000000000000000000
+        0000000000000000000
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -595,7 +672,7 @@ fn test_algorithm()
     for _ in 0..10 {
         let initial = Goban::new(player, enemy);
         algo.update_initial_state(initial, next_move, result_node.get_player_captures(), result_node.get_opponent_captures());
-        let next_move_opt = algo.get_next_move(3);
+        let next_move_opt = algo.get_next_move(2);
         if next_move_opt.is_none() { break; }
         result_node = next_move_opt.unwrap();
         next_move = result_node.get_item().get_player() ^ initial.get_player();
@@ -604,7 +681,7 @@ fn test_algorithm()
         println!("Player's BitBoard:\n{}", player);
         let initial = Goban::new(enemy, player);
         algo.update_initial_state(initial, next_move, result_node.get_opponent_captures(), result_node.get_player_captures());
-        let next_move_opt = algo.get_next_move(3);
+        let next_move_opt = algo.get_next_move(2);
         if next_move_opt.is_none() { break; }
         result_node = next_move_opt.unwrap();
         next_move = result_node.get_item().get_player() ^ initial.get_player();
