@@ -120,13 +120,14 @@ impl Node {
         self.is_players_move
     }
 
-    pub fn compute_immediate_threads_for_player(&mut self) {
+    pub fn compute_immediate_threats_for_player(&mut self, patterns: &NewPattern) {
         let goban = self.get_item();
-        let (player, enemy) = (goban.get_player(), goban.get_enemy());
+        let (player, enemy) = (*goban.get_player(), *goban.get_enemy());
 
-        let threats = extract_missing_bit_cross_three_with_four(*enemy, *enemy);
+        // let threats = extract_missing_bit_cross_three_with_four(*enemy, *enemy);
 
-        self.is_player_threatened = Some((threats | extract_missing_bit_cross_four_with_four(*enemy, *player)).is_any());
+        // self.is_player_threatened = Some((threats | extract_missing_bit_cross_four_with_four(*enemy, *player)).is_any());
+        self.is_player_threatened = Some(extract_threatening_moves_from_player(player, enemy, self.opponent_captures, patterns).is_any());
     }
 
     pub fn is_player_threatened(&self) -> bool {
