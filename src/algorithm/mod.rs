@@ -303,10 +303,19 @@ impl Algorithm {
             return result | extract_missing_bit(player, opponent, pattern, pattern_size, is_sym);
         }
 
+        // Get the moves that theat `player` to be able to play the move before the opponent does.
         let mut result = extract_threatening_moves_from_player(
             player,
             opponent,
             opponent_captures,
+            &self.patterns
+        );
+
+        // Get the moves that theat `opponent` because those are good move to play.
+        result |= extract_threatening_moves_from_player(
+            opponent,
+            player,
+            player_captures,
             &self.patterns
         );
         result |= extract_capturing_moves(opponent, player, &self.patterns);
