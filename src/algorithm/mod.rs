@@ -134,9 +134,9 @@ impl Algorithm {
                 0
             };
             // result += ((matched.count_ones() as isize - nb_captures) * score) + (nb_captures * score);
-            result += (((matched.count_ones() as isize - nb_captures) * score) as f64 * 1.5f64).round() as isize + (nb_captures * score);
+            result += (((matched.count_ones() as isize - nb_captures) * score) as f64 * 0.25f64).round() as isize + (nb_captures * score);
         }
-        result += extract_capturing_moves(*player, *enemy, &self.patterns).count_ones() as isize * 10;
+        result += extract_capturing_moves(*player, *enemy, &self.patterns).count_ones() as isize * if !node.is_players_last_move() { 3 } else { 10 };
         result += (player_captures as isize).pow(2) * 20;
 
         Fscore::Value(result)
