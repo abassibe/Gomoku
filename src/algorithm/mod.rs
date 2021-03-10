@@ -255,8 +255,8 @@ impl Algorithm {
         return true;
     }
 
-    pub fn compute_initial_threat_for_player(&mut self) {
-        self.initial.compute_immediate_threads_for_player();
+    pub fn compute_initial_threats_for_player(&mut self) {
+        self.initial.compute_immediate_threats_for_player(&self.patterns);
     }
 
     // FIXME: Shouldn't be public (made it pub for debug)
@@ -385,7 +385,7 @@ impl Algorithm {
     /// This method is likely to change in a near future because I'm not sure what to return.
     /// For now, it returns a BitBoard that contains the next move to play.
     pub fn get_next_move(&mut self, depth: u32) -> Option<Node> {
-        self.initial.compute_immediate_threads_for_player();
+        self.compute_initial_threats_for_player();
         let mut initial = self.initial.clone();
         let next_state = self.minimax(&mut initial, depth, Fscore::MIN, Fscore::MAX, true);
         if next_state == self.initial {
