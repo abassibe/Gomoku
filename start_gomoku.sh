@@ -1,5 +1,5 @@
 #!/bin/bash
-DYLIB=target/debug/librust_ext.dylib
+DYLIB=target/release/librust_ext.dylib
 GOMOKU_PATH=src/PyInterface/gomoku.py
 maturin develop --release
 if test -f "$DYLIB"; then
