@@ -21,21 +21,30 @@ impl Algorithm {
         Algorithm::default()
     }
 
+    pub fn get_initial(&self) -> &Node {
+        &self.initial
+    }
+
     /// Set the initial Node to a new state using the provided Goban.
     pub fn update_initial_state(&mut self, initial_state: Goban, last_move: BitBoard, player_captures: u8, opponent_captures:u8) {
         let new_initial_node = Node::new(initial_state, 0, last_move, false, player_captures, opponent_captures);
         self.initial = new_initial_node;
     }
 
-    fn compute_and_set_fscore(&self, node: &mut Node, depth: u32) -> Fscore {
+    // FIXME: SHOULDN'T BE PUBLIC
+    pub fn compute_and_set_fscore(&self, node: &mut Node, depth: u32) -> Fscore {
+        // If player is threatened in the initial Node then we give more weight to the defense
+        // in order to prioritize the defense over the attack.
+        // We do the opposite if there is no immediate threats in inital Node for player.
+        let defense_weight = if self.initial.is_player_threatened() {3f64} else {1.5};
         let player_score = self.compute_score(node, depth, false);
         let enemy_score = self.compute_score(node, depth, true);
         let global_score = match (player_score, enemy_score) {
             (Fscore::Win, _) => Fscore::Win,
             (_, Fscore::Win) => Fscore::Value(isize::MIN),
             (Fscore::Uninitialized, Fscore::Value(score)) => Fscore::Value(-score),
-            // (Fscore::Value(player_value), Fscore::Value(enemy_value)) => Fscore::Value(player_value - (enemy_value as f64 * 1.5).round() as isize),
-            (Fscore::Value(player_value), Fscore::Value(enemy_value)) => Fscore::Value(player_value - enemy_value),
+            (Fscore::Value(player_value), Fscore::Value(enemy_value)) => Fscore::Value(player_value - (enemy_value as f64 * defense_weight).round() as isize),
+            // (Fscore::Value(player_value), Fscore::Value(enemy_value)) => Fscore::Value(player_value - enemy_value),
             (Fscore::Value(player_value), _) => Fscore::Value(player_value),
             (Fscore::Uninitialized, Fscore::Uninitialized) => Fscore::Uninitialized
         };
@@ -125,9 +134,9 @@ impl Algorithm {
                 0
             };
             // result += ((matched.count_ones() as isize - nb_captures) * score) + (nb_captures * score);
-            result += (((matched.count_ones() as isize - nb_captures) * score) as f64 * 1.5f64).round() as isize + (nb_captures * score);
+            result += (((matched.count_ones() as isize - nb_captures) * score) as f64 * 0.25f64).round() as isize + (nb_captures * score);
         }
-        result += extract_capturing_moves(*player, *enemy, &self.patterns).count_ones() as isize * 10;
+        result += extract_capturing_moves(*player, *enemy, &self.patterns).count_ones() as isize * if !node.is_players_last_move() { 3 } else { 10 };
         result += (player_captures as isize).pow(2) * 20;
 
         Fscore::Value(result)
@@ -246,7 +255,12 @@ impl Algorithm {
         return true;
     }
 
-    fn get_potential_moves(&self, parent: &Node) -> BitBoard {
+    pub fn compute_initial_threats_for_player(&mut self) {
+        self.initial.compute_immediate_threats_for_player(&self.patterns);
+    }
+
+    // FIXME: Shouldn't be public (made it pub for debug)
+    pub fn get_potential_moves(&self, parent: &Node) -> BitBoard {
         let goban = parent.get_item();
         let player = *goban.get_player();
         let opponent = *goban.get_enemy();
@@ -289,10 +303,19 @@ impl Algorithm {
             return result | extract_missing_bit(player, opponent, pattern, pattern_size, is_sym);
         }
 
+        // Get the moves that theat `player` to be able to play the move before the opponent does.
         let mut result = extract_threatening_moves_from_player(
             player,
             opponent,
             opponent_captures,
+            &self.patterns
+        );
+
+        // Get the moves that theat `opponent` because those are good move to play.
+        result |= extract_threatening_moves_from_player(
+            opponent,
+            player,
+            player_captures,
             &self.patterns
         );
         result |= extract_capturing_moves(opponent, player, &self.patterns);
@@ -362,6 +385,7 @@ impl Algorithm {
     /// This method is likely to change in a near future because I'm not sure what to return.
     /// For now, it returns a BitBoard that contains the next move to play.
     pub fn get_next_move(&mut self, depth: u32) -> Option<Node> {
+        self.compute_initial_threats_for_player();
         let mut initial = self.initial.clone();
         let next_state = self.minimax(&mut initial, depth, Fscore::MIN, Fscore::MAX, true);
         if next_state == self.initial {

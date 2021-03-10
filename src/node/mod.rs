@@ -9,7 +9,7 @@ use std::{
 };
 
 use crate::{
-    bitboard::BitBoard,
+    bitboard::{BitBoard, pattern::*},
     goban::Goban
 };
 use crate::goban::fscore::Fscore;
@@ -44,6 +44,7 @@ pub struct Node {
     last_move: BitBoard,
     player_captures: u8,
     opponent_captures: u8,
+    is_player_threatened: Option<bool>,
     /// `branches` is a [`BinaryHeap`], wrapped in an [`Option`], which hold child nodes.
     /// The type `Branches` is used for convenience and is just an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
     branches: Option<Branches>
@@ -90,6 +91,7 @@ impl Node {
             is_players_move,
             player_captures,
             opponent_captures,
+            is_player_threatened: None,
             branches: None
         }
     }
@@ -116,6 +118,24 @@ impl Node {
 
     pub fn is_players_last_move(&self) -> bool {
         self.is_players_move
+    }
+
+    pub fn compute_immediate_threats_for_player(&mut self, patterns: &NewPattern) {
+        let goban = self.get_item();
+        let (player, enemy) = (*goban.get_player(), *goban.get_enemy());
+
+        // let threats = extract_missing_bit_cross_three_with_four(*enemy, *enemy);
+
+        // self.is_player_threatened = Some((threats | extract_missing_bit_cross_four_with_four(*enemy, *player)).is_any());
+        self.is_player_threatened = Some(extract_threatening_moves_from_player(player, enemy, self.opponent_captures, patterns).is_any());
+    }
+
+    pub fn is_player_threatened(&self) -> bool {
+        if let Some(is_threatened) = self.is_player_threatened {
+            return is_threatened;
+        }
+
+        true
     }
 
     pub fn set_item_fscore(&mut self, fscore: Fscore) {

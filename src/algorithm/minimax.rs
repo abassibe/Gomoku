@@ -10,7 +10,7 @@ impl Algorithm {
             // TODO: We have to pass the potential next move to compute_item_fscore, but we don't have it at this point
             // and I'm not even sure we actually need it, maybe we should remove it completely?
             // node.compute_item_fscore(&current_goban, current_goban.get_player(), depth as usize);
-            self.compute_and_set_fscore(node, depth);
+            self.compute_and_set_fscore(node, depth + 1);
             return node.clone();
         }
         let mut candidate = node.clone();
