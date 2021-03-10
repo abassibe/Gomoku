@@ -31,7 +31,8 @@ impl Algorithm {
         self.initial = new_initial_node;
     }
 
-    fn compute_and_set_fscore(&self, node: &mut Node, depth: u32) -> Fscore {
+    // FIXME: SHOULDN'T BE PUBLIC
+    pub fn compute_and_set_fscore(&self, node: &mut Node, depth: u32) -> Fscore {
         // If player is threatened in the initial Node then we give more weight to the defense
         // in order to prioritize the defense over the attack.
         // We do the opposite if there is no immediate threats in inital Node for player.
@@ -258,7 +259,8 @@ impl Algorithm {
         self.initial.compute_immediate_threads_for_player();
     }
 
-    fn get_potential_moves(&self, parent: &Node) -> BitBoard {
+    // FIXME: Shouldn't be public (made it pub for debug)
+    pub fn get_potential_moves(&self, parent: &Node) -> BitBoard {
         let goban = parent.get_item();
         let player = *goban.get_player();
         let opponent = *goban.get_enemy();
