@@ -2,6 +2,7 @@ use super::*;
 use crate::{algorithm::Algorithm, goban::*};
 
 #[test]
+#[ignore = "This test is for debug purpose right now"]
 fn test_debug_extract_illegal_move() {
     // Arrange
     // let player = BitBoard::from_str("
