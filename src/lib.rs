@@ -27,15 +27,8 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     #[pyfn(m, "get_next_move")]
     /// Interfacing function.
     /// Takes the Python GIL, the board in the shape of a 19*19 numpy 2d array, the color of the human player, a boolean that indicates if this is a hint request, and the number of captures made by the human and the ai.
-    fn get_next_move(
-        py: Python<'_>,
-        goban: &PyArray2<u8>,
-        p_color: u8,
-        hint: &PyBool,
-        human_capture: i32,
-        ai_capture: i32
-    ) -> PyResult<(u32, u32)> {
-        let board: Vec<u8> = goban.to_vec()?;
+    fn get_next_move(py: Python<'_>, goban: &PyArray2<u8>, p_color: u8, hint: &PyBool, human_capture: i32, ai_capture: i32, last_move_human : Option<(u16, u16)>, last_move_ai : Option<(u16, u16)>) -> PyResult<(u32, u32)> {
+        let board:Vec<u8> = goban.to_vec()?;
 
         if board.len() != 361 {
             return Err(exceptions::PyTypeError::new_err(format!(
@@ -45,17 +38,16 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         }
 
         let goban = assign_color_to_ai(vec_to_string(board), p_color);
-        println!(
-            "\nCOLOR IS ={}\n\nPLAYER(AI)\n{}\nENEMY\n{}",
-            p_color,
-            goban.get_player(),
-            goban.get_enemy()
-        );
+        //println!("\nCOLOR IS ={}\n\nPLAYER(AI)\n{}\nENEMY\n{}", p_color, goban.get_player(), goban.get_enemy());
 
         if goban.get_board().is_empty() {
             return Ok((9u32, 9u32));
         }
-        let ret = launch_ai(goban, (ai_capture / 2) as u8, (human_capture / 2) as u8);
+        let mut last_move = BitBoard::empty();
+        if let Some((x, y)) = last_move_human.or(last_move_ai) {
+            last_move.set((y * BitBoard::MOVE_UP_DOWN_SHIFT_VALUE as u16 + x) as isize, true);
+        }
+        let ret = launch_ai(goban, (ai_capture / 2) as u8, (human_capture / 2) as u8, last_move);
         Ok(ret)
     }
 
@@ -101,24 +93,22 @@ fn assign_color_to_ai(str: String, human: u8) -> Goban {
     }
 }
 
-fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8) -> (u32, u32) {
+fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8, last_move: BitBoard) -> (u32, u32) {
     let mut algorithm = Algorithm::new();
-    algorithm.update_initial_state(input, BitBoard::empty(), player_captures, opponent_captures);
+    algorithm.update_initial_state(input, last_move, player_captures, opponent_captures);
     let ret = algorithm.get_next_move(DEPTH).unwrap();
     // println!("RET = \n{:?}", ret);
 
-    println!("Get win coord inside launch_ai : "); //to remove
-    println!("{:?}", get_win_coord(*input.get_player(), *ret.get_item().get_player())); //to remove
     get_win_coord(*input.get_player(), *ret.get_item().get_player())
 }
 
 fn get_win_coord(previous: BitBoard, current: BitBoard) -> (u32, u32) {
     let pos = previous ^ current;
-    // println!("PREV:\n{}\nCUR:\n{}", previous, current);
-    // println!("UNIQUE POS:\n{}", pos);
+    //println!("PREV:\n{}\nCUR:\n{}", previous, current);
+    //println!("UNIQUE POS:\n{}", pos);
 
-    let i: u32 = *pos.get_bit_indexes().last().unwrap() as u32;
-    println!("I is = {}, coord = {:?}", i, (i / 20, i % 20));
+    let i : u32 = *pos.get_bit_indexes().last().unwrap() as u32;
+    //println!("I is = {}, coord = {:?}", i, (i / 20, i % 20));
     // println!("{}", pos);
     (i / 20, i % 20)
 }

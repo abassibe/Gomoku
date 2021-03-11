@@ -6,7 +6,6 @@ class Options():
         self.gameMode = "PVE"
         self.rulesSet = ['Basic Rule', 'Capture', 'Double three', 'Game-ending capture']
 
-
     def _onAccept(self, window, dialog):
         self.langage = dialog.langageCombobox.currentText()
         if dialog.PVEButton.isChecked():

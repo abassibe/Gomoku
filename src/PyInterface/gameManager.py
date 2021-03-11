@@ -6,6 +6,8 @@ import windowBuilding
 import rulesSet
 import numpy as np
 
+last_move_ai = (0, 0)
+last_move_human = (0, 0)
 
 class HumanPlayer():
     def __init__(self, window, color):
@@ -20,7 +22,6 @@ class HumanPlayer():
             self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/blackStone.png"))))
         else:
             self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/whiteStone.png"))))
-        print(self.cursor)
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.timerText))
         self.playerCapture = None
         self.stoneRemovedCount = 0
@@ -34,8 +35,11 @@ class HumanPlayer():
 
     def startTurn(self):
         self.window.layoutWidget.setCursor(self.cursor)
+        global last_move_human
         if self.window.gameManager.hintButtonBool:
-            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount)
+            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True,\
+                    self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai) 
+            last_move_human = (x, y) #update last human move
             self.window.gameManager.gameBoard.dropHint(x, y, self.color)
         self.window.layoutWidget.setCursor(self.cursor)
         windowBuilding.playerTurnEffect(self.window, self.color)
@@ -61,6 +65,7 @@ class ComputerPlayer():
         self.colorLabel = window.playerTwoLabel
         self.window = window
         self.startTime = 0.0
+
         if self.color == 1:
             self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt \"SF Wasabi\";")
         else:
@@ -75,7 +80,12 @@ class ComputerPlayer():
     def startTurn(self):
         self.turnTime.start()
         self.startTime = time()
-        x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount)
+        print(self.window.gameManager.playerTurn)
+        global last_move_ai
+        global last_move_human
+        x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False,\
+                self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai) ##
+        last_move_ai = (x, y) ##
         self.turnTime.stop()
         if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) is None:
             return
@@ -96,15 +106,19 @@ class GameBoard():
     def placeStone(self, x, y, color, computerMove):
         scaledX = 0
         scaledY = 0
+        global last_move_human
+        global last_move_ai
         if computerMove:
             scaledX = x
             scaledY = y
+            last_move_ai = (scaledX, scaledY) #update last ai move for rust side
         else:
             blockSize = (629 / 19)
             scaledX = x - self.window.layoutWidget.geometry().y()
             scaledX = int(scaledX / blockSize)
             scaledY = y - self.window.layoutWidget.geometry().x()
             scaledY = int(scaledY / blockSize)
+            last_move_human = (scaledX, scaledY) #update last human move for rust side
         if self.grid[scaledX, scaledY] != 0 or not self.isValidMove(scaledX, scaledY, color):
             return None
         self.window.gameManager.gameBoard.clearHint()

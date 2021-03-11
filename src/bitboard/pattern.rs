@@ -314,6 +314,7 @@ pub fn extract_threatening_moves_from_opponent(
         for _ in 0..(pattern_size - 1) {
             tmp |= tmp << direction.to_invert();
         }
+
         result |= tmp & open_cells;
     }
 
@@ -329,11 +330,12 @@ pub fn extract_threatening_moves_from_player(
 ) -> BitBoard {
     let open_cells = !(player | opponent);
     let (pattern_three, pattern_three_size, is_three_sym) = patterns[PatternName::OpenThree];
-    let (pattern_split_three, pattern_split_three_size, is_split_three_sym) =
-        patterns[PatternName::OpenSplitThreeRight];
+    let (pattern_split_three, pattern_split_three_size, is_split_three_sym) = patterns[PatternName::OpenSplitThreeRight];
     let (pattern_five, pattern_five_size, is_five_sym) = patterns[PatternName::Five];
 
     let mut result = extract_winning_move_capture(opponent, player, opponent_captures, patterns);
+    result |= extract_missing_bit_cross_four_with_four(opponent, player);
+    result |= extract_missing_bit_cross_three_with_four(opponent, player);
     result |= extract_threatening_moves_from_opponent(
         player,
         opponent,

@@ -43,6 +43,7 @@ fn count_branch_with_0_branch_should_return_0() {
         is_players_move: false,
         player_captures: 0,
         opponent_captures: 0,
+        is_player_threatened: Some(false),
         branches: Some(Branches::new())
     };
 
@@ -64,6 +65,7 @@ fn count_branch_with_no_branch_should_return_0() {
         is_players_move: false,
         player_captures: 0,
         opponent_captures: 0,
+        is_player_threatened: Some(false),
         branches: None
     };
 
@@ -86,6 +88,7 @@ fn count_branch_with_3_branches_should_return_3() {
             is_players_move: false,
             player_captures: 0,
             opponent_captures: 0,
+            is_player_threatened: Some(false),
             branches: None
         })),
         Rc::new(RefCell::new(Node {
@@ -95,6 +98,7 @@ fn count_branch_with_3_branches_should_return_3() {
             is_players_move: false,
             player_captures: 0,
             opponent_captures: 0,
+            is_player_threatened: Some(false),
             branches: None
         })),
         Rc::new(RefCell::new(Node {
@@ -104,6 +108,7 @@ fn count_branch_with_3_branches_should_return_3() {
             is_players_move: false,
             player_captures: 0,
             opponent_captures: 0,
+            is_player_threatened: Some(false),
             branches: None
         }))
     );
@@ -118,6 +123,7 @@ fn count_branch_with_3_branches_should_return_3() {
         is_players_move: false,
         player_captures: 0,
         opponent_captures: 0,
+        is_player_threatened: Some(false),
         branches: Some(branches)
     };
 
@@ -139,6 +145,7 @@ fn add_branch_should_add_a_branch() {
         is_players_move: false,
         player_captures: 0,
         opponent_captures: 0,
+        is_player_threatened: Some(false),
         branches: None
     };
 

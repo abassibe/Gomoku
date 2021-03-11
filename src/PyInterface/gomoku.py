@@ -86,12 +86,12 @@ def algoSubscribe(func):
     window.algoPointer = func
 
 
-def tmpAlgo(board, color, hint):
+"""def tmpAlgo(board, color, hint):
     tmp = window.gameManager.rules.getValidPoints(board, color)
     # if tmp == None:
     #     return 9, 9
     print(board + "\n")
-    return tmp[randint(0, len(tmp) - 1)]
+    return tmp[randint(0, len(tmp) - 1)]"""
 
 
 app = PyQt5.QtWidgets.QApplication(sys.argv)
