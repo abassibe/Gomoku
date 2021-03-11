@@ -1,3 +1,4 @@
+use node::Node;
 use numpy::PyArray2;
 use pyo3::exceptions;
 use pyo3::prelude::{pymodule, PyModule, PyResult, Python};
@@ -100,12 +101,12 @@ fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8) -> (u32, 
     algorithm.update_initial_state(input, BitBoard::empty(), player_captures, opponent_captures);
     let ret = algorithm.get_next_move(DEPTH).unwrap();
 
-    get_win_coord(*input.get_player(), *ret.get_item().get_player())
+    get_move_coord(&ret)
 }
 
-fn get_win_coord(previous: BitBoard, current: BitBoard) -> (u32, u32) {
-    let pos = previous ^ current;
+fn get_move_coord(node: &Node) -> (u32, u32) {
+    let move_to_play = node.get_last_move();
 
-    let i: u32 = *pos.get_bit_indexes().last().unwrap() as u32;
+    let i: u32 = *move_to_play.get_bit_indexes().last().unwrap() as u32;
     (i / 20, i % 20)
 }
