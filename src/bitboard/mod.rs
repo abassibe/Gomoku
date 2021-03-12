@@ -570,7 +570,6 @@ impl BitBoard {
 			Axis::All => {
 				let mut result = *self;
 				for d in AxisIterator::new() {
-					println!("Result:\n{}", result);
 					result &= self << d;
 				}
 				result
