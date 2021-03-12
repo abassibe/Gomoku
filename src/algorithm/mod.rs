@@ -80,11 +80,11 @@ impl Algorithm {
         }
         let three_cross_four = extract_missing_bit_cross_three_with_four(*player, *enemy);
         if three_cross_four.is_any() {
-            result += three_cross_four.count_ones() as isize * if !node.is_players_last_move() { 500 } else { 1000 };
+            result += three_cross_four.count_ones() as isize * if node.is_players_last_move() { 500 } else { 1000 };
         }
         let four_cross_four = extract_missing_bit_cross_four_with_four(*player, *enemy);
         if four_cross_four.is_any() {
-            result += four_cross_four.count_ones() as isize * if !node.is_players_last_move() { 750 } else { 1200 };
+            result += four_cross_four.count_ones() as isize * if node.is_players_last_move() { 750 } else { 1200 };
         }
         // TODO: Let this be a global static
         // let patterns: [((u8, u8, bool), isize, isize); 12] = [
@@ -117,7 +117,7 @@ impl Algorithm {
             ((0b01010000, 5, true), 25isize, 1000isize)
         ];
         for &((pattern, pattern_size, is_sym), player_score, opponent_score) in patterns.iter() {
-            let score = if !node.is_players_last_move() { player_score } else { opponent_score };
+            let score = if node.is_players_last_move() { player_score } else { opponent_score };
             let matched = match_pattern(*player, *enemy, pattern, pattern_size, is_sym);
             let matched_captures = match_pattern(
                 extract_captures(*enemy, *player, &self.patterns) ^ *player,
@@ -132,9 +132,9 @@ impl Algorithm {
                 0
             };
             // result += ((matched.count_ones() as isize - nb_captures) * score) + (nb_captures * score);
-            result += (((matched.count_ones() as isize - nb_captures) * score) as f64 * 0.25f64).round() as isize + (nb_captures * score);
+            result += ((matched.count_ones() as isize - nb_captures) as f64 * score as f64 * 0.25f64).round() as isize + (nb_captures * score);
         }
-        result += extract_capturing_moves(*player, *enemy, &self.patterns).count_ones() as isize * if !node.is_players_last_move() { 3 } else { 10 };
+        result += extract_capturing_moves(*player, *enemy, &self.patterns).count_ones() as isize * if node.is_players_last_move() { 3 } else { 10 };
         result += (player_captures as isize).pow(2) * 20;
 
         Fscore::Value(result)
