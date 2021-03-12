@@ -81,12 +81,10 @@ impl Algorithm {
         let three_cross_four = extract_missing_bit_cross_three_with_four(*player, *enemy);
         if three_cross_four.is_any() {
             result += three_cross_four.count_ones() as isize * if !node.is_players_last_move() { 500 } else { 1000 };
-            // result += three_cross_four.count_ones() as isize * 100;
         }
         let four_cross_four = extract_missing_bit_cross_four_with_four(*player, *enemy);
         if four_cross_four.is_any() {
             result += four_cross_four.count_ones() as isize * if !node.is_players_last_move() { 750 } else { 1200 };
-            // result += four_cross_four.count_ones() as isize * 200;
         }
         // TODO: Let this be a global static
         // let patterns: [((u8, u8, bool), isize, isize); 12] = [
