@@ -260,8 +260,12 @@ impl Algorithm {
     // FIXME: Shouldn't be public (made it pub for debug)
     pub fn get_potential_moves(&self, parent: &Node) -> BitBoard {
         let goban = parent.get_item();
-        let player = *goban.get_player();
-        let opponent = *goban.get_enemy();
+        // If the Node parent is representing a move for player then it means we are generating moves for opponent
+        let (player, opponent) = if parent.is_players_last_move() {
+            (*goban.get_enemy(), *goban.get_player())
+        } else {
+            (*goban.get_player(), *goban.get_enemy())
+        };
         let player_captures = parent.get_player_captures();
         let opponent_captures = parent.get_opponent_captures();
         let open_cells = !(player | opponent);
