@@ -261,30 +261,30 @@ impl Algorithm {
     pub fn get_potential_moves(&self, parent: &Node) -> BitBoard {
         let goban = parent.get_item();
         // If the Node parent is representing a move for player then it means we are generating moves for opponent
-        let (player, opponent) = if parent.is_players_last_move() {
+        let (current_player, opponent) = if parent.is_players_last_move() {
             (*goban.get_enemy(), *goban.get_player())
         } else {
             (*goban.get_player(), *goban.get_enemy())
         };
         let player_captures = parent.get_player_captures();
         let opponent_captures = parent.get_opponent_captures();
-        let open_cells = !(player | opponent);
-        let illegal_moves_complement = !extract_illegal_moves(player, opponent, &self.patterns);
+        let open_cells = !(current_player | opponent);
+        let illegal_moves_complement = !extract_illegal_moves(current_player, opponent, &self.patterns);
         let legal_open_cells = open_cells & illegal_moves_complement;
 
-        if player.is_empty() {
-            return open_cells & Self::get_first_move(player, opponent);
+        if current_player.is_empty() {
+            return open_cells & Self::get_first_move(current_player, opponent);
         }
 
         if opponent.contains_five_aligned() {
-            let result = self.counter_five_aligned(player, opponent, player_captures) & legal_open_cells;
+            let result = self.counter_five_aligned(current_player, opponent, player_captures) & legal_open_cells;
             if result.is_any() {
                 return result;
             }
         }
 
         let result = extract_winning_moves_from_player(
-            player,
+            current_player,
             opponent,
             player_captures,
             opponent_captures,
@@ -296,19 +296,19 @@ impl Algorithm {
 
         let result = extract_winning_moves_from_player(
             opponent,
-            player,
+            current_player,
             opponent_captures,
             player_captures,
             &self.patterns
         ) & illegal_moves_complement;
         if result.is_any() {
             let (pattern, pattern_size, is_sym) = self.patterns[PatternName::Five];
-            return result | extract_missing_bit(player, opponent, pattern, pattern_size, is_sym);
+            return result | extract_missing_bit(current_player, opponent, pattern, pattern_size, is_sym);
         }
 
         // Get the moves that theat `player` to be able to play the move before the opponent does.
         let mut result = extract_threatening_moves_from_player(
-            player,
+            current_player,
             opponent,
             opponent_captures,
             &self.patterns
@@ -317,26 +317,26 @@ impl Algorithm {
         // Get the moves that theat `opponent` because those are good move to play.
         result |= extract_threatening_moves_from_player(
             opponent,
-            player,
+            current_player,
             player_captures,
             &self.patterns
         );
-        result |= extract_capturing_moves(opponent, player, &self.patterns);
+        result |= extract_capturing_moves(opponent, current_player, &self.patterns);
         result |= extract_missing_bit(
-            player,
+            current_player,
             opponent,
             GET_MOVES_PATTERNS[0].0,
             GET_MOVES_PATTERNS[0].1,
             GET_MOVES_PATTERNS[0].2
         );
         result |= extract_missing_bit(
-            player,
+            current_player,
             opponent,
             GET_MOVES_PATTERNS[1].0,
             GET_MOVES_PATTERNS[1].1,
             GET_MOVES_PATTERNS[1].2
         );
-        result |= extract_capturing_moves(player, opponent, &self.patterns);
+        result |= extract_capturing_moves(current_player, opponent, &self.patterns);
         result &= legal_open_cells;
 
         if result.count_ones() > 4 {
@@ -344,21 +344,21 @@ impl Algorithm {
         }
 
         result |= extract_threatening_moves_from_opponent(
-            player,
+            current_player,
             opponent,
             GET_MOVES_PATTERNS[2].0,
             GET_MOVES_PATTERNS[2].1,
             GET_MOVES_PATTERNS[2].2
         );
         result |= extract_missing_bit(
-            player,
+            current_player,
             opponent,
             GET_MOVES_PATTERNS[3].0,
             GET_MOVES_PATTERNS[3].1,
             GET_MOVES_PATTERNS[3].2
         );
         result |= extract_missing_bit(
-            player,
+            current_player,
             opponent,
             GET_MOVES_PATTERNS[4].0,
             GET_MOVES_PATTERNS[4].1,
@@ -371,7 +371,7 @@ impl Algorithm {
         }
 
         result |= extract_missing_bit(
-            player,
+            current_player,
             opponent,
             GET_MOVES_PATTERNS[5].0,
             GET_MOVES_PATTERNS[5].1,
@@ -383,7 +383,7 @@ impl Algorithm {
             return result;
         }
 
-        (result | (player + Direction::All)) & legal_open_cells
+        (result | (current_player + Direction::All)) & legal_open_cells
     }
 
     // TODO: We maybe can do better here, self probably doesn't need to be mutable.
