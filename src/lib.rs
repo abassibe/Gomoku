@@ -91,7 +91,6 @@ fn assign_color_to_ai(str: String, human: u8) -> Goban {
     if human == WHITE {
         Goban::new(player, enemy)
     } else {
-        println!("Goban after color assign : \n{:?}", Goban::new(enemy, player)); //to remove
         Goban::new(enemy, player)
     }
 }
