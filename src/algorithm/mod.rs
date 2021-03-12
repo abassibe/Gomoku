@@ -270,15 +270,16 @@ impl Algorithm {
         let opponent_captures = parent.get_opponent_captures();
         let open_cells = !(player | opponent);
         let illegal_moves_complement = !extract_illegal_moves(player, opponent, &self.patterns);
+        let legal_open_cells = open_cells & illegal_moves_complement;
 
         if player.is_empty() {
             return open_cells & Self::get_first_move(player, opponent);
         }
 
         if opponent.contains_five_aligned() {
-            let result = self.counter_five_aligned(player, opponent, player_captures);
+            let result = self.counter_five_aligned(player, opponent, player_captures) & legal_open_cells;
             if result.is_any() {
-                return result & open_cells;
+                return result;
             }
         }
 
@@ -288,7 +289,7 @@ impl Algorithm {
             player_captures,
             opponent_captures,
             &self.patterns
-        );
+        ) & illegal_moves_complement;
         if result.is_any() {
             return result;
         }
@@ -299,7 +300,7 @@ impl Algorithm {
             opponent_captures,
             player_captures,
             &self.patterns
-        );
+        ) & illegal_moves_complement;
         if result.is_any() {
             let (pattern, pattern_size, is_sym) = self.patterns[PatternName::Five];
             return result | extract_missing_bit(player, opponent, pattern, pattern_size, is_sym);
@@ -336,9 +337,10 @@ impl Algorithm {
             GET_MOVES_PATTERNS[1].2
         );
         result |= extract_capturing_moves(player, opponent, &self.patterns);
+        result &= legal_open_cells;
 
         if result.count_ones() > 4 {
-            return result & open_cells & illegal_moves_complement;
+            return result;
         }
 
         result |= extract_threatening_moves_from_opponent(
@@ -362,9 +364,10 @@ impl Algorithm {
             GET_MOVES_PATTERNS[4].1,
             GET_MOVES_PATTERNS[4].2
         );
+        result &= legal_open_cells;
 
         if result.count_ones() > 4 {
-            return result & open_cells & illegal_moves_complement;
+            return result;
         }
 
         result |= extract_missing_bit(
@@ -374,12 +377,13 @@ impl Algorithm {
             GET_MOVES_PATTERNS[5].1,
             GET_MOVES_PATTERNS[5].2
         );
+        result &= legal_open_cells;
 
         if result.count_ones() > 2 {
-            return result & open_cells & illegal_moves_complement;
+            return result;
         }
 
-        (result | (player + Direction::All)) & open_cells & illegal_moves_complement
+        (result | (player + Direction::All)) & legal_open_cells
     }
 
     // TODO: We maybe can do better here, self probably doesn't need to be mutable.
