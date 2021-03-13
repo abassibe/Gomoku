@@ -145,6 +145,7 @@ class GameBoard():
             scaledY = int(scaledY / blockSize)
 
             #--------------------------------------------------------------------------------------#
+            print("player is valid move : ", self.isValidMove(scaledX, scaledY, color))
             if self.isValidMove(scaledX, scaledY, color):
                 self.cursor = QtGui.QCursor(QtCore.Qt.ForbiddenCursor)
                 forbidden_cursor_check = True
