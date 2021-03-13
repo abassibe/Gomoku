@@ -5,10 +5,32 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 import windowBuilding
 import rulesSet
 import numpy as np
+from threading import Thread
 
 last_move_ai = (0, 0)
 last_move_human = (0, 0)
 forbidden_cursor_check = False
+
+
+class RustThread(Thread):
+    def __init__(self, window, color, func):
+        Thread.__init__(self)
+        self.x = None
+        self.y = None
+        self.window = window
+        self.color = color
+        self.func = func
+
+    def run(self):
+        global last_move_human
+        global last_move_ai
+        self.x, self.y = self.func(self.window.gameManager.gameBoard.grid, self.color, False,\
+                self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai) ##
+
+    def join(self):
+        Thread.join(self)
+        return self.x, self.y
+
 
 class HumanPlayer():
     def __init__(self, window, color):
@@ -88,8 +110,11 @@ class ComputerPlayer():
 
         global last_move_ai
         global last_move_human
-        x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False,\
-                self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai) ##
+        thread = RustThread(self.window, self.color, self.window.algoPointer)
+        thread.start()
+        x, y = thread.join()
+        # x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False,\
+        #         self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai) ##
         last_move_ai = (x, y) ##
         self.turnTime.stop()
         if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) is None:
@@ -271,6 +296,7 @@ class GameBoard():
                             if n + 1 == 5:
                                 return (x, y), (x + n, y - n)
         return None, None
+
 
 class GameManager():
     def __init__(self, window, option, hintButtonBool):
