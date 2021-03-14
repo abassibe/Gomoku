@@ -17,6 +17,7 @@ pub mod fscore;
 pub struct Goban {
 	board: BitBoard,
 	fscore: Fscore,
+	estimation : Fscore,
 	player: BitBoard,
 	enemy: BitBoard
 }
@@ -26,6 +27,17 @@ impl Goban {
 	pub fn new(player: BitBoard, enemy: BitBoard) -> Self {
 		Self {
 			fscore: Fscore::Uninitialized,
+			estimation : Fscore::Uninitialized,
+			player,
+			enemy,
+			board: player | enemy
+		}
+	}
+
+	pub fn new_with_estimation(player: BitBoard, enemy: BitBoard) -> Self {
+		Self {
+			fscore: Fscore::Uninitialized,
+			estimation: Self::heuristic_estimation(player, enemy),
 			player,
 			enemy,
 			board: player | enemy
@@ -48,11 +60,15 @@ impl Goban {
 		self.fscore
 	}
 
+	pub fn get_estimation(&self) -> Fscore {
+		self.estimation
+	}
+
 	pub fn set_fscore(&mut self, fscore: Fscore) {
 		self.fscore = fscore;
 	}
-}
 
+}
 
 impl BitAnd<BitBoard> for Goban {
 	type Output = BitBoard;

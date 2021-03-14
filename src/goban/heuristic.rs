@@ -3,6 +3,14 @@ use crate::bitboard::BitBoard;
 use crate::bitboard::direction::Direction;
 use crate::goban::fscore::Fscore;
 use crate::goban::Goban;
+use crate::bitboard::pattern::match_pattern;
+
+///const pattern for heuristic estimation
+const PATTERNS_ESTIMATION: [((u8, u8, bool), isize); 3] = [
+	((0b11111000, 5, true), 1000isize), //five
+	((0b01111000, 6, true), 500isize), //open four
+	((0b01110000, 5, true), 250), //open three
+];
 
 impl Goban {
 	/// This method returns a negative version of `self's` bitboard
@@ -39,6 +47,31 @@ impl Goban {
 			}
 		}
 		ret
+	}
+
+	///Fscore estimation function, suggest to be moved to another file
+	pub fn heuristic_estimation(player: BitBoard, enemy : BitBoard) -> Fscore {
+		let mut estimation = 0u16;
+
+		//adjust estimation score in regard to the matched pattern
+		for &((pattern, pattern_size, is_sym), player_score) in PATTERNS_ESTIMATION.into_iter() {
+			let matched = match_pattern(player, enemy, pattern, pattern_size, is_sym);
+			estimation += matched.count_ones();
+			println!("estimation during match {:?}", estimation);
+		}
+		//*4 may change don't bother with it too much
+		estimation += (player.count_ones() * 4) - (enemy.count_ones() * 4);
+		println!("estimation after count ones : {:?}", estimation);
+
+		Fscore::Value(estimation as isize)
+
+		//check patterns les plus importants
+		// if 5 score += Fscore(Win)
+		// if open 4 score += 10000
+		// if close 4 score += 500
+		// if open 3 score += 250
+
+		//score += ((layer.count_ones * 4) - (enemy.count_ones * 4)) *4 may change in the future
 	}
 
 	// TODO Add way to isolate different lines, currently cannot differentiate between lines that are on the same axes

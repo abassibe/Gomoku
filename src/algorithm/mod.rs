@@ -176,10 +176,12 @@ impl Algorithm {
                             (*parent_player, enemy_with_move, false)
                         }
                     };
-                Node::new(Goban::new(player, enemy), parent.get_depth() + 1, *b, is_players_move, player_captures, enemy_captures)
+                Node::new(Goban::new_with_estimation(player, enemy), parent.get_depth() + 1, *b, is_players_move, player_captures, enemy_captures)
             })
             .collect()
     }
+
+    //fn heuristique_estimation(board: Goban, )
 
     #[inline]
     fn get_first_move(player: BitBoard, opponent: BitBoard) -> BitBoard {

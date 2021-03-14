@@ -19,7 +19,7 @@ mod node;
 // Presque n'importe quel type peut etre passé tant que c'est un type natif python/rust (check doc)
 // Pour compiler, maturin develop dans le terminal, qui genere un dylib dans le dossier target/debug qu'il faut mettre dans le dossier root du projet.
 
-const DEPTH: u32 = 5;
+const DEPTH: u32 = 6;
 const WHITE: u8 = 2;
 const BLACK: u8 = 1;
 
@@ -28,15 +28,8 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     #[pyfn(m, "get_next_move")]
     /// Interfacing function.
     /// Takes the Python GIL, the board in the shape of a 19*19 numpy 2d array, the color of the human player, a boolean that indicates if this is a hint request, and the number of captures made by the human and the ai.
-    fn get_next_move(
-        py: Python<'_>,
-        goban: &PyArray2<u8>,
-        p_color: u8,
-        hint: &PyBool,
-        human_capture: i32,
-        ai_capture: i32
-    ) -> PyResult<(u32, u32)> {
-        let board: Vec<u8> = goban.to_vec()?;
+    fn get_next_move(py: Python<'_>, goban: &PyArray2<u8>, p_color: u8, hint: &PyBool, human_capture: i32, ai_capture: i32, last_move_human : Option<(u16, u16)>, last_move_ai : Option<(u16, u16)>) -> PyResult<(u32, u32)> {
+        let board:Vec<u8> = goban.to_vec()?;
 
         if board.len() != 361 {
             return Err(exceptions::PyTypeError::new_err(format!(
@@ -46,6 +39,7 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         }
 
         let goban = assign_color_to_ai(vec_to_string(board), p_color);
+        //println!("\nCOLOR IS ={}\n\nPLAYER(AI)\n{}\nENEMY\n{}", p_color, goban.get_player(), goban.get_enemy());
 
         if goban.get_board().is_empty() {
             return Ok((9u32, 9u32));
@@ -89,9 +83,9 @@ fn assign_color_to_ai(str: String, human: u8) -> Goban {
     let enemy = BitBoard::from_str(&str.replace("1", "0").replace("2", "1"));
 
     if human == WHITE {
-        Goban::new(enemy, player)
-    } else {
         Goban::new(player, enemy)
+    } else {
+        Goban::new(enemy, player)
     }
 }
 
@@ -106,6 +100,7 @@ fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8) -> (u32, 
 fn get_move_coord(node: &Node) -> (u32, u32) {
     let move_to_play = node.get_last_move();
 
+    let i : u32 = *move_to_play.get_bit_indexes().last().unwrap() as u32;
     let i: u32 = *move_to_play.get_bit_indexes().last().unwrap() as u32;
     (i / 20, i % 20)
 }

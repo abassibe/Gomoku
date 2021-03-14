@@ -47,7 +47,7 @@ pub struct Node {
     is_player_threatened: Option<bool>,
     /// `branches` is a [`BinaryHeap`], wrapped in an [`Option`], which hold child nodes.
     /// The type `Branches` is used for convenience and is just an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
-    branches: Option<Branches>
+    branches: Option<Branches>,
 }
 
 impl fmt::Display for Node {
