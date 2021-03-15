@@ -49,18 +49,28 @@ impl Goban {
 		ret
 	}
 
-	///Fscore estimation function, suggest to be moved to another file
+	///Fscore estimation function, suggested to be moved to another file
 	pub fn heuristic_estimation(player: BitBoard, enemy : BitBoard) -> Fscore {
 		let mut estimation = 0u16;
 
 		//adjust estimation score in regard to the matched pattern
-		for &((pattern, pattern_size, is_sym), player_score) in PATTERNS_ESTIMATION.into_iter() {
+		for &((pattern, pattern_size, is_sym), player_score) in PATTERNS_ESTIMATION.iter() {
 			let matched = match_pattern(player, enemy, pattern, pattern_size, is_sym);
+			println!("pattern : \n{}", matched);
 			estimation += matched.count_ones();
 			println!("estimation during match {:?}", estimation);
 		}
 		//*4 may change don't bother with it too much
-		estimation += (player.count_ones() * 4) - (enemy.count_ones() * 4);
+		println!("player count ones : {:?}\nenemy count ones : {:?}", player.count_ones() * 4, enemy.count_ones() * 4);
+		let player_count = player.count_ones() * 4;
+		let enemy_count = enemy.count_ones() * 4;
+
+		if player_count < enemy_count {
+			estimation += enemy_count - player_count;
+		} else {
+			estimation += player_count - enemy_count;
+		}
+		//estimation += (player.count_ones() * 4) - (enemy.count_ones() * 4);
 		println!("estimation after count ones : {:?}", estimation);
 
 		Fscore::Value(estimation as isize)
