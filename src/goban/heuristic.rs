@@ -56,12 +56,9 @@ impl Goban {
 		//adjust estimation score in regard to the matched pattern
 		for &((pattern, pattern_size, is_sym), player_score) in PATTERNS_ESTIMATION.iter() {
 			let matched = match_pattern(player, enemy, pattern, pattern_size, is_sym);
-			println!("pattern : \n{}", matched);
 			estimation += matched.count_ones();
-			println!("estimation during match {:?}", estimation);
 		}
 		//*4 may change don't bother with it too much
-		println!("player count ones : {:?}\nenemy count ones : {:?}", player.count_ones() * 4, enemy.count_ones() * 4);
 		let player_count = player.count_ones() * 4;
 		let enemy_count = enemy.count_ones() * 4;
 
@@ -70,8 +67,6 @@ impl Goban {
 		} else {
 			estimation += player_count - enemy_count;
 		}
-		//estimation += (player.count_ones() * 4) - (enemy.count_ones() * 4);
-		println!("estimation after count ones : {:?}", estimation);
 
 		Fscore::Value(estimation as isize)
 
