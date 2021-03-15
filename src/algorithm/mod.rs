@@ -6,6 +6,7 @@ use super::{bitboard::BitBoard, goban::Goban, node::Node};
 #[cfg(test)]
 mod tests;
 mod minimax;
+mod negamax;
 
 #[derive(Default)]
 pub struct Algorithm {
@@ -139,49 +140,6 @@ impl Algorithm {
 
         Fscore::Value(result)
     }
-
-    // TODO: Could be more efficient to calculate the score for each new node
-    // and then sort the resulting Vec<Node> according this score.
-    fn node_generator(&self, parent: &Node, maximazing: bool) -> Vec<Node> {
-        let parent_goban = parent.get_item();
-        let parent_player = parent_goban.get_player();
-        let parent_enemy = parent_goban.get_enemy();
-        let parent_player_captures = parent.get_player_captures();
-        let parent_enemy_captures = parent.get_opponent_captures();
-
-        // TODO: Investigate this call and its return value (especially for open 2).
-        self.get_potential_moves(parent)
-            .enumerate()
-            .iter()
-            .map(|b| {
-                let mut player_captures = parent_player_captures;
-                let mut enemy_captures = parent_enemy_captures;
-                let (player, enemy, is_players_move) =
-                    if maximazing {
-                        let player_with_move = parent_player | b;
-                        let captured_by_player = extract_captured_by_move(player_with_move, *parent_enemy, *b, &self.patterns);
-                        if captured_by_player.is_any() {
-                            player_captures += (captured_by_player.count_ones() / 2) as u8;
-                            (player_with_move, parent_enemy ^ &captured_by_player, true)
-                        } else {
-                            (player_with_move, *parent_enemy, true)
-                        }
-                    } else {
-                        let enemy_with_move = parent_enemy | b;
-                        let captured_by_enemy = extract_captured_by_move(enemy_with_move, *parent_player, *b, &self.patterns);
-                        if captured_by_enemy.is_any() {
-                            enemy_captures += (captured_by_enemy.count_ones() / 2) as u8;
-                            (parent_player ^ &captured_by_enemy, enemy_with_move, false)
-                        } else {
-                            (*parent_player, enemy_with_move, false)
-                        }
-                    };
-                Node::new(Goban::new_with_estimation(player, enemy), parent.get_depth() + 1, *b, is_players_move, player_captures, enemy_captures)
-            })
-            .collect()
-    }
-
-    //fn heuristique_estimation(board: Goban, )
 
     #[inline]
     fn get_first_move(player: BitBoard, opponent: BitBoard) -> BitBoard {
@@ -395,7 +353,7 @@ impl Algorithm {
     pub fn get_next_move(&mut self, depth: u32) -> Option<Node> {
         self.compute_initial_threats_for_player();
         let mut initial = self.initial.clone();
-        let next_state = self.minimax(&mut initial, depth, Fscore::MIN, Fscore::MAX, true);
+        let next_state = self.negamax(&mut initial, depth, Fscore::MIN, Fscore::MAX);
         if next_state == self.initial {
             None
         } else {
