@@ -19,7 +19,7 @@ mod node;
 // Presque n'importe quel type peut etre passé tant que c'est un type natif python/rust (check doc)
 // Pour compiler, maturin develop dans le terminal, qui genere un dylib dans le dossier target/debug qu'il faut mettre dans le dossier root du projet.
 
-const DEPTH: u32 = 6;
+const DEPTH: u32 = 1;
 const WHITE: u8 = 2;
 const BLACK: u8 = 1;
 
