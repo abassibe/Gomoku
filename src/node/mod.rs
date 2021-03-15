@@ -174,10 +174,14 @@ impl Node {
 
     /// A method that add many branches at once using the closure `generator`.
     pub fn add_many_branches(&mut self, new_branches: Vec<Node>) {
-        let mut new_branches: BinaryHeap<Rc<RefCell<Node>>> = new_branches
+        let mut new_branches: Branches = new_branches
             .into_iter()
             .map(|x| Rc::new(RefCell::new(x)))
             .collect();
+
+        for nodes in new_branches.iter() {
+            println!("Estimate in BinaryHeap = {:?}", nodes.borrow_mut().get_item().get_estimation())
+        }
 
         if !new_branches.is_empty() {
             let mut branches = self.branches.take().unwrap_or_default();
