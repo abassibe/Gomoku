@@ -50,17 +50,17 @@ impl Goban {
 	}
 
 	///Fscore estimation function, suggested to be moved to another file
-	pub fn heuristic_estimation(player: BitBoard, enemy : BitBoard) -> Fscore {
+	pub fn set_heuristic_estimation(&mut self) {
 		let mut estimation = 0u16;
 
 		//adjust estimation score in regard to the matched pattern
 		for &((pattern, pattern_size, is_sym), player_score) in PATTERNS_ESTIMATION.iter() {
-			let matched = match_pattern(player, enemy, pattern, pattern_size, is_sym);
+			let matched = match_pattern(self.player, self.enemy, pattern, pattern_size, is_sym);
 			estimation += matched.count_ones();
 		}
 		//*4 may change don't bother with it too much
-		let player_count = player.count_ones() * 4;
-		let enemy_count = enemy.count_ones() * 4;
+		let player_count = self.player.count_ones() * 4;
+		let enemy_count = self.enemy.count_ones() * 4;
 
 		if player_count < enemy_count {
 			estimation += enemy_count - player_count;
@@ -68,15 +68,7 @@ impl Goban {
 			estimation += player_count - enemy_count;
 		}
 
-		Fscore::Value(estimation as isize)
-
-		//check patterns les plus importants
-		// if 5 score += Fscore(Win)
-		// if open 4 score += 10000
-		// if close 4 score += 500
-		// if open 3 score += 250
-
-		//score += ((layer.count_ones * 4) - (enemy.count_ones * 4)) *4 may change in the future
+		self.set_fscore(Fscore::Value(estimation as isize));
 	}
 
 	// TODO Add way to isolate different lines, currently cannot differentiate between lines that are on the same axes
