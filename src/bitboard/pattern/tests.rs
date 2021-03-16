@@ -1,5 +1,6 @@
 use super::*;
 use crate::{algorithm::Algorithm, goban::*};
+use crate::algorithm::Algorithms;
 
 #[test]
 #[ignore = "This test is for debug purpose right now"]

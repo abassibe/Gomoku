@@ -3,6 +3,11 @@ use crate::goban::fscore::Fscore;
 
 use super::{bitboard::BitBoard, goban::Goban, node::Node};
 
+#[cfg(test)]
+mod tests;
+mod minimax;
+mod negamax;
+
 static PATTERNS: [((u8, u8, bool), isize, isize); 12] = [
     ((0b11111000, 5, true), 10000000000isize, 100000000isize),
     ((0b01111000, 6, true), 9999999isize, 99999999isize),
@@ -18,15 +23,10 @@ static PATTERNS: [((u8, u8, bool), isize, isize); 12] = [
     ((0b01010000, 5, true), 25isize, 1000isize)
 ];
 
-enum Algorithms {
+pub enum Algorithms {
     Negamax,
     Minimax
 }
-
-#[cfg(test)]
-mod tests;
-mod minimax;
-mod negamax;
 
 #[derive(Default)]
 pub struct Algorithm {

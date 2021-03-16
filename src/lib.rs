@@ -6,7 +6,7 @@ use pyo3::types::PyBool;
 
 use goban::Goban;
 
-use crate::algorithm::Algorithm;
+use crate::algorithm::{Algorithm, Algorithms};
 use crate::bitboard::BitBoard;
 
 mod algorithm;
