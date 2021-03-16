@@ -18,6 +18,11 @@ static PATTERNS: [((u8, u8, bool), isize, isize); 12] = [
     ((0b01010000, 5, true), 25isize, 1000isize)
 ];
 
+enum Algorithms {
+    Negamax,
+    Minimax
+}
+
 #[cfg(test)]
 mod tests;
 mod minimax;
@@ -377,10 +382,13 @@ impl Algorithm {
     // Maybe we should pass the initial Node directly without passing by the initial property of Algorithm?
     /// This method is likely to change in a near future because I'm not sure what to return.
     /// For now, it returns a BitBoard that contains the next move to play.
-    pub fn get_next_move(&mut self, depth: u32) -> Option<Node> {
+    pub fn get_next_move(&mut self, depth: u32, algo: Algorithms) -> Option<Node> {
         self.compute_initial_threats_for_player();
         let mut initial = self.initial.clone();
-        let next_state = self.negamax(&mut initial, depth, Fscore::MIN, Fscore::MAX);
+        let next_state = match algo {
+            Algorithms::Negamax => self.negamax(&mut initial, depth, Fscore::MIN, Fscore::MAX),
+            Algorithms::Minimax => self.minimax(&mut initial, depth, Fscore::MIN, Fscore::MAX, true)
+        };
         if next_state == self.initial {
             None
         } else {
