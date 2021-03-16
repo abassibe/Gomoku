@@ -3,7 +3,6 @@ use crate::goban::fscore::Fscore;
 use crate::node::{Node, Branches};
 
 
-
 // Not sure if this is a good idea, just trying it out.
 impl Algorithm {
     // TODO: There is a lot of duplicated code in this function, we should refactor it.

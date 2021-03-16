@@ -518,10 +518,10 @@ pub fn extract_captured_by_move(
         while i < pattern_size && tmp.is_any() {
             tmp = (tmp >> direction)
                 & if (pattern << i) & U8_FIRST_BIT == U8_FIRST_BIT {
-                    opponent
-                } else {
-                    player
-                };
+                opponent
+            } else {
+                player
+            };
             i += 1;
         }
         if tmp.is_any() {
@@ -549,10 +549,10 @@ pub fn extract_capturing_moves(
         while i < pattern_size && tmp.is_any() {
             tmp = (tmp >> direction)
                 & if (pattern << i) & U8_FIRST_BIT == U8_FIRST_BIT {
-                    opponent
-                } else {
-                    open_cells
-                };
+                opponent
+            } else {
+                open_cells
+            };
             i += 1;
         }
         result |= tmp;
@@ -572,10 +572,10 @@ pub fn extract_captures(player: BitBoard, opponent: BitBoard, patterns: &NewPatt
         while i < pattern_size && tmp.is_any() {
             tmp = (tmp >> direction)
                 & if (pattern << i) & U8_FIRST_BIT == U8_FIRST_BIT {
-                    opponent
-                } else {
-                    open_cells
-                };
+                opponent
+            } else {
+                open_cells
+            };
             i += 1;
         }
         if tmp.is_any() {
@@ -615,7 +615,7 @@ pub fn extract_five_align_breaking_moves(
         // TODO: We probably can do much better in term of perf here
         let tmp = (((tmp >> inverted_direction) & opponent_fives) >> direction)
             | ((tmp.shift_direction_by(inverted_direction, 2) & opponent_fives)
-                .shift_direction_by(direction, 2));
+            .shift_direction_by(direction, 2));
         if tmp.is_any() {
             result |= tmp;
         }

@@ -237,7 +237,7 @@ impl Algorithm {
             return false;
         }
         // Player wins by unbreakable alignment
-        return true;
+        true
     }
 
     pub fn compute_initial_threats_for_player(&mut self) {
