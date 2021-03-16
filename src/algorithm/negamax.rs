@@ -4,7 +4,7 @@ use crate::node::{Node, Branches};
 
 impl Algorithm {
 
-    pub fn negamax(&self, node: &mut Node, depth: u32, mut alpha: Fscore, mut beta: Fscore) -> Node {
+    pub fn negamax(&self, node: &mut Node, depth: u32, mut alpha: Fscore, beta: Fscore) -> Node {
         if depth == 0 || self.is_game_over(node) {
             self.compute_and_set_fscore(node, depth + 1);
             return node.clone();
