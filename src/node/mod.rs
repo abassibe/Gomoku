@@ -180,7 +180,7 @@ impl Node {
             .collect();
 
         for nodes in new_branches.iter() {
-            println!("Estimate in BinaryHeap = {:?}", nodes.borrow_mut().get_item().get_estimation())
+            println!("Estimate in BinaryHeap = {:?}", nodes.borrow_mut().get_item().get_fscore())
         }
 
         if !new_branches.is_empty() {
