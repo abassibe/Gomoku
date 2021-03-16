@@ -20,7 +20,6 @@ impl Algorithm {
         if maximizing {
             let mut fscore = Fscore::Value(isize::MIN);
             node.add_many_branches(self.node_generator(&node, maximizing));
-            println!("node fscore estimation : {:?}", node.get_item().get_fscore());
             let children : Option<&Branches> = node.get_branches();
             if let Some(children) = children {
                 for child in children {

@@ -391,11 +391,5 @@ impl Algorithm {
 }
 
 fn sort_by_estimate(nodes: &mut Vec<Node>) {
-    for (i, node) in nodes.iter().enumerate() {
-        println!("(before) node[{:?}] estimation is : {:?}", i, node.get_item().get_fscore());
-    }
     nodes.sort_unstable_by(|a, b| b.get_item().get_fscore().partial_cmp(&a.get_item().get_fscore()).unwrap());
-    for (i, node) in nodes.iter().enumerate() {
-        println!("(after) node[{:?}] estimation is : {:?}", i, node.get_item().get_fscore());
-    }
 }

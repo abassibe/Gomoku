@@ -179,10 +179,6 @@ impl Node {
             .map(|x| Rc::new(RefCell::new(x)))
             .collect();
 
-        for nodes in new_branches.iter() {
-            println!("Estimate in BinaryHeap = {:?}", nodes.borrow_mut().get_item().get_fscore())
-        }
-
         if !new_branches.is_empty() {
             let mut branches = self.branches.take().unwrap_or_default();
             branches.append(&mut new_branches);
