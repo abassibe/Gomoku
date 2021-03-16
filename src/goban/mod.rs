@@ -3,9 +3,7 @@ use std::fmt;
 use std::fmt::Formatter;
 use std::hash::{Hash, Hasher};
 use std::ops::{BitAnd, BitOr, BitXor};
-
 use fscore::Fscore;
-
 use super::bitboard::*;
 
 #[cfg(test)]
@@ -17,7 +15,6 @@ pub mod fscore;
 pub struct Goban {
 	board: BitBoard,
 	fscore: Fscore,
-	estimation : Fscore,
 	player: BitBoard,
 	enemy: BitBoard
 }
@@ -27,7 +24,6 @@ impl Goban {
 	pub fn new(player: BitBoard, enemy: BitBoard) -> Self {
 		Self {
 			fscore: Fscore::Uninitialized,
-			estimation : Fscore::Uninitialized,
 			player,
 			enemy,
 			board: player | enemy
@@ -35,13 +31,9 @@ impl Goban {
 	}
 
 	pub fn new_with_estimation(player: BitBoard, enemy: BitBoard) -> Self {
-		Self {
-			fscore: Fscore::Uninitialized,
-			estimation: Self::heuristic_estimation(player, enemy),
-			player,
-			enemy,
-			board: player | enemy
-		}
+		let mut ret = Self::new(player, enemy);
+		ret.set_heuristic_estimation();
+		ret
 	}
 
 	pub fn get_player(&self) -> &BitBoard {
@@ -58,10 +50,6 @@ impl Goban {
 
 	pub fn get_fscore(&self) -> Fscore {
 		self.fscore
-	}
-
-	pub fn get_estimation(&self) -> Fscore {
-		self.estimation
 	}
 
 	pub fn set_fscore(&mut self, fscore: Fscore) {
