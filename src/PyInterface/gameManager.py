@@ -2,10 +2,11 @@ import pathlib
 from time import time
 from random import randint
 from PyQt5 import QtGui, QtCore, QtWidgets
+from PyQt5.QtWidgets import QWidget
 import windowBuilding
 import rulesSet
 import numpy as np
-from threading import Thread
+from threading import Thread, Event
 
 last_move_ai = (0, 0)
 last_move_human = (0, 0)
@@ -13,13 +14,20 @@ forbidden_cursor_check = False
 
 
 class RustThread(Thread):
-    def __init__(self, window, color, func):
-        Thread.__init__(self)
+    def __init__(self, window, color, func, turnTime, startTime, timerText):
+        global last_move_human
+        global last_move_ai
+        Thread.__init__(self, target=func, name=None, args=(window.gameManager.gameBoard.grid, color, False, \
+                window.gameManager.player1.stoneRemovedCount, window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai))
         self.x = None
         self.y = None
         self.window = window
         self.color = color
         self.func = func
+
+        self.turnTime = turnTime
+        self.startTime = startTime
+        self.timerText = timerText
 
     def run(self):
         global last_move_human
@@ -27,8 +35,10 @@ class RustThread(Thread):
         self.x, self.y = self.func(self.window.gameManager.gameBoard.grid, self.color, False,\
                 self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai) ##
 
-    def join(self):
+    def launch_thread(self):
         Thread.join(self)
+        #self.run()
+        #Thread.start(self.turnTime.timeout.connect(lambda : windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.timerText)))
         return self.x, self.y
 
 
@@ -110,13 +120,14 @@ class ComputerPlayer():
 
         global last_move_ai
         global last_move_human
-        thread = RustThread(self.window, self.color, self.window.algoPointer)
+        thread = RustThread(self.window, self.color, self.window.algoPointer, self.turnTime, self.startTime, self.window.playerTwoTimer, 'algo_ptr')
         thread.start()
-        x, y = thread.join()
+        x, y = thread.launch_thread()
         # x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False,\
         #         self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai) ##
         last_move_ai = (x, y) ##
         self.turnTime.stop()
+
         if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) is None:
             return
 
@@ -144,8 +155,25 @@ class GameBoard():
         self.placedHint = []
 
     def highLightWinningLine(self, x, y):
-        widget = self.window.__getattr__("centralwidget")
-        widget.drawLine(10, 10, 200, 200)
+        #-------------------------------------------#
+        #               Part fixed                  #
+        ##widget = window_attr_lst['centralwidget']
+        window_attr_lst = vars(self.window)
+        painter = QtGui.QPainter()
+        painter.setPen(QtCore.Qt.red)
+        #painter.begin(QWidget or self) begin ?
+        painter.drawLine(10, 10, 200, 200)
+        #painter.end(QWidget or self) end ?
+        #                                           #
+        #-------------------------------------------#
+
+
+        #-------------------------------------------#
+        #                   Old part                #
+        #widget = self.window.__getattr__("centralwidget")
+        #widget.drawLine(10, 10, 200, 200)
+        #                                           #
+        #-------------------------------------------#
 
     def placeStone(self, x, y, color, computerMove):
         scaledX = 0
