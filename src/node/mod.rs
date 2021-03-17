@@ -43,7 +43,7 @@ pub struct Node {
     is_computers_move: bool,
     last_move: BitBoard,
     computer_captures: u8,
-    opponent_captures: u8,
+    human_captures: u8,
     is_computer_threatened: Option<bool>,
     /// `branches` is a [`BinaryHeap`], wrapped in an [`Option`], which hold child nodes.
     /// The type `Branches` is used for convenience and is just an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
@@ -83,14 +83,14 @@ impl Hash for Node {
 }
 
 impl Node {
-    pub fn new(item: Goban, depth: usize, last_move: BitBoard, is_computers_move: bool, computer_captures: u8, opponent_captures: u8) -> Self {
+    pub fn new(item: Goban, depth: usize, last_move: BitBoard, is_computers_move: bool, computer_captures: u8, human_captures: u8) -> Self {
         Self {
             item,
             depth,
             last_move,
             is_computers_move,
             computer_captures,
-            opponent_captures,
+            human_captures,
             is_computer_threatened: None,
             branches: None
         }
@@ -112,8 +112,8 @@ impl Node {
         self.computer_captures
     }
 
-    pub fn get_opponent_captures(&self) -> u8 {
-        self.opponent_captures
+    pub fn get_human_captures(&self) -> u8 {
+        self.human_captures
     }
 
     pub fn is_computers_last_move(&self) -> bool {
@@ -127,7 +127,7 @@ impl Node {
         // let threats = extract_missing_bit_cross_three_with_four(*human, *human);
 
         // self.is_computer_threatened = Some((threats | extract_missing_bit_cross_four_with_four(*human, *computer)).is_any());
-        self.is_computer_threatened = Some(extract_threatening_moves_from_computer(computer, human, self.opponent_captures, patterns).is_any());
+        self.is_computer_threatened = Some(extract_threatening_moves_from_computer(computer, human, self.human_captures, patterns).is_any());
     }
 
     pub fn is_computer_threatened(&self) -> bool {
@@ -152,7 +152,7 @@ impl Node {
     }
 
     pub fn add_branch(&mut self, item: Goban, last_move: BitBoard, is_computers_move: bool) -> Rc<RefCell<Self>> {
-        let new_node = Rc::new(RefCell::new(Self::new(item, self.depth + 1, last_move, is_computers_move, self.computer_captures, self.opponent_captures)));
+        let new_node = Rc::new(RefCell::new(Self::new(item, self.depth + 1, last_move, is_computers_move, self.computer_captures, self.human_captures)));
         let mut branches = self.branches.take().unwrap_or_default();
 
         branches.push(Rc::clone(&new_node));

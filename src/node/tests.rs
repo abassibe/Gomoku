@@ -42,7 +42,7 @@ fn count_branch_with_0_branch_should_return_0() {
         last_move: BitBoard::empty(),
         is_computers_move: false,
         computer_captures: 0,
-        opponent_captures: 0,
+        human_captures: 0,
         is_computer_threatened: Some(false),
         branches: Some(Branches::new())
     };
@@ -64,7 +64,7 @@ fn count_branch_with_no_branch_should_return_0() {
         last_move: BitBoard::empty(),
         is_computers_move: false,
         computer_captures: 0,
-        opponent_captures: 0,
+        human_captures: 0,
         is_computer_threatened: Some(false),
         branches: None
     };
@@ -87,7 +87,7 @@ fn count_branch_with_3_branches_should_return_3() {
             last_move: BitBoard::empty(),
             is_computers_move: false,
             computer_captures: 0,
-            opponent_captures: 0,
+            human_captures: 0,
             is_computer_threatened: Some(false),
             branches: None
         })),
@@ -97,7 +97,7 @@ fn count_branch_with_3_branches_should_return_3() {
             last_move: BitBoard::empty(),
             is_computers_move: false,
             computer_captures: 0,
-            opponent_captures: 0,
+            human_captures: 0,
             is_computer_threatened: Some(false),
             branches: None
         })),
@@ -107,7 +107,7 @@ fn count_branch_with_3_branches_should_return_3() {
             last_move: BitBoard::empty(),
             is_computers_move: false,
             computer_captures: 0,
-            opponent_captures: 0,
+            human_captures: 0,
             is_computer_threatened: Some(false),
             branches: None
         }))
@@ -122,7 +122,7 @@ fn count_branch_with_3_branches_should_return_3() {
         last_move: BitBoard::empty(),
         is_computers_move: false,
         computer_captures: 0,
-        opponent_captures: 0,
+        human_captures: 0,
         is_computer_threatened: Some(false),
         branches: Some(branches)
     };
@@ -144,7 +144,7 @@ fn add_branch_should_add_a_branch() {
         last_move: BitBoard::empty(),
         is_computers_move: false,
         computer_captures: 0,
-        opponent_captures: 0,
+        human_captures: 0,
         is_computer_threatened: Some(false),
         branches: None
     };

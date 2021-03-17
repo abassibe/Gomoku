@@ -12,7 +12,7 @@ pub struct Algorithm {
     initial: Node,
     patterns: NewPattern,
     computer_captures: u8,
-    opponent_captures: u8
+    human_captures: u8
 }
 
 impl Algorithm {
@@ -26,8 +26,8 @@ impl Algorithm {
     }
 
     /// Set the initial Node to a new state using the provided Goban.
-    pub fn update_initial_state(&mut self, initial_state: Goban, last_move: BitBoard, computer_captures: u8, opponent_captures:u8) {
-        let new_initial_node = Node::new(initial_state, 0, last_move, false, computer_captures, opponent_captures);
+    pub fn update_initial_state(&mut self, initial_state: Goban, last_move: BitBoard, computer_captures: u8, human_captures:u8) {
+        let new_initial_node = Node::new(initial_state, 0, last_move, false, computer_captures, human_captures);
         self.initial = new_initial_node;
     }
 
@@ -58,9 +58,9 @@ impl Algorithm {
     fn compute_score(&self, node: &Node, depth: u32, current_player_is_human: bool) -> Fscore {
         let goban = node.get_item();
         let (computer, human, computer_captures, human_captures) = if current_player_is_human {
-            (goban.get_human(), goban.get_computer(), node.get_opponent_captures(), node.get_computer_captures())
+            (goban.get_human(), goban.get_computer(), node.get_human_captures(), node.get_computer_captures())
         } else {
-            (goban.get_computer(), goban.get_human(), node.get_computer_captures(), node.get_opponent_captures())
+            (goban.get_computer(), goban.get_human(), node.get_computer_captures(), node.get_human_captures())
         };
         let mut result = 0isize;
 
@@ -72,7 +72,7 @@ impl Algorithm {
             && extract_winning_move_capture(
                 *human,
                 *computer,
-                node.get_opponent_captures(),
+                node.get_human_captures(),
                 &self.patterns
             ).is_empty()
         {
@@ -116,8 +116,8 @@ impl Algorithm {
             ((0b01100000, 4, true), 500isize, 2000isize),
             ((0b01010000, 5, true), 25isize, 1000isize)
         ];
-        for &((pattern, pattern_size, is_sym), computer_score, opponent_score) in patterns.iter() {
-            let score = if node.is_computers_last_move() { computer_score } else { opponent_score };
+        for &((pattern, pattern_size, is_sym), computer_score, human_score) in patterns.iter() {
+            let score = if node.is_computers_last_move() { computer_score } else { human_score };
             let matched = match_pattern(*computer, *human, pattern, pattern_size, is_sym);
             let matched_captures = match_pattern(
                 extract_captures(*human, *computer, &self.patterns) ^ *computer,
@@ -147,7 +147,7 @@ impl Algorithm {
         let parent_computer = parent_goban.get_computer();
         let parent_human = parent_goban.get_human();
         let parent_computer_captures = parent.get_computer_captures();
-        let parent_human_captures = parent.get_opponent_captures();
+        let parent_human_captures = parent.get_human_captures();
 
         // TODO: Investigate this call and its return value (especially for open 2).
         self.get_potential_moves(parent)
@@ -182,9 +182,9 @@ impl Algorithm {
     }
 
     #[inline]
-    fn get_first_move(computer: BitBoard, opponent: BitBoard) -> BitBoard {
-        match (computer.is_empty(), opponent.is_empty()) {
-            (true, false) => (opponent + Direction::All) & !computer,
+    fn get_first_move(computer: BitBoard, human: BitBoard) -> BitBoard {
+        match (computer.is_empty(), human.is_empty()) {
+            (true, false) => (human + Direction::All) & !computer,
             (true, true) => BitBoard::CENTER_BIT_SET,
             (false, _) => BitBoard::empty()
         }
@@ -194,12 +194,12 @@ impl Algorithm {
     fn counter_five_aligned(
         &self,
         computer: BitBoard,
-        opponent: BitBoard,
+        human: BitBoard,
         computer_captures: u8) -> BitBoard {
-        let result = extract_five_align_breaking_moves(computer, opponent, &self.patterns);
+        let result = extract_five_align_breaking_moves(computer, human, &self.patterns);
 
         if result.is_empty() {
-            extract_winning_move_capture(computer, opponent, computer_captures, &self.patterns)
+            extract_winning_move_capture(computer, human, computer_captures, &self.patterns)
         } else {
             result
         }
@@ -207,10 +207,10 @@ impl Algorithm {
 
     fn is_game_over(&self, current: &Node) -> bool {
         let goban = current.get_item();
-        let (computer, opponent, computer_captures, opponent_captures) = if current.is_computers_last_move() {
-            (goban.get_computer(), goban.get_human(), current.get_computer_captures(), current.get_opponent_captures())
+        let (computer, human, computer_captures, human_captures) = if current.is_computers_last_move() {
+            (goban.get_computer(), goban.get_human(), current.get_computer_captures(), current.get_human_captures())
         } else {
-            (goban.get_human(), goban.get_computer(), current.get_opponent_captures(), current.get_computer_captures())
+            (goban.get_human(), goban.get_computer(), current.get_human_captures(), current.get_computer_captures())
         };
         let last_move = current.get_last_move();
 
@@ -218,9 +218,9 @@ impl Algorithm {
         if computer_captures >= 5 {
             return true;
         }
-        // Current opponent wins by unbroken 5 alignment
+        // Current human wins by unbroken 5 alignment
         // TODO: We probably want to extract the breaking moves here instead of the 5 alignment.
-        if opponent.contains_five_aligned() && (extract_five_aligned(*opponent) & last_move).is_empty() {
+        if human.contains_five_aligned() && (extract_five_aligned(*human) & last_move).is_empty() {
             return true;
         }
         if !computer.contains_five_aligned() {
@@ -237,16 +237,16 @@ impl Algorithm {
         if (extract_five_aligned(*computer) & last_move).is_empty() {
             return true;
         }
-        // Opponent wins by unbroken 5 alignment
-        if opponent.contains_five_aligned() {
+        // human wins by unbroken 5 alignment
+        if human.contains_five_aligned() {
             return true;
         }
-        // Opponent still can break computer's 5 alignment
-        if extract_five_align_breaking_moves(*opponent, *computer, &self.patterns).is_any() {
+        // human still can break computer's 5 alignment
+        if extract_five_align_breaking_moves(*human, *computer, &self.patterns).is_any() {
             return false;
         }
-        // Opponent still can win by capture
-        if extract_winning_move_capture(*opponent, *computer, opponent_captures, &self.patterns).is_any() {
+        // human still can win by capture
+        if extract_winning_move_capture(*human, *computer, human_captures, &self.patterns).is_any() {
             return false;
         }
         // Computer wins by unbreakable alignment
@@ -260,24 +260,24 @@ impl Algorithm {
     // FIXME: Shouldn't be public (made it pub for debug)
     pub fn get_potential_moves(&self, parent: &Node) -> BitBoard {
         let goban = parent.get_item();
-        // If the Node parent is representing a move for computer then it means we are generating moves for opponent
-        let (current_computer, opponent) = if parent.is_computers_last_move() {
+        // If the Node parent is representing a move for computer then it means we are generating moves for human
+        let (current_computer, human) = if parent.is_computers_last_move() {
             (*goban.get_human(), *goban.get_computer())
         } else {
             (*goban.get_computer(), *goban.get_human())
         };
         let computer_captures = parent.get_computer_captures();
-        let opponent_captures = parent.get_opponent_captures();
-        let open_cells = !(current_computer | opponent);
-        let illegal_moves_complement = !extract_illegal_moves(current_computer, opponent, &self.patterns);
+        let human_captures = parent.get_human_captures();
+        let open_cells = !(current_computer | human);
+        let illegal_moves_complement = !extract_illegal_moves(current_computer, human, &self.patterns);
         let legal_open_cells = open_cells & illegal_moves_complement;
 
         if current_computer.is_empty() {
-            return open_cells & Self::get_first_move(current_computer, opponent);
+            return open_cells & Self::get_first_move(current_computer, human);
         }
 
-        if opponent.contains_five_aligned() {
-            let result = self.counter_five_aligned(current_computer, opponent, computer_captures) & legal_open_cells;
+        if human.contains_five_aligned() {
+            let result = self.counter_five_aligned(current_computer, human, computer_captures) & legal_open_cells;
             if result.is_any() {
                 return result;
             }
@@ -285,9 +285,9 @@ impl Algorithm {
 
         let result = extract_winning_moves_from_computer(
             current_computer,
-            opponent,
+            human,
             computer_captures,
-            opponent_captures,
+            human_captures,
             &self.patterns
         ) & illegal_moves_complement;
         if result.is_any() {
@@ -295,71 +295,71 @@ impl Algorithm {
         }
 
         let result = extract_winning_moves_from_computer(
-            opponent,
+            human,
             current_computer,
-            opponent_captures,
+            human_captures,
             computer_captures,
             &self.patterns
         ) & illegal_moves_complement;
         if result.is_any() {
             let (pattern, pattern_size, is_sym) = self.patterns[PatternName::Five];
-            return result | extract_missing_bit(current_computer, opponent, pattern, pattern_size, is_sym);
+            return result | extract_missing_bit(current_computer, human, pattern, pattern_size, is_sym);
         }
 
-        // Get the moves that theat `computer` to be able to play the move before the opponent does.
+        // Get the moves that theat `computer` to be able to play the move before the human does.
         let mut result = extract_threatening_moves_from_computer(
             current_computer,
-            opponent,
-            opponent_captures,
+            human,
+            human_captures,
             &self.patterns
         );
 
-        // Get the moves that theat `opponent` because those are good move to play.
+        // Get the moves that theat `human` because those are good move to play.
         result |= extract_threatening_moves_from_computer(
-            opponent,
+            human,
             current_computer,
             computer_captures,
             &self.patterns
         );
-        result |= extract_capturing_moves(opponent, current_computer, &self.patterns);
+        result |= extract_capturing_moves(human, current_computer, &self.patterns);
         result |= extract_missing_bit(
             current_computer,
-            opponent,
+            human,
             GET_MOVES_PATTERNS[0].0,
             GET_MOVES_PATTERNS[0].1,
             GET_MOVES_PATTERNS[0].2
         );
         result |= extract_missing_bit(
             current_computer,
-            opponent,
+            human,
             GET_MOVES_PATTERNS[1].0,
             GET_MOVES_PATTERNS[1].1,
             GET_MOVES_PATTERNS[1].2
         );
-        result |= extract_capturing_moves(current_computer, opponent, &self.patterns);
+        result |= extract_capturing_moves(current_computer, human, &self.patterns);
         result &= legal_open_cells;
 
         if result.count_ones() > 4 {
             return result;
         }
 
-        result |= extract_threatening_moves_from_opponent(
+        result |= extract_threatening_moves_from_human(
             current_computer,
-            opponent,
+            human,
             GET_MOVES_PATTERNS[2].0,
             GET_MOVES_PATTERNS[2].1,
             GET_MOVES_PATTERNS[2].2
         );
         result |= extract_missing_bit(
             current_computer,
-            opponent,
+            human,
             GET_MOVES_PATTERNS[3].0,
             GET_MOVES_PATTERNS[3].1,
             GET_MOVES_PATTERNS[3].2
         );
         result |= extract_missing_bit(
             current_computer,
-            opponent,
+            human,
             GET_MOVES_PATTERNS[4].0,
             GET_MOVES_PATTERNS[4].1,
             GET_MOVES_PATTERNS[4].2
@@ -372,7 +372,7 @@ impl Algorithm {
 
         result |= extract_missing_bit(
             current_computer,
-            opponent,
+            human,
             GET_MOVES_PATTERNS[5].0,
             GET_MOVES_PATTERNS[5].1,
             GET_MOVES_PATTERNS[5].2

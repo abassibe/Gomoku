@@ -26,7 +26,7 @@ fn test_get_potential_moves_with_one_unbreakable_five() {
         0000000000000000000
         0000000000000000000
     ");
-    let opponent = BitBoard::from_str("
+    let human = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -69,7 +69,7 @@ fn test_get_potential_moves_with_one_unbreakable_five() {
         0000000000000000000
     ");
     let mut algo = Algorithm::new();
-    algo.update_initial_state(Goban::new(computer, opponent), BitBoard::empty(), 0, 0);
+    algo.update_initial_state(Goban::new(computer, human), BitBoard::empty(), 0, 0);
 
     // Act
     let result = algo.get_potential_moves(&algo.initial);
@@ -103,7 +103,7 @@ fn test_get_potential_moves_with_one_breakable_five() {
         0000000000000000000
         0000000000000000000
     ");
-    let opponent = BitBoard::from_str("
+    let human = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -146,7 +146,7 @@ fn test_get_potential_moves_with_one_breakable_five() {
         0000000000000000000
     ");
     let mut algo = Algorithm::new();
-    algo.update_initial_state(Goban::new(computer, opponent), BitBoard::empty(), 0, 0);
+    algo.update_initial_state(Goban::new(computer, human), BitBoard::empty(), 0, 0);
 
     // Act
     let result = algo.get_potential_moves(&algo.initial);
@@ -180,7 +180,7 @@ fn test_get_potential_moves_with_multiple_threats_and_one_split_four() {
         0000000000000000000
         0000000000000000000
     ");
-    let opponent = BitBoard::from_str("
+    let human = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -223,7 +223,7 @@ fn test_get_potential_moves_with_multiple_threats_and_one_split_four() {
         0000000000000000000
     ");
     let mut algo = Algorithm::new();
-    algo.update_initial_state(Goban::new(computer, opponent), BitBoard::empty(), 0, 0);
+    algo.update_initial_state(Goban::new(computer, human), BitBoard::empty(), 0, 0);
 
     // Act
     let result = algo.get_potential_moves(&algo.initial);
@@ -234,7 +234,7 @@ fn test_get_potential_moves_with_multiple_threats_and_one_split_four() {
 }
 
 #[test]
-fn test_get_potential_moves_with_threat_from_opponent() {
+fn test_get_potential_moves_with_threat_from_human() {
     // Arrange
     let computer = BitBoard::from_str("
         0000000000000000000
@@ -257,7 +257,7 @@ fn test_get_potential_moves_with_threat_from_opponent() {
         0000000000000000000
         0000000000000000000
     ");
-    let opponent = BitBoard::from_str("
+    let human = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -300,7 +300,7 @@ fn test_get_potential_moves_with_threat_from_opponent() {
         0000000000000000000
     ");
     let mut algo = Algorithm::new();
-    algo.update_initial_state(Goban::new(computer, opponent), BitBoard::empty(), 0, 0);
+    algo.update_initial_state(Goban::new(computer, human), BitBoard::empty(), 0, 0);
 
     // Act
     let result = algo.get_potential_moves(&algo.initial);
@@ -334,7 +334,7 @@ fn test_get_potential_moves_with_first_turn_completed() {
         0000000000000000000
         0000000000000000000
     ");
-    let opponent = BitBoard::from_str("
+    let human = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -377,7 +377,7 @@ fn test_get_potential_moves_with_first_turn_completed() {
         0000000000000000000
     ");
     let mut algo = Algorithm::new();
-    algo.update_initial_state(Goban::new(computer, opponent), BitBoard::empty(), 0, 0);
+    algo.update_initial_state(Goban::new(computer, human), BitBoard::empty(), 0, 0);
 
     // Act
     let result = algo.get_potential_moves(&algo.initial);
@@ -411,7 +411,7 @@ fn test_get_potential_moves_with_no_move_played() {
         0000000000000000000
         0000000000000000000
     ");
-    let opponent = BitBoard::from_str("
+    let human = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -454,7 +454,7 @@ fn test_get_potential_moves_with_no_move_played() {
         0000000000000000000
     ");
     let mut algo = Algorithm::new();
-    algo.update_initial_state(Goban::new(computer, opponent), BitBoard::empty(), 0, 0);
+    algo.update_initial_state(Goban::new(computer, human), BitBoard::empty(), 0, 0);
 
     // Act
     let result = algo.get_potential_moves(&algo.initial);
@@ -465,7 +465,7 @@ fn test_get_potential_moves_with_no_move_played() {
 }
 
 #[test]
-fn test_get_potential_moves_with_only_one_opponent_move() {
+fn test_get_potential_moves_with_only_one_human_move() {
     // Arrange
     let computer = BitBoard::from_str("
         0000000000000000000
@@ -488,7 +488,7 @@ fn test_get_potential_moves_with_only_one_opponent_move() {
         0000000000000000000
         0000000000000000000
     ");
-    let opponent = BitBoard::from_str("
+    let human = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -531,7 +531,7 @@ fn test_get_potential_moves_with_only_one_opponent_move() {
         0000000000000000000
     ");
     let mut algo = Algorithm::new();
-    algo.update_initial_state(Goban::new(computer, opponent), BitBoard::empty(), 0, 0);
+    algo.update_initial_state(Goban::new(computer, human), BitBoard::empty(), 0, 0);
 
     // Act
     let result = algo.get_potential_moves(&algo.initial);
@@ -594,7 +594,7 @@ fn test_algorithm()
 
     for _ in 0..10 {
         let initial = Goban::new(computer, human);
-        algo.update_initial_state(initial, next_move, result_node.get_computer_captures(), result_node.get_opponent_captures());
+        algo.update_initial_state(initial, next_move, result_node.get_computer_captures(), result_node.get_human_captures());
         let next_move_opt = algo.get_next_move(2);
         if next_move_opt.is_none() { break; }
         result_node = next_move_opt.unwrap();
@@ -603,7 +603,7 @@ fn test_algorithm()
         computer |= next_move;
         println!("Computer's BitBoard:\n{}", computer);
         let initial = Goban::new(human, computer);
-        algo.update_initial_state(initial, next_move, result_node.get_opponent_captures(), result_node.get_computer_captures());
+        algo.update_initial_state(initial, next_move, result_node.get_human_captures(), result_node.get_computer_captures());
         let next_move_opt = algo.get_next_move(2);
         if next_move_opt.is_none() { break; }
         result_node = next_move_opt.unwrap();
