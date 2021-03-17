@@ -2,10 +2,47 @@ use crate::bitboard::{direction::Direction, pattern::*};
 use crate::goban::fscore::Fscore;
 
 use super::{bitboard::BitBoard, goban::Goban, node::Node};
+use std::collections::HashMap;
 
 #[cfg(test)]
 mod tests;
 mod minimax;
+
+
+//------------------------------------------------------------------------------------------------//
+//                                Transposition Table Under construction                          //
+
+//Transposition table states, hash map of already encountered board states
+static mut TT_STATES: HashMap<Goban, Fscore> = HashMap::new();
+
+//here be dragons
+unsafe fn tt_update(new_goban: &Goban, new_fscore: Fscore) -> Option<&Fscore> {
+    if tt_check_key(new_goban) {
+        Some(tt_get_fscore(new_goban).unwrap())
+    } else {
+        None
+    }
+}
+
+unsafe fn tt_insert_new_state(new_goban: Goban, new_fscore: Fscore) {
+    println!("tt state : {:?}", TT_STATES);
+    TT_STATES.insert(new_goban, new_fscore);
+}
+
+unsafe fn tt_check_key(key: &Goban) -> bool {
+    if TT_STATES.contains_key(key) {
+        true
+    } else {
+        false
+    }
+}
+
+unsafe fn tt_get_fscore(state: &Goban) -> Option<&Fscore> {
+    TT_STATES.get(state)
+}
+
+//                                                                                                //
+//------------------------------------------------------------------------------------------------//
 
 #[derive(Default)]
 pub struct Algorithm {

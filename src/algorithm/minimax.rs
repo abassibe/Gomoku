@@ -1,4 +1,4 @@
-use crate::algorithm::Algorithm;
+use crate::algorithm::{Algorithm, TT_STATES, tt_update, tt_insert_new_state};
 use crate::goban::fscore::Fscore;
 use crate::node::Node;
 
@@ -10,7 +10,16 @@ impl Algorithm {
             // TODO: We have to pass the potential next move to compute_item_fscore, but we don't have it at this point
             // and I'm not even sure we actually need it, maybe we should remove it completely?
             // node.compute_item_fscore(&current_goban, current_goban.get_player(), depth as usize);
-            self.compute_and_set_fscore(node, depth + 1);
+            unsafe {
+                let tmp = tt_update(node.get_item(), node.get_item().get_fscore());
+                if tmp.is_some() {
+                    node.get_item().set_fscore(*tmp.unwrap());
+                } else {
+                    self.compute_and_set_fscore(node, depth + 1);
+                    tt_insert_new_state(*node.get_item(), node.get_item().get_fscore());
+                }
+            }
+            //self.compute_and_set_fscore(node, depth + 1);
             return node.clone();
         }
         let mut candidate = node.clone();
