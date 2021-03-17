@@ -27,7 +27,7 @@ const BLACK: u8 = 1;
 fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     #[pyfn(m, "get_next_move")]
     /// Interfacing function.
-    /// Takes the Python GIL, the board in the shape of a 19*19 numpy 2d array, the color of the human player, a boolean that indicates if this is a hint request, and the number of captures made by the human and the ai.
+    /// Takes the Python GIL, the board in the shape of a 19*19 numpy 2d array, the color of the human computer, a boolean that indicates if this is a hint request, and the number of captures made by the human and the ai.
     fn get_next_move(
         py: Python<'_>,
         goban: &PyArray2<u8>,
@@ -83,21 +83,21 @@ fn vec_to_string(board: Vec<u8>) -> String {
         .collect::<String>()
 }
 
-/// Turns the string into two bitboards (player, enemy)
-fn assign_color_to_ai(str: String, human: u8) -> Goban {
-    let player = BitBoard::from_str(&str.replace("2", "0"));
-    let enemy = BitBoard::from_str(&str.replace("1", "0").replace("2", "1"));
+/// Turns the string into two bitboards (computer, human)
+fn assign_color_to_ai(str: String, player_color: u8) -> Goban {
+    let player_one = BitBoard::from_str(&str.replace("2", "0"));
+    let player_two = BitBoard::from_str(&str.replace("1", "0").replace("2", "1"));
 
-    if human == WHITE {
-        Goban::new(enemy, player)
-    } else {
-        Goban::new(player, enemy)
+    match player_color {
+        WHITE => Goban::new(player_two, player_one),
+        BLACK => Goban::new(player_one, player_two),
+        _ => panic!("Player color doesn't exist")
     }
 }
 
-fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8) -> (u32, u32) {
+fn launch_ai(input: Goban, computer_captures: u8, opponent_captures: u8) -> (u32, u32) {
     let mut algorithm = Algorithm::new();
-    algorithm.update_initial_state(input, BitBoard::empty(), player_captures, opponent_captures);
+    algorithm.update_initial_state(input, BitBoard::empty(), computer_captures, opponent_captures);
     let ret = algorithm.get_next_move(DEPTH).unwrap();
 
     get_move_coord(&ret)

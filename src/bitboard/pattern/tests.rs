@@ -5,7 +5,7 @@ use crate::{algorithm::Algorithm, goban::*};
 #[ignore = "This test is for debug purpose right now"]
 fn test_debug_extract_illegal_move() {
     // Arrange
-    // let player = BitBoard::from_str("
+    // let computer = BitBoard::from_str("
     //     0000000000000000000
     //     0000000000000000000
     //     0000000000000000000
@@ -26,7 +26,7 @@ fn test_debug_extract_illegal_move() {
     //     0000000000000000000
     //     0000000000000000000
     // ");
-    // let enemy = BitBoard::from_str("
+    // let human = BitBoard::from_str("
     //     0000000000000000000
     //     0000000000000000000
     //     0000000000000000000
@@ -90,7 +90,7 @@ fn test_debug_extract_illegal_move() {
     //     0000000000000000000
     // ");
 
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -111,7 +111,7 @@ fn test_debug_extract_illegal_move() {
         0000000000000000000
         0000000000000000000
     ");
-    let enemy = BitBoard::from_str("
+    let human = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -175,14 +175,14 @@ fn test_debug_extract_illegal_move() {
         0000000000000000000
     ");
 
-    // let goban = Goban::new(player, enemy);
-    let goban = Goban::new(enemy, player);
+    // let goban = Goban::new(computer, human);
+    let goban = Goban::new(human, computer);
     let mut algo = Algorithm::new();
     algo.update_initial_state(goban, last_move, 0, 0);
 
     // Act
     // TODO: try with get_bext_move to try to understand what is going on.
-    // let result = extract_illegal_moves(player, enemy, &NewPattern::new());
+    // let result = extract_illegal_moves(computer, human, &NewPattern::new());
 
     // let fscore = algo.compute_and_set_fscore(&mut algo.get_initial().clone(), 0);
 
@@ -191,12 +191,12 @@ fn test_debug_extract_illegal_move() {
 
     // let result = algo.get_potential_moves(algo.get_initial());
 
-    // let result = extract_threatening_moves_from_player(enemy, player, 0, &NewPattern::new());
+    // let result = extract_threatening_moves_from_computer(human, computer, 0, &NewPattern::new());
 
-    // let result = extract_missing_bit_cross_four_with_four(player, enemy);
+    // let result = extract_missing_bit_cross_four_with_four(computer, human);
 
     println!("Here is the Fscore: {}", node.get_item().get_fscore());
-    println!("Is initial player threatened: {}", algo.get_initial().is_player_threatened());
+    println!("Is initial computer threatened: {}", algo.get_initial().is_computer_threatened());
 
     println!("Here is the result:\n{}", result);
 
@@ -207,7 +207,7 @@ fn test_debug_extract_illegal_move() {
 #[test]
 fn test_pattern_matching_extract_threatening_moves_from_opponent_with_open_split_four() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -228,7 +228,7 @@ fn test_pattern_matching_extract_threatening_moves_from_opponent_with_open_split
         0000000000000000000
         0000000000000000000
     ");
-    let enemy = BitBoard::from_str("
+    let human = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -272,7 +272,7 @@ fn test_pattern_matching_extract_threatening_moves_from_opponent_with_open_split
     ");
 
     // Act
-    let result = extract_threatening_moves_from_player(enemy, player, 0, &NewPattern::new());
+    let result = extract_threatening_moves_from_computer(human, computer, 0, &NewPattern::new());
     println!("Here is the result:\n{}", result);
 
     // Assert
@@ -282,7 +282,7 @@ fn test_pattern_matching_extract_threatening_moves_from_opponent_with_open_split
 #[test]
 fn test_pattern_matching_extract_threatening_moves_from_opponent_with_four() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -303,7 +303,7 @@ fn test_pattern_matching_extract_threatening_moves_from_opponent_with_four() {
         0000000000000000000
         0000000000000000000
     ");
-    let enemy = BitBoard::from_str("
+    let human = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -347,7 +347,7 @@ fn test_pattern_matching_extract_threatening_moves_from_opponent_with_four() {
     ");
 
     // Act
-    let result = extract_threatening_moves_from_player(enemy, player, 0, &NewPattern::new());
+    let result = extract_threatening_moves_from_computer(human, computer, 0, &NewPattern::new());
     println!("Here is the result:\n{}", result);
 
     // Assert
@@ -548,7 +548,7 @@ fn test_pattern_matching_contains_five_aligned() {
 fn test_pattern_matching_with_split_three() {
     // Arrange
     let (pattern, pattern_size, is_sym) = NewPattern::new()[PatternName::OpenSplitThreeLeft];
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         1000000100000010000
         0100000010000001000
         0010000001000000100
@@ -593,7 +593,7 @@ fn test_pattern_matching_with_split_three() {
     ");
 
     // Act
-    let result = match_pattern(player, opponent, pattern, pattern_size, is_sym);
+    let result = match_pattern(computer, opponent, pattern, pattern_size, is_sym);
 
     // Assert
     assert_eq!(expected, result);
@@ -603,7 +603,7 @@ fn test_pattern_matching_with_split_three() {
 fn test_pattern_matching_with_split_four() {
     // Arrange
     let (pattern, pattern_size, is_sym) = NewPattern::new()[PatternName::SplitFourRight];
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         1000000100000010000
         0100000010000001000
         0010000001000000100
@@ -648,7 +648,7 @@ fn test_pattern_matching_with_split_four() {
     ");
 
     // Act
-    let result = match_pattern(player, opponent, pattern, pattern_size, is_sym);
+    let result = match_pattern(computer, opponent, pattern, pattern_size, is_sym);
 
     // Assert
     assert_eq!(expected, result);
@@ -658,7 +658,7 @@ fn test_pattern_matching_with_split_four() {
 fn test_pattern_matching_five_aligned() {
     // Arrange
     let (pattern, pattern_size, is_sym) = NewPattern::new()[PatternName::Five];
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000001000
         0000000000000001000
         0000000000000001000
@@ -703,7 +703,7 @@ fn test_pattern_matching_five_aligned() {
     ");
 
     // Act
-    let result = match_pattern(player, opponent, pattern, pattern_size, is_sym);
+    let result = match_pattern(computer, opponent, pattern, pattern_size, is_sym);
 
     // Assert
     assert_eq!(expected, result);
@@ -712,7 +712,7 @@ fn test_pattern_matching_five_aligned() {
 #[test]
 fn test_pattern_matching_isolate_five_aligned() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000001000
         0000000000000001000
         0000000000000001000
@@ -756,7 +756,7 @@ fn test_pattern_matching_isolate_five_aligned() {
     ");
 
     // Act
-    let result = extract_five_aligned(player);
+    let result = extract_five_aligned(computer);
 
     // Assert
     assert_eq!(expected, result);
@@ -766,7 +766,7 @@ fn test_pattern_matching_isolate_five_aligned() {
 fn test_pattern_matching_open_three() {
     // Arrange
     let (pattern, pattern_size, is_sym) = NewPattern::new()[PatternName::OpenThree];
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000001000
         0000000000000001000
         0000000000000001000
@@ -831,7 +831,7 @@ fn test_pattern_matching_open_three() {
     ");
 
     // Act
-    let result = match_pattern(player, opponent, pattern, pattern_size, is_sym);
+    let result = match_pattern(computer, opponent, pattern, pattern_size, is_sym);
 
     // Assert
     assert_eq!(expected, result);
@@ -840,7 +840,7 @@ fn test_pattern_matching_open_three() {
 #[test]
 fn test_pattern_matching_check_illegal_moves() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -886,7 +886,7 @@ fn test_pattern_matching_check_illegal_moves() {
     let patterns = NewPattern::new();
 
     // Act
-    let result = extract_illegal_moves(player, opponent, &patterns);
+    let result = extract_illegal_moves(computer, opponent, &patterns);
 
     // Assert
     assert_eq!(expected, result);
@@ -895,7 +895,7 @@ fn test_pattern_matching_check_illegal_moves() {
 #[test]
 fn test_pattern_matching_check_illegal_moves_with_no_illegal() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -961,7 +961,7 @@ fn test_pattern_matching_check_illegal_moves_with_no_illegal() {
     let patterns = NewPattern::new();
 
     // Act
-    let result = extract_illegal_moves(player, opponent, &patterns);
+    let result = extract_illegal_moves(computer, opponent, &patterns);
 
     // Assert
     assert_eq!(expected, result);
@@ -970,7 +970,7 @@ fn test_pattern_matching_check_illegal_moves_with_no_illegal() {
 #[test]
 fn test_pattern_matching_check_illegal_moves_with_split_three() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -1016,7 +1016,7 @@ fn test_pattern_matching_check_illegal_moves_with_split_three() {
     let patterns = NewPattern::new();
 
     // Act
-    let result = extract_illegal_moves(player, opponent, &patterns);
+    let result = extract_illegal_moves(computer, opponent, &patterns);
     println!("Here is the result:\n{}", result);
 
     // Assert
@@ -1048,7 +1048,7 @@ fn test_pattern_matching_check_illegal_moves_with_merged_split_three() {
     // 0000000000000000000
     // 0000000000000000000
     // 0000000000000000000
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000100000000000000
@@ -1094,7 +1094,7 @@ fn test_pattern_matching_check_illegal_moves_with_merged_split_three() {
     let patterns = NewPattern::new();
 
     // Act
-    let result = extract_illegal_moves(player, opponent, &patterns);
+    let result = extract_illegal_moves(computer, opponent, &patterns);
     println!("Here is the result:\n{}", result);
 
     // Assert
@@ -1104,7 +1104,7 @@ fn test_pattern_matching_check_illegal_moves_with_merged_split_three() {
 #[test]
 fn test_pattern_matching_check_illegal_moves_with_split_three_real_scene() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -1170,7 +1170,7 @@ fn test_pattern_matching_check_illegal_moves_with_split_three_real_scene() {
     let patterns = NewPattern::new();
 
     // Act
-    let result = extract_illegal_moves(player, opponent, &patterns);
+    let result = extract_illegal_moves(computer, opponent, &patterns);
 
     // Assert
     assert_eq!(expected, result);
@@ -1179,7 +1179,7 @@ fn test_pattern_matching_check_illegal_moves_with_split_three_real_scene() {
 #[test]
 fn test_pattern_matching_extract_threatening_moves_from_opponent_with_open_three() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -1245,7 +1245,7 @@ fn test_pattern_matching_extract_threatening_moves_from_opponent_with_open_three
     let (pattern, pattern_size, is_sym) = NewPattern::new()[PatternName::OpenThree];
 
     // Act
-    let result = extract_threatening_moves_from_opponent(player, opponent, pattern, pattern_size, is_sym);
+    let result = extract_threatening_moves_from_opponent(computer, opponent, pattern, pattern_size, is_sym);
 
     // Assert
     assert_eq!(expected, result);
@@ -1254,7 +1254,7 @@ fn test_pattern_matching_extract_threatening_moves_from_opponent_with_open_three
 #[test]
 fn test_pattern_matching_extract_missing_bit_with_open_three() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000010011000001
         0100000010000000010
         0010000000000000000
@@ -1300,7 +1300,7 @@ fn test_pattern_matching_extract_missing_bit_with_open_three() {
     let (pattern, pattern_size, is_sym) = NewPattern::new()[PatternName::OpenThree];
 
     // Act
-    let result = extract_missing_bit(player, opponent, pattern, pattern_size, is_sym);
+    let result = extract_missing_bit(computer, opponent, pattern, pattern_size, is_sym);
 
     // Assert
     assert_eq!(expected, result);
@@ -1309,7 +1309,7 @@ fn test_pattern_matching_extract_missing_bit_with_open_three() {
 #[test]
 fn test_pattern_matching_extract_missing_bit_with_close_three() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000100000
         0000000010000000000
         0010000000000000000
@@ -1375,7 +1375,7 @@ fn test_pattern_matching_extract_missing_bit_with_close_three() {
     let (pattern, pattern_size, is_sym) = NewPattern::new()[PatternName::CloseSplitThreeLeft];
 
     // Act
-    let result = extract_missing_bit(player, opponent, pattern, pattern_size, is_sym);
+    let result = extract_missing_bit(computer, opponent, pattern, pattern_size, is_sym);
 
     // Assert
     assert_eq!(expected, result);
@@ -1384,7 +1384,7 @@ fn test_pattern_matching_extract_missing_bit_with_close_three() {
 #[test]
 fn test_pattern_matching_extract_captured_by_move() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -1405,7 +1405,7 @@ fn test_pattern_matching_extract_captured_by_move() {
         0000000000000000000
         0000000000000000000
     ");
-    let player_last_move = BitBoard::from_str("
+    let computer_last_move = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -1471,7 +1471,7 @@ fn test_pattern_matching_extract_captured_by_move() {
     let patterns = NewPattern::new();
 
     // Act
-    let result = extract_captured_by_move(player, opponent, player_last_move, &patterns);
+    let result = extract_captured_by_move(computer, opponent, computer_last_move, &patterns);
 
     // Assert
     assert_eq!(expected, result);
@@ -1480,7 +1480,7 @@ fn test_pattern_matching_extract_captured_by_move() {
 #[test]
 fn test_pattern_matching_extract_captured_by_move_in_edge() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -1501,7 +1501,7 @@ fn test_pattern_matching_extract_captured_by_move_in_edge() {
         0000000000000000000
         1001000000000000000
     ");
-    let player_last_move = BitBoard::from_str("
+    let computer_last_move = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -1567,7 +1567,7 @@ fn test_pattern_matching_extract_captured_by_move_in_edge() {
     let patterns = NewPattern::new();
 
     // Act
-    let result = extract_captured_by_move(player, opponent, player_last_move, &patterns);
+    let result = extract_captured_by_move(computer, opponent, computer_last_move, &patterns);
 
     // Assert
     assert_eq!(expected, result);
@@ -1576,7 +1576,7 @@ fn test_pattern_matching_extract_captured_by_move_in_edge() {
 #[test]
 fn test_pattern_matching_extract_winning_move_capture_with_3_captures() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -1642,7 +1642,7 @@ fn test_pattern_matching_extract_winning_move_capture_with_3_captures() {
     let patterns = NewPattern::new();
 
     // Act
-    let result = extract_winning_move_capture(player, opponent, 3, &patterns);
+    let result = extract_winning_move_capture(computer, opponent, 3, &patterns);
     println!("Here is the result:\n{}", result);
 
     // Assert
@@ -1652,7 +1652,7 @@ fn test_pattern_matching_extract_winning_move_capture_with_3_captures() {
 #[test]
 fn test_pattern_matching_extract_winning_move_capture_with_4_captures() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -1718,7 +1718,7 @@ fn test_pattern_matching_extract_winning_move_capture_with_4_captures() {
     let patterns = NewPattern::new();
 
     // Act
-    let result = extract_winning_move_capture(player, opponent, 4, &patterns);
+    let result = extract_winning_move_capture(computer, opponent, 4, &patterns);
 
     // Assert
     assert_eq!(expected, result);
@@ -1727,7 +1727,7 @@ fn test_pattern_matching_extract_winning_move_capture_with_4_captures() {
 #[test]
 fn test_pattern_matching_extract_five_align_breaking_moves() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000100000000000000
         0001100000000000000
         0010000000000100000
@@ -1793,7 +1793,7 @@ fn test_pattern_matching_extract_five_align_breaking_moves() {
     let patterns = NewPattern::new();
 
     // Act
-    let result = extract_five_align_breaking_moves(opponent, player, &patterns);
+    let result = extract_five_align_breaking_moves(opponent, computer, &patterns);
 
     // Assert
     assert_eq!(expected, result);
@@ -1802,7 +1802,7 @@ fn test_pattern_matching_extract_five_align_breaking_moves() {
 #[test]
 fn test_pattern_matching_extract_missing_bit_cross_four_with_four() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000000000
         0000000100000000000
         0000000010000000000
@@ -1867,7 +1867,7 @@ fn test_pattern_matching_extract_missing_bit_cross_four_with_four() {
     ");
 
     // Act
-    let result = extract_missing_bit_cross_four_with_four(player, opponent);
+    let result = extract_missing_bit_cross_four_with_four(computer, opponent);
 
     // Assert
     assert_eq!(expected, result);
@@ -1876,7 +1876,7 @@ fn test_pattern_matching_extract_missing_bit_cross_four_with_four() {
 #[test]
 fn test_pattern_matching_extract_missing_bit_cross_three_with_four() {
     // Arrange
-    let player = BitBoard::from_str("
+    let computer = BitBoard::from_str("
         0000000000000000000
         0000000000000000000
         0000000000000000000
@@ -1941,7 +1941,7 @@ fn test_pattern_matching_extract_missing_bit_cross_three_with_four() {
     ");
 
     // Act
-    let result = extract_missing_bit_cross_three_with_four(player, opponent);
+    let result = extract_missing_bit_cross_three_with_four(computer, opponent);
 
     // Assert
     assert_eq!(expected, result);
@@ -1950,7 +1950,7 @@ fn test_pattern_matching_extract_missing_bit_cross_three_with_four() {
 // #[test]
 // fn test_pattern_matching_extract_winning_move_align_with_breakable_alignment() {
 //     // Arrange
-//     let player = BitBoard::from_str("
+//     let computer = BitBoard::from_str("
 //         0000000000000000000
 //         0000000000000000000
 //         0000000000000000000
@@ -2016,7 +2016,7 @@ fn test_pattern_matching_extract_missing_bit_cross_three_with_four() {
 //     let patterns = NewPattern::new();
 
 //     // Act
-//     let result = extract_winning_move_capture(player, opponent, 4, &patterns);
+//     let result = extract_winning_move_capture(computer, opponent, 4, &patterns);
 
 //     // Assert
 //     assert_eq!(expected, result);
@@ -2025,7 +2025,7 @@ fn test_pattern_matching_extract_missing_bit_cross_three_with_four() {
 // #[test]
 // fn test_pattern_matching_extract_winning_move_align_with_unbreakable_alignment() {
 //     // Arrange
-//     let player = BitBoard::from_str("
+//     let computer = BitBoard::from_str("
 //         0000100000000000000
 //         0000000000000000000
 //         0010000000000000000
@@ -2089,10 +2089,10 @@ fn test_pattern_matching_extract_missing_bit_cross_three_with_four() {
 //         0000000000000000000
 //     ");
 //     let patterns = NewPattern::new();
-//     let illegals = extract_illegal_moves(player, opponent, &patterns);
+//     let illegals = extract_illegal_moves(computer, opponent, &patterns);
 
 //     // Act
-//     let result = extract_winning_move_align(player, opponent, illegals, 1, &patterns);
+//     let result = extract_winning_move_align(computer, opponent, illegals, 1, &patterns);
 //     println!("Here is the result:\n{}", result);
 
 //     // Assert

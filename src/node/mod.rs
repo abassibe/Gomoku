@@ -40,11 +40,11 @@ pub struct Node {
     /// `item` is the inner value which is held by a Node.
     item: Goban,
     depth: usize,
-    is_players_move: bool,
+    is_computers_move: bool,
     last_move: BitBoard,
-    player_captures: u8,
+    computer_captures: u8,
     opponent_captures: u8,
-    is_player_threatened: Option<bool>,
+    is_computer_threatened: Option<bool>,
     /// `branches` is a [`BinaryHeap`], wrapped in an [`Option`], which hold child nodes.
     /// The type `Branches` is used for convenience and is just an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
     branches: Option<Branches>
@@ -83,15 +83,15 @@ impl Hash for Node {
 }
 
 impl Node {
-    pub fn new(item: Goban, depth: usize, last_move: BitBoard, is_players_move: bool, player_captures: u8, opponent_captures: u8) -> Self {
+    pub fn new(item: Goban, depth: usize, last_move: BitBoard, is_computers_move: bool, computer_captures: u8, opponent_captures: u8) -> Self {
         Self {
             item,
             depth,
             last_move,
-            is_players_move,
-            player_captures,
+            is_computers_move,
+            computer_captures,
             opponent_captures,
-            is_player_threatened: None,
+            is_computer_threatened: None,
             branches: None
         }
     }
@@ -108,30 +108,30 @@ impl Node {
         self.last_move
     }
 
-    pub fn get_player_captures(&self) -> u8 {
-        self.player_captures
+    pub fn get_computer_captures(&self) -> u8 {
+        self.computer_captures
     }
 
     pub fn get_opponent_captures(&self) -> u8 {
         self.opponent_captures
     }
 
-    pub fn is_players_last_move(&self) -> bool {
-        self.is_players_move
+    pub fn is_computers_last_move(&self) -> bool {
+        self.is_computers_move
     }
 
-    pub fn compute_immediate_threats_for_player(&mut self, patterns: &NewPattern) {
+    pub fn compute_immediate_threats_for_computer(&mut self, patterns: &NewPattern) {
         let goban = self.get_item();
-        let (player, enemy) = (*goban.get_player(), *goban.get_enemy());
+        let (computer, human) = (*goban.get_computer(), *goban.get_human());
 
-        // let threats = extract_missing_bit_cross_three_with_four(*enemy, *enemy);
+        // let threats = extract_missing_bit_cross_three_with_four(*human, *human);
 
-        // self.is_player_threatened = Some((threats | extract_missing_bit_cross_four_with_four(*enemy, *player)).is_any());
-        self.is_player_threatened = Some(extract_threatening_moves_from_player(player, enemy, self.opponent_captures, patterns).is_any());
+        // self.is_computer_threatened = Some((threats | extract_missing_bit_cross_four_with_four(*human, *computer)).is_any());
+        self.is_computer_threatened = Some(extract_threatening_moves_from_computer(computer, human, self.opponent_captures, patterns).is_any());
     }
 
-    pub fn is_player_threatened(&self) -> bool {
-        if let Some(is_threatened) = self.is_player_threatened {
+    pub fn is_computer_threatened(&self) -> bool {
+        if let Some(is_threatened) = self.is_computer_threatened {
             return is_threatened;
         }
 
@@ -151,8 +151,8 @@ impl Node {
         self.item.compute_fscore(previous_state, to_play, depth)
     }
 
-    pub fn add_branch(&mut self, item: Goban, last_move: BitBoard, is_players_move: bool) -> Rc<RefCell<Self>> {
-        let new_node = Rc::new(RefCell::new(Self::new(item, self.depth + 1, last_move, is_players_move, self.player_captures, self.opponent_captures)));
+    pub fn add_branch(&mut self, item: Goban, last_move: BitBoard, is_computers_move: bool) -> Rc<RefCell<Self>> {
+        let new_node = Rc::new(RefCell::new(Self::new(item, self.depth + 1, last_move, is_computers_move, self.computer_captures, self.opponent_captures)));
         let mut branches = self.branches.take().unwrap_or_default();
 
         branches.push(Rc::clone(&new_node));

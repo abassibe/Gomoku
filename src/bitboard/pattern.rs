@@ -112,7 +112,7 @@ impl Default for NewPattern {
 // TODO: Handle captures when generating moves
 #[inline]
 pub fn match_pattern_base(
-    player: BitBoard,
+    computer: BitBoard,
     opponent: BitBoard,
     pattern: u8,
     pattern_size: u8,
@@ -130,7 +130,7 @@ pub fn match_pattern_base(
 
     while x < pattern_size && result.is_any() {
         result = if ((pattern << x) & U8_FIRST_BIT) == U8_FIRST_BIT {
-            (result >> direction) & player
+            (result >> direction) & computer
         } else {
             if edge_mask.is_any() && x > 0 {
                 edge_mask = BitBoard::empty();
@@ -145,19 +145,19 @@ pub fn match_pattern_base(
 }
 
 pub fn match_pattern_all_directions(
-    player: BitBoard,
+    computer: BitBoard,
     opponent: BitBoard,
     pattern: u8,
     pattern_size: u8,
     move_step: u8,
     closure_bits: u8
 ) -> BitBoard {
-    let open_cells = !(player | opponent);
+    let open_cells = !(computer | opponent);
     let mut result = BitBoard::empty();
 
     for direction in DirectionIterator::new() {
         result |= match_pattern_base(
-            player,
+            computer,
             opponent,
             pattern,
             pattern_size,
@@ -172,19 +172,19 @@ pub fn match_pattern_all_directions(
 }
 
 pub fn match_pattern_all_axis(
-    player: BitBoard,
+    computer: BitBoard,
     opponent: BitBoard,
     pattern: u8,
     pattern_size: u8,
     move_step: u8,
     closure_bits: u8
 ) -> BitBoard {
-    let open_cells = !(player | opponent);
+    let open_cells = !(computer | opponent);
     let mut result = BitBoard::empty();
 
     for direction in AxisIterator::new() {
         result |= match_pattern_base(
-            player,
+            computer,
             opponent,
             pattern,
             pattern_size,
@@ -199,7 +199,7 @@ pub fn match_pattern_all_axis(
 }
 
 pub fn match_pattern(
-    player: BitBoard,
+    computer: BitBoard,
     opponent: BitBoard,
     pattern: u8,
     pattern_size: u8,
@@ -207,20 +207,20 @@ pub fn match_pattern(
 ) -> BitBoard {
     let closure_bits = (pattern & U8_FIRST_BIT) | (1 << (8 - pattern_size) & pattern);
     if is_pattern_symmetric {
-        match_pattern_all_axis(player, opponent, pattern, pattern_size, 0, closure_bits)
+        match_pattern_all_axis(computer, opponent, pattern, pattern_size, 0, closure_bits)
     } else {
-        match_pattern_all_directions(player, opponent, pattern, pattern_size, 0, closure_bits)
+        match_pattern_all_directions(computer, opponent, pattern, pattern_size, 0, closure_bits)
     }
 }
 
-pub fn extract_five_aligned(player: BitBoard) -> BitBoard {
+pub fn extract_five_aligned(computer: BitBoard) -> BitBoard {
     let mut result = BitBoard::empty();
 
     for direction in AxisIterator::new() {
-        let mut tmp = player;
+        let mut tmp = computer;
         let mut i = 0;
         while i < 4 && tmp.is_any() {
-            tmp = (tmp << direction) & player;
+            tmp = (tmp << direction) & computer;
             i += 1;
         }
         if tmp.is_empty() {
@@ -235,11 +235,11 @@ pub fn extract_five_aligned(player: BitBoard) -> BitBoard {
 }
 
 pub fn extract_illegal_moves(
-    player: BitBoard,
+    computer: BitBoard,
     opponent: BitBoard,
     patterns: &NewPattern
 ) -> BitBoard {
-    let open_cells = !(player | opponent);
+    let open_cells = !(computer | opponent);
     let illegal_patterns = [
         patterns[PatternName::OpenSplitThreeLeft],
         patterns[PatternName::OpenSplitThreeRight],
@@ -261,7 +261,7 @@ pub fn extract_illegal_moves(
             }
             for (id, direction) in AxisIterator::new().enumerate() {
                 tmp[id] |= match_pattern_base(
-                    player,
+                    computer,
                     opponent,
                     sub_pattern,
                     pattern_size,
@@ -282,14 +282,14 @@ pub fn extract_illegal_moves(
 }
 
 pub fn extract_threatening_moves_from_opponent(
-    player: BitBoard,
+    computer: BitBoard,
     opponent: BitBoard,
     pattern: u8,
     pattern_size: u8,
     is_pattern_symmetric: bool
 ) -> BitBoard {
     let closure_bits = (pattern & U8_FIRST_BIT) | ((U8_FIRST_BIT >> (pattern_size - 1)) & pattern);
-    let open_cells = !(player | opponent);
+    let open_cells = !(computer | opponent);
     let directions = if is_pattern_symmetric {
         AxisIterator::as_array_iter()
     } else {
@@ -300,7 +300,7 @@ pub fn extract_threatening_moves_from_opponent(
     for &direction in directions {
         let mut tmp = match_pattern_base(
             opponent,
-            player,
+            computer,
             pattern,
             pattern_size,
             0,
@@ -322,29 +322,29 @@ pub fn extract_threatening_moves_from_opponent(
 }
 
 // TODO: Missing tests
-pub fn extract_threatening_moves_from_player(
-    player: BitBoard,
+pub fn extract_threatening_moves_from_computer(
+    computer: BitBoard,
     opponent: BitBoard,
     opponent_captures: u8,
     patterns: &NewPattern
 ) -> BitBoard {
-    let open_cells = !(player | opponent);
+    let open_cells = !(computer | opponent);
     let (pattern_three, pattern_three_size, is_three_sym) = patterns[PatternName::OpenThree];
     let (pattern_split_three, pattern_split_three_size, is_split_three_sym) = patterns[PatternName::OpenSplitThreeRight];
     let (pattern_five, pattern_five_size, is_five_sym) = patterns[PatternName::Five];
 
-    let mut result = extract_winning_move_capture(opponent, player, opponent_captures, patterns);
-    result |= extract_missing_bit_cross_four_with_four(opponent, player);
-    result |= extract_missing_bit_cross_three_with_four(opponent, player);
+    let mut result = extract_winning_move_capture(opponent, computer, opponent_captures, patterns);
+    result |= extract_missing_bit_cross_four_with_four(opponent, computer);
+    result |= extract_missing_bit_cross_three_with_four(opponent, computer);
     result |= extract_threatening_moves_from_opponent(
-        player,
+        computer,
         opponent,
         pattern_three,
         pattern_three_size,
         is_three_sym
     );
     result |= extract_threatening_moves_from_opponent(
-        player,
+        computer,
         opponent,
         pattern_split_three,
         pattern_split_three_size,
@@ -352,7 +352,7 @@ pub fn extract_threatening_moves_from_player(
     );
     result |= extract_missing_bit(
         opponent,
-        player,
+        computer,
         pattern_five,
         pattern_five_size,
         is_five_sym
@@ -361,8 +361,8 @@ pub fn extract_threatening_moves_from_player(
     result & open_cells
 }
 
-pub fn extract_missing_bit_cross_three_with_four(player: BitBoard, opponent: BitBoard) -> BitBoard {
-    let open_cells = !(player | opponent);
+pub fn extract_missing_bit_cross_three_with_four(computer: BitBoard, opponent: BitBoard) -> BitBoard {
+    let open_cells = !(computer | opponent);
     let mut tmp_three = [
         BitBoard::empty(),
         BitBoard::empty(),
@@ -389,7 +389,7 @@ pub fn extract_missing_bit_cross_three_with_four(player: BitBoard, opponent: Bit
             }
             for (di, direction) in AxisIterator::new().enumerate() {
                 let tmp = match_pattern_base(
-                    player,
+                    computer,
                     opponent,
                     masked_pattern,
                     pattern_size,
@@ -416,8 +416,8 @@ pub fn extract_missing_bit_cross_three_with_four(player: BitBoard, opponent: Bit
     result & open_cells
 }
 
-pub fn extract_missing_bit_cross_four_with_four(player: BitBoard, opponent: BitBoard) -> BitBoard {
-    let open_cells = !(player | opponent);
+pub fn extract_missing_bit_cross_four_with_four(computer: BitBoard, opponent: BitBoard) -> BitBoard {
+    let open_cells = !(computer | opponent);
     let mut tmp = [
         BitBoard::empty(),
         BitBoard::empty(),
@@ -434,7 +434,7 @@ pub fn extract_missing_bit_cross_four_with_four(player: BitBoard, opponent: BitB
             }
             for (di, direction) in AxisIterator::new().enumerate() {
                 tmp[di] |= match_pattern_base(
-                    player,
+                    computer,
                     opponent,
                     masked_pattern,
                     pattern_size,
@@ -465,7 +465,7 @@ pub fn extract_missing_bit_cross_four_with_four(player: BitBoard, opponent: BitB
 /// Only one bit by potential match are returned, understand that the returned bits
 /// are the ones we can play to complete the provided pattern in one move.
 pub fn extract_missing_bit(
-    player: BitBoard,
+    computer: BitBoard,
     opponent: BitBoard,
     pattern: u8,
     pattern_size: u8,
@@ -481,7 +481,7 @@ pub fn extract_missing_bit(
         }
         if is_sym {
             result |= match_pattern_all_axis(
-                player,
+                computer,
                 opponent,
                 tmp,
                 pattern_size,
@@ -490,7 +490,7 @@ pub fn extract_missing_bit(
             );
         } else {
             result |= match_pattern_all_directions(
-                player,
+                computer,
                 opponent,
                 tmp,
                 pattern_size,
@@ -500,11 +500,11 @@ pub fn extract_missing_bit(
         }
     }
 
-    result & !(player | opponent)
+    result & !(computer | opponent)
 }
 
 pub fn extract_captured_by_move(
-    player: BitBoard,
+    computer: BitBoard,
     opponent: BitBoard,
     being_played: BitBoard,
     patterns: &NewPattern
@@ -520,7 +520,7 @@ pub fn extract_captured_by_move(
                 & if (pattern << i) & U8_FIRST_BIT == U8_FIRST_BIT {
                     opponent
                 } else {
-                    player
+                    computer
                 };
             i += 1;
         }
@@ -535,16 +535,16 @@ pub fn extract_captured_by_move(
 }
 
 pub fn extract_capturing_moves(
-    player: BitBoard,
+    computer: BitBoard,
     opponent: BitBoard,
     patterns: &NewPattern
 ) -> BitBoard {
-    let open_cells = !(player | opponent);
+    let open_cells = !(computer | opponent);
     let (pattern, pattern_size, _) = patterns[PatternName::CloseTwo];
     let mut result = BitBoard::empty();
 
     for direction in DirectionIterator::new() {
-        let mut tmp = player;
+        let mut tmp = computer;
         let mut i = 0;
         while i < pattern_size && tmp.is_any() {
             tmp = (tmp >> direction)
@@ -561,13 +561,13 @@ pub fn extract_capturing_moves(
     result
 }
 
-pub fn extract_captures(player: BitBoard, opponent: BitBoard, patterns: &NewPattern) -> BitBoard {
-    let open_cells = !(player | opponent);
+pub fn extract_captures(computer: BitBoard, opponent: BitBoard, patterns: &NewPattern) -> BitBoard {
+    let open_cells = !(computer | opponent);
     let (pattern, pattern_size, _) = patterns[PatternName::CloseTwo];
     let mut result = BitBoard::empty();
 
     for direction in DirectionIterator::new() {
-        let mut tmp = player;
+        let mut tmp = computer;
         let mut i = 0;
         while i < pattern_size && tmp.is_any() {
             tmp = (tmp >> direction)
@@ -592,11 +592,11 @@ pub fn extract_captures(player: BitBoard, opponent: BitBoard, patterns: &NewPatt
 /// which means that it's possible for that function to return a move that will NOT actually break the alignment
 /// for the alignment of 6 or +.
 pub fn extract_five_align_breaking_moves(
-    player: BitBoard,
+    computer: BitBoard,
     opponent: BitBoard,
     patterns: &NewPattern) -> BitBoard {
     let mut result = BitBoard::empty();
-    let open_cells = !(player | opponent);
+    let open_cells = !(computer | opponent);
     let opponent_fives = extract_five_aligned(opponent);
     let (pattern, pattern_size, _) = patterns[PatternName::CloseTwo];
 
@@ -604,7 +604,7 @@ pub fn extract_five_align_breaking_moves(
         let inverted_direction = direction.to_invert();
         let tmp = match_pattern_base(
             opponent,
-            player,
+            computer,
             pattern,
             pattern_size,
             0,
@@ -625,39 +625,39 @@ pub fn extract_five_align_breaking_moves(
 }
 
 // TODO: Missing tests
-pub fn extract_winning_moves_from_player(
-    player: BitBoard,
+pub fn extract_winning_moves_from_computer(
+    computer: BitBoard,
     opponent: BitBoard,
-    player_captures: u8,
+    computer_captures: u8,
     opponent_captures: u8,
     patterns: &NewPattern) -> BitBoard {
-    let open_cells = !(player | opponent);
+    let open_cells = !(computer | opponent);
     let (pattern, pattern_size, is_sym) = patterns[PatternName::Five];
 
-    let player_with_finisher =
-        player | extract_missing_bit(player, opponent, pattern, pattern_size, is_sym);
-    let result = extract_five_aligned(player_with_finisher)
-        ^ extract_captures(opponent, player_with_finisher, patterns);
+    let computer_with_finisher =
+        computer | extract_missing_bit(computer, opponent, pattern, pattern_size, is_sym);
+    let result = extract_five_aligned(computer_with_finisher)
+        ^ extract_captures(opponent, computer_with_finisher, patterns);
     let result = if result.is_any()
-        && extract_winning_move_capture(opponent, player, opponent_captures, patterns).is_empty()
+        && extract_winning_move_capture(opponent, computer, opponent_captures, patterns).is_empty()
     {
         result
     } else {
-        extract_winning_move_capture(player, opponent, player_captures, patterns)
+        extract_winning_move_capture(computer, opponent, computer_captures, patterns)
     };
 
     result & open_cells
 }
 
 // There is no use for the following function. I keep it here for now, just in case.
-// pub fn extract_winning_move_align(player: BitBoard, opponent: BitBoard, illegals: BitBoard, opponent_captures: u8, patterns: &NewPattern) -> BitBoard {
+// pub fn extract_winning_move_align(computer: BitBoard, opponent: BitBoard, illegals: BitBoard, opponent_captures: u8, patterns: &NewPattern) -> BitBoard {
 //     let illegals_complement = !illegals;
-//     let open_cells = !(player | opponent);
+//     let open_cells = !(computer | opponent);
 //     let (pattern, pattern_size, is_sym) = patterns[PatternName::Five];
-//     let result = (player | extract_missing_bit(player, opponent, pattern, pattern_size, false)) & illegals_complement;
+//     let result = (computer | extract_missing_bit(computer, opponent, pattern, pattern_size, false)) & illegals_complement;
 //     let result = extract_five_aligned(result ^ extract_captures(opponent, result, patterns)) & open_cells;
 
-//     if result.is_any() && extract_winning_move_capture(opponent, player, opponent_captures, patterns).is_empty() {
+//     if result.is_any() && extract_winning_move_capture(opponent, computer, opponent_captures, patterns).is_empty() {
 //         result
 //     } else {
 //         BitBoard::empty()
@@ -665,21 +665,21 @@ pub fn extract_winning_moves_from_player(
 // }
 
 pub fn extract_winning_move_capture(
-    player: BitBoard,
+    computer: BitBoard,
     opponent: BitBoard,
-    player_captures: u8,
+    computer_captures: u8,
     patterns: &NewPattern) -> BitBoard {
-    let player_capturing_moves = extract_capturing_moves(player, opponent, patterns);
+    let computer_capturing_moves = extract_capturing_moves(computer, opponent, patterns);
     let mut result = BitBoard::empty();
 
-    if player_capturing_moves.is_empty() {
+    if computer_capturing_moves.is_empty() {
         return result;
     }
 
-    for capturing_move in player_capturing_moves.enumerate() {
+    for capturing_move in computer_capturing_moves.enumerate() {
         let tmp =
-            extract_captured_by_move(player | capturing_move, opponent, capturing_move, patterns);
-        if player_captures as u16 + tmp.count_ones() / 2 >= 5 {
+            extract_captured_by_move(computer | capturing_move, opponent, capturing_move, patterns);
+        if computer_captures as u16 + tmp.count_ones() / 2 >= 5 {
             result |= capturing_move;
         }
     }

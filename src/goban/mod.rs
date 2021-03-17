@@ -17,27 +17,27 @@ pub mod fscore;
 pub struct Goban {
 	board: BitBoard,
 	fscore: Fscore,
-	player: BitBoard,
-	enemy: BitBoard
+	computer: BitBoard,
+	human: BitBoard
 }
 
 
 impl Goban {
-	pub fn new(player: BitBoard, enemy: BitBoard) -> Self {
+	pub fn new(computer: BitBoard, human: BitBoard) -> Self {
 		Self {
 			fscore: Fscore::Uninitialized,
-			player,
-			enemy,
-			board: player | enemy
+			computer,
+			human,
+			board: computer | human
 		}
 	}
 
-	pub fn get_player(&self) -> &BitBoard {
-		&self.player
+	pub fn get_computer(&self) -> &BitBoard {
+		&self.computer
 	}
 
-	pub fn get_enemy(&self) -> &BitBoard {
-		&self.enemy
+	pub fn get_human(&self) -> &BitBoard {
+		&self.human
 	}
 
 	pub fn get_board(&self) -> BitBoard {
@@ -100,7 +100,7 @@ impl PartialOrd for Goban {
 
 impl fmt::Display for Goban {
 	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-		write!(f, "{}", self.player | self.enemy)
+		write!(f, "{}", self.computer | self.human)
 	}
 }
 

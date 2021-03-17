@@ -29,7 +29,7 @@ fn test_goban_neighbour_layers_simple()
     0000000000000000000
     ");
 
-    let player =
+    let computer =
         BitBoard::from_str("
     0000000000000000000
     0000000000000000000
@@ -52,7 +52,7 @@ fn test_goban_neighbour_layers_simple()
     0000000000000000000
     ");
 
-    let enemy =
+    let human =
         BitBoard::from_str("
     0000000000000000000
     0000000000000000000
@@ -75,7 +75,7 @@ fn test_goban_neighbour_layers_simple()
     0000000000000000000
     ");
 
-    let board = Goban::new(player, enemy);
+    let board = Goban::new(computer, human);
 
     println!("{}", to_play);
     assert_eq!(4, board.neighbour_layering(&to_play));
@@ -84,7 +84,7 @@ fn test_goban_neighbour_layers_simple()
 #[test]
 fn test_goban_neighbours_simple()
 {
-    let player =
+    let computer =
         BitBoard::from_str("
     0000000000000000001
     0000000000000000000
@@ -107,7 +107,7 @@ fn test_goban_neighbours_simple()
     0000000000000000000
     ");
 
-    let enemy =
+    let human =
         BitBoard::from_str("
     0000000000000000000
     0000000000000000000
@@ -152,8 +152,8 @@ fn test_goban_neighbours_simple()
     1110001000000000000
     0011111000000000000
     ");
-    let board = Goban::new(player, enemy);
-    println!("PLAYER\n{}\nENEMY\n{}\nFULL\n{}", player, enemy, player | enemy);
+    let board = Goban::new(computer, human);
+    println!("COMPUTER\n{}\nHUMAN\n{}\nFULL\n{}", computer, human, computer | human);
     println!("RESULT\n{}\nEXPECTED\n{}", board.list_neighbours(), expected);
     assert_eq!(board.list_neighbours(), expected);
 }
@@ -161,7 +161,7 @@ fn test_goban_neighbours_simple()
 #[test]
 fn test_goban_neighbours_borders()
 {
-    let player =
+    let computer =
         BitBoard::from_str("
     1111111111111111111
     1000000000000000001
@@ -207,7 +207,7 @@ fn test_goban_neighbours_borders()
     0000000000000000000
     ");
 
-    let board = Goban::new(player, BitBoard::default());
+    let board = Goban::new(computer, BitBoard::default());
     println!("RESULT\n{}\nEXPECTED\n{}", board.list_neighbours(), expect);
     assert_eq!(board.list_neighbours(), expect);
 }

@@ -34,7 +34,7 @@ impl Goban {
 	fn check_surround(&self, lines: BitBoard, dir: Direction) -> u8 {
 		let mut ret: u8 = 0;
 		for dirs in [dir, dir.to_invert()].iter() {
-			if ((lines >> *dirs) & self.enemy).is_empty() {
+			if ((lines >> *dirs) & self.human).is_empty() {
 				ret += 1;
 			}
 		}
@@ -49,7 +49,7 @@ impl Goban {
 		let mut len: isize;
 
 		for dir in AxisIterator::new() {
-			bits = self.player;
+			bits = self.computer;
 			final_line = BitBoard::empty();
 			len = 0;
 			while bits.is_any() {
