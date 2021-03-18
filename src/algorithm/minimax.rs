@@ -1,8 +1,6 @@
-use crate::algorithm::{Algorithm, tt_get_state, tt_insert_new_state};
+use crate::algorithm::{Algorithm, transposition_table::*};
 use crate::goban::fscore::Fscore;
-use crate::node::{Node, Branches};
-
-
+use crate::node::{Node};
 
 // Not sure if this is a good idea, just trying it out.
 impl Algorithm {
@@ -12,17 +10,15 @@ impl Algorithm {
             // TODO: We have to pass the potential next move to compute_item_fscore, but we don't have it at this point
             // and I'm not even sure we actually need it, maybe we should remove it completely?
             // node.compute_item_fscore(&current_goban, current_goban.get_player(), depth as usize);
-            unsafe {
-                match tt_get_state(&node.get_item().clone())
-                {
-                    Some(fscore) => {
-                        //println!("Found already existing board state");
-                        node.set_item_fscore(fscore);
-                    },
-                    None => {
-                        self.compute_and_set_fscore(node, depth + 1);
-                        tt_insert_new_state(*node.get_item(), node.get_item().get_fscore());
-                    }
+            match tt_lookup_state(&node.get_item())
+            {
+                Some(fscore) => {
+                    //println!("Found already existing board state");
+                    node.set_item_fscore(fscore);
+                },
+                None => {
+                    self.compute_and_set_fscore(node, depth + 1);
+                    tt_insert_new_state(*node.get_item(), node.get_item().get_fscore());
                 }
             }
             //self.compute_and_set_fscore(node, depth + 1);

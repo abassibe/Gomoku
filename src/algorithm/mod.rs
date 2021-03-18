@@ -1,55 +1,13 @@
-#[macro_use]
 use crate::bitboard::{direction::Direction, pattern::*};
 use crate::goban::fscore::Fscore;
 
 use super::{bitboard::BitBoard, goban::Goban, node::Node};
-use std::collections::HashMap;
-use std::sync::RwLock;
-use lazy_static::*;
 
 #[cfg(test)]
 mod tests;
 mod minimax;
+mod transposition_table;
 
-
-//------------------------------------------------------------------------------------------------//
-//                                Transposition Table Under construction                          //
-
-//Transposition table states, hash map of already encountered board states
-lazy_static! {
-    static ref TT_STATES: RwLock<HashMap<Goban, Fscore>> = RwLock::new(HashMap::new());
-}
-
-//here be dragons
-unsafe fn tt_get_state(new_goban: &Goban) -> Option<Fscore> {
-    if tt_check_key(new_goban) {
-        tt_get_fscore(new_goban)
-    } else {
-        None
-    }
-}
-
-unsafe fn tt_insert_new_state(new_goban: Goban, new_fscore: Fscore) {
-    // println!("tt state : {:?}", TT_STATES.read().unwrap());
-    TT_STATES.write().unwrap().insert(new_goban, new_fscore);
-}
-
-unsafe fn tt_check_key(key: &Goban) -> bool {
-    if TT_STATES.read().unwrap().contains_key(key) {
-        true
-    } else {
-        false
-    }
-}
-
-unsafe fn tt_get_fscore(state: &Goban) -> Option<Fscore> {
-    let lock = TT_STATES.read().unwrap();
-    let tmpret = lock.get(state).cloned();
-    tmpret
-}
-
-//                                                                                                //
-//------------------------------------------------------------------------------------------------//
 
 #[derive(Default)]
 pub struct Algorithm {
