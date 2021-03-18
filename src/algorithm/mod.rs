@@ -8,7 +8,7 @@ mod tests;
 mod minimax;
 mod transposition_table;
 
-
+// Should patterns even be in Algorithm ?
 #[derive(Default)]
 pub struct Algorithm {
     initial: Node,
