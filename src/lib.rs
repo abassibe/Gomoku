@@ -1,3 +1,4 @@
+extern crate lazy_static;
 use node::Node;
 use numpy::PyArray2;
 use pyo3::exceptions;

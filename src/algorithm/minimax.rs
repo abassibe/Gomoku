@@ -1,6 +1,7 @@
 use crate::algorithm::{Algorithm, TT_STATES, tt_update, tt_insert_new_state};
 use crate::goban::fscore::Fscore;
 use crate::node::Node;
+use std::borrow::BorrowMut;
 
 // Not sure if this is a good idea, just trying it out.
 impl Algorithm {
@@ -11,9 +12,9 @@ impl Algorithm {
             // and I'm not even sure we actually need it, maybe we should remove it completely?
             // node.compute_item_fscore(&current_goban, current_goban.get_player(), depth as usize);
             unsafe {
-                let tmp = tt_update(node.get_item(), node.get_item().get_fscore());
+                let tmp = tt_update(node.get_item());
                 if tmp.is_some() {
-                    node.get_item().set_fscore(*tmp.unwrap());
+                    node.get_item().set_fscore(tmp.unwrap());
                 } else {
                     self.compute_and_set_fscore(node, depth + 1);
                     tt_insert_new_state(*node.get_item(), node.get_item().get_fscore());
@@ -30,7 +31,7 @@ impl Algorithm {
             let children = node.get_branches();
             if let Some(children) = children {
                 for child in children {
-                    let grandchild = self.minimax(&mut child.borrow_mut(), depth - 1, alpha, beta, !maximizing);
+                    let grandchild = self.minimax(child.borrow_mut(), depth - 1, alpha, beta, !maximizing);
                     let grandchild_fscore = grandchild.get_item().get_fscore();
                     child.borrow_mut().set_item_fscore(grandchild_fscore);
                     if fscore < grandchild_fscore {
