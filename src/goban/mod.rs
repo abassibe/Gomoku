@@ -13,6 +13,7 @@ mod tests;
 pub mod heuristic;
 pub mod fscore;
 
+// TODO Put fscore in Node because I was wrong lmao
 #[derive(Clone, Debug, Default, Copy)]
 pub struct Goban {
 	board: BitBoard,
