@@ -15,7 +15,10 @@ impl Algorithm {
             unsafe {
                 match tt_get_state(&node.get_item().clone())
                 {
-                    Some(fscore) => node.set_item_fscore(fscore),
+                    Some(fscore) => {
+                        //println!("Found already existing board state");
+                        node.set_item_fscore(fscore);
+                    },
                     None => {
                         self.compute_and_set_fscore(node, depth + 1);
                         tt_insert_new_state(*node.get_item(), node.get_item().get_fscore());

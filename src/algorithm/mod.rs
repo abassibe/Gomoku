@@ -45,7 +45,6 @@ unsafe fn tt_check_key(key: &Goban) -> bool {
 unsafe fn tt_get_fscore(state: &Goban) -> Option<Fscore> {
     let lock = TT_STATES.read().unwrap();
     let tmpret = lock.get(state).cloned();
-    println!("{}", tmpret.unwrap());
     tmpret
 }
 

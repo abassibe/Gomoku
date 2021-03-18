@@ -64,13 +64,13 @@ impl PartialOrd for Node {
 
 impl Ord for Node {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.item.cmp(&other.item)
+        self.item.get_fscore().cmp(&other.item.get_fscore())
     }
 }
 
 impl PartialEq for Node {
     fn eq(&self, other: &Self) -> bool {
-        self.item == other.item
+        self.item.get_fscore() == other.item.get_fscore()
     }
 }
 

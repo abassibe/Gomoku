@@ -82,19 +82,11 @@ impl Eq for Goban {}
 
 impl PartialEq for Goban {
 	fn eq(&self, other: &Self) -> bool {
-		self.fscore == other.fscore
-	}
-}
-
-impl Ord for Goban {
-	fn cmp(&self, other: &Self) -> Ordering {
-		self.fscore.cmp(&other.fscore)
-	}
-}
-
-impl PartialOrd for Goban {
-	fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-		Some(self.cmp(other))
+		if self.player == other.player && self.enemy == other.enemy {
+			true
+		} else {
+			false
+		}
 	}
 }
 
