@@ -1,5 +1,6 @@
 use std::cmp::Ordering;
 use std::fmt;
+use std::hash::{Hash};
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum Fscore {

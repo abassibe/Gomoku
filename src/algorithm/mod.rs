@@ -21,7 +21,7 @@ lazy_static! {
 }
 
 //here be dragons
-unsafe fn tt_update(new_goban: &Goban) -> Option<Fscore> {
+unsafe fn tt_get_state(new_goban: &Goban) -> Option<Fscore> {
     if tt_check_key(new_goban) {
         tt_get_fscore(new_goban)
     } else {
@@ -30,7 +30,7 @@ unsafe fn tt_update(new_goban: &Goban) -> Option<Fscore> {
 }
 
 unsafe fn tt_insert_new_state(new_goban: Goban, new_fscore: Fscore) {
-    //println!("tt state : {:?}", TT_STATES);
+    // println!("tt state : {:?}", TT_STATES.read().unwrap());
     TT_STATES.write().unwrap().insert(new_goban, new_fscore);
 }
 
@@ -44,7 +44,9 @@ unsafe fn tt_check_key(key: &Goban) -> bool {
 
 unsafe fn tt_get_fscore(state: &Goban) -> Option<Fscore> {
     let lock = TT_STATES.read().unwrap();
-    lock.get(state).cloned()
+    let tmpret = lock.get(state).cloned();
+    println!("{}", tmpret.unwrap());
+    tmpret
 }
 
 //                                                                                                //

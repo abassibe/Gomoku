@@ -78,7 +78,7 @@ impl Eq for Node {}
 
 impl Hash for Node {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        self.item.hash(state);
+        self.item.get_fscore().hash(state);
     }
 }
 
