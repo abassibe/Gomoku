@@ -106,6 +106,7 @@ impl fmt::Display for Goban {
 
 impl Hash for Goban {
 	fn hash<H: Hasher>(&self, state: &mut H) {
-		self.fscore.hash(state)
+		self.player.hash(state);
+		self.enemy.hash(state);
 	}
 }
