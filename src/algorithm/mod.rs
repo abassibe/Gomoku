@@ -7,6 +7,7 @@ use super::{bitboard::BitBoard, goban::Goban, node::Node};
 mod tests;
 mod minimax;
 mod transposition_table;
+mod mtdf;
 mod negamax;
 
 static PATTERNS: [((u8, u8, bool), isize, isize); 12] = [
