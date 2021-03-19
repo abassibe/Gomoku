@@ -7,6 +7,7 @@ use super::{bitboard::BitBoard, goban::Goban, node::Node};
 mod tests;
 mod minimax;
 mod transposition_table;
+mod mtdf;
 
 // Should patterns even be in Algorithm ?
 #[derive(Default)]
