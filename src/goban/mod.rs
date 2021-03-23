@@ -23,17 +23,11 @@ pub struct Goban {
 impl Goban {
 	pub fn new(player: BitBoard, enemy: BitBoard) -> Self {
 		Self {
-			fscore: Fscore::Uninitialized,
+			fscore: Fscore::Value(heuristic::set_heuristic_estimation(player, enemy)),
 			player,
 			enemy,
 			board: player | enemy
 		}
-	}
-
-	pub fn new_with_estimation(player: BitBoard, enemy: BitBoard) -> Self {
-		let mut ret = Self::new(player, enemy);
-		ret.set_heuristic_estimation();
-		ret
 	}
 
 	pub fn get_player(&self) -> &BitBoard {
