@@ -12,6 +12,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 numpy = "*"
+lazy_static = "1.4.0"
 
 [dependencies.pyo3]
 version = "*"

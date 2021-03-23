@@ -6,6 +6,7 @@ use super::{bitboard::BitBoard, goban::Goban, node::Node};
 #[cfg(test)]
 mod tests;
 mod minimax;
+mod transposition_table;
 mod negamax;
 
 static PATTERNS: [((u8, u8, bool), isize, isize); 12] = [
@@ -28,6 +29,7 @@ pub enum Algorithms {
     Minimax
 }
 
+// Should patterns even be in Algorithm ?
 #[derive(Default)]
 pub struct Algorithm {
     initial: Node,

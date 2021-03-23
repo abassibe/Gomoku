@@ -1,5 +1,6 @@
 use std::cmp::Ordering;
 use std::fmt;
+use std::hash::{Hash};
 use std::ops::Neg;
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
