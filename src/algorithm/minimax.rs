@@ -1,6 +1,7 @@
 use crate::algorithm::Algorithm;
 use crate::goban::fscore::Fscore;
-use crate::node::Node;
+use crate::node::{Node, Branches};
+
 
 // Not sure if this is a good idea, just trying it out.
 impl Algorithm {
@@ -18,7 +19,7 @@ impl Algorithm {
         if maximizing {
             let mut fscore = Fscore::Value(isize::MIN);
             node.add_many_branches(self.node_generator(&node, maximizing));
-            let children = node.get_branches();
+            let children : Option<&Branches> = node.get_branches();
             if let Some(children) = children {
                 for child in children {
                     let grandchild = self.minimax(&mut child.borrow_mut(), depth - 1, alpha, beta, !maximizing);
@@ -54,7 +55,6 @@ impl Algorithm {
                 }
             }
         }
-
         candidate
     }
 }
