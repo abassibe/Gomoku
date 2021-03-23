@@ -1,6 +1,7 @@
 use std::cmp::Ordering;
 use std::fmt;
 use std::hash::{Hash};
+use std::ops::Neg;
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum Fscore {
@@ -25,6 +26,18 @@ impl Fscore {
 impl Default for Fscore {
     fn default() -> Self {
         Fscore::Uninitialized
+    }
+}
+
+impl Neg for Fscore{
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        match self {
+            Fscore::Uninitialized => self,
+            Fscore::Win => self,
+            Fscore::Value(x) => Fscore::Value(x.neg())
+        }
     }
 }
 

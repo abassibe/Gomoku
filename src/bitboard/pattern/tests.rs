@@ -1,5 +1,6 @@
 use super::*;
 use crate::{algorithm::Algorithm, goban::*};
+use crate::algorithm::Algorithms;
 
 #[test]
 #[ignore = "This test is for debug purpose right now"]
@@ -186,7 +187,7 @@ fn test_debug_extract_illegal_move() {
 
     // let fscore = algo.compute_and_set_fscore(&mut algo.get_initial().clone(), 0);
 
-    let node = algo.get_next_move(5).unwrap();
+    let node = algo.get_next_move(5, Algorithms::Minimax).unwrap();
     let result = node.get_last_move();
 
     // let result = algo.get_potential_moves(algo.get_initial());

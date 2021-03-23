@@ -7,6 +7,27 @@ use super::{bitboard::BitBoard, goban::Goban, node::Node};
 mod tests;
 mod minimax;
 mod transposition_table;
+mod negamax;
+
+static PATTERNS: [((u8, u8, bool), isize, isize); 12] = [
+    ((0b11111000, 5, true), 10000000000isize, 100000000isize),
+    ((0b01111000, 6, true), 9999999isize, 99999999isize),
+    ((0b01111000, 5, false), 1000isize, 99999999isize),
+    ((0b10111000, 5, false), 50isize, 99999999isize),
+    ((0b11011000, 5, true), 50isize, 99999999isize),
+    ((0b01110000, 5, true), 50isize, 500isize),
+    ((0b01110000, 5, false), 50isize, 500isize),
+    ((0b00111000, 6, false), 3000isize, 999999isize),
+    ((0b11100000, 5, false), 50isize, 1500isize),
+    ((0b01011000, 5, false), 50isize, 500isize),
+    ((0b01100000, 4, true), 500isize, 2000isize),
+    ((0b01010000, 5, true), 25isize, 1000isize)
+];
+
+pub enum Algorithms {
+    Negamax,
+    Minimax
+}
 
 // Should patterns even be in Algorithm ?
 #[derive(Default)]
@@ -37,7 +58,7 @@ impl Algorithm {
     pub fn compute_and_set_fscore(&self, node: &mut Node, depth: u32) -> Fscore {
         // If player is threatened in the initial Node then we give more weight to the defense
         // in order to prioritize the defense over the attack.
-        // We do the opposite if there is no immediate threats in inital Node for player.
+        // We do the opposite if there is no immediate threats in initial Node for player.
         let defense_weight = 1.5f64;
         let player_score = self.compute_score(node, depth, false);
         let enemy_score = self.compute_score(node, depth, true);
@@ -53,6 +74,51 @@ impl Algorithm {
         node.set_item_fscore(global_score);
 
         global_score
+    }
+
+
+
+    // TODO: Could be more efficient to calculate the score for each new node
+    // and then sort the resulting Vec<Node> according this score.
+    pub(crate) fn node_generator(&self, parent: &Node, maximazing: bool) -> Vec<Node> {
+        let parent_goban = parent.get_item();
+        let parent_player = parent_goban.get_player();
+        let parent_enemy = parent_goban.get_enemy();
+        let parent_player_captures = parent.get_player_captures();
+        let parent_enemy_captures = parent.get_opponent_captures();
+
+        // TODO: Investigate this call and its return value (especially for open 2).
+        let mut ret : Vec<Node> = self.get_potential_moves(parent)
+            .enumerate()
+            .iter()
+            .map(|b| {
+                let mut player_captures = parent_player_captures;
+                let mut enemy_captures = parent_enemy_captures;
+                let (player, enemy, is_players_move) =
+                    if maximazing {
+                        let player_with_move = parent_player | b;
+                        let captured_by_player = extract_captured_by_move(player_with_move, *parent_enemy, *b, &self.patterns);
+                        if captured_by_player.is_any() {
+                            player_captures += (captured_by_player.count_ones() / 2) as u8;
+                            (player_with_move, parent_enemy ^ &captured_by_player, true)
+                        } else {
+                            (player_with_move, *parent_enemy, true)
+                        }
+                    } else {
+                        let enemy_with_move = parent_enemy | b;
+                        let captured_by_enemy = extract_captured_by_move(enemy_with_move, *parent_player, *b, &self.patterns);
+                        if captured_by_enemy.is_any() {
+                            enemy_captures += (captured_by_enemy.count_ones() / 2) as u8;
+                            (parent_player ^ &captured_by_enemy, enemy_with_move, false)
+                        } else {
+                            (*parent_player, enemy_with_move, false)
+                        }
+                    };
+                Node::new(Goban::new(player, enemy), parent.get_depth() + 1, *b, is_players_move, player_captures, enemy_captures)
+            })
+            .collect();
+        sort_by_estimate(&mut ret);
+        ret
     }
 
     // TODO: Missing tests
@@ -82,43 +148,16 @@ impl Algorithm {
         }
         let three_cross_four = extract_missing_bit_cross_three_with_four(*player, *enemy);
         if three_cross_four.is_any() {
-            result += three_cross_four.count_ones() as isize * if node.is_players_last_move() { 500 } else { 1000 };
+            result += three_cross_four.count_ones() as isize * if !node.is_players_last_move() { 500 } else { 1000 };
+            // result += three_cross_four.count_ones() as isize * 100;
         }
         let four_cross_four = extract_missing_bit_cross_four_with_four(*player, *enemy);
         if four_cross_four.is_any() {
-            result += four_cross_four.count_ones() as isize * if node.is_players_last_move() { 750 } else { 1200 };
+            result += four_cross_four.count_ones() as isize * if !node.is_players_last_move() { 750 } else { 1200 };
+            // result += four_cross_four.count_ones() as isize * 200;
         }
-        // TODO: Let this be a global static
-        // let patterns: [((u8, u8, bool), isize, isize); 12] = [
-        //     (self.patterns[PatternName::OpenThree], 50isize, 500isize),
-        //     (self.patterns[PatternName::CloseThree], 50isize, 1500isize),
-        //     (self.patterns[PatternName::OpenSplitThreeLeft], 50isize, 500isize),
-        //     (self.patterns[PatternName::OpenSplitThreeRight], 50isize, 500isize),
-        //     (self.patterns[PatternName::OpenFour], 9999999isize, 99999999isize),
-        //     (self.patterns[PatternName::CloseFour], 1000isize, 99999999isize),
-        //     (self.patterns[PatternName::SplitFourRight], 50isize, 99999999isize),
-        //     (self.patterns[PatternName::SplitFourLeft], 50isize, 99999999isize),
-        //     (self.patterns[PatternName::SplitFourMiddle], 50isize, 99999999isize),
-        //     (self.patterns[PatternName::Five], 10000000000isize, 100000000isize),
-        //     ((0b01100000, 4, true), 500isize, 2000isize),
-        //     ((0b01010000, 5, true), 25isize, 1000isize)
-        // ];
-        // Got score values from https://playgomoku.online/gomoku-offline
-        let patterns: [((u8, u8, bool), isize, isize); 12] = [
-            ((0b11111000, 5, true), 10000000000isize, 100000000isize),
-            ((0b01111000, 6, true), 9999999isize, 99999999isize),
-            ((0b01111000, 5, false), 1000isize, 99999999isize),
-            ((0b10111000, 5, false), 50isize, 99999999isize),
-            ((0b11011000, 5, true), 50isize, 99999999isize),
-            ((0b01110000, 5, true), 50isize, 500isize),
-            ((0b01110000, 5, false), 50isize, 500isize),
-            ((0b00111000, 6, false), 3000isize, 999999isize),
-            ((0b11100000, 5, false), 50isize, 1500isize),
-            ((0b01011000, 5, false), 50isize, 500isize),
-            ((0b01100000, 4, true), 500isize, 2000isize),
-            ((0b01010000, 5, true), 25isize, 1000isize)
-        ];
-        for &((pattern, pattern_size, is_sym), player_score, opponent_score) in patterns.iter() {
+
+        for &((pattern, pattern_size, is_sym), player_score, opponent_score) in PATTERNS.iter() {
             let score = if node.is_players_last_move() { player_score } else { opponent_score };
             let matched = match_pattern(*player, *enemy, pattern, pattern_size, is_sym);
             let matched_captures = match_pattern(
@@ -140,47 +179,6 @@ impl Algorithm {
         result += (player_captures as isize).pow(2) * 20;
 
         Fscore::Value(result)
-    }
-
-    // TODO: Could be more efficient to calculate the score for each new node
-    // and then sort the resulting Vec<Node> according this score.
-    fn node_generator(&self, parent: &Node, maximazing: bool) -> Vec<Node> {
-        let parent_goban = parent.get_item();
-        let parent_player = parent_goban.get_player();
-        let parent_enemy = parent_goban.get_enemy();
-        let parent_player_captures = parent.get_player_captures();
-        let parent_enemy_captures = parent.get_opponent_captures();
-
-        // TODO: Investigate this call and its return value (especially for open 2).
-        self.get_potential_moves(parent)
-            .enumerate()
-            .iter()
-            .map(|b| {
-                let mut player_captures = parent_player_captures;
-                let mut enemy_captures = parent_enemy_captures;
-                let (player, enemy, is_players_move) =
-                    if maximazing {
-                        let player_with_move = parent_player | b;
-                        let captured_by_player = extract_captured_by_move(player_with_move, *parent_enemy, *b, &self.patterns);
-                        if captured_by_player.is_any() {
-                            player_captures += (captured_by_player.count_ones() / 2) as u8;
-                            (player_with_move, parent_enemy ^ &captured_by_player, true)
-                        } else {
-                            (player_with_move, *parent_enemy, true)
-                        }
-                    } else {
-                        let enemy_with_move = parent_enemy | b;
-                        let captured_by_enemy = extract_captured_by_move(enemy_with_move, *parent_player, *b, &self.patterns);
-                        if captured_by_enemy.is_any() {
-                            enemy_captures += (captured_by_enemy.count_ones() / 2) as u8;
-                            (parent_player ^ &captured_by_enemy, enemy_with_move, false)
-                        } else {
-                            (*parent_player, enemy_with_move, false)
-                        }
-                    };
-                Node::new(Goban::new(player, enemy), parent.get_depth() + 1, *b, is_players_move, player_captures, enemy_captures)
-            })
-            .collect()
     }
 
     #[inline]
@@ -227,13 +225,7 @@ impl Algorithm {
         }
         if !player.contains_five_aligned() {
             // Game is over because there is no more empty cells to play
-            if goban.get_board().is_full() {
-                return true;
-            }
-            // The game is not over yet
-            else {
-                return false;
-            }
+            return goban.get_board().is_full()
         }
         // Player wins by unbroken 5 alignment
         if (extract_five_aligned(*player) & last_move).is_empty() {
@@ -252,7 +244,7 @@ impl Algorithm {
             return false;
         }
         // Player wins by unbreakable alignment
-        return true;
+        true
     }
 
     pub fn compute_initial_threats_for_player(&mut self) {
@@ -308,7 +300,7 @@ impl Algorithm {
             return result | extract_missing_bit(current_player, opponent, pattern, pattern_size, is_sym);
         }
 
-        // Get the moves that theat `player` to be able to play the move before the opponent does.
+        // Get the moves that threat `player` to be able to play the move before the opponent does.
         let mut result = extract_threatening_moves_from_player(
             current_player,
             opponent,
@@ -316,7 +308,7 @@ impl Algorithm {
             &self.patterns
         );
 
-        // Get the moves that theat `opponent` because those are good move to play.
+        // Get the moves that threat `opponent` because those are good move to play.
         result |= extract_threatening_moves_from_player(
             opponent,
             current_player,
@@ -392,10 +384,13 @@ impl Algorithm {
     // Maybe we should pass the initial Node directly without passing by the initial property of Algorithm?
     /// This method is likely to change in a near future because I'm not sure what to return.
     /// For now, it returns a BitBoard that contains the next move to play.
-    pub fn get_next_move(&mut self, depth: u32) -> Option<Node> {
+    pub fn get_next_move(&mut self, depth: u32, algo: Algorithms) -> Option<Node> {
         self.compute_initial_threats_for_player();
         let mut initial = self.initial.clone();
-        let next_state = self.minimax(&mut initial, depth, Fscore::MIN, Fscore::MAX, true);
+        let next_state = match algo {
+            Algorithms::Negamax => self.negamax(&mut initial, depth, Fscore::MIN, Fscore::MAX),
+            Algorithms::Minimax => self.minimax(&mut initial, depth, Fscore::MIN, Fscore::MAX, true)
+        };
         if next_state == self.initial {
             None
         } else {
@@ -403,4 +398,8 @@ impl Algorithm {
             // Some(next_state.get_item().get_player() ^ self.initial.get_item().get_player())
         }
     }
+}
+
+fn sort_by_estimate(nodes: &mut Vec<Node>) {
+    nodes.sort_unstable_by(|a, b| b.get_item().get_fscore().partial_cmp(&a.get_item().get_fscore()).unwrap());
 }

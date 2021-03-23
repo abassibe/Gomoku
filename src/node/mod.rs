@@ -47,7 +47,7 @@ pub struct Node {
     is_player_threatened: Option<bool>,
     /// `branches` is a [`BinaryHeap`], wrapped in an [`Option`], which hold child nodes.
     /// The type `Branches` is used for convenience and is just an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
-    branches: Option<Branches>
+    branches: Option<Branches>,
 }
 
 impl fmt::Display for Node {
@@ -174,7 +174,7 @@ impl Node {
 
     /// A method that add many branches at once using the closure `generator`.
     pub fn add_many_branches(&mut self, new_branches: Vec<Node>) {
-        let mut new_branches: BinaryHeap<Rc<RefCell<Node>>> = new_branches
+        let mut new_branches: Branches = new_branches
             .into_iter()
             .map(|x| Rc::new(RefCell::new(x)))
             .collect();

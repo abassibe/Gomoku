@@ -2,6 +2,7 @@ use crate::algorithm::{Algorithm, transposition_table::*};
 use crate::goban::fscore::Fscore;
 use crate::node::{Node};
 
+
 impl Algorithm {
     // TODO: There is a lot of duplicated code in this function, we should refactor it.
     pub(super) fn minimax(&self, node: &mut Node, depth: u32, mut alpha: Fscore, mut beta: Fscore, maximizing: bool) -> Node {
@@ -26,7 +27,9 @@ impl Algorithm {
         if maximizing {
             let mut fscore = Fscore::Value(isize::MIN);
             node.add_many_branches(self.node_generator(&node, maximizing));
+
             if let Some(children) = node.get_branches() {
+
                 for child in children {
                     let grandchild = self.minimax(&mut child.borrow_mut(), depth - 1, alpha, beta, !maximizing);
                     let grandchild_fscore = grandchild.get_item().get_fscore();
