@@ -7,7 +7,7 @@ impl Algorithm {
         let lower_bound: u32 = u32::MIN;
 
         while lower_bound < upper_bound {
-            
+
         }
         unimplemented!()
     }
