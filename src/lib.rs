@@ -38,10 +38,7 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         }
 
         let goban = assign_color_to_ai(vec_to_string(board), p_color);
-<<<<<<< HEAD
         //println!("\nCOLOR IS ={}\n\nPLAYER(AI)\n{}\nENEMY\n{}", p_color, goban.get_player(), goban.get_enemy());
-=======
->>>>>>> origin/feature/pyQt
 
         if goban.get_board().is_empty() {
             return Ok((9u32, 9u32));
@@ -90,13 +87,8 @@ fn assign_color_to_ai(str: String, human: u8) -> Goban {
 
     if human == WHITE {
         Goban::new(player, enemy)
-<<<<<<< HEAD
     } else {
-        println!("Goban after color assign : \n{:?}", Goban::new(enemy, player)); //to remove
-=======
-    }
-    else {
->>>>>>> origin/feature/pyQt
+        // println!("Goban after color assign : \n{:?}", Goban::new(enemy, player)); //to remove
         Goban::new(enemy, player)
     }
 }
@@ -105,26 +97,18 @@ fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8, last_move
     let mut algorithm = Algorithm::new();
     algorithm.update_initial_state(input, last_move, player_captures, opponent_captures);
     let ret = algorithm.get_next_move(DEPTH).unwrap();
-<<<<<<< HEAD
     // println!("RET = \n{:?}", ret);
 
-=======
->>>>>>> origin/feature/pyQt
     get_win_coord(*input.get_player(), *ret.get_item().get_player())
 }
 
 fn get_win_coord(previous: BitBoard, current: BitBoard) -> (u32, u32) {
     let pos = previous ^ current;
-<<<<<<< HEAD
     //println!("PREV:\n{}\nCUR:\n{}", previous, current);
     //println!("UNIQUE POS:\n{}", pos);
 
     let i : u32 = *pos.get_bit_indexes().last().unwrap() as u32;
     //println!("I is = {}, coord = {:?}", i, (i / 20, i % 20));
     // println!("{}", pos);
-=======
-
-    let i : u32 = *pos.get_bit_indexes().last().unwrap() as u32;
->>>>>>> origin/feature/pyQt
     (i / 20, i % 20)
 }

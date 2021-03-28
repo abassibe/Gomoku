@@ -19,28 +19,46 @@ class RustThread(Thread):
         global last_move_ai
         Thread.__init__(self, target=func, name=None, args=(window.gameManager.gameBoard.grid, color, False, \
                 window.gameManager.player1.stoneRemovedCount, window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai))
-        self.x = None
-        self.y = None
+        self._x = None
+        self._y = None
         self.window = window
         self.color = color
         self.func = func
+        self._observers = []
 
         self.turnTime = turnTime
         self.startTime = startTime
         self.timerText = timerText
+        self.xTmp = 0
+        self.yTmp = 0
+
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        self._x = value
+        for callback in self._observers:
+            callback(self.x, self.y)
+
+    @property
+    def y(self):
+        return self._y
+
+    @y.setter
+    def y(self, value):
+        self._y = value
+        for callback in self._observers:
+            callback(self.x, self.y)
 
     def run(self):
-        global last_move_human
-        global last_move_ai
-        self.x, self.y = self.func(self.window.gameManager.gameBoard.grid, self.color, False,\
+        self.xTmp, self.yTmp = self.func(self.window.gameManager.gameBoard.grid, self.color, False,\
                 self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai) ##
 
-    def launch_thread(self):
+    def join(self):
         Thread.join(self)
-        #self.run()
-        #Thread.start(self.turnTime.timeout.connect(lambda : windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.timerText)))
-        return self.x, self.y
-
+        return self.xTmp, self.yTmp
 
 class HumanPlayer():
     def __init__(self, window, color):
@@ -92,7 +110,7 @@ class HumanPlayer():
         self.turnTime.stop()
 
 
-class ComputerPlayer():
+class ComputerPlayer(object):
     def __init__(self, window, color):
         self.turnTime = QtCore.QTimer()
         self.turnTime.setInterval(10)
@@ -116,15 +134,40 @@ class ComputerPlayer():
         self.turnTime.start()
         self.startTime = time()
 
-        global forbidden_cursor_check
-
         global last_move_ai
         global last_move_human
-        thread = RustThread(self.window, self.color, self.window.algoPointer, self.turnTime, self.startTime, self.window.playerTwoTimer, 'algo_ptr')
+        thread = RustThread(self.window, self.color, self.window.algoPointer, self.turnTime, self.startTime, self.window.playerTwoTimer)
+        thread._observers.append(self.finishTurn)
         thread.start()
-        x, y = thread.launch_thread()
+        x, y = thread.join()
+        thread.x = x
+        thread.y = y
         # x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False,\
         #         self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai) ##
+        # last_move_ai = (x, y) ##
+        # self.turnTime.stop()
+
+        # if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) is None:
+        #     return
+
+        # #---------------------------------------------------------------------------------------------------------------#
+        # if forbidden_cursor_check is True:
+        #     if self.color == 1:
+        #         self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/blackStone.png"))))
+        #     else:
+        #         self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/whiteSone.png"))))
+        #     forbidden_cursor_check = False
+        # #---------------------------------------------------------------------------------------------------------------#
+
+        # self.playerCapture.setText(str(self.stoneRemovedCount) + "/10")
+        # self.window.gameManager.playerTurn = not self.window.gameManager.playerTurn
+
+    def finishTurn(self, x, y):
+        if not y or not x:
+            return
+
+        global forbidden_cursor_check
+
         last_move_ai = (x, y) ##
         self.turnTime.stop()
 
@@ -240,7 +283,6 @@ class GameBoard():
             self.window.layoutWidget.unsetCursor()
             windowBuilding.winDraw(self.window, 1, color)
             self.highLightWinningLine(x, y)
-            print("DRAWN")
             return True
         self.window.update()
         return True

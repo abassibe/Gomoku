@@ -25,6 +25,7 @@ class MainWindow(QtWidgets.QMainWindow):
         windowBuilding.parseTranslationFile()
         self.setWindowTitle("Gomoku")
         self.gameManager = None
+        self.setFixedSize(self.geometry().width(), self.geometry().height())
 
         self.optionsButton.clicked.connect(lambda x: buttonEventHandler.optionsEvent(self, self.option))
         self.hintButton.clicked.connect(lambda x: buttonEventHandler.hintEvent(self.hintButton, window))

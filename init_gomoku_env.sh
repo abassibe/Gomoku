@@ -22,4 +22,4 @@ if type rustup >/dev/null; then
 fi
 echo "source $HOME/.cargo/env" >> ~/.zshrc
 cargo install maturin
-source venv/bin/activate
+source bin/activate
