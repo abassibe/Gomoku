@@ -1,4 +1,3 @@
-use std::cmp::Ordering;
 use std::fmt;
 use std::fmt::Formatter;
 use std::hash::{Hash, Hasher};

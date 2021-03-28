@@ -93,7 +93,7 @@ fn assign_color_to_ai(str: String, human: u8) -> Goban {
 fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8) -> (u32, u32) {
     let mut algorithm = Algorithm::new();
     algorithm.update_initial_state(input, BitBoard::empty(), player_captures, opponent_captures);
-    let ret = algorithm.get_next_move(DEPTH, Algorithms::Minimax).unwrap();
+    let ret = algorithm.get_next_move(DEPTH, Algorithms::Negamax).unwrap();
 
     get_move_coord(&ret)
 }
