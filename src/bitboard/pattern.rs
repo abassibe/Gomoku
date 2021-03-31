@@ -10,15 +10,16 @@ const EDGE_MASK: BitBoard = BitBoard::new(
     207692072411988285641522779730903040,
     53169170537469001124229831611119566816
 );
-pub static HEURISTIC_PATTERNS: [(u8, u8, bool); 8] = [
-    (0b11111000, 5, true),
-    (0b01111000, 6, true),
-    (0b01110000, 5, true),
-    (0b01101000, 6, false),
-    (0b11110000, 5, false),
-    (0b10111000, 5, false),
-    (0b11011000, 5, false),
-    (0b11101000, 5, false)
+// ((<pattern>, <size>, <is_pattern_symetric>), <score_for_player>, <score_for_enemy>)
+pub static HEURISTIC_PATTERNS: [((u8, u8, bool), isize, isize); 8] = [
+    ((0b11111000, 5, true), 500, 5000),
+    ((0b01111000, 6, true), 500, 1100),
+    ((0b01110000, 5, true), 50, 500),
+    ((0b01101000, 6, false), 49, 495),
+    ((0b11110000, 5, false), 50, 1000),
+    ((0b10111000, 5, false), 50, 1000),
+    ((0b11011000, 5, false), 50, 1000),
+    ((0b11101000, 5, false), 50, 1000)
 ];
 pub static GET_MOVES_PATTERNS: [(u8, u8, bool); 6] = [
     (0b11111000, 5, true),
