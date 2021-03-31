@@ -101,6 +101,6 @@ fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8) -> (u32, 
 fn get_move_coord(node: &Node) -> (u32, u32) {
     let move_to_play = node.get_last_move();
 
-    let i: u32 = *move_to_play.get_bit_indexes().last().unwrap() as u32;
+    let i: u32 = *move_to_play.get_bit_indexes().last().unwrap_or(&0) as u32;
     (i / 20, i % 20)
 }
