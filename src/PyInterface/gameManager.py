@@ -135,7 +135,7 @@ class Worker(QRunnable):
             print("trying worker run...")
             self.x, self.y = self.function(self, self.window.gameManager.gameBoard.grid, self.color, self.window.gameManager.player1.stoneRemovedCount,
                                            self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai)
-            print("got x = {} y = {}".format(self.x, self.y))
+            print("got x = {} y = {}".format(self.x, self.y)) #
         except:
             print("error in worker.run()..")
         else:
