@@ -84,6 +84,16 @@ impl BitBoard {
 		}
 	}
 
+	pub fn one_bit_from_coord(coord: (u16, u16)) -> Self {
+		let mut result = Self::empty();
+		let (x, y) = coord;
+		let index = x * 20 + y;
+
+		result.set(index as isize, true);
+
+		result
+	}
+
 	pub fn from_array(from: [u128; 3]) -> Self {
 		Self { b: from }
 	}
