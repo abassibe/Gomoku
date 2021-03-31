@@ -2,6 +2,7 @@ import pathlib
 from time import time
 from random import randint
 from PyQt5 import QtGui, QtCore, QtWidgets
+from PyQt5.QtCore import QObject, QThread, pyqtSignal, QRunnable, pyqtSlot, QThreadPool
 from PyQt5.QtWidgets import QWidget
 import windowBuilding
 import rulesSet
@@ -17,7 +18,7 @@ class RustThread(Thread):
     def __init__(self, window, color, func, turnTime, startTime, timerText):
         global last_move_human
         global last_move_ai
-        Thread.__init__(self, target=func, name=None, args=(window.gameManager.gameBoard.grid, color, False, \
+        Thread.__init__(self, target=func, name=None, args=(window.gameManager.gameBoard.grid, color, False,
                 window.gameManager.player1.stoneRemovedCount, window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai))
         self._x = None
         self._y = None
@@ -53,12 +54,13 @@ class RustThread(Thread):
             callback(self.x, self.y)
 
     def run(self):
-        self.xTmp, self.yTmp = self.func(self.window.gameManager.gameBoard.grid, self.color, False,\
+        self.xTmp, self.yTmp = self.func(self.window.gameManager.gameBoard.grid, self.color, False,
                 self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai) ##
 
     def join(self):
         Thread.join(self)
         return self.xTmp, self.yTmp
+
 
 class HumanPlayer():
     def __init__(self, window, color):
@@ -79,6 +81,7 @@ class HumanPlayer():
         self.playerCapture = None
         self.stoneRemovedCount = 0
 
+
     def start(self):
         self.timerText.setText("00:00:00")
         if self.color == 1:
@@ -90,8 +93,8 @@ class HumanPlayer():
         self.window.layoutWidget.setCursor(self.cursor)
         global last_move_human
         if self.window.gameManager.hintButtonBool:
-            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True,\
-                    self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai) 
+            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True,
+                    self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai)
             last_move_human = (x, y) #update last human move
             self.window.gameManager.gameBoard.dropHint(x, y, self.color)
         self.window.layoutWidget.setCursor(self.cursor)
@@ -110,6 +113,49 @@ class HumanPlayer():
         self.turnTime.stop()
 
 
+class WorkerSignals(QObject):
+    finished = pyqtSignal()
+    result = pyqtSignal(int, int)
+
+class Worker(QRunnable):
+    finished = pyqtSignal()
+    result = pyqtSignal(int, int)
+    def __init__(self, function, *args, **kwargs):
+        super(Worker, self).__init__()
+        self.args = args
+        self.kwargs = kwargs
+        self.function = function
+        self.x = None
+        self.y = None
+        self.signals = WorkerSignals()
+
+    @pyqtSlot()
+    def uselessloop(self):
+        for i in range(1_000_000):
+            print(i)
+
+    @pyqtSlot()
+    def run(self):
+        #print("starting worker...")
+        #self.x, self.y = self.function(*self.args, *self.kwargs)
+        #print("done worker... x = {}\ty = {}".format(self.x, self.y))
+        try:
+            #self.x, self.y = self.function(*self.args, *self.kwargs)
+            self.uselessloop()
+        except:
+            for i in range(10_000_000):
+                print(i) if i % 100_000 == 0 else 0
+            print("error inside Worker.run")
+        else:
+            print("emitting {} and {}".format(self.x, self.y))
+            self.signals.result.emit(self.x, self.y)
+        finally:
+            self.signals.finished.emit()
+
+    def join(self):
+        return self.x, self.y
+
+
 class ComputerPlayer(object):
     def __init__(self, window, color):
         self.turnTime = QtCore.QTimer()
@@ -118,6 +164,8 @@ class ComputerPlayer(object):
         self.colorLabel = window.playerTwoLabel
         self.window = window
         self.startTime = 0.0
+
+        self.threadpool = QThreadPool()
 
         if self.color == 1:
             self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt \"SF Wasabi\";")
@@ -136,19 +184,29 @@ class ComputerPlayer(object):
 
         global last_move_ai
         global last_move_human
-        thread = RustThread(self.window, self.color, self.window.algoPointer, self.turnTime, self.startTime, self.window.playerTwoTimer)
+
+        worker = Worker(self.window.algoPointer, self.window.gameManager.gameBoard.grid, self.color, False,
+                        self.window.gameManager.player1.stoneRemovedCount, 
+                        self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai)
+        worker.signals.result.connect(self.window.algoPointer)
+        worker.signals.finished.connect(worker.join)
+        self.threadpool.start(worker)
+        x = randint(0, 18)
+        y = randint(0, 18)
+        """thread = RustThread(self.window, self.color, self.window.algoPointer, self.turnTime, self.startTime, self.window.playerTwoTimer)
         thread._observers.append(self.finishTurn)
         thread.start()
         x, y = thread.join()
         thread.x = x
-        thread.y = y
+        thread.y = y"""
+
         # x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False,\
         #         self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai) ##
-        # last_move_ai = (x, y) ##
-        # self.turnTime.stop()
+        last_move_ai = (x, y) ##
+        self.turnTime.stop()
 
-        # if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) is None:
-        #     return
+        if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) is None:
+             return
 
         # #---------------------------------------------------------------------------------------------------------------#
         # if forbidden_cursor_check is True:
@@ -159,8 +217,8 @@ class ComputerPlayer(object):
         #     forbidden_cursor_check = False
         # #---------------------------------------------------------------------------------------------------------------#
 
-        # self.playerCapture.setText(str(self.stoneRemovedCount) + "/10")
-        # self.window.gameManager.playerTurn = not self.window.gameManager.playerTurn
+        self.playerCapture.setText(str(self.stoneRemovedCount) + "/10")
+        self.window.gameManager.playerTurn = not self.window.gameManager.playerTurn
 
     def finishTurn(self, x, y):
         if not y or not x:
