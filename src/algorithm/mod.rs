@@ -58,8 +58,9 @@ impl Algorithm {
     pub fn compute_and_set_fscore(&self, node: &mut Node, depth: u32) -> Fscore {
         // If player is threatened in the initial Node then we give more weight to the defense
         // in order to prioritize the defense over the attack.
-        // We do the opposite if there is no immediate threats in initial Node for player.
-        let defense_weight = 1.5f64;
+        // We do the opposite if there is no immediate threats in inital Node for player.
+        let defense_weight = if self.initial.is_player_threatened() {3f64} else {1.5};
+        // let defense_weight = 1.5f64;
         let player_score = self.compute_score(node, depth, false);
         let enemy_score = self.compute_score(node, depth, true);
         let global_score = match (player_score, enemy_score) {
