@@ -84,9 +84,9 @@ fn assign_color_to_ai(str: String, human: u8) -> Goban {
     let enemy = BitBoard::from_str(&str.replace("1", "0").replace("2", "1"));
 
     if human == WHITE {
-        Goban::new(player, enemy)
-    } else {
         Goban::new(enemy, player)
+    } else {
+        Goban::new(player, enemy)
     }
 }
 
