@@ -93,7 +93,7 @@ class HumanPlayer():
         self.window.layoutWidget.setCursor(self.cursor)
         global last_move_human
         if self.window.gameManager.hintButtonBool:
-            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True,
+            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color,
                     self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai)
             last_move_human = (x, y) #update last human move
             self.window.gameManager.gameBoard.dropHint(x, y, self.color)
@@ -118,43 +118,33 @@ class WorkerSignals(QObject):
     result = pyqtSignal(int, int)
 
 class Worker(QRunnable):
-    finished = pyqtSignal()
-    result = pyqtSignal(int, int)
-    def __init__(self, function, *args, **kwargs):
+    def __init__(self, window, color, func, turnTime, startTime, timerText):
         super(Worker, self).__init__()
-        self.args = args
-        self.kwargs = kwargs
-        self.function = function
-        self.x = None
-        self.y = None
+        self.function = func
+        self.window = window
+        self.turnTime = turnTime
+        self.startTime = startTime
+        self.timerText = timerText
+        self.color = color
         self.signals = WorkerSignals()
-
-    @pyqtSlot()
-    def uselessloop(self):
-        for i in range(1_000_000):
-            print(i)
+        #self.kwargs['process_callback'] = self.signals.result
 
     @pyqtSlot()
     def run(self):
-        #print("starting worker...")
-        #self.x, self.y = self.function(*self.args, *self.kwargs)
-        #print("done worker... x = {}\ty = {}".format(self.x, self.y))
         try:
-            #self.x, self.y = self.function(*self.args, *self.kwargs)
-            self.uselessloop()
+            print("trying worker run...")
+            self.x, self.y = self.function(self, self.window.gameManager.gameBoard.grid, self.color, self.window.gameManager.player1.stoneRemovedCount,
+                                           self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai)
+            print("got x = {} y = {}".format(self.x, self.y))
         except:
-            for i in range(10_000_000):
-                print(i) if i % 100_000 == 0 else 0
-            print("error inside Worker.run")
+            print("error in worker.run()..")
         else:
-            print("emitting {} and {}".format(self.x, self.y))
             self.signals.result.emit(self.x, self.y)
         finally:
             self.signals.finished.emit()
 
-    def join(self):
+    def return_pos(self):
         return self.x, self.y
-
 
 class ComputerPlayer(object):
     def __init__(self, window, color):
@@ -185,14 +175,11 @@ class ComputerPlayer(object):
         global last_move_ai
         global last_move_human
 
-        worker = Worker(self.window.algoPointer, self.window.gameManager.gameBoard.grid, self.color, False,
-                        self.window.gameManager.player1.stoneRemovedCount, 
-                        self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai)
+        worker = Worker(self.window, self.color, self.window.algoPointer, self.turnTime, self.startTime, self.window.playerTwoTimer)
         worker.signals.result.connect(self.window.algoPointer)
-        worker.signals.finished.connect(worker.join)
+        worker.signals.finished.connect(worker.return_pos)
         self.threadpool.start(worker)
-        x = randint(0, 18)
-        y = randint(0, 18)
+        x = randint(0, 18) ; y = randint(0, 18)
         """thread = RustThread(self.window, self.color, self.window.algoPointer, self.turnTime, self.startTime, self.window.playerTwoTimer)
         thread._observers.append(self.finishTurn)
         thread.start()
