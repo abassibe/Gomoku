@@ -1,5 +1,6 @@
 #!/bin/bash
 DEFAULT_DYLIB_PATH=target/release/librust_ext.dylib
+DEFAULT_PYTHON_BIN=bin/python3
 
 if [[ $# -ge 1 && ($1 == "--help" || $1 == "-h") ]]; then
     echo -e "This script aims at building then running the project Gomoku.
@@ -16,6 +17,12 @@ elif [ $# -ge 1 ]; then
 fi
 
 # Variable definitions
+if [[ -n $GOMOKU_PYTHON_BIN_PATH ]]; then
+    PYTHON_BIN=$GOMOKU_PYTHON_BIN_PATH
+else
+    PYTHON_BIN=$DEFAULT_PYTHON_BIN
+fi
+
 if [[ -n $GOMOKU_RUST_LIB_PATH ]]; then
     DYLIB=$GOMOKU_RUST_LIB_PATH
 else
@@ -49,6 +56,6 @@ if test -f "$DYLIB"; then
 fi
 
 # Run the project
-bin/python3 $PYTHON
+$PYTHON_BIN $PYTHON
 
 #maturin develop --release && mv target/debug/librust_ext.dylib . && bin/python3.9 src/PyInterface/gomoku.py
