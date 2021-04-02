@@ -7,6 +7,9 @@ if [[ $# -ge 1 && ($1 == "--help" || $1 == "-h") ]]; then
     It uses the environment variable 'GOMOKU_RUST_LIB_PATH' to know where to find the built dylib.
     If this env var is NOT set then the default path is used which is: $DEFAULT_DYLIB_PATH
 
+    It uses the environment variable 'GOMOKU_PYTHON_BIN_PATH' to know where to find the Python binary.
+    If this env var is NOT set then the default path is used which is: $DEFAULT_PYTHON_BIN
+
     No option are currently supported apart from '--help' and '-h'
     No build has been performed, to build and run the project please rerun this script without the help option"
     exit 42
