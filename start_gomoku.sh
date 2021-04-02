@@ -28,7 +28,7 @@ echo "Target dylib is expected to by found at the following path: $DYLIB"
 # Build
 maturin develop --release
 
-# Check the build went OK
+# Check if build is successful
 if [ $? -ne 0 ]; then
     echo -e "\033[0;31mMaturin failed to build the project! Will NOT run the project\033[0m"
     exit 42
