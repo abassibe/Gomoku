@@ -2,9 +2,23 @@ import pathlib
 from time import time
 from random import randint
 from PyQt5 import QtGui, QtCore, QtWidgets
+from PyQt5.QtCore import QObject, QThread, pyqtSignal, QRunnable, pyqtSlot, QThreadPool
+from PyQt5.QtWidgets import QWidget, QApplication
 import windowBuilding
 import rulesSet
 import numpy as np
+from threading import Thread, Event
+
+last_move_ai = (0, 0)
+last_move_human = (0, 0)
+
+
+def unSetForbiddenCursor(cursor, window):
+    window.layoutWidget.setCursor(cursor)
+
+
+# self.x, self.y = self.function(self.window.gameManager.gameBoard.grid, self.color, 0, self.window.gameManager.player1.stoneRemovedCount,
+#                                self.window.gameManager.player2.stoneRemovedCount, self.last_move_human, self.last_move_ai)
 
 
 class HumanPlayer():
@@ -20,10 +34,10 @@ class HumanPlayer():
             self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/blackStone.png"))))
         else:
             self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/whiteStone.png"))))
-        print(self.cursor)
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.timerText))
         self.playerCapture = None
         self.stoneRemovedCount = 0
+
 
     def start(self):
         self.timerText.setText("00:00:00")
@@ -34,8 +48,11 @@ class HumanPlayer():
 
     def startTurn(self):
         self.window.layoutWidget.setCursor(self.cursor)
+        global last_move_human
         if self.window.gameManager.hintButtonBool:
-            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, True, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount)
+            x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color,
+                    self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai)
+            last_move_human = (x, y) #update last human move
             self.window.gameManager.gameBoard.dropHint(x, y, self.color)
         self.window.layoutWidget.setCursor(self.cursor)
         windowBuilding.playerTurnEffect(self.window, self.color)
@@ -53,7 +70,7 @@ class HumanPlayer():
         self.turnTime.stop()
 
 
-class ComputerPlayer():
+class ComputerPlayer(object):
     def __init__(self, window, color):
         self.turnTime = QtCore.QTimer()
         self.turnTime.setInterval(10)
@@ -61,6 +78,7 @@ class ComputerPlayer():
         self.colorLabel = window.playerTwoLabel
         self.window = window
         self.startTime = 0.0
+
         if self.color == 1:
             self.colorLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt \"SF Wasabi\";")
         else:
@@ -75,10 +93,32 @@ class ComputerPlayer():
     def startTurn(self):
         self.turnTime.start()
         self.startTime = time()
-        x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False, self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount)
+
+        global last_move_ai
+        global last_move_human
+
+        #Appeler algo ici
+        x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False,
+                                       self.window.gameManager.player1.stoneRemovedCount,
+                                       self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai)
+        last_move_ai = (x, y) ##
+
+        if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) is None:
+             return
+
+        self.playerCapture.setText(str(self.stoneRemovedCount) + "/10")
+        self.window.gameManager.playerTurn = not self.window.gameManager.playerTurn
+
+    def finishTurn(self, x, y):
+        if not y or not x:
+            return
+
         self.turnTime.stop()
+        last_move_ai = (x, y) ##
+
         if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) is None:
             return
+
         self.playerCapture.setText(str(self.stoneRemovedCount) + "/10")
         self.window.gameManager.playerTurn = not self.window.gameManager.playerTurn
 
@@ -93,20 +133,52 @@ class GameBoard():
         self.placedPoint = []
         self.placedHint = []
 
+    def highLightWinningLine(self, x, y):
+        #-------------------------------------------#
+        #               Part fixed                  #
+        ##widget = window_attr_lst['centralwidget']
+        window_attr_lst = vars(self.window)
+        painter = QtGui.QPainter()
+        painter.setPen(QtCore.Qt.red)
+        #painter.begin(QWidget or self) begin ?
+        painter.drawLine(10, 10, 200, 200)
+        #painter.end(QWidget or self) end ?
+        #                                           #
+        #-------------------------------------------#
+
+
+        #-------------------------------------------#
+        #                   Old part                #
+        #widget = self.window.__getattr__("centralwidget")
+        #widget.drawLine(10, 10, 200, 200)
+        #                                           #
+        #-------------------------------------------#
+
     def placeStone(self, x, y, color, computerMove):
         scaledX = 0
         scaledY = 0
+        global last_move_human
+        global last_move_ai
+
         if computerMove:
             scaledX = x
             scaledY = y
+            last_move_ai = (scaledX, scaledY) #update last ai move for rust side
+
         else:
             blockSize = (629 / 19)
             scaledX = x - self.window.layoutWidget.geometry().y()
             scaledX = int(scaledX / blockSize)
             scaledY = y - self.window.layoutWidget.geometry().x()
             scaledY = int(scaledY / blockSize)
+
+            last_move_human = (scaledX, scaledY) #update last human move for rust side
         if self.grid[scaledX, scaledY] != 0 or not self.isValidMove(scaledX, scaledY, color):
+            tmp = self.window.layoutWidget.cursor()
+            self.window.layoutWidget.setCursor(QtGui.QCursor(QtCore.Qt.ForbiddenCursor))
+            QtCore.QTimer.singleShot(1000, lambda: unSetForbiddenCursor(tmp, self.window))
             return None
+
         self.window.gameManager.gameBoard.clearHint()
         dropPoint = self.window.boardGrid.itemAtPosition(scaledX, scaledY)
         if color == 1:
@@ -135,6 +207,7 @@ class GameBoard():
             self.window.gameManager.end()
             self.window.layoutWidget.unsetCursor()
             windowBuilding.winDraw(self.window, 1, color)
+            self.highLightWinningLine(x, y)
             return True
         self.window.update()
         return True
@@ -219,6 +292,7 @@ class GameBoard():
                                 return (x, y), (x + n, y - n)
         return None, None
 
+
 class GameManager():
     def __init__(self, window, option, hintButtonBool):
         self.isPlayer1Turn = True if randint(0, 1) == 0 else False
@@ -239,7 +313,7 @@ class GameManager():
         self.window.playerOneTimer.setText("00:00:00")
         self.window.playerTwoTimer.setText("00:00:00")
         self.window.player1Capture.setText("0/10")
-        self.window.player1Capture.setText("0/10")
+        self.window.player2Capture.setText("0/10")
         self.gameBoard = GameBoard(window)
         self.turnCount = 0
         self.gameRuning = False

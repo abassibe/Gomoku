@@ -25,6 +25,7 @@ class MainWindow(QtWidgets.QMainWindow):
         windowBuilding.parseTranslationFile()
         self.setWindowTitle("Gomoku")
         self.gameManager = None
+        self.setFixedSize(self.geometry().width(), self.geometry().height())
 
         self.optionsButton.clicked.connect(lambda x: buttonEventHandler.optionsEvent(self, self.option))
         self.hintButton.clicked.connect(lambda x: buttonEventHandler.hintEvent(self.hintButton, window))
@@ -48,7 +49,6 @@ class MainWindow(QtWidgets.QMainWindow):
             else:
                 self.gameManager.player2.endTurn(x, y)
 
-
 def getOptionsSet(targetedOption=[]):
     """
         Return list of options.
@@ -70,7 +70,6 @@ def getOptionsSet(targetedOption=[]):
                 exit("Unknown option: " + item)
         return toReturn
 
-
 def algoSubscribe(func):
     """
         Function used to connect the algo and the GUI.
@@ -82,17 +81,7 @@ def algoSubscribe(func):
         And the return value must be two integer "x" and "y", representing the position of the move. (0 <= xy <= 19)
     """
     global window
-
     window.algoPointer = func
-
-
-def tmpAlgo(board, color, hint):
-    tmp = window.gameManager.rules.getValidPoints(board, color)
-    # if tmp == None:
-    #     return 9, 9
-    print(board + "\n")
-    return tmp[randint(0, len(tmp) - 1)]
-
 
 app = PyQt5.QtWidgets.QApplication(sys.argv)
 window = MainWindow()
