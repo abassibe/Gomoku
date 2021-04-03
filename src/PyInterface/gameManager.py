@@ -76,10 +76,8 @@ class HumanPlayer():
         self.startTime = 0.0
         if color == 1:
             self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/blackStone.png"))))
-            #self.cursor = QtGui.QCursor(QtCore.Qt.ForbiddenCursor)
         else:
             self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/whiteStone.png"))))
-            #self.cursor = QtGui.QCursor(QtCore.Qt.ForbiddenCursor)
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.timerText))
         self.playerCapture = None
         self.stoneRemovedCount = 0
@@ -178,17 +176,17 @@ class ComputerPlayer(object):
         global last_move_ai
         global last_move_human
 
-        worker = Worker(self.window, self.color, self.window.algoPointer, self.turnTime, self.startTime, self.window.playerTwoTimer)
+        """worker = Worker(self.window, self.color, self.window.algoPointer, self.turnTime, self.startTime, self.window.playerTwoTimer)
         worker.signals.result.connect(self.window.algoPointer)
         worker.signals.finished.connect(worker.return_pos)
         self.threadpool.start(worker)
-        x = randint(0, 18) ; y = randint(0, 18)
-        """thread = RustThread(self.window, self.color, self.window.algoPointer, self.turnTime, self.startTime, self.window.playerTwoTimer)
+        x = randint(0, 18) ; y = randint(0, 18)"""
+        thread = RustThread(self.window, self.color, self.window.algoPointer, self.turnTime, self.startTime, self.window.playerTwoTimer)
         thread._observers.append(self.finishTurn)
         thread.start()
         x, y = thread.join()
         thread.x = x
-        thread.y = y"""
+        thread.y = y
 
         # x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False,\
         #         self.window.gameManager.player1.stoneRemovedCount, self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai) ##
@@ -198,23 +196,12 @@ class ComputerPlayer(object):
         if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) is None:
              return
 
-        # #---------------------------------------------------------------------------------------------------------------#
-        # if forbidden_cursor_check is True:
-        #     if self.color == 1:
-        #         self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/blackStone.png"))))
-        #     else:
-        #         self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/whiteSone.png"))))
-        #     forbidden_cursor_check = False
-        # #---------------------------------------------------------------------------------------------------------------#
-
         self.playerCapture.setText(str(self.stoneRemovedCount) + "/10")
         self.window.gameManager.playerTurn = not self.window.gameManager.playerTurn
 
     def finishTurn(self, x, y):
         if not y or not x:
             return
-
-        global forbidden_cursor_check
 
         last_move_ai = (x, y) ##
         self.turnTime.stop()
