@@ -39,7 +39,7 @@ impl BitBoard {
 	/// when we have to move UP or DOWN all bit set on the BitBoard.
 	/// This value is the number of columns in the BitBoard + 1
 	/// (to take in account the separating bit at the end of each row).
-	pub const MOVE_UP_DOWN_SHIFT_VALUE: u32 = Self::NUMBER_OF_COLS + 1;
+	const MOVE_UP_DOWN_SHIFT_VALUE: u32 = Self::NUMBER_OF_COLS + 1;
 	const INDEX_RETURN_FALSE: bool = false;
 	const INDEX_RETURN_TRUE: bool = true;
 	const ENDLINE_DELIMITER_MASK: Self = Self {
