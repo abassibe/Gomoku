@@ -11,7 +11,10 @@ from threading import Thread, Event
 
 last_move_ai = (0, 0)
 last_move_human = (0, 0)
-forbidden_cursor_check = False
+
+
+def unSetForbiddenCursor(cursor, window):
+    window.layoutWidget.setCursor(cursor)
 
 
 class RustThread(Thread):
@@ -269,18 +272,10 @@ class GameBoard():
         global last_move_human
         global last_move_ai
 
-        global forbidden_cursor_check
-
         if computerMove:
             scaledX = x
             scaledY = y
             last_move_ai = (scaledX, scaledY) #update last ai move for rust side
-
-            #--------------------------------------------------------------------------------------#
-            if self.isValidMove(scaledX, scaledY, color):
-                self.cursor = QtGui.QCursor(QtCore.Qt.ForbiddenCursor)
-                forbidden_cursor_check = True
-            #--------------------------------------------------------------------------------------#
 
         else:
             blockSize = (629 / 19)
@@ -289,16 +284,13 @@ class GameBoard():
             scaledY = y - self.window.layoutWidget.geometry().x()
             scaledY = int(scaledY / blockSize)
 
-            #--------------------------------------------------------------------------------------#
-            print("player is valid move : ", self.isValidMove(scaledX, scaledY, color))
-            if self.isValidMove(scaledX, scaledY, color):
-                self.cursor = QtGui.QCursor(QtCore.Qt.ForbiddenCursor)
-                forbidden_cursor_check = True
-            #--------------------------------------------------------------------------------------#
-
             last_move_human = (scaledX, scaledY) #update last human move for rust side
         if self.grid[scaledX, scaledY] != 0 or not self.isValidMove(scaledX, scaledY, color):
+            tmp = self.window.layoutWidget.cursor()
+            self.window.layoutWidget.setCursor(QtGui.QCursor(QtCore.Qt.ForbiddenCursor))
+            QtCore.QTimer.singleShot(1000, lambda: unSetForbiddenCursor(tmp, self.window))
             return None
+
         self.window.gameManager.gameBoard.clearHint()
         dropPoint = self.window.boardGrid.itemAtPosition(scaledX, scaledY)
         if color == 1:
