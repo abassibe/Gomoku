@@ -10,5 +10,5 @@ fi
 #if test -f "$DYLIB"; then
     #mv $DYLIB .
 #fi
-bin/python3 $GOMOKU_PATH
+venv/bin/python3 $GOMOKU_PATH
 #maturin develop --release && mv target/debug/librust_ext.dylib . && bin/python3.9 src/PyInterface/gomoku.py

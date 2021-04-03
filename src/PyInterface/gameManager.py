@@ -98,7 +98,9 @@ class ComputerPlayer(object):
         global last_move_human
 
         #Appeler algo ici
-
+        x, y = self.window.algoPointer(self.window.gameManager.gameBoard.grid, self.color, False,
+                                       self.window.gameManager.player1.stoneRemovedCount,
+                                       self.window.gameManager.player2.stoneRemovedCount, last_move_human, last_move_ai)
         last_move_ai = (x, y) ##
 
         if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) is None:
