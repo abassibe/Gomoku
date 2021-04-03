@@ -1,6 +1,6 @@
 #!/bin/bash
 DEFAULT_DYLIB_PATH=target/release/librust_ext.dylib
-DEFAULT_PYTHON_BIN=bin/python3
+DEFAULT_PYTHON_BIN=venv/bin/python3
 
 if [[ $# -ge 1 && ($1 == "--help" || $1 == "-h") ]]; then
     echo -e "This script aims at building then running the project Gomoku.
