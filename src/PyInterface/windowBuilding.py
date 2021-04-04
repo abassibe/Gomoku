@@ -148,6 +148,18 @@ def setFontShadow(window):
     window.gameTimer.setGraphicsEffect(effect)
     window.gameTimer.setGeometry(960, 330, 151, 41)
     window.gameTimer.setText("00:00")
+    
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(60, 17, 3))
+    effect.setOffset(3, -3)
+    window.turnsLabel.setGraphicsEffect(effect)
+    
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(60, 17, 3))
+    effect.setOffset(3, -3)
+    window.turnsValue.setGraphicsEffect(effect)
 
 
 def setRulesList(window, ruleSet):

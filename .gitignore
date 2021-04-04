@@ -20,6 +20,5 @@ src/PyInterface/__pycache__/
 /librust_ext.dylib
 /rust_ext.dll
 lib
-pyvenv.cfg
 /bin/
 /.idea/codeStyles/codeStyleConfig.xml

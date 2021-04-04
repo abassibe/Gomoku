@@ -1968,9 +1968,9 @@ font: 22pt &quot;SF Wasabi&quot;;</string>
    <widget class="QLabel" name="gameTimer">
     <property name="geometry">
      <rect>
-      <x>960</x>
+      <x>1050</x>
       <y>330</y>
-      <width>151</width>
+      <width>91</width>
       <height>41</height>
      </rect>
     </property>
@@ -1981,6 +1981,9 @@ font:20pt  &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="text">
      <string>00:00</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="playerTurnEffect">
@@ -2063,6 +2066,45 @@ font:22pt  &quot;SF Wasabi&quot;;</string>
      <string>0/10</string>
     </property>
    </widget>
+   <widget class="QLabel" name="turnsLabel">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>330</y>
+      <width>81</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 0);
+color:rgb(209, 168, 101);
+font:24pt  &quot;SF Wasabi&quot;;</string>
+    </property>
+    <property name="locale">
+     <locale language="English" country="UnitedStates"/>
+    </property>
+    <property name="text">
+     <string>Turns</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="turnsValue">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>330</y>
+      <width>101</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 0);
+color:rgb(209, 168, 101);
+font:22pt  &quot;SF Wasabi&quot;;</string>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
    <zorder>backgroundBoard</zorder>
    <zorder>gameBoard</zorder>
    <zorder>infosBackground1</zorder>
@@ -2087,6 +2129,8 @@ font:22pt  &quot;SF Wasabi&quot;;</string>
    <zorder>player1Capture</zorder>
    <zorder>player2Capture</zorder>
    <zorder>winOrDrawLabel</zorder>
+   <zorder>turnsLabel</zorder>
+   <zorder>turnsValue</zorder>
   </widget>
  </widget>
  <resources/>

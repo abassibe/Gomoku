@@ -187,7 +187,6 @@ class GameBoard():
         else:
             self.grid[scaledX, scaledY] = 2
             dropPoint.widget().setPixmap(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/whiteStone.png"))))
-        self.window.gameManager.turnCount += 1
         self.placedPoint.append(dropPoint)
         if 'Capture' in self.window.option.rulesSet:
             removedStone = self.window.gameManager.rules.captureRule(self.grid, scaledX, scaledY, color)
@@ -315,7 +314,6 @@ class GameManager():
         self.window.player1Capture.setText("0/10")
         self.window.player2Capture.setText("0/10")
         self.gameBoard = GameBoard(window)
-        self.turnCount = 0
         self.gameRuning = False
         self.globalTimer = QtCore.QTimer()
         self.globalTimer.setInterval(10)
@@ -324,6 +322,7 @@ class GameManager():
             self.globalTimer, self.startGameTimer, self.window.gameTimer))
         self._observers = [self.nextTurn]
         self.rules = rulesSet.Rules(self.options)
+        self.turnCount = 0
 
     @property
     def playerTurn(self):
@@ -349,6 +348,8 @@ class GameManager():
     def nextTurn(self, isPlayer1Turn):
         if not self.gameRuning:
             return
+        self.turnCount += 1
+        self.window.turnsValue.setText(str(int(self.turnCount / 2)))
         if isPlayer1Turn:
             self.player1.startTurn()
         else:
