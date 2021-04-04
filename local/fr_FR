@@ -12,7 +12,7 @@ winOrDrawLabel=Noir Gagne;Blanc Gagne;Egalite
 hintButton=Astuces
 giveUpButton=Abandon
 newGameButton=N. partie
-turnLabel=Tours
+turnsLabel=Tours
 #dialog.ui
 langageLabel=Langue :
 langageCombobox=Anglais;Francais
