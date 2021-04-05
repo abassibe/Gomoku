@@ -12,7 +12,7 @@ winOrDrawLabel=Black Win;White Win;Draw
 hintButton=Hint
 giveUpButton=Give up
 newGameButton=New Game
-turnLabel=Turns
+turnsLabel=Turns
 #dialog.ui
 langageLabel=Langage:
 langageCombobox=English;French
