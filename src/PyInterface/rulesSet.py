@@ -82,17 +82,18 @@ class Rules():
                 result.append((x, y - 1))
         return result
 
-    def gameEndingCaptureRule(self, board, v1, v2, color):
-        self.winStart = v1
-        self.winEnd = v2
-        start_x = v1[0]
-        end_x = v2[0]
-        start_y = v1[1]
-        end_y = v2[1]
+
+    def gameEndingCaptureRule(self, board, BeginWinPos, endWinPos, color):
+        self.winStart = BeginWinPos
+        self.winEnd = endWinPos
+        start_x = BeginWinPos[0]
+        end_x = endWinPos[0]
+        start_y = BeginWinPos[1]
+        end_y = endWinPos[1]
 
         result = []
         while start_x != end_x or start_y != end_y:
-            self.hasSameColorNeighbor(board, start_x, start_y, color, result)
+            result = self.hasSameColorNeighbor(board, start_x, start_y, color, result)
             if start_x < end_x:
                 start_x += 1
             elif start_x > end_x:
@@ -101,7 +102,7 @@ class Rules():
                 start_y += 1
             elif start_y > end_y:
                 start_y -= 1
-        self.hasSameColorNeighbor(board, start_x, start_y, color, result)
+        result = self.hasSameColorNeighbor(board, start_x, start_y, color, result)
         if result:
             self.isWinner = color
         return result
