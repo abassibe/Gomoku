@@ -336,6 +336,7 @@ impl Algorithm {
             opponent_captures,
             &self.patterns
         );
+        let is_threatened = result.is_any();
 
         // Get the moves that threat `opponent` because those are good move to play.
         result |= extract_threatening_moves_from_player(
