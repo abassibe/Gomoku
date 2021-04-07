@@ -22,6 +22,8 @@ class Worker(QObject):
     progress = pyqtSignal(int)
 
     def setup(self, function, window, color, last_move_human, last_move_ai, computPlayer):
+        self.turnTime = QtCore.QTimer()
+        self.turnTime.setInterval(10)
         self.window = window
         self.color = color
         self.last_move_human = last_move_human
@@ -33,6 +35,7 @@ class Worker(QObject):
         """Long-running task."""
         self.computPlayer.x, self.computPlayer.y = self.function(self.window.gameManager.gameBoard.grid, self.color, False, self.window.gameManager.player1.stoneRemovedCount,
                                        self.window.gameManager.player2.stoneRemovedCount, self.last_move_human, self.last_move_ai)
+        self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.window.playerTwoTimer))
         self.progress.emit(1)
         self.finished.emit()
 
