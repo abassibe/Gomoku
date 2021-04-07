@@ -345,7 +345,7 @@ impl Algorithm {
             player_captures,
             &self.patterns
         );
-        if !is_threatened || opponent_captures >= 6 {
+        if !is_threatened || opponent_captures >= 3 {
             result |= extract_capturing_moves(opponent, current_player, &self.patterns);
         }
         result |= extract_missing_bit(
