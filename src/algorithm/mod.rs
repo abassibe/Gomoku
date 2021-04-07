@@ -345,7 +345,9 @@ impl Algorithm {
             player_captures,
             &self.patterns
         );
-        result |= extract_capturing_moves(opponent, current_player, &self.patterns);
+        if !is_threatened || opponent_captures >= 6 {
+            result |= extract_capturing_moves(opponent, current_player, &self.patterns);
+        }
         result |= extract_missing_bit(
             current_player,
             opponent,
@@ -403,7 +405,7 @@ impl Algorithm {
         );
         result &= legal_open_cells;
 
-        if result.count_ones() > 2 {
+        if result.count_ones() > 2 || is_threatened {
             return result;
         }
 
