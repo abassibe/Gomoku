@@ -88,7 +88,6 @@ impl Algorithm {
         let parent_player_captures = parent.get_player_captures();
         let parent_enemy_captures = parent.get_opponent_captures();
 
-        // TODO: Investigate this call and its return value (especially for open 2).
         let mut ret : Vec<Node> = self.get_potential_moves(parent)
             .enumerate()
             .iter()
