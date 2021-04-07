@@ -284,13 +284,13 @@ impl Algorithm {
     pub fn get_potential_moves(&self, parent: &Node) -> BitBoard {
         let goban = parent.get_item();
         // If the Node parent is representing a move for player then it means we are generating moves for opponent
-        let (current_player, opponent) = if parent.is_players_last_move() {
-            (*goban.get_enemy(), *goban.get_player())
+        let (current_player, opponent, player_captures, opponent_captures) = if parent.is_players_last_move() {
+            (*goban.get_enemy(), *goban.get_player(), parent.get_opponent_captures(), parent.get_player_captures())
         } else {
-            (*goban.get_player(), *goban.get_enemy())
+            (*goban.get_player(), *goban.get_enemy(), parent.get_player_captures(), parent.get_opponent_captures())
         };
-        let player_captures = parent.get_player_captures();
-        let opponent_captures = parent.get_opponent_captures();
+        // let player_captures = parent.get_player_captures();
+        // let opponent_captures = parent.get_opponent_captures();
         let open_cells = !(current_player | opponent);
         let illegal_moves_complement = !extract_illegal_moves(current_player, opponent, &self.patterns);
         let legal_open_cells = open_cells & illegal_moves_complement;
