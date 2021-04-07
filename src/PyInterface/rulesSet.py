@@ -20,7 +20,7 @@ class Rules():
     def checkPotentialCapture(self, board, color):
         for x in range(19):
             for y in range(19):
-                if self.checkPotentialCapture(board, x, y, color):
+                if self.checkPotentialCaptureFromPosition(board, x, y, color):
                     return True
         return False
 
