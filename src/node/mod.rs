@@ -124,9 +124,6 @@ impl Node {
         let goban = self.get_item();
         let (player, enemy) = (*goban.get_player(), *goban.get_enemy());
 
-        // let threats = extract_missing_bit_cross_three_with_four(*enemy, *enemy);
-
-        // self.is_player_threatened = Some((threats | extract_missing_bit_cross_four_with_four(*enemy, *player)).is_any());
         self.is_player_threatened = Some(extract_threatening_moves_from_player(player, enemy, self.opponent_captures, patterns).is_any());
     }
 
@@ -186,8 +183,6 @@ impl Node {
         }
     }
 
-    // TODO: Ideally, this method should returns an Iterator (not an option)
-    // in order to be able to directly iterate over its return value.
     /// Returns the Branches of the current node, if any, wrapped into an Option.
     /// Returns None otherwise.
     pub fn get_branches(&mut self) -> Option<&Branches> {
