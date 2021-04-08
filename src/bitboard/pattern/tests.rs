@@ -1,6 +1,4 @@
 use super::*;
-use crate::{algorithm::Algorithm, goban::*};
-use crate::algorithm::Algorithms;
 
 #[test]
 fn test_pattern_matching_extract_threatening_moves_from_opponent_with_open_split_four() {
