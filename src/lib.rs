@@ -22,7 +22,6 @@ mod node;
 
 const DEPTH: u32 = 7;
 const WHITE: u8 = 2;
-const BLACK: u8 = 1;
 
 #[pymodule]
 fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
