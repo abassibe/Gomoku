@@ -139,15 +139,6 @@ impl Node {
         self.item.set_fscore(fscore);
     }
 
-    pub fn compute_item_fscore(
-        &mut self,
-        previous_state: &Goban,
-        to_play: &BitBoard,
-        depth: usize
-    ) -> Fscore {
-        self.item.compute_fscore(previous_state, to_play, depth)
-    }
-
     pub fn add_branch(&mut self, item: Goban, last_move: BitBoard, is_players_move: bool) -> Rc<RefCell<Self>> {
         let new_node = Rc::new(RefCell::new(Self::new(item, self.depth + 1, last_move, is_players_move, self.player_captures, self.opponent_captures)));
         let mut branches = self.branches.take().unwrap_or_default();
