@@ -111,7 +111,7 @@ pub fn set_heuristic_estimation(player: BitBoard, enemy: BitBoard) -> isize {
 	let mut estimation = 0u16;
 
 	//adjust estimation score in regard to the matched pattern
-	for &((pattern, pattern_size, is_sym), player_score) in PATTERNS_ESTIMATION.iter() {
+	for &((pattern, pattern_size, is_sym), _) in PATTERNS_ESTIMATION.iter() {
 		let matched = match_pattern(player, enemy, pattern, pattern_size, is_sym);
 		estimation += matched.count_ones();
 	}
