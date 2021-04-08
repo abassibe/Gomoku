@@ -18,8 +18,6 @@ pub enum Algorithms {
 pub struct Algorithm {
     initial: Node,
     patterns: NewPattern,
-    player_captures: u8,
-    opponent_captures: u8
 }
 
 impl Algorithm {
