@@ -29,7 +29,6 @@ pub enum Algorithms {
     Minimax
 }
 
-// Should patterns even be in Algorithm ?
 #[derive(Default)]
 pub struct Algorithm {
     initial: Node,
@@ -54,8 +53,7 @@ impl Algorithm {
         self.initial = new_initial_node;
     }
 
-    // FIXME: SHOULDN'T BE PUBLIC
-    pub fn compute_and_set_fscore(&self, node: &mut Node, depth: u32) -> Fscore {
+    fn compute_and_set_fscore(&self, node: &mut Node, depth: u32) -> Fscore {
         // If player is threatened in the initial Node then we give more weight to the defense
         // in order to prioritize the defense over the attack.
         // We do the opposite if there is no immediate threats in inital Node for player.
@@ -68,7 +66,6 @@ impl Algorithm {
             (_, Fscore::Win) => Fscore::Value(isize::MIN),
             (Fscore::Uninitialized, Fscore::Value(score)) => Fscore::Value(-score),
             (Fscore::Value(player_value), Fscore::Value(enemy_value)) => Fscore::Value(player_value - (enemy_value as f64 * defense_weight).round() as isize),
-            // (Fscore::Value(player_value), Fscore::Value(enemy_value)) => Fscore::Value(player_value - enemy_value),
             (Fscore::Value(player_value), _) => Fscore::Value(player_value),
             (Fscore::Uninitialized, Fscore::Uninitialized) => Fscore::Uninitialized
         };
@@ -88,7 +85,6 @@ impl Algorithm {
         let parent_player_captures = parent.get_player_captures();
         let parent_enemy_captures = parent.get_opponent_captures();
 
-        // TODO: Investigate this call and its return value (especially for open 2).
         let mut ret : Vec<Node> = self.get_potential_moves(parent)
             .enumerate()
             .iter()
@@ -122,7 +118,6 @@ impl Algorithm {
         ret
     }
 
-    // TODO: Missing tests
     // FIXME: This method has never been tested.
     fn compute_score(&self, node: &Node, depth: u32, player_is_enemy: bool) -> Fscore {
         let goban = node.get_item();
@@ -150,43 +145,11 @@ impl Algorithm {
         let three_cross_four = extract_missing_bit_cross_three_with_four(*player, *enemy);
         if three_cross_four.is_any() {
             result += three_cross_four.count_ones() as isize * if node.is_players_last_move() { 500 } else { 1000 };
-            // result += three_cross_four.count_ones() as isize * 100;
         }
         let four_cross_four = extract_missing_bit_cross_four_with_four(*player, *enemy);
         if four_cross_four.is_any() {
             result += four_cross_four.count_ones() as isize * if node.is_players_last_move() { 750 } else { 1200 };
-            // result += four_cross_four.count_ones() as isize * 200;
         }
-        // TODO: Let this be a global static
-        // let patterns: [((u8, u8, bool), isize, isize); 12] = [
-        //     (self.patterns[PatternName::OpenThree], 50isize, 500isize),
-        //     (self.patterns[PatternName::CloseThree], 50isize, 1500isize),
-        //     (self.patterns[PatternName::OpenSplitThreeLeft], 50isize, 500isize),
-        //     (self.patterns[PatternName::OpenSplitThreeRight], 50isize, 500isize),
-        //     (self.patterns[PatternName::OpenFour], 9999999isize, 99999999isize),
-        //     (self.patterns[PatternName::CloseFour], 1000isize, 99999999isize),
-        //     (self.patterns[PatternName::SplitFourRight], 50isize, 99999999isize),
-        //     (self.patterns[PatternName::SplitFourLeft], 50isize, 99999999isize),
-        //     (self.patterns[PatternName::SplitFourMiddle], 50isize, 99999999isize),
-        //     (self.patterns[PatternName::Five], 10000000000isize, 100000000isize),
-        //     ((0b01100000, 4, true), 500isize, 2000isize),
-        //     ((0b01010000, 5, true), 25isize, 1000isize)
-        // ];
-        // Got score values from https://playgomoku.online/gomoku-offline
-        // let patterns: [((u8, u8, bool), isize, isize); 12] = [
-        //     ((0b11111000, 5, true), 10000000000isize, 100000000isize),
-        //     ((0b01111000, 6, true), 9999999isize, 99999999isize),
-        //     ((0b01111000, 5, false), 1000isize, 99999999isize),
-        //     ((0b10111000, 5, false), 50isize, 99999999isize),
-        //     ((0b11011000, 5, true), 50isize, 99999999isize),
-        //     ((0b01110000, 5, true), 50isize, 500isize),
-        //     ((0b01110000, 5, false), 50isize, 500isize),
-        //     ((0b00111000, 6, false), 3000isize, 999999isize),
-        //     ((0b11100000, 5, false), 50isize, 1500isize),
-        //     ((0b01011000, 5, false), 50isize, 500isize),
-        //     ((0b01100000, 4, true), 500isize, 2000isize),
-        //     ((0b01010000, 5, true), 25isize, 1000isize)
-        // ];
         for &((pattern, pattern_size, is_sym), player_score, opponent_score) in HEURISTIC_PATTERNS.iter() {
             let score = if node.is_players_last_move() { player_score } else { opponent_score };
             let matched = match_pattern(*player, *enemy, pattern, pattern_size, is_sym);
@@ -202,7 +165,6 @@ impl Algorithm {
             } else {
                 0
             };
-            // result += ((matched.count_ones() as isize - nb_captures) * score) + (nb_captures * score);
             result += ((matched.count_ones() as isize - nb_captures) as f64 * score as f64 * 0.25f64).round() as isize + (nb_captures * score);
         }
         result += extract_capturing_moves(*player, *enemy, &self.patterns).count_ones() as isize * if node.is_players_last_move() { 3 } else { 10 };
@@ -281,8 +243,7 @@ impl Algorithm {
         self.initial.compute_immediate_threats_for_player(&self.patterns);
     }
 
-    // FIXME: Shouldn't be public (made it pub for debug)
-    pub fn get_potential_moves(&self, parent: &Node) -> BitBoard {
+    fn get_potential_moves(&self, parent: &Node) -> BitBoard {
         let goban = parent.get_item();
         // If the Node parent is representing a move for player then it means we are generating moves for opponent
         let (current_player, opponent) = if parent.is_players_last_move() {
@@ -412,7 +373,6 @@ impl Algorithm {
 
     // TODO: We maybe can do better here, self probably doesn't need to be mutable.
     // Maybe we should pass the initial Node directly without passing by the initial property of Algorithm?
-    /// This method is likely to change in a near future because I'm not sure what to return.
     /// For now, it returns a BitBoard that contains the next move to play.
     pub fn get_next_move(&mut self, depth: u32, algo: Algorithms) -> Option<Node> {
         self.compute_initial_threats_for_player();
@@ -425,7 +385,6 @@ impl Algorithm {
             None
         } else {
             Some(next_state)
-            // Some(next_state.get_item().get_player() ^ self.initial.get_item().get_player())
         }
     }
 }
