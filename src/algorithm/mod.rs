@@ -26,10 +26,6 @@ impl Algorithm {
         Algorithm::default()
     }
 
-    pub fn get_initial(&self) -> &Node {
-        &self.initial
-    }
-
     /// Set the initial Node to a new state using the provided Goban.
     pub fn update_initial_state(&mut self, initial_state: Goban, last_move: BitBoard, player_captures: u8, opponent_captures:u8) {
         let new_initial_node = Node::new(initial_state, 0, last_move, false, player_captures, opponent_captures);
