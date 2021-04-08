@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests;
 
-use std::collections::{hash_map::Iter, HashMap};
+use std::collections::HashMap;
 
 use super::{direction::DirectionIterator, *};
 
@@ -86,10 +86,6 @@ impl NewPattern {
         hashmap.insert(PatternName::Five,                   (0b11111000, 5, true));
 
         NewPattern { patterns: hashmap }
-    }
-
-    pub fn iter(&self) -> Iter<'_, PatternName, (u8, u8, bool)> {
-        self.patterns.iter()
     }
 }
 
