@@ -139,6 +139,7 @@ impl Node {
         self.item.set_fscore(fscore);
     }
 
+    #[allow(unused)]
     pub fn add_branch(&mut self, item: Goban, last_move: BitBoard, is_players_move: bool) -> Rc<RefCell<Self>> {
         let new_node = Rc::new(RefCell::new(Self::new(item, self.depth + 1, last_move, is_players_move, self.player_captures, self.opponent_captures)));
         let mut branches = self.branches.take().unwrap_or_default();
@@ -152,6 +153,7 @@ impl Node {
     /// This method should not have any overhead as the method len()
     /// actually calls the same method on the underlying type (which is a Vec)
     /// which is just a getter on the len property on Vec
+    #[allow(unused)]
     pub fn count_branch(&self) -> usize {
         if let Some(ref branches) = self.branches {
             branches.len()
