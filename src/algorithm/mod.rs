@@ -9,21 +9,6 @@ mod minimax;
 mod transposition_table;
 mod negamax;
 
-static PATTERNS: [((u8, u8, bool), isize, isize); 12] = [
-    ((0b11111000, 5, true), 10000000000isize, 100000000isize),
-    ((0b01111000, 6, true), 9999999isize, 99999999isize),
-    ((0b01111000, 5, false), 1000isize, 99999999isize),
-    ((0b10111000, 5, false), 50isize, 99999999isize),
-    ((0b11011000, 5, true), 50isize, 99999999isize),
-    ((0b01110000, 5, true), 50isize, 500isize),
-    ((0b01110000, 5, false), 50isize, 500isize),
-    ((0b00111000, 6, false), 3000isize, 999999isize),
-    ((0b11100000, 5, false), 50isize, 1500isize),
-    ((0b01011000, 5, false), 50isize, 500isize),
-    ((0b01100000, 4, true), 500isize, 2000isize),
-    ((0b01010000, 5, true), 25isize, 1000isize)
-];
-
 pub enum Algorithms {
     Negamax,
     Minimax
