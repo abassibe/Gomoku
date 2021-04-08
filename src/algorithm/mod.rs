@@ -100,10 +100,10 @@ impl Algorithm {
     // FIXME: This method has never been tested.
     fn compute_score(&self, node: &Node, depth: u32, player_is_enemy: bool) -> Fscore {
         let goban = node.get_item();
-        let (player, enemy, player_captures, enemy_captures) = if player_is_enemy {
-            (goban.get_enemy(), goban.get_player(), node.get_opponent_captures(), node.get_player_captures())
+        let (player, enemy, player_captures) = if player_is_enemy {
+            (goban.get_enemy(), goban.get_player(), node.get_opponent_captures())
         } else {
-            (goban.get_player(), goban.get_enemy(), node.get_player_captures(), node.get_opponent_captures())
+            (goban.get_player(), goban.get_enemy(), node.get_player_captures())
         };
         let mut result = 0isize;
 
