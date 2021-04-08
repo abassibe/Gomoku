@@ -28,6 +28,7 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     #[pyfn(m, "get_next_move")]
     /// Interfacing function.
     /// Takes the Python GIL, the board in the shape of a 19*19 numpy 2d array, the color of the human player, a boolean that indicates if this is a hint request, and the number of captures made by the human and the ai.
+    #[allow(unused_variables)]
     fn get_next_move(_py: Python<'_>, goban: &PyArray2<u8>, p_color: u8, hint: &PyBool, human_capture: i32, ai_capture: i32, last_move_human : Option<(u16, u16)>, last_move_ai : Option<(u16, u16)>) -> PyResult<(u32, u32)> {
         let board:Vec<u8> = goban.to_vec()?;
 
