@@ -21,9 +21,7 @@ class Rules():
         for y in range(19):
             for x in range(19):
                 if board[y][x] == color:
-                    print("board[{}][{}] == {}".format(x, y, color))
                     if self.checkPotentialCaptureFromPosition(board, y, x, color):
-                        print("found a potential capture at ({} {}) for color {}".format(x, y, color))
                         return True
         return False
 

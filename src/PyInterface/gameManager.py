@@ -1,13 +1,11 @@
 import pathlib
 from time import time
 from random import randint
-from PyQt5 import QtGui, QtCore, QtWidgets
-from PyQt5.QtCore import QObject, QThread, pyqtSignal, QRunnable, pyqtSlot, QThreadPool
-from PyQt5.QtWidgets import QWidget, QApplication
+from PyQt5 import QtGui, QtCore
+from PyQt5.QtCore import QObject, QThread, pyqtSignal
 import windowBuilding
 import rulesSet
 import numpy as np
-from threading import Thread, Event
 
 last_move_ai = (0, 0)
 last_move_human = (0, 0)
@@ -107,10 +105,6 @@ class HumanPlayer():
         self.turnTime.stop()
 
 
-def test():
-    print("Thread end !")
-
-
 class ComputerPlayer(object):
     def __init__(self, window, color):
         self.turnTime = QtCore.QTimer()
@@ -138,7 +132,9 @@ class ComputerPlayer(object):
 
     def rustReturn(self):
         self.turnTime.stop()
-        last_move_ai = (self.x, self.y)  ##
+
+        global last_move_ai
+        last_move_ai = (self.x, self.y)
 
         if self.window.gameManager.gameBoard.placeStone(self.x, self.y, self.color, True) is None:
             return
@@ -170,7 +166,8 @@ class ComputerPlayer(object):
             return
 
         self.turnTime.stop()
-        last_move_ai = (x, y)  ##
+        global last_move_ai
+        last_move_ai = (x, y)
 
         if self.window.gameManager.gameBoard.placeStone(x, y, self.color, True) is None:
             return
@@ -190,35 +187,20 @@ class GameBoard():
         self.placedHint = []
 
     def highLightWinningLine(self, x, y):
-        # -------------------------------------------#
-        #               Part fixed                  #
-        ##widget = window_attr_lst['centralwidget']
-        window_attr_lst = vars(self.window)
         painter = QtGui.QPainter()
         painter.setPen(QtCore.Qt.red)
-        # painter.begin(QWidget or self) begin ?
         painter.drawLine(10, 10, 200, 200)
-        # painter.end(QWidget or self) end ?
-        #                                           #
-        # -------------------------------------------#
-
-        # -------------------------------------------#
-        #                   Old part                #
-        # widget = self.window.__getattr__("centralwidget")
-        # widget.drawLine(10, 10, 200, 200)
-        #                                           #
-        # -------------------------------------------#
 
     def placeStone(self, x, y, color, computerMove):
-        scaledX = 0
-        scaledY = 0
         global last_move_human
         global last_move_ai
+        scaledX = 0
+        scaledY = 0
 
         if computerMove:
             scaledX = x
             scaledY = y
-            last_move_ai = (scaledX, scaledY)  # update last ai move for rust side
+            last_move_ai = (scaledX, scaledY)
 
         else:
             blockSize = (629 / 19)
@@ -227,7 +209,7 @@ class GameBoard():
             scaledY = y - self.window.layoutWidget.geometry().x()
             scaledY = int(scaledY / blockSize)
 
-            last_move_human = (scaledX, scaledY)  # update last human move for rust side
+            last_move_human = (scaledX, scaledY)
         if self.grid[scaledX, scaledY] != 0 or not self.isValidMove(scaledX, scaledY, color):
             tmp = self.window.layoutWidget.cursor()
             self.window.layoutWidget.setCursor(QtGui.QCursor(QtCore.Qt.ForbiddenCursor))
@@ -252,18 +234,17 @@ class GameBoard():
                 removedStonePlayer = self.window.gameManager.player1 if color == self.window.gameManager.player1.color else self.window.gameManager.player2
                 removedStonePlayer.stoneRemovedCount += 1
         winStart, winEnd = self.isWinner()
-        print("color : ", color)
         global continue_game
         if type(winStart) is tuple and type(winEnd) is tuple and (
                 'Game-ending capture' in self.window.option.rulesSet or 'Capture fin de partie' in self.window.option.rulesSet):
             counterCapture = self.window.gameManager.rules.gameEndingCaptureRule(self.grid, winStart, winEnd, color)
 
-            if len(counterCapture) == 0 and not continue_game:
-                if ((color == self.window.gameManager.player1.color and self.window.gameManager.player2.stoneRemovedCount == 8)
-                    or (color == self.window.gameManager.player2.color and self.window.gameManager.player1.stoneRemovedCount == 8)):
-                    if self.window.gameManager.rules.checkPotentialCapture(self.grid, self.window.gameManager.player2.color if color ==
-                                                                           self.window.gameManager.player1.color else self.window.gameManager.player1.color):
-                        continue_game = True
+            if len(counterCapture) == 0:
+                if (color == self.window.gameManager.player1.color and self.window.gameManager.player2.stoneRemovedCount == 8) \
+                    or (color == self.window.gameManager.player2.color and self.window.gameManager.player1.stoneRemovedCount == 8):
+                    if self.window.gameManager.rules.checkPotentialCapture(self.grid, self.window.gameManager.player1.color if
+                                                                           color == self.window.gameManager.player2.color
+                                                                            else self.window.gameManager.player2.color):
                         return True
             elif len(counterCapture) > 0:
                 return True
@@ -309,7 +290,7 @@ class GameBoard():
 
     def isValidMove(self, x, y, color):
         isDoubleThreeRule = True if (
-                    "Double trois" in self.window.gameManager.rules.activeRules or "Double three" in self.window.gameManager.rules.activeRules) else False
+                "Double trois" in self.window.gameManager.rules.activeRules or "Double three" in self.window.gameManager.rules.activeRules) else False
         if isDoubleThreeRule and not self.window.gameManager.rules.doubleThreeRule(self.grid, x, y, color):
             return False
         if self.window.gameManager.rules.isWinner != 0:
@@ -363,15 +344,15 @@ class GameBoard():
 class GameManager():
     def __init__(self, window, option, hintButtonBool):
         self.isPlayer1Turn = True if randint(0, 1) == 0 else False
-        self.player1 = HumanPlayer(window, 1 if self.isPlayer1Turn == True else 2)
+        self.player1 = HumanPlayer(window, 1 if self.isPlayer1Turn is True else 2)
         self.player1.timerText = window.playerOneTimer
         self.player1.colorLabel = window.playerOneLabel
         self.player1.playerCapture = window.player1Capture
         self.options = option
         if self.options.gameMode == "PVE":
-            self.player2 = ComputerPlayer(window, 1 if self.isPlayer1Turn == False else 2)
+            self.player2 = ComputerPlayer(window, 1 if self.isPlayer1Turn is False else 2)
         else:
-            self.player2 = HumanPlayer(window, 1 if self.isPlayer1Turn == False else 2)
+            self.player2 = HumanPlayer(window, 1 if self.isPlayer1Turn is False else 2)
             self.player2.timerText = window.playerTwoTimer
             self.player2.colorLabel = window.playerTwoLabel
         self.player2.playerCapture = window.player2Capture
