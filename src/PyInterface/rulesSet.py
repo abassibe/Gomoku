@@ -18,29 +18,32 @@ class Rules():
         return [tuple(coord) for coord in np.argwhere(np.array(board) == 0).tolist()]
 
     def checkPotentialCapture(self, board, color):
-        for x in range(19):
-            for y in range(19):
-                if self.checkPotentialCaptureFromPosition(board, x, y, color):
-                    return True
+        for y in range(19):
+            for x in range(19):
+                if board[y][x] == color:
+                    print("board[{}][{}] == {}".format(x, y, color))
+                    if self.checkPotentialCaptureFromPosition(board, y, x, color):
+                        print("found a potential capture at ({} {}) for color {}".format(x, y, color))
+                        return True
         return False
 
-    def checkPotentialCaptureFromPosition(self, board, x, y, color):
+    def checkPotentialCaptureFromPosition(self, board, y, x, color):
         target = 1 if color == 2 else 2
-        if y > 2 and board[x][y - 3] == 0 and (board[x][y - 2] == target and board[x][y - 1] == target):
+        if x > 2 and board[y][x - 3] == 0 and (board[y][x - 2] == target and board[y][x - 1] == target):
             return True
-        if x > 2 and y > 2 and board[x - 3][y - 3] == color and (board[x - 2][y - 2] == target and board[x - 1][y - 1] == target):
+        if y > 2 and x > 2 and board[y - 3][x - 3] == color and (board[y - 2][x - 2] == target and board[y - 1][x - 1] == target):
             return True
-        if x > 2 and board[x - 3][y] == 0 and (board[x - 2][y] == target and board[x - 1][y] == target):
+        if y > 2 and board[y - 3][x] == 0 and (board[y - 2][x] == target and board[y - 1][x] == target):
             return True
-        if x > 2 and y < 16 and board[x - 3][y + 3] == color and (board[x - 2][y + 2] == target and board[x - 1][y + 1] == target):
+        if y > 2 and x < 16 and board[y - 3][x + 3] == color and (board[y - 2][x + 2] == target and board[y - 1][x + 1] == target):
             return True
-        if y < 16 and board[x][y + 3] == 0 and (board[x][y + 2] == target and board[x][y + 1] == target):
+        if x < 16 and board[y][x + 3] == 0 and (board[y][x + 2] == target and board[y][x + 1] == target):
             return True
-        if x < 16 and y < 16 and board[x + 3][y + 3] == color and (board[x + 2][y + 2] == target and board[x + 1][y + 1] == target):
+        if y < 16 and x < 16 and board[y + 3][x + 3] == color and (board[y + 2][x + 2] == target and board[y + 1][x + 1] == target):
             return True
-        if x < 16 and board[x + 3][y] == 0 and (board[x + 2][y] == target and board[x + 1][y] == target):
+        if y < 16 and board[y + 3][x] == 0 and (board[y + 2][x] == target and board[y + 1][x] == target):
             return True
-        if x < 16 and y > 2 and board[x + 3][y - 3] == 0 and (board[x + 2][y - 2] == target and board[x + 1][y - 1] == target):
+        if y < 16 and x > 2 and board[y + 3][x - 3] == 0 and (board[y + 2][x - 2] == target and board[y + 1][x - 1] == target):
             return True
         return False
 
