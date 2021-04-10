@@ -17,7 +17,9 @@ class Rules():
     def getBasicRule(self, board, color):
         return [tuple(coord) for coord in np.argwhere(np.array(board) == 0).tolist()]
 
-    def checkPotentialCapture(self, board, color):
+    # Not used at the moment, but might need it later so
+    # I'm just keeping it commented for the time being
+    """def checkPotentialCapture(self, board, color):
         for y in range(19):
             for x in range(19):
                 if board[y][x] == color:
@@ -43,7 +45,7 @@ class Rules():
             return True
         if y < 16 and x > 2 and board[y + 3][x - 3] == 0 and (board[y + 2][x - 2] == target and board[y + 1][x - 1] == target):
             return True
-        return False
+        return False"""
 
     def captureRule(self, board, x, y, color):
         target = 1 if color == 2 else 2

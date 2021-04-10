@@ -241,15 +241,7 @@ class GameBoard():
         if type(winStart) is tuple and type(winEnd) is tuple and (
                 'Game-ending capture' in self.window.option.rulesSet or 'Capture fin de partie' in self.window.option.rulesSet):
             counterCapture = self.window.gameManager.rules.gameEndingCaptureRule(self.grid, winStart, winEnd, color)
-
-            if len(counterCapture) == 0:
-                if (color == self.window.gameManager.player1.color and self.window.gameManager.player2.stoneRemovedCount == 8) \
-                    or (color == self.window.gameManager.player2.color and self.window.gameManager.player1.stoneRemovedCount == 8):
-                    if self.window.gameManager.rules.checkPotentialCapture(self.grid, self.window.gameManager.player1.color if
-                                                                           color == self.window.gameManager.player2.color
-                                                                            else self.window.gameManager.player2.color):
-                        return True
-            elif len(counterCapture) > 0:
+            if len(counterCapture) > 0:
                 return True
 
         if winStart:
