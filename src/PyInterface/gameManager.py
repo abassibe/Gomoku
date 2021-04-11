@@ -66,10 +66,10 @@ class HumanPlayer():
         self.timerText.setText("00:00:00")
         if self.color == 1:
             self.colorLabel.setStyleSheet(
-                "background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt \"SF Wasabi\";")
+                "background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt;")
         else:
             self.colorLabel.setStyleSheet(
-                "background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt \"SF Wasabi\";")
+                "background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt;")
 
     def rustReturn(self):
         global last_move_human
@@ -121,10 +121,10 @@ class ComputerPlayer(object):
 
         if self.color == 1:
             self.colorLabel.setStyleSheet(
-                "background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt \"SF Wasabi\";")
+                "background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt;")
         else:
             self.colorLabel.setStyleSheet(
-                "background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt \"SF Wasabi\";")
+                "background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt;")
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime,
                                                                              self.window.playerTwoTimer))
         self.playerCapture = None
