@@ -9,7 +9,6 @@ import numpy as np
 
 last_move_ai = (0, 0)
 last_move_human = (0, 0)
-continue_game = False
 
 
 def unSetForbiddenCursor(cursor, window):
@@ -37,7 +36,8 @@ class Worker(QObject):
                                                                  self.window.gameManager.player1.stoneRemovedCount,
                                                                  self.window.gameManager.player2.stoneRemovedCount,
                                                                  self.last_move_human, self.last_move_ai)
-        self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.window.playerTwoTimer))
+        self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime,
+                                                                             self.window.playerTwoTimer))
         self.progress.emit(1)
         self.finished.emit()
 
@@ -66,10 +66,10 @@ class HumanPlayer():
         self.timerText.setText("00:00:00")
         if self.color == 1:
             self.colorLabel.setStyleSheet(
-                "background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt \"SF Wasabi\";")
+                "background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt;")
         else:
             self.colorLabel.setStyleSheet(
-                "background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt \"SF Wasabi\";")
+                "background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt;")
 
     def rustReturn(self):
         global last_move_human
@@ -121,10 +121,10 @@ class ComputerPlayer(object):
 
         if self.color == 1:
             self.colorLabel.setStyleSheet(
-                "background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt \"SF Wasabi\";")
+                "background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt;")
         else:
             self.colorLabel.setStyleSheet(
-                "background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt \"SF Wasabi\";")
+                "background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt;")
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime,
                                                                              self.window.playerTwoTimer))
         self.playerCapture = None
@@ -190,9 +190,10 @@ class GameBoard():
         self.placedHint = []
 
     def highLightWinningLine(self, x, y):
-        painter = QtGui.QPainter()
-        painter.setPen(QtCore.Qt.red)
-        painter.drawLine(10, 10, 200, 200)
+        pass
+        # painter = QtGui.QPainter()
+        # painter.setPen(QtCore.Qt.red)
+        # painter.drawLine(10, 10, 200, 200)
 
     def placeStone(self, x, y, color, computerMove):
         global last_move_human
@@ -237,18 +238,15 @@ class GameBoard():
                 removedStonePlayer = self.window.gameManager.player1 if color == self.window.gameManager.player1.color else self.window.gameManager.player2
                 removedStonePlayer.stoneRemovedCount += 1
         winStart, winEnd = self.isWinner()
-        global continue_game
         if type(winStart) is tuple and type(winEnd) is tuple and (
                 'Game-ending capture' in self.window.option.rulesSet or 'Capture fin de partie' in self.window.option.rulesSet):
             counterCapture = self.window.gameManager.rules.gameEndingCaptureRule(self.grid, winStart, winEnd, color)
 
             if len(counterCapture) == 0:
-                if (color == self.window.gameManager.player1.color and self.window.gameManager.player2.stoneRemovedCount == 8) \
-                    or (color == self.window.gameManager.player2.color and self.window.gameManager.player1.stoneRemovedCount == 8):
-                    if self.window.gameManager.rules.checkPotentialCapture(self.grid, self.window.gameManager.player1.color if
-                                                                           color == self.window.gameManager.player2.color
-                                                                            else self.window.gameManager.player2.color):
-                        return True
+                if (color == self.window.gameManager.player1.color and self.window.gameManager.player2.stoneRemovedCount
+                    == 8) or (color == self.window.gameManager.player2.color and
+                              self.window.gameManager.player1.stoneRemovedCount == 8):
+                    return True
             elif len(counterCapture) > 0:
                 return True
 
