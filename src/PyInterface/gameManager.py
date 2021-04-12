@@ -19,7 +19,7 @@ class Worker(QObject):
     finished = pyqtSignal()
     progress = pyqtSignal(int)
 
-    def setup(self, function, window, color, last_move_human, last_move_ai, computPlayer):
+    def setup(self, function, window, color, last_move_human, last_move_ai, computPlayer, bool_hint=False):
         self.turnTime = QtCore.QTimer()
         self.turnTime.setInterval(10)
         self.window = window
@@ -28,11 +28,12 @@ class Worker(QObject):
         self.last_move_ai = last_move_ai
         self.function = function
         self.computPlayer = computPlayer
+        self.bool_hint = bool_hint
 
     def run(self):
         """Long-running task."""
         self.computPlayer.x, self.computPlayer.y = self.function(self.window.gameManager.gameBoard.grid, self.color,
-                                                                 False,
+                                                                 self.bool_hint,
                                                                  self.window.gameManager.player1.stoneRemovedCount,
                                                                  self.window.gameManager.player2.stoneRemovedCount,
                                                                  self.last_move_human, self.last_move_ai)
@@ -82,7 +83,7 @@ class HumanPlayer():
         if self.window.gameManager.hintButtonBool:
             self.thread = QThread()
             self.worker = Worker()
-            self.worker.setup(self.window.algoPointer, self.window, self.color, last_move_human, last_move_ai, self)
+            self.worker.setup(self.window.algoPointer, self.window, self.color, last_move_human, last_move_ai, self, True)
             self.worker.moveToThread(self.thread)
             self.thread.started.connect(self.worker.run)
             self.worker.finished.connect(self.thread.quit)
