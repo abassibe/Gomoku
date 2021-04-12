@@ -1606,7 +1606,7 @@
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(60, 17, 3);
-font: 22pt &quot;SF Wasabi&quot;;</string>
+font: 22pt &quot;Arial&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1629,7 +1629,7 @@ font: 22pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="font">
      <font>
-      <family>SF Wasabi</family>
+      <family>Arial</family>
       <pointsize>22</pointsize>
       <weight>50</weight>
       <italic>false</italic>
@@ -1639,7 +1639,7 @@ font: 22pt &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(60, 17, 3);
-font: 22pt &quot;SF Wasabi&quot;;</string>
+font: 22pt &quot;Arial&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1663,7 +1663,7 @@ font: 22pt &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font: 24pt &quot;SF Wasabi&quot;;</string>
+font: 24pt &quot;Arial&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1684,7 +1684,7 @@ font: 24pt &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font:22pt  &quot;SF Wasabi&quot;;</string>
+font:22pt  &quot;Arial&quot;;</string>
     </property>
     <property name="text">
      <string>00:00:00</string>
@@ -1702,7 +1702,7 @@ font:22pt  &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font:24pt  &quot;SF Wasabi&quot;;</string>
+font:24pt  &quot;Arial&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1723,7 +1723,7 @@ font:24pt  &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font:22pt  &quot;SF Wasabi&quot;;</string>
+font:22pt  &quot;Arial&quot;;</string>
     </property>
     <property name="text">
      <string>00:00:00</string>
@@ -1741,7 +1741,7 @@ font:22pt  &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font: 22pt &quot;SF Wasabi&quot;;</string>
+font: 22pt &quot;Arial&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1762,7 +1762,7 @@ font: 22pt &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font: 22pt &quot;SF Wasabi&quot;;</string>
+font: 22pt &quot;Arial&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1826,7 +1826,7 @@ font: 22pt &quot;SF Wasabi&quot;;</string>
     </property>
     <property name="font">
      <font>
-      <family>SF Wasabi</family>
+      <family>Arial</family>
       <pointsize>20</pointsize>
       <weight>50</weight>
       <italic>false</italic>
@@ -1838,7 +1838,7 @@ font: 22pt &quot;SF Wasabi&quot;;</string>
 border-image: url(&quot;ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
 background-repeat: no-repeat;
 background-position: center center;
-font: 20pt &quot;SF Wasabi&quot;;
+font: 20pt &quot;Arial&quot;;
 color:rgb(0,0,0);</string>
     </property>
     <property name="locale">
@@ -1862,7 +1862,7 @@ color:rgb(0,0,0);</string>
     </property>
     <property name="font">
      <font>
-      <family>SF Wasabi</family>
+      <family>Arial</family>
       <pointsize>20</pointsize>
       <weight>50</weight>
       <italic>false</italic>
@@ -1874,7 +1874,7 @@ color:rgb(0,0,0);</string>
 border-image: url(&quot;ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
 background-repeat: no-repeat;
 background-position: center center;
-font: 20pt &quot;SF Wasabi&quot;;
+font: 20pt &quot;Arial&quot;;
 color:rgb(0,0, 0);</string>
     </property>
     <property name="locale">
@@ -1898,7 +1898,7 @@ color:rgb(0,0, 0);</string>
     </property>
     <property name="font">
      <font>
-      <family>SF Wasabi</family>
+      <family>Arial</family>
       <pointsize>20</pointsize>
       <weight>50</weight>
       <italic>false</italic>
@@ -1910,7 +1910,7 @@ color:rgb(0,0, 0);</string>
 border-image: url(&quot;ressources/pictures/big_button.png&quot;) 0 0 0 0 stretch stretch;
 background-repeat: no-repeat;
 background-position: center center;
-font: 20pt &quot;SF Wasabi&quot;;
+font: 20pt &quot;Arial&quot;;
 color:rgb(0, 0, 0);</string>
     </property>
     <property name="locale">
@@ -1935,7 +1935,7 @@ color:rgb(0, 0, 0);</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font: 22pt &quot;SF Wasabi&quot;;</string>
+font: 22pt &quot;Arial&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1956,7 +1956,7 @@ font: 22pt &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font: 22pt &quot;SF Wasabi&quot;;</string>
+font: 22pt &quot;Arial&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -1977,7 +1977,7 @@ font: 22pt &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font:20pt  &quot;SF Wasabi&quot;;</string>
+font:20pt  &quot;Arial&quot;;</string>
     </property>
     <property name="text">
      <string>00:00</string>
@@ -2042,7 +2042,7 @@ font:20pt  &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font:22pt  &quot;SF Wasabi&quot;;</string>
+font:22pt  &quot;Arial&quot;;</string>
     </property>
     <property name="text">
      <string>0/10</string>
@@ -2060,7 +2060,7 @@ font:22pt  &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font:22pt  &quot;SF Wasabi&quot;;</string>
+font:22pt  &quot;Arial&quot;;</string>
     </property>
     <property name="text">
      <string>0/10</string>
@@ -2078,7 +2078,7 @@ font:22pt  &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font:24pt  &quot;SF Wasabi&quot;;</string>
+font:24pt  &quot;Arial&quot;;</string>
     </property>
     <property name="locale">
      <locale language="English" country="UnitedStates"/>
@@ -2099,7 +2099,7 @@ font:24pt  &quot;SF Wasabi&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 255, 255, 0);
 color:rgb(209, 168, 101);
-font:22pt  &quot;SF Wasabi&quot;;</string>
+font:22pt  &quot;Arial&quot;;</string>
     </property>
     <property name="text">
      <string>0</string>

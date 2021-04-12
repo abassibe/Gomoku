@@ -17,6 +17,36 @@ class Rules():
     def getBasicRule(self, board, color):
         return [tuple(coord) for coord in np.argwhere(np.array(board) == 0).tolist()]
 
+    # Might needs those methods in the future
+    # keeping them but might delete them later
+    """def checkPotentialCapture(self, board, color):
+        for y in range(19):
+            for x in range(19):
+                if board[y][x] == color:
+                    if self.checkPotentialCaptureFromPosition(board, y, x, color):
+                        return True
+        return False
+
+    def checkPotentialCaptureFromPosition(self, board, y, x, color):
+        target = 1 if color == 2 else 2
+        if x > 2 and board[y][x - 3] == 0 and (board[y][x - 2] == target and board[y][x - 1] == target):
+            return True
+        if y > 2 and x > 2 and board[y - 3][x - 3] == color and (board[y - 2][x - 2] == target and board[y - 1][x - 1] == target):
+            return True
+        if y > 2 and board[y - 3][x] == 0 and (board[y - 2][x] == target and board[y - 1][x] == target):
+            return True
+        if y > 2 and x < 16 and board[y - 3][x + 3] == color and (board[y - 2][x + 2] == target and board[y - 1][x + 1] == target):
+            return True
+        if x < 16 and board[y][x + 3] == 0 and (board[y][x + 2] == target and board[y][x + 1] == target):
+            return True
+        if y < 16 and x < 16 and board[y + 3][x + 3] == color and (board[y + 2][x + 2] == target and board[y + 1][x + 1] == target):
+            return True
+        if y < 16 and board[y + 3][x] == 0 and (board[y + 2][x] == target and board[y + 1][x] == target):
+            return True
+        if y < 16 and x > 2 and board[y + 3][x - 3] == 0 and (board[y + 2][x - 2] == target and board[y + 1][x - 1] == target):
+            return True
+        return False"""
+
     def captureRule(self, board, x, y, color):
         target = 1 if color == 2 else 2
         removedStone = []
@@ -82,17 +112,18 @@ class Rules():
                 result.append((x, y - 1))
         return result
 
-    def gameEndingCaptureRule(self, board, v1, v2, color):
-        self.winStart = v1
-        self.winEnd = v2
-        start_x = v1[0]
-        end_x = v2[0]
-        start_y = v1[1]
-        end_y = v2[1]
+
+    def gameEndingCaptureRule(self, board, BeginWinPos, endWinPos, color):
+        self.winStart = BeginWinPos
+        self.winEnd = endWinPos
+        start_x = BeginWinPos[0]
+        end_x = endWinPos[0]
+        start_y = BeginWinPos[1]
+        end_y = endWinPos[1]
 
         result = []
         while start_x != end_x or start_y != end_y:
-            self.hasSameColorNeighbor(board, start_x, start_y, color, result)
+            result = self.hasSameColorNeighbor(board, start_x, start_y, color, result)
             if start_x < end_x:
                 start_x += 1
             elif start_x > end_x:
@@ -101,7 +132,7 @@ class Rules():
                 start_y += 1
             elif start_y > end_y:
                 start_y -= 1
-        self.hasSameColorNeighbor(board, start_x, start_y, color, result)
+        result = self.hasSameColorNeighbor(board, start_x, start_y, color, result)
         if result:
             self.isWinner = color
         return result
