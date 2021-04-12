@@ -1,10 +1,7 @@
 import pathlib
-from time import time
 from PyQt5 import uic, QtWidgets, QtGui, QtCore
-import options
 import windowBuilding
 import gameManager
-import numpy as np
 
 _hintButtonBool = False
 helpDialog = None
@@ -19,7 +16,7 @@ def helpButton():
 def optionsEvent(window, option):
     global helpDialog
 
-    if window.gameManager != None and window.gameManager.gameRuning:
+    if window.gameManager is not None and window.gameManager.gameRuning:
         return
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)
@@ -44,12 +41,20 @@ def optionsEvent(window, option):
     for rule in option.rulesSet:
         if rule == dialog.ruleCheckbox1.text():
             dialog.ruleCheckbox1.setChecked(True)
+            if option.gameMode == "PVE":
+                dialog.ruleCheckbox1.setEnabled(False)
         if rule == dialog.ruleCheckbox2.text():
             dialog.ruleCheckbox2.setChecked(True)
+            if option.gameMode == "PVE":
+                dialog.ruleCheckbox2.setEnabled(False)
         if rule == dialog.ruleCheckbox3.text():
             dialog.ruleCheckbox3.setChecked(True)
+            if option.gameMode == "PVE":
+                dialog.ruleCheckbox3.setEnabled(False)
         if rule == dialog.ruleCheckbox4.text():
             dialog.ruleCheckbox4.setChecked(True)
+            if option.gameMode == "PVE":
+                dialog.ruleCheckbox4.setEnabled(False)
 
     dialog.show()
     dialog.activateWindow()
@@ -101,7 +106,7 @@ def releaseGUButton(window, effect):
 
 
 def giveUpEvent(window):
-    if window.gameManager is None or window.gameManager.gameRuning == False:
+    if window.gameManager is None or window.gameManager.gameRuning is False:
         return
 
     window.layoutWidget.unsetCursor()
@@ -125,7 +130,7 @@ def releaseNGButton(window, effect):
 
 def newGameEvent(window, option):
     global _hintButtonBool
-    if window.gameManager is not None and window.gameManager.gameRuning == True:
+    if window.gameManager is not None and window.gameManager.gameRuning is True:
         return
 
     if window.gameManager:
