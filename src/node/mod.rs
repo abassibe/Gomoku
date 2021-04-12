@@ -39,7 +39,7 @@ pub type Branches = BinaryHeap<Rc<RefCell<Node>>>;
 pub struct Node {
     /// `item` is the inner value which is held by a Node.
     item: Goban,
-    depth: usize,
+    depth: u32,
     is_players_move: bool,
     last_move: BitBoard,
     player_captures: u8,
@@ -83,7 +83,7 @@ impl Hash for Node {
 }
 
 impl Node {
-    pub fn new(item: Goban, depth: usize, last_move: BitBoard, is_players_move: bool, player_captures: u8, opponent_captures: u8) -> Self {
+    pub fn new(item: Goban, depth: u32, last_move: BitBoard, is_players_move: bool, player_captures: u8, opponent_captures: u8) -> Self {
         Self {
             item,
             depth,
@@ -100,7 +100,7 @@ impl Node {
         &self.item
     }
 
-    pub fn get_depth(&self) -> usize {
+    pub fn get_depth(&self) -> u32 {
         self.depth
     }
 

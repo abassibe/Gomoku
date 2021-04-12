@@ -83,6 +83,7 @@ impl NewPattern {
         hashmap.insert(PatternName::SplitFourMiddle,        (0b11011000, 5, false));
         hashmap.insert(PatternName::SplitFourRight,         (0b11101000, 5, false));
         hashmap.insert(PatternName::CloseSplitFourRight,    (0b11101000, 5, false));
+        // TODO: Maybe the five should not be symetric?
         hashmap.insert(PatternName::Five,                   (0b11111000, 5, true));
 
         NewPattern { patterns: hashmap }
