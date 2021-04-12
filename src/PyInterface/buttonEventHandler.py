@@ -38,6 +38,8 @@ def optionsEvent(window, option):
         dialog.PVEButton.setChecked(False)
         dialog.PVPButton.setChecked(True)
     dialog.buttonBox.accepted.connect(lambda: option._onAccept(window, dialog))
+    if option.gameMode == "PVE" and len(option.rulesSet) == 1:
+        option.rulesSet = ['Basic Rule', 'Capture', 'Double three', 'Game-ending capture']
     for rule in option.rulesSet:
         if rule == dialog.ruleCheckbox1.text():
             dialog.ruleCheckbox1.setChecked(True)
