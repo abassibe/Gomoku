@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests;
 
-use std::collections::{hash_map::Iter, HashMap};
+use std::collections::HashMap;
 
 use super::{direction::DirectionIterator, *};
 
@@ -88,10 +88,6 @@ impl NewPattern {
 
         NewPattern { patterns: hashmap }
     }
-
-    pub fn iter(&self) -> Iter<'_, PatternName, (u8, u8, bool)> {
-        self.patterns.iter()
-    }
 }
 
 impl Index<PatternName> for NewPattern {
@@ -108,10 +104,7 @@ impl Default for NewPattern {
     }
 }
 
-// TODO: Implement the missing methods (get the potential next moves according to the threats/opportunities, ...) in the right mod directly this time
 // TODO: Test all this as much as possible
-// TODO: Move the tests in a dedicated mod. Move every test in a dedicated directory/files.
-// TODO: Handle captures when generating moves
 #[inline]
 pub fn match_pattern_base(
     player: BitBoard,
@@ -650,21 +643,6 @@ pub fn extract_winning_moves_from_player(
 
     result & open_cells
 }
-
-// There is no use for the following function. I keep it here for now, just in case.
-// pub fn extract_winning_move_align(player: BitBoard, opponent: BitBoard, illegals: BitBoard, opponent_captures: u8, patterns: &NewPattern) -> BitBoard {
-//     let illegals_complement = !illegals;
-//     let open_cells = !(player | opponent);
-//     let (pattern, pattern_size, is_sym) = patterns[PatternName::Five];
-//     let result = (player | extract_missing_bit(player, opponent, pattern, pattern_size, false)) & illegals_complement;
-//     let result = extract_five_aligned(result ^ extract_captures(opponent, result, patterns)) & open_cells;
-
-//     if result.is_any() && extract_winning_move_capture(opponent, player, opponent_captures, patterns).is_empty() {
-//         result
-//     } else {
-//         BitBoard::empty()
-//     }
-// }
 
 pub fn extract_winning_move_capture(
     player: BitBoard,

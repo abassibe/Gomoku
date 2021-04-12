@@ -124,9 +124,6 @@ impl Node {
         let goban = self.get_item();
         let (player, enemy) = (*goban.get_player(), *goban.get_enemy());
 
-        // let threats = extract_missing_bit_cross_three_with_four(*enemy, *enemy);
-
-        // self.is_player_threatened = Some((threats | extract_missing_bit_cross_four_with_four(*enemy, *player)).is_any());
         self.is_player_threatened = Some(extract_threatening_moves_from_player(player, enemy, self.opponent_captures, patterns).is_any());
     }
 
@@ -142,15 +139,7 @@ impl Node {
         self.item.set_fscore(fscore);
     }
 
-    pub fn compute_item_fscore(
-        &mut self,
-        previous_state: &Goban,
-        to_play: &BitBoard,
-        depth: usize
-    ) -> Fscore {
-        self.item.compute_fscore(previous_state, to_play, depth)
-    }
-
+    #[allow(unused)]
     pub fn add_branch(&mut self, item: Goban, last_move: BitBoard, is_players_move: bool) -> Rc<RefCell<Self>> {
         let new_node = Rc::new(RefCell::new(Self::new(item, self.depth + 1, last_move, is_players_move, self.player_captures, self.opponent_captures)));
         let mut branches = self.branches.take().unwrap_or_default();
@@ -164,6 +153,7 @@ impl Node {
     /// This method should not have any overhead as the method len()
     /// actually calls the same method on the underlying type (which is a Vec)
     /// which is just a getter on the len property on Vec
+    #[allow(unused)]
     pub fn count_branch(&self) -> usize {
         if let Some(ref branches) = self.branches {
             branches.len()
@@ -186,8 +176,6 @@ impl Node {
         }
     }
 
-    // TODO: Ideally, this method should returns an Iterator (not an option)
-    // in order to be able to directly iterate over its return value.
     /// Returns the Branches of the current node, if any, wrapped into an Option.
     /// Returns None otherwise.
     pub fn get_branches(&mut self) -> Option<&Branches> {

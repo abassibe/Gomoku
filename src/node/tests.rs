@@ -160,6 +160,7 @@ fn add_branch_should_add_a_branch() {
 
 #[test]
 #[ignore]
+#[allow(unused_variables)]
 fn test_display_no_assert() {
     // Arrange
     let closure = |n: &mut Node, m| {
