@@ -2,7 +2,7 @@
 dependencies = ["build", "move"]
 
 [tasks.re]
-dependencies = ["remove", "clean", "build", "move"]
+dependencies = ["remove", "clean", "all"]
 
 [tasks.move]
 script_runner = "@shell"
@@ -15,7 +15,7 @@ mv ./target/release/librust_ext.dylib ./src/PyInterface/rust_ext.so
 script_runner = "@shell"
 script = '''
 echo Platform detected: Windows
-mv ./target/release/librust_ext.dll ./src/PyInterface/rust_ext.pyd
+mv ./target/release/rust_ext.dll ./src/PyInterface/rust_ext.pyd
 '''
 
 [tasks.move.linux]
