@@ -1,5 +1,5 @@
 [env]
-RUST_LIB_PATH = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "", mapping = {"linux" = "./target/release/librust_ext.so", "macos" = "./target/release/librust_ext.dylib", "windows" = "./target/release/rust_ext.dll" } }
+RUST_LIB_PATH = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "", mapping = {"linux" = "./target/release/librust_ext.so", "macos" = "./target/release/librust_ext.dylib", "windows" = ".\\target\\release\\rust_ext.dll" } }
 RUST_LIB_EXT = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "so", mapping = { "windows" = "pyd" } }
 
 [tasks.default]
