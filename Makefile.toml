@@ -1,46 +1,48 @@
+[env]
+RUST_LIB_PATH = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "", mapping = {"linux" = "./target/release/librust_ext.so", "macos" = "./target/release/librust_ext.dylib", "windows" = "./target/release/rust_ext.dll" } }
+RUST_LIB_EXT = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "so", mapping = { "windows" = "pyd" } }
+
+[tasks.default]
+clear = true
+dependencies = ["all"]
+
 [tasks.all]
-dependencies = ["build", "move"]
+dependencies = ["build", "move", "pip"]
 
 [tasks.re]
-dependencies = ["remove", "clean", "all"]
+dependencies = ["clean", "all"]
 
 [tasks.move]
 script_runner = "@shell"
 script = '''
-echo Platform detected: Macos
-mv ./target/release/librust_ext.dylib ./src/PyInterface/rust_ext.so
+echo Detected platform : $CARGO_MAKE_RUST_TARGET_OS.
+echo Moving file to correct folder.
+mv $RUST_LIB_PATH ./src/PyInterface/rust_ext.$RUST_LIB_EXT
 '''
 
-[tasks.move.windows]
+[tasks.pip]
 script_runner = "@shell"
 script = '''
-echo Platform detected: Windows
-mv ./target/release/rust_ext.dll ./src/PyInterface/rust_ext.pyd
-'''
-
-[tasks.move.linux]
-script_runner = "@shell"
-script = '''
-echo Platform detected: Linux
-mv ./target/release/librust_ext.so ./src/PyInterface/rust_ext.so
+Echo Checking/installing pip requirements.
+pip install -r requirements.txt
 '''
 
 [tasks.build]
 command = "cargo"
 args = ["build", "--release"]
 
-
 [tasks.test]
 command = "cargo"
 args = ["test"]
 
 [tasks.clean]
+dependencies = ["remove"]
 command = "cargo"
 args = ["clean"]
 
 [tasks.remove]
 script_runner = "@shell"
 script = '''
-echo Remove dynamic library
-rm ./src/PyInterface/rust_ext.so
+echo Cleaning dynamic library from PyInterface folder.
+rm ./src/PyInterface/rust_ext.$RUST_LIB_EXT
 '''
