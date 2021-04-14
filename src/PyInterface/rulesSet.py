@@ -214,6 +214,8 @@ class Rules():
                 break
             if numberThree > 1:
                 return numberThree
+        if numberThree > 1: #maybe not needed, keeping it in case
+            return numberThree
         return numberThree
 
     def doubleThreeRule(self, board, x, y, color):
