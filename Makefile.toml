@@ -2,6 +2,10 @@
 RUST_LIB_PATH = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "", mapping = {"linux" = "./target/release/librust_ext.so", "macos" = "./target/release/librust_ext.dylib", "windows" = "./target/release/rust_ext.dll" } }
 RUST_LIB_EXT = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "so", mapping = { "windows" = "pyd" } }
 
+[tasks.default]
+clear = true
+dependencies = ["all"]
+
 [tasks.all]
 dependencies = ["build", "move", "pip"]
 
@@ -11,13 +15,15 @@ dependencies = ["clean", "all"]
 [tasks.move]
 script_runner = "@shell"
 script = '''
-echo Detected platform : $CARGO_MAKE_RUST_TARGET_OS\nMoving file to correct folder
+echo Detected platform : $CARGO_MAKE_RUST_TARGET_OS.
+echo Moving file to correct folder.
 mv $RUST_LIB_PATH ./src/PyInterface/rust_ext.$RUST_LIB_EXT
 '''
 
 [tasks.pip]
 script_runner = "@shell"
 script = '''
+Echo Checking/installing pip requirements.
 pip install -r requirements.txt
 '''
 
@@ -37,6 +43,6 @@ args = ["clean"]
 [tasks.remove]
 script_runner = "@shell"
 script = '''
-echo Remove dynamic library
+echo Cleaning dynamic library from PyInterface folder.
 rm ./src/PyInterface/rust_ext.$RUST_LIB_EXT
 '''
