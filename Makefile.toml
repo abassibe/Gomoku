@@ -3,16 +3,22 @@ RUST_LIB_PATH = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "", m
 RUST_LIB_EXT = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "so", mapping = { "windows" = "pyd" } }
 
 [tasks.all]
-dependencies = ["build", "move"]
+dependencies = ["build", "move", "pip"]
 
 [tasks.re]
-dependencies = ["clean", "build", "move"]
+dependencies = ["clean", "all"]
 
 [tasks.move]
 script_runner = "@shell"
 script = '''
 echo Detected platform : $CARGO_MAKE_RUST_TARGET_OS\nMoving file to correct folder
 mv $RUST_LIB_PATH ./src/PyInterface/rust_ext.$RUST_LIB_EXT
+'''
+
+[tasks.pip]
+script_runner = "@shell"
+script = '''
+pip install -r requirements.txt
 '''
 
 [tasks.build]
