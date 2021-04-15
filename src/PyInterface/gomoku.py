@@ -14,6 +14,7 @@ import rulesSet
 
 window = None
 
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -37,7 +38,8 @@ class MainWindow(QtWidgets.QMainWindow):
         windowBuilding.setRulesList(self, self.option.rulesSet)
 
     def mousePressEvent(self, event):
-        if self.gameManager == None or self.gameManager.gameRuning == False or (self.option.gameMode == "PVE" and not self.gameManager.isPlayer1Turn):
+        if self.gameManager is None or self.gameManager.gameRuning is False or (self.option.gameMode == "PVE" and not
+        self.gameManager.isPlayer1Turn):
             return
         if event.button() == 1:
             y = event.x()
@@ -49,7 +51,8 @@ class MainWindow(QtWidgets.QMainWindow):
             else:
                 self.gameManager.player2.endTurn(x, y)
 
-def getOptionsSet(targetedOption=[]):
+
+def getOptionsSet(targeted_option=[]):
     """
         Return list of options.
 
@@ -59,16 +62,17 @@ def getOptionsSet(targetedOption=[]):
         
         Available options: langage, gameMode, rulesSet.
     """
-    if targetedOption == []:
+    if targeted_option == []:
         return window.option.langage, window.option.gameMode, window.option.rulesSet
     else:
-        toReturn = []
-        for item in targetedOption:
+        to_return = []
+        for item in targeted_option:
             try:
-                toReturn.append(window.option.__getattribute__(item))
+                to_return.append(window.option.__getattribute__(item))
             except:
                 exit("Unknown option: " + item)
-        return toReturn
+        return to_return
+
 
 def algoSubscribe(func):
     """
@@ -76,12 +80,14 @@ def algoSubscribe(func):
 
         Param "func" must be the entrance of algorithm with following signature : func(board, playerColor, hint)
 
-        Where "board" is a matrix of the actual state of the board, "playerColor" tell you if he's black(1) or white(2) and "hint" is a boolean that tells you if it's the algorithm's turn or just a hint you're looking for.
+        Where "board" is a matrix of the actual state of the board, "playerColor" tell you if he's black(1) or white(2)
+        and "hint" is a boolean that tells you if it's the algorithm's turn or just a hint you're looking for.
 
         And the return value must be two integer "x" and "y", representing the position of the move. (0 <= xy <= 19)
     """
     global window
     window.algoPointer = func
+
 
 app = PyQt5.QtWidgets.QApplication(sys.argv)
 window = MainWindow()

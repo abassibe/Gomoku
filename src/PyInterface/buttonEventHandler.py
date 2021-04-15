@@ -66,18 +66,17 @@ def optionsEvent(window, option):
     window.optionsButton.setGeometry(880, 740, 40, 40)
 
 
-def hintEvent(hintButton, window):
+def hintEvent(hint_button, window):
     global _hintButtonBool
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)
     if not _hintButtonBool:
         effect.setColor(QtGui.QColor(0, 0, 0, 120))
         effect.setOffset(-7, -7)
-        hintButton.setGraphicsEffect(effect)
-        hintButton.setGeometry(40, 770, 180, 45)
+        hint_button.setGraphicsEffect(effect)
+        hint_button.setGeometry(40, 770, 180, 45)
         _hintButtonBool = True
-        color = None
-        if window.gameManager and window.gameManager.gameRuning == True:
+        if window.gameManager and window.gameManager.gameRuning is True:
             if window.gameManager.isPlayer1Turn:
                 color = window.gameManager.player1.color
             else:
@@ -89,8 +88,8 @@ def hintEvent(hintButton, window):
     else:
         effect.setColor(QtGui.QColor(0, 0, 0, 90))
         effect.setOffset(-10, -10)
-        hintButton.setGraphicsEffect(effect)
-        hintButton.setGeometry(40, 770, 200, 50)
+        hint_button.setGraphicsEffect(effect)
+        hint_button.setGeometry(40, 770, 200, 50)
         _hintButtonBool = False
         if window.gameManager:
             window.gameManager.gameBoard.clearHint()
@@ -108,7 +107,6 @@ def releaseGUButton(window, effect):
 def giveUpEvent(window):
     if window.gameManager is None or window.gameManager.gameRuning is False:
         return
-
     window.layoutWidget.unsetCursor()
     window.gameManager.end()
     window.gameManager.gameBoard.clearHint()
@@ -132,7 +130,6 @@ def newGameEvent(window, option):
     global _hintButtonBool
     if window.gameManager is not None and window.gameManager.gameRuning is True:
         return
-
     if window.gameManager:
         window.gameManager.gameBoard.clear()
     window.gameManager = gameManager.GameManager(window, option, _hintButtonBool)
