@@ -106,7 +106,7 @@ def releaseGUButton(window, effect):
 
 
 def giveUpEvent(window):
-    if window.gameManager is None or window.gameManager.gameRuning == False:
+    if window.gameManager is None or window.gameManager.gameRuning is False:
         return
 
     window.layoutWidget.unsetCursor()
@@ -130,7 +130,7 @@ def releaseNGButton(window, effect):
 
 def newGameEvent(window, option):
     global _hintButtonBool
-    if window.gameManager is not None and window.gameManager.gameRuning == True:
+    if window.gameManager is not None and window.gameManager.gameRuning is True:
         return
 
     if window.gameManager:
