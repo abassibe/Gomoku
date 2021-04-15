@@ -16,12 +16,21 @@ class Options():
         windowBuilding.dialogTranslate(dialog, self.langage)
         windowBuilding.howtoplayTranslate(self)
         self.rulesSet = []
-        if dialog.ruleCheckbox1.isChecked():
+        if self.gameMode == "PVP":
+            if dialog.ruleCheckbox1.isChecked():
+                self.rulesSet.append(dialog.ruleCheckbox1.text())
+            if dialog.ruleCheckbox2.isChecked():
+                self.rulesSet.append(dialog.ruleCheckbox2.text())
+            if dialog.ruleCheckbox3.isChecked():
+                self.rulesSet.append(dialog.ruleCheckbox3.text())
+            if dialog.ruleCheckbox4.isChecked():
+                self.rulesSet.append(dialog.ruleCheckbox4.text())
+        else:
             self.rulesSet.append(dialog.ruleCheckbox1.text())
-        if dialog.ruleCheckbox2.isChecked():
             self.rulesSet.append(dialog.ruleCheckbox2.text())
-        if dialog.ruleCheckbox3.isChecked():
             self.rulesSet.append(dialog.ruleCheckbox3.text())
-        if dialog.ruleCheckbox4.isChecked():
             self.rulesSet.append(dialog.ruleCheckbox4.text())
+        windowBuilding.mainWindowTranslate(window, self)
+        windowBuilding.dialogTranslate(dialog, self.langage)
+        windowBuilding.howtoplayTranslate(self)
         windowBuilding.setRulesList(window, self.rulesSet)
