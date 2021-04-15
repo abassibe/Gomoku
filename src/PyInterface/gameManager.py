@@ -9,7 +9,6 @@ import numpy as np
 
 last_move_ai = (0, 0)
 last_move_human = (0, 0)
-continue_game = False
 
 
 def unSetForbiddenCursor(cursor, window):
@@ -20,7 +19,7 @@ class Worker(QObject):
     finished = pyqtSignal()
     progress = pyqtSignal(int)
 
-    def setup(self, function, window, color, last_move_human, last_move_ai, computPlayer):
+    def setup(self, function, window, color, last_move_human, last_move_ai, computPlayer, bool_hint=False):
         self.turnTime = QtCore.QTimer()
         self.turnTime.setInterval(10)
         self.window = window
@@ -29,15 +28,17 @@ class Worker(QObject):
         self.last_move_ai = last_move_ai
         self.function = function
         self.computPlayer = computPlayer
+        self.bool_hint = bool_hint
 
     def run(self):
         """Long-running task."""
         self.computPlayer.x, self.computPlayer.y = self.function(self.window.gameManager.gameBoard.grid, self.color,
-                                                                 False,
+                                                                 self.bool_hint,
                                                                  self.window.gameManager.player1.stoneRemovedCount,
                                                                  self.window.gameManager.player2.stoneRemovedCount,
                                                                  self.last_move_human, self.last_move_ai)
-        self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.window.playerTwoTimer))
+        self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime,
+                                                                             self.window.playerTwoTimer))
         self.progress.emit(1)
         self.finished.emit()
 
@@ -66,10 +67,10 @@ class HumanPlayer():
         self.timerText.setText("00:00:00")
         if self.color == 1:
             self.colorLabel.setStyleSheet(
-                "background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt \"SF Wasabi\";")
+                "background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt;")
         else:
             self.colorLabel.setStyleSheet(
-                "background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt \"SF Wasabi\";")
+                "background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt;")
 
     def rustReturn(self):
         global last_move_human
@@ -82,7 +83,7 @@ class HumanPlayer():
         if self.window.gameManager.hintButtonBool:
             self.thread = QThread()
             self.worker = Worker()
-            self.worker.setup(self.window.algoPointer, self.window, self.color, last_move_human, last_move_ai, self)
+            self.worker.setup(self.window.algoPointer, self.window, self.color, last_move_human, last_move_ai, self, True)
             self.worker.moveToThread(self.thread)
             self.thread.started.connect(self.worker.run)
             self.worker.finished.connect(self.thread.quit)
@@ -121,10 +122,10 @@ class ComputerPlayer(object):
 
         if self.color == 1:
             self.colorLabel.setStyleSheet(
-                "background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt \"SF Wasabi\";")
+                "background-color: rgba(255, 255, 255, 0);color:rgb(0, 0, 0);font: 24pt;")
         else:
             self.colorLabel.setStyleSheet(
-                "background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt \"SF Wasabi\";")
+                "background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt;")
         self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime,
                                                                              self.window.playerTwoTimer))
         self.playerCapture = None
@@ -190,9 +191,10 @@ class GameBoard():
         self.placedHint = []
 
     def highLightWinningLine(self, x, y):
-        painter = QtGui.QPainter()
-        painter.setPen(QtCore.Qt.red)
-        painter.drawLine(10, 10, 200, 200)
+        pass
+        # painter = QtGui.QPainter()
+        # painter.setPen(QtCore.Qt.red)
+        # painter.drawLine(10, 10, 200, 200)
 
     def placeStone(self, x, y, color, computerMove):
         global last_move_human
@@ -237,7 +239,6 @@ class GameBoard():
                 removedStonePlayer = self.window.gameManager.player1 if color == self.window.gameManager.player1.color else self.window.gameManager.player2
                 removedStonePlayer.stoneRemovedCount += 1
         winStart, winEnd = self.isWinner()
-        global continue_game
         if type(winStart) is tuple and type(winEnd) is tuple and (
                 'Game-ending capture' in self.window.option.rulesSet or 'Capture fin de partie' in self.window.option.rulesSet):
             counterCapture = self.window.gameManager.rules.gameEndingCaptureRule(self.grid, winStart, winEnd, color)

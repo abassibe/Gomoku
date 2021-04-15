@@ -19,8 +19,8 @@ class Rules():
     def getBasicRule(self, board, color):
         return [tuple(coord) for coord in np.argwhere(np.array(board) == 0).tolist()]
 
-    # Not used at the moment, but might need it later so
-    # I'm just keeping it commented for the time being
+    # Might needs those methods in the future
+    # keeping them but might delete them later
     """def checkPotentialCapture(self, board, color):
         for y in range(19):
             for x in range(19):
