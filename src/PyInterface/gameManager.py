@@ -215,7 +215,7 @@ class GameBoard():
             scaledY = int(scaledY / blockSize)
 
             last_move_human = (scaledX, scaledY)
-        if self.grid[scaledX, scaledY] != 0 or not self.isValidMove(scaledX, scaledY, color):
+        if self.grid[scaledX, scaledY] != 0 or not self.isValidMove(scaledX, scaledY, color) and not computerMove:
             tmp = self.window.layoutWidget.cursor()
             self.window.layoutWidget.setCursor(QtGui.QCursor(QtCore.Qt.ForbiddenCursor))
             QtCore.QTimer.singleShot(1000, lambda: unSetForbiddenCursor(tmp, self.window))
