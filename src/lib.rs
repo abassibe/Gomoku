@@ -14,7 +14,7 @@ mod bitboard;
 mod goban;
 mod node;
 
-const DEPTH: u32 = 7;
+const DEPTH: u32 = 5;
 const WHITE: u8 = 2;
 
 #[pymodule]
