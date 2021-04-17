@@ -1,6 +1,8 @@
 import pathlib
-from time import time
+
 from PyQt5 import QtWidgets, QtGui, QtCore
+from time import time
+
 import buttonEventHandler
 
 mainWindow_en_EN = {}

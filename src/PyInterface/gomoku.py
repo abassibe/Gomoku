@@ -1,16 +1,13 @@
 import pathlib
-import sys
+
 import PyQt5
-from PyQt5.QtGui import *
+import rust_ext as rst
+import sys
 from PyQt5 import uic, QtWidgets
-import windowBuilding
+
 import buttonEventHandler
 import options
-import gameManager
-import rust_ext as rst
-from random import randint
-import time
-import rulesSet
+import windowBuilding
 
 window = None
 

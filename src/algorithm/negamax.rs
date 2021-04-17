@@ -1,6 +1,6 @@
 use crate::algorithm::Algorithm;
 use crate::goban::fscore::Fscore;
-use crate::node::{Node, Branches};
+use crate::node::{Branches, Node};
 
 impl Algorithm {
 

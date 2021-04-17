@@ -1,11 +1,12 @@
 use std::{
-    rc::Rc,
     cell::RefCell,
-    collections::{BinaryHeap}
+    collections::BinaryHeap,
+    rc::Rc
 };
 
 use crate::{bitboard::BitBoard, goban::Goban};
-use super::{Node, Branches};
+
+use super::{Branches, Node};
 
 #[test]
 #[allow(unused)]

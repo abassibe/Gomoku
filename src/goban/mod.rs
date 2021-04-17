@@ -2,7 +2,9 @@ use std::fmt;
 use std::fmt::Formatter;
 use std::hash::{Hash, Hasher};
 use std::ops::{BitAnd, BitOr, BitXor};
+
 use fscore::Fscore;
+
 use super::bitboard::*;
 
 #[cfg(test)]

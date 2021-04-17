@@ -1,7 +1,6 @@
 use crate::algorithm::{Algorithm, transposition_table::*};
 use crate::goban::fscore::Fscore;
-use crate::node::{Node};
-
+use crate::node::Node;
 
 impl Algorithm {
     pub(super) fn minimax(&self, node: &mut Node, depth: u32, mut alpha: Fscore, mut beta: Fscore, maximizing: bool) -> Node {

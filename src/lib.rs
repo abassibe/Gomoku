@@ -1,11 +1,10 @@
-extern crate lazy_static;
-use node::Node;
 use numpy::PyArray2;
 use pyo3::exceptions;
 use pyo3::prelude::{pymodule, PyModule, PyResult, Python};
 use pyo3::types::PyBool;
 
 use goban::Goban;
+use node::Node;
 
 use crate::algorithm::{Algorithm, Algorithms};
 use crate::bitboard::BitBoard;

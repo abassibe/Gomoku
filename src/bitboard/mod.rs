@@ -1,21 +1,22 @@
+use std::{
+	fmt,
+	mem::size_of,
+	ops::{
+		Add, BitAnd, BitAndAssign, BitOr, BitOrAssign,
+		BitXor, BitXorAssign, Index, Not, Shl, Shr, Sub
+	},
+	ops::Mul
+};
+
+use axis::*;
+use direction::*;
+
 pub(crate) mod axis;
 pub(crate) mod direction;
 pub(crate) mod pattern;
 
 #[cfg(test)]
 mod tests;
-
-use axis::*;
-use direction::*;
-use std::{
-	fmt,
-	mem::size_of,
-	ops::Mul,
-	ops::{
-		Add, BitAnd, BitAndAssign, BitOr, BitOrAssign,
-		BitXor, BitXorAssign, Index, Not, Shl, Shr, Sub
-	}
-};
 
 const BITS_IN_U128: usize = size_of::<u128>() * 8;
 const U8_FIRST_BIT: u8 = 1u8 << 7;

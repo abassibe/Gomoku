@@ -1,11 +1,13 @@
 import pathlib
-from time import time
 from random import randint
+
+import numpy as np
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import QObject, QThread, pyqtSignal
-import windowBuilding
+from time import time
+
 import rulesSet
-import numpy as np
+import windowBuilding
 
 last_move_ai = (0, 0)
 last_move_human = (0, 0)

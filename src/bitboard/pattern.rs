@@ -1,9 +1,9 @@
-#[cfg(test)]
-mod tests;
-
 use std::collections::HashMap;
 
-use super::{direction::DirectionIterator, *};
+use super::{*, direction::DirectionIterator};
+
+#[cfg(test)]
+mod tests;
 
 const EDGE_MASK: BitBoard = BitBoard::new(
     340281880143881689085708262006044230272,
