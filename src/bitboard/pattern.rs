@@ -10,7 +10,8 @@ const EDGE_MASK: BitBoard = BitBoard::new(
     207692072411988285641522779730903040,
     53169170537469001124229831611119566816
 );
-// ((<pattern>, <size>, <is_pattern_symetric>), <score_for_player>, <score_for_enemy>)
+
+// ((<pattern>, <size>, <is_pattern_symmetric>), <score_for_player>, <score_for_enemy>)
 pub static HEURISTIC_PATTERNS: [((u8, u8, bool), isize, isize); 8] = [
     ((0b11111000, 5, true), 500, 5000),
     ((0b01111000, 6, true), 500, 1100),

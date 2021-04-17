@@ -127,14 +127,6 @@ impl Node {
         self.is_player_threatened = Some(extract_threatening_moves_from_player(player, enemy, self.opponent_captures, patterns).is_any());
     }
 
-    pub fn is_player_threatened(&self) -> bool {
-        if let Some(is_threatened) = self.is_player_threatened {
-            return is_threatened;
-        }
-
-        true
-    }
-
     pub fn set_item_fscore(&mut self, fscore: Fscore) {
         self.item.set_fscore(fscore);
     }
