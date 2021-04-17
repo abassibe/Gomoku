@@ -265,7 +265,7 @@ impl Algorithm {
         ) & illegal_moves_complement;
         if result.is_any() {
             // Those are moves that perform a capture on the opponent's stones.
-            // If one of those moves breaks the threatening alignment we want to concider that move.
+            // If one of those moves breaks the threatening alignment we want to consider that move.
             // let capturing_moves_by_player = extract_capturing_moves(current_player, opponent, &self.patterns);
             let (pattern, pattern_size, is_sym) = self.patterns[PatternName::Five];
             let moves_to_complete_five = extract_missing_bit(opponent, current_player, pattern, pattern_size, is_sym);
