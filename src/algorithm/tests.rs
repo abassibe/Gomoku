@@ -1,6 +1,6 @@
 use crate::{goban::Goban, node::Node};
 use crate::bitboard::BitBoard;
-use crate::algorithm::{Algorithm, Algorithms};
+use crate::algorithm::Algorithm;
 
 #[test]
 fn test_get_potential_moves_with_one_unbreakable_five() {

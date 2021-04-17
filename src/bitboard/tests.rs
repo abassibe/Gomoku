@@ -1,4 +1,4 @@
-use super::{*, axis::*, direction::*};
+use super::*;
 
 // TODO: This file can/should be split into several smaller files.
 
