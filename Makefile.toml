@@ -23,7 +23,7 @@ mv $RUST_LIB_PATH ./src/PyInterface/rust_ext.$RUST_LIB_EXT
 [tasks.pip]
 script_runner = "@shell"
 script = '''
-Echo Checking/installing pip requirements.
+echo Checking/installing pip requirements.
 pip install -r requirements.txt
 '''
 
