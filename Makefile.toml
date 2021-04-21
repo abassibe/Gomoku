@@ -3,8 +3,8 @@ skip_core_tasks = true
 on_error_task = "catch"
 
 [env]
-RUST_LIB_PATH = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "", mapping = {"linux" = "./target/release/librust_ext.so", "macos" = "./target/release/librust_ext.dylib", "windows" = ".\\target\\release\\rust_ext.dll" } }
-RUST_LIB_EXT = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "so", mapping = {"linux" = "./target/release/librust_ext.so", "macos" = "./target/release/librust_ext.dylib", "windows" = ".\\target\\release\\rust_ext.dll" } }
+RUST_LIB_PATH = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "", mapping = { "linux" = "./target/release/librust_ext.so", "macos" = "./target/release/librust_ext.dylib", "windows" = ".\\target\\release\\rust_ext.dll" } }
+RUST_LIB_EXT = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "so", mapping = { "windows" = "pyd" } }
 PYQT_INSTALL = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "pip install --user pyqt5", mapping = {"linux" = "sudo apt-get install python3-pyqt5" } }
 
 [tasks.default]
@@ -36,7 +36,7 @@ dependencies = ["numpy", "pyqt"]
 
 [tasks.pyqt]
 script_runner = "@shell"
-scrip = '''
+script = '''
 $PYQT_INSTALL
 '''
 
