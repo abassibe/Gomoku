@@ -37,8 +37,7 @@ class Worker(QObject):
                                                                  self.window.gameManager.player1.stoneRemovedCount,
                                                                  self.window.gameManager.player2.stoneRemovedCount,
                                                                  self.last_move_human, self.last_move_ai)
-        self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime,
-                                                                             self.window.playerTwoTimer))
+        self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.startTime, self.window.playerTwoTimer))
         self.progress.emit(1)
         self.finished.emit()
 
@@ -57,7 +56,7 @@ class HumanPlayer():
         else:
             self.cursor = QtGui.QCursor(QtGui.QPixmap(str(pathlib.Path("ressources/pictures/whiteStone.png"))))
         self.turnTime.timeout.connect(
-            lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime, self.timerText))
+            lambda: windowBuilding.updateTimerGame(self.startTime, self.timerText))
         self.playerCapture = None
         self.stoneRemovedCount = 0
         self.x = 0
@@ -126,8 +125,7 @@ class ComputerPlayer(object):
         else:
             self.colorLabel.setStyleSheet(
                 "background-color: rgba(255, 255, 255, 0);color:rgb(255, 255, 255);font: 24pt;")
-        self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.window, self.turnTime, self.startTime,
-                                                                             self.window.playerTwoTimer))
+        self.turnTime.timeout.connect(lambda: windowBuilding.updateTimerGame(self.startTime, self.window.playerTwoTimer))
         self.playerCapture = None
         self.stoneRemovedCount = 0
 
@@ -199,8 +197,6 @@ class GameBoard():
     def placeStone(self, x, y, color, computerMove):
         global last_move_human
         global last_move_ai
-        scaledX = 0
-        scaledY = 0
 
         if computerMove:
             scaledX = x
@@ -236,7 +232,8 @@ class GameBoard():
                 dropPoint = self.window.boardGrid.itemAtPosition(stone[0], stone[1])
                 dropPoint.widget().clear()
                 self.grid[stone[0]][stone[1]] = 0
-                removedStonePlayer = self.window.gameManager.player1 if color == self.window.gameManager.player1.color else self.window.gameManager.player2
+                removedStonePlayer = self.window.gameManager.player1 if color == self.window.gameManager.player1.color \
+                    else self.window.gameManager.player2
                 removedStonePlayer.stoneRemovedCount += 1
         winStart, winEnd = self.isWinner()
         if type(winStart) is tuple and type(winEnd) is tuple and (
@@ -265,7 +262,6 @@ class GameBoard():
         if self.grid[x, y] != 0:
             return None
         dropPoint = self.window.boardGrid.itemAtPosition(x, y)
-        img = None
         if color == 1:
             img = QtGui.QPixmap(str(pathlib.Path("ressources/pictures/blackStone.png")))
         else:
@@ -296,7 +292,7 @@ class GameBoard():
         if isDoubleThreeRule and not self.window.gameManager.rules.doubleThreeRule(self.grid, x, y, color):
             return False
         if self.window.gameManager.rules.isWinner != 0:
-            ret = self.window.gameManager.rules.getValidPoints(self.grid, color)
+            ret = self.window.gameManager.rules.getValidPoints(self.grid)
             for validX, validY in ret:
                 if x == validX and y == validY:
                     self.window.gameManager.rules.isWinner = False
@@ -304,7 +300,7 @@ class GameBoard():
                     self.winEnd = None
                     return True
             return False
-        return self.window.gameManager.rules.checkBasicRule(self.grid, x, y, color)
+        return self.window.gameManager.rules.checkBasicRule(self.grid, x, y)
 
     def isWinner(self):
         if self.window.gameManager.player1.stoneRemovedCount >= 10:
@@ -343,7 +339,7 @@ class GameBoard():
         return None, None
 
 
-class GameManager():
+class GameManager:
     def __init__(self, window, option, hintButtonBool):
         self.isPlayer1Turn = True if randint(0, 1) == 0 else False
         self.player1 = HumanPlayer(window, 1 if self.isPlayer1Turn is True else 2)
@@ -369,9 +365,7 @@ class GameManager():
         self.globalTimer = QtCore.QTimer()
         self.globalTimer.setInterval(10)
         self.startGameTimer = 0.0
-        self.globalTimer.timeout.connect(lambda: windowBuilding.updateTimerGame(window,
-                                                                                self.globalTimer, self.startGameTimer,
-                                                                                self.window.gameTimer))
+        self.globalTimer.timeout.connect(lambda: windowBuilding.updateTimerGame(self.startGameTimer, self.window.gameTimer))
         self._observers = [self.nextTurn]
         self.rules = rulesSet.Rules(self.options)
         self.turnCount = 0
