@@ -1,11 +1,10 @@
-extern crate lazy_static;
-use node::Node;
 use numpy::PyArray2;
 use pyo3::exceptions;
 use pyo3::prelude::{pymodule, PyModule, PyResult, Python};
 use pyo3::types::PyBool;
 
 use goban::Goban;
+use node::Node;
 
 use crate::algorithm::{Algorithm, Algorithms};
 use crate::bitboard::BitBoard;
@@ -22,13 +21,13 @@ mod node;
 
 const DEPTH: u32 = 7;
 const WHITE: u8 = 2;
-const BLACK: u8 = 1;
 
 #[pymodule]
 fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     #[pyfn(m, "get_next_move")]
     /// Interfacing function.
     /// Takes the Python GIL, the board in the shape of a 19*19 numpy 2d array, the color of the human player, a boolean that indicates if this is a hint request, and the number of captures made by the human and the ai.
+    #[allow(unused_variables)]
     fn get_next_move(_py: Python<'_>, goban: &PyArray2<u8>, p_color: u8, hint: &PyBool, human_capture: i32, ai_capture: i32, last_move_human : Option<(u16, u16)>, last_move_ai : Option<(u16, u16)>) -> PyResult<(u32, u32)> {
         let board:Vec<u8> = goban.to_vec()?;
 
@@ -40,7 +39,6 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         }
 
         let goban = assign_color_to_ai(vec_to_string(board), p_color);
-        //println!("\nCOLOR IS ={}\n\nPLAYER(AI)\n{}\nENEMY\n{}", p_color, goban.get_player(), goban.get_enemy());
 
         if goban.get_board().is_empty() {
             return Ok((9u32, 9u32));

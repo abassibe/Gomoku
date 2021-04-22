@@ -1,3 +1,16 @@
+use std::{
+	fmt,
+	mem::size_of,
+	ops::{
+		Add, BitAnd, BitAndAssign, BitOr, BitOrAssign,
+		BitXor, BitXorAssign, Index, Not, Shl, Shr, Sub
+	},
+	ops::Mul
+};
+
+use axis::*;
+use direction::*;
+
 pub(crate) mod axis;
 pub(crate) mod direction;
 pub(crate) mod pattern;
@@ -5,24 +18,9 @@ pub(crate) mod pattern;
 #[cfg(test)]
 mod tests;
 
-use axis::*;
-use direction::*;
-use std::{
-	fmt,
-	mem::size_of,
-	ops::Mul,
-	ops::{
-		Add, BitAnd, BitAndAssign, BitOr, BitOrAssign,
-		BitXor, BitXorAssign, Index, Not, Shl, Shr, Sub
-	}
-};
-
 const BITS_IN_U128: usize = size_of::<u128>() * 8;
 const U8_FIRST_BIT: u8 = 1u8 << 7;
 
-// TODO: Implement method to get/set ~one or~ several bits by index
-// TODO: Implement method to get/set one or several bits by a coordinate (X, Y flatten to index then call previous method above)
-// TODO: Implement method to perform a pattern match!
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct BitBoard {
 	b: [u128; 3],
@@ -57,13 +55,6 @@ impl BitBoard {
 		]
 	};
 	const U128_FIRST_BIT_SET: u128 = 0b10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;
-	const FIRST_LINE_MASK: Self = Self {
-		b: [
-			0b11111111111111111110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
-			0,
-			0
-		]
-	};
 	pub const CENTER_BIT_SET: Self = Self {
 		b: [
 			0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
@@ -118,7 +109,6 @@ impl BitBoard {
 		for _ in 0..(BITS_IN_U128 * 3) - bits_count {
 			one_line_str.push('0');
 		}
-		// let mut bins = vec![String::from("0b"), String::from("0b"), String::from("0b")];
 		let mut bins: Vec<&str> = vec![];
 		for i in 0..3 {
 			bins.push(&one_line_str[BITS_IN_U128 * i..BITS_IN_U128 * (i + 1)]);
@@ -275,60 +265,6 @@ impl BitBoard {
 		Self { b: new_bits }
 	}
 
-	/// Returns the same BitBoard without the edge delimiter bits
-	fn remove_edge_delimiters(mut self) -> Self {
-		let mut i = 0u32;
-		let mut new_bitboard = BitBoard::default();
-
-		while self.is_any() {
-			new_bitboard |= (self & BitBoard::FIRST_LINE_MASK) >> 19 * i;
-			self = self << 20;
-			i += 1;
-		}
-
-		new_bitboard
-	}
-
-	fn add_edge_delimiters(mut self) -> Self {
-		let mut i = 0u32;
-		let mut new_bitboard = BitBoard::default();
-
-		while self.is_any() {
-			new_bitboard |= (self & BitBoard::FIRST_LINE_MASK) >> 20 * i;
-			self = self << 19;
-			i += 1;
-		}
-
-		new_bitboard
-	}
-
-	fn rotate_left(&self, by: usize) -> Self {
-		let bits = self.remove_edge_delimiters().b;
-		let max_index = bits.len() - 1;
-		let mut new_bits: [u128; 3] = [0, 0, 0];
-
-		if by >= BITS_IN_U128 * (max_index + 1) {
-			return Self::default();
-		}
-
-		let inner_lshift = by % BITS_IN_U128;
-		let inner_rshift = BITS_IN_U128 - inner_lshift;
-		let value_off = by / BITS_IN_U128;
-		for (dest_i, src_i) in (0..=(max_index - value_off))
-			.rev()
-			.zip((0..=max_index).rev())
-		{
-			if src_i < max_index && inner_rshift < BITS_IN_U128 {
-				new_bits[dest_i] = bits[src_i + 1] >> inner_rshift
-			} else if src_i == max_index {
-				new_bits[dest_i] = bits[0] >> inner_rshift - 23
-			}
-			new_bits[dest_i] |= bits[src_i] << inner_lshift;
-		}
-
-		Self { b: new_bits }.add_edge_delimiters()
-	}
-
 	#[inline]
 	fn shift_right(&self, by: usize) -> Self {
 		let bits = self.b;
@@ -352,125 +288,6 @@ impl BitBoard {
 		Self { b: new_bits }
 	}
 
-	fn replicate_as_row(&mut self, mut row: u128) {
-		let mut offset = 19i32;
-		let nb_bits = BITS_IN_U128 as i32;
-		let nb_cols = BitBoard::NUMBER_OF_COLS as i32 + 1;
-
-		row >>= nb_bits - (nb_cols - 1);
-		self.b = [0, 0, 0];
-
-		for i in 0..self.b.len() {
-			let mut j = 0;
-			let mut shift = 1i32;
-			while shift.is_positive() {
-				shift = nb_bits - offset - (nb_cols * j);
-				self.b[i] |= if shift.is_positive() {
-					row << shift
-				} else {
-					row >> -shift
-				};
-				j += 1;
-			}
-			offset = -shift;
-		}
-	}
-
-	pub fn rotate_45(&self) -> Self {
-		let mut result = BitBoard::empty();
-		let mut mask = BitBoard::empty();
-		let mut pattern = 1 << (BITS_IN_U128 - 1);
-
-		for i in 0..19 {
-			mask.replicate_as_row(pattern);
-			result |= (self >> (20 * i) | self << (20 * (20 - i))) & mask;
-			pattern >>= 1;
-		}
-
-		result
-	}
-
-	fn rotate_315(&self) -> Self {
-		let mut result = BitBoard::empty();
-		let mut mask = BitBoard::empty();
-		let mut pattern = 1 << (BITS_IN_U128 - 1);
-
-		for i in 0..19 {
-			mask.replicate_as_row(pattern);
-			result |= (self << (20 * i) | self >> (20 * (20 - i))) & mask;
-			pattern >>= 1;
-		}
-
-		result
-	}
-
-	// fn rotate_45(&self) -> Self {
-	//     let mut new_bitboard = BitBoard::default();
-	//     let mut initial_mask = BitBoard::FIRST_BIT_SET;
-
-	//     for i in 0..BitBoard::NUMBER_OF_COLS {
-	//         let mask = initial_mask.broadcast_row();
-	//         new_bitboard |= ((self >> (BitBoard::NUMBER_OF_COLS * i) | self << (BitBoard::NUMBER_OF_COLS * (BitBoard::NUMBER_OF_COLS - i)))) & mask;
-	//         initial_mask = initial_mask >> 1;
-	//         println!("new_bitboard in rotate_45(), loop #{}:\n{}", i, new_bitboard);
-	//     }
-
-	//     new_bitboard
-	// }
-
-	// fn rotate_right_with_edge(&self, by: usize) -> Self {
-	//     let bits = self.b;
-	//     let max_index = bits.len() - 1;
-	//     let mut new_bits: [u128; 3] = [0, 0, 0];
-
-	//     if by >= BITS_IN_U128 * (max_index + 1) {
-	//         return Self::default();
-	//     }
-
-	//     let inner_rshift = by % BITS_IN_U128;
-	//     let inner_lshift = BITS_IN_U128 - inner_rshift;
-	//     let value_off = by / BITS_IN_U128;
-	//     for (dest_i, src_i) in (value_off..=max_index).zip(0..=max_index) {
-	//         if src_i > usize::MIN && inner_lshift < BITS_IN_U128 {
-	//             new_bits[dest_i] = bits[src_i - 1] << inner_lshift
-	//         } else if src_i == max_index {
-	//             new_bits[dest_i] = bits[max_index] << inner_lshift
-	//         }
-	//         new_bits[dest_i] |= bits[src_i] >> inner_rshift;
-	//     }
-
-	//     Self {
-	//         b: new_bits
-	//     }
-	// }
-
-	// fn rotate_right(&self, by: usize) -> Self {
-	//     let bits = self.remove_edge_delimiters().b;
-	//     let max_index = bits.len() - 1;
-	//     let mut new_bits: [u128; 3] = [0, 0, 0];
-
-	//     if by >= BITS_IN_U128 * (max_index + 1) {
-	//         return Self::default();
-	//     }
-
-	//     let inner_rshift = by % BITS_IN_U128;
-	//     let inner_lshift = BITS_IN_U128 - inner_rshift;
-	//     let value_off = by / BITS_IN_U128;
-	//     for (dest_i, src_i) in (value_off..=max_index).zip(0..=max_index) {
-	//         if src_i > usize::MIN && inner_lshift < BITS_IN_U128 {
-	//             new_bits[dest_i] = bits[src_i - 1] << inner_lshift
-	//         } else if src_i == max_index {
-	//             new_bits[dest_i] = bits[max_index] << inner_lshift - 23
-	//         }
-	//         new_bits[dest_i] |= bits[src_i] >> inner_rshift;
-	//     }
-
-	//     Self {
-	//         b: new_bits
-	//     }.add_edge_delimiters()
-	// }
-
-	// TODO: Missing doc here
 	fn shift_direction(&self, direction: Direction) -> Self {
 		let board = *self;
 		*match direction {

@@ -1,9 +1,10 @@
 import pathlib
-import sys
+
 import PyQt5
-from PyQt5.QtGui import *
+import rust_ext as rst
+import sys
 from PyQt5 import uic, QtWidgets
-import windowBuilding
+
 import buttonEventHandler
 import options
 import rust_ext as rst

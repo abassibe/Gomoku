@@ -1,11 +1,12 @@
 use std::{
-    rc::Rc,
     cell::RefCell,
-    collections::{BinaryHeap}
+    collections::BinaryHeap,
+    rc::Rc
 };
 
 use crate::{bitboard::BitBoard, goban::Goban};
-use super::{Node, Branches};
+
+use super::{Branches, Node};
 
 #[test]
 #[allow(unused)]
@@ -160,6 +161,7 @@ fn add_branch_should_add_a_branch() {
 
 #[test]
 #[ignore]
+#[allow(unused_variables)]
 fn test_display_no_assert() {
     // Arrange
     let closure = |n: &mut Node, m| {

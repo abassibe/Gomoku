@@ -9,33 +9,15 @@ mod minimax;
 mod transposition_table;
 mod negamax;
 
-static PATTERNS: [((u8, u8, bool), isize, isize); 12] = [
-    ((0b11111000, 5, true), 10000000000isize, 100000000isize),
-    ((0b01111000, 6, true), 9999999isize, 99999999isize),
-    ((0b01111000, 5, false), 1000isize, 99999999isize),
-    ((0b10111000, 5, false), 50isize, 99999999isize),
-    ((0b11011000, 5, true), 50isize, 99999999isize),
-    ((0b01110000, 5, true), 50isize, 500isize),
-    ((0b01110000, 5, false), 50isize, 500isize),
-    ((0b00111000, 6, false), 3000isize, 999999isize),
-    ((0b11100000, 5, false), 50isize, 1500isize),
-    ((0b01011000, 5, false), 50isize, 500isize),
-    ((0b01100000, 4, true), 500isize, 2000isize),
-    ((0b01010000, 5, true), 25isize, 1000isize)
-];
-
 pub enum Algorithms {
     Negamax,
     Minimax
 }
 
-// Should patterns even be in Algorithm ?
 #[derive(Default)]
 pub struct Algorithm {
     initial: Node,
     patterns: NewPattern,
-    player_captures: u8,
-    opponent_captures: u8
 }
 
 impl Algorithm {
@@ -44,23 +26,18 @@ impl Algorithm {
         Algorithm::default()
     }
 
-    pub fn get_initial(&self) -> &Node {
-        &self.initial
-    }
-
     /// Set the initial Node to a new state using the provided Goban.
     pub fn update_initial_state(&mut self, initial_state: Goban, last_move: BitBoard, player_captures: u8, opponent_captures:u8) {
-        let new_initial_node = Node::new(initial_state, 0, last_move, false, player_captures, opponent_captures);
+        let new_initial_node = Node::new(initial_state, crate::DEPTH, last_move, false, player_captures, opponent_captures);
         self.initial = new_initial_node;
     }
 
-    // FIXME: SHOULDN'T BE PUBLIC
-    pub fn compute_and_set_fscore(&self, node: &mut Node, depth: u32) -> Fscore {
+    fn compute_and_set_fscore(&self, node: &mut Node, depth: u32) -> Fscore {
         // If player is threatened in the initial Node then we give more weight to the defense
         // in order to prioritize the defense over the attack.
         // We do the opposite if there is no immediate threats in inital Node for player.
-        let defense_weight = if self.initial.is_player_threatened() {3f64} else {1.5};
-        // let defense_weight = 1.5f64;
+        // let defense_weight = if self.initial.is_player_threatened() {3f64} else {1.5};
+        let defense_weight = 1.5f64;
         let player_score = self.compute_score(node, depth, false);
         let enemy_score = self.compute_score(node, depth, true);
         let global_score = match (player_score, enemy_score) {
@@ -68,7 +45,6 @@ impl Algorithm {
             (_, Fscore::Win) => Fscore::Value(isize::MIN),
             (Fscore::Uninitialized, Fscore::Value(score)) => Fscore::Value(-score),
             (Fscore::Value(player_value), Fscore::Value(enemy_value)) => Fscore::Value(player_value - (enemy_value as f64 * defense_weight).round() as isize),
-            // (Fscore::Value(player_value), Fscore::Value(enemy_value)) => Fscore::Value(player_value - enemy_value),
             (Fscore::Value(player_value), _) => Fscore::Value(player_value),
             (Fscore::Uninitialized, Fscore::Uninitialized) => Fscore::Uninitialized
         };
@@ -88,7 +64,6 @@ impl Algorithm {
         let parent_player_captures = parent.get_player_captures();
         let parent_enemy_captures = parent.get_opponent_captures();
 
-        // TODO: Investigate this call and its return value (especially for open 2).
         let mut ret : Vec<Node> = self.get_potential_moves(parent)
             .enumerate()
             .iter()
@@ -122,16 +97,16 @@ impl Algorithm {
         ret
     }
 
-    // TODO: Missing tests
     // FIXME: This method has never been tested.
     fn compute_score(&self, node: &Node, depth: u32, player_is_enemy: bool) -> Fscore {
         let goban = node.get_item();
-        let (player, enemy, player_captures, enemy_captures) = if player_is_enemy {
-            (goban.get_enemy(), goban.get_player(), node.get_opponent_captures(), node.get_player_captures())
+        let (player, enemy, player_captures) = if player_is_enemy {
+            (goban.get_enemy(), goban.get_player(), node.get_opponent_captures())
         } else {
-            (goban.get_player(), goban.get_enemy(), node.get_player_captures(), node.get_opponent_captures())
+            (goban.get_player(), goban.get_enemy(), node.get_player_captures())
         };
         let mut result = 0isize;
+        let is_attack_score = ((player_is_enemy && !node.is_players_last_move()) || (!player_is_enemy && node.is_players_last_move()));
 
         if player_captures >= 5 {
             return Fscore::Value(50000000 * depth as isize);
@@ -149,46 +124,15 @@ impl Algorithm {
         }
         let three_cross_four = extract_missing_bit_cross_three_with_four(*player, *enemy);
         if three_cross_four.is_any() {
-            result += three_cross_four.count_ones() as isize * if node.is_players_last_move() { 500 } else { 1000 };
-            // result += three_cross_four.count_ones() as isize * 100;
+            result += three_cross_four.count_ones() as isize * if is_attack_score { 500 } else { 1000 };
         }
         let four_cross_four = extract_missing_bit_cross_four_with_four(*player, *enemy);
         if four_cross_four.is_any() {
-            result += four_cross_four.count_ones() as isize * if node.is_players_last_move() { 750 } else { 1200 };
-            // result += four_cross_four.count_ones() as isize * 200;
+            result += four_cross_four.count_ones() as isize * if is_attack_score { 750 } else { 1200 };
         }
-        // TODO: Let this be a global static
-        // let patterns: [((u8, u8, bool), isize, isize); 12] = [
-        //     (self.patterns[PatternName::OpenThree], 50isize, 500isize),
-        //     (self.patterns[PatternName::CloseThree], 50isize, 1500isize),
-        //     (self.patterns[PatternName::OpenSplitThreeLeft], 50isize, 500isize),
-        //     (self.patterns[PatternName::OpenSplitThreeRight], 50isize, 500isize),
-        //     (self.patterns[PatternName::OpenFour], 9999999isize, 99999999isize),
-        //     (self.patterns[PatternName::CloseFour], 1000isize, 99999999isize),
-        //     (self.patterns[PatternName::SplitFourRight], 50isize, 99999999isize),
-        //     (self.patterns[PatternName::SplitFourLeft], 50isize, 99999999isize),
-        //     (self.patterns[PatternName::SplitFourMiddle], 50isize, 99999999isize),
-        //     (self.patterns[PatternName::Five], 10000000000isize, 100000000isize),
-        //     ((0b01100000, 4, true), 500isize, 2000isize),
-        //     ((0b01010000, 5, true), 25isize, 1000isize)
-        // ];
-        // Got score values from https://playgomoku.online/gomoku-offline
-        // let patterns: [((u8, u8, bool), isize, isize); 12] = [
-        //     ((0b11111000, 5, true), 10000000000isize, 100000000isize),
-        //     ((0b01111000, 6, true), 9999999isize, 99999999isize),
-        //     ((0b01111000, 5, false), 1000isize, 99999999isize),
-        //     ((0b10111000, 5, false), 50isize, 99999999isize),
-        //     ((0b11011000, 5, true), 50isize, 99999999isize),
-        //     ((0b01110000, 5, true), 50isize, 500isize),
-        //     ((0b01110000, 5, false), 50isize, 500isize),
-        //     ((0b00111000, 6, false), 3000isize, 999999isize),
-        //     ((0b11100000, 5, false), 50isize, 1500isize),
-        //     ((0b01011000, 5, false), 50isize, 500isize),
-        //     ((0b01100000, 4, true), 500isize, 2000isize),
-        //     ((0b01010000, 5, true), 25isize, 1000isize)
-        // ];
         for &((pattern, pattern_size, is_sym), player_score, opponent_score) in HEURISTIC_PATTERNS.iter() {
-            let score = if node.is_players_last_move() { player_score } else { opponent_score };
+            let score = if is_attack_score { player_score } else { opponent_score };
+            // let score = if node.is_players_last_move() { player_score } else { opponent_score };
             let matched = match_pattern(*player, *enemy, pattern, pattern_size, is_sym);
             let matched_captures = match_pattern(
                 extract_captures(*enemy, *player, &self.patterns) ^ *player,
@@ -202,10 +146,10 @@ impl Algorithm {
             } else {
                 0
             };
-            // result += ((matched.count_ones() as isize - nb_captures) * score) + (nb_captures * score);
             result += ((matched.count_ones() as isize - nb_captures) as f64 * score as f64 * 0.25f64).round() as isize + (nb_captures * score);
         }
-        result += extract_capturing_moves(*player, *enemy, &self.patterns).count_ones() as isize * if node.is_players_last_move() { 3 } else { 10 };
+        result += extract_capturing_moves(*player, *enemy, &self.patterns).count_ones() as isize * if is_attack_score { 3 } else { 10 };
+        // result += extract_capturing_moves(*player, *enemy, &self.patterns).count_ones() as isize * if node.is_players_last_move() { 3 } else { 10 };
         result += (player_captures as isize).pow(2) * 20;
 
         Fscore::Value(result)
@@ -281,17 +225,16 @@ impl Algorithm {
         self.initial.compute_immediate_threats_for_player(&self.patterns);
     }
 
-    // FIXME: Shouldn't be public (made it pub for debug)
-    pub fn get_potential_moves(&self, parent: &Node) -> BitBoard {
+    fn get_potential_moves(&self, parent: &Node) -> BitBoard {
         let goban = parent.get_item();
         // If the Node parent is representing a move for player then it means we are generating moves for opponent
-        let (current_player, opponent) = if parent.is_players_last_move() {
-            (*goban.get_enemy(), *goban.get_player())
+        let (current_player, opponent, player_captures, opponent_captures) = if parent.is_players_last_move() {
+            (*goban.get_enemy(), *goban.get_player(), parent.get_opponent_captures(), parent.get_player_captures())
         } else {
-            (*goban.get_player(), *goban.get_enemy())
+            (*goban.get_player(), *goban.get_enemy(), parent.get_player_captures(), parent.get_opponent_captures())
         };
-        let player_captures = parent.get_player_captures();
-        let opponent_captures = parent.get_opponent_captures();
+        // let player_captures = parent.get_player_captures();
+        // let opponent_captures = parent.get_opponent_captures();
         let open_cells = !(current_player | opponent);
         let illegal_moves_complement = !extract_illegal_moves(current_player, opponent, &self.patterns);
         let legal_open_cells = open_cells & illegal_moves_complement;
@@ -326,8 +269,16 @@ impl Algorithm {
             &self.patterns
         ) & illegal_moves_complement;
         if result.is_any() {
+            // Those are moves that perform a capture on the opponent's stones.
+            // If one of those moves breaks the threatening alignment we want to concider that move.
+            // let capturing_moves_by_player = extract_capturing_moves(current_player, opponent, &self.patterns);
             let (pattern, pattern_size, is_sym) = self.patterns[PatternName::Five];
-            return result | extract_missing_bit(current_player, opponent, pattern, pattern_size, is_sym);
+            let moves_to_complete_five = extract_missing_bit(opponent, current_player, pattern, pattern_size, is_sym);
+            let breaking_moves = extract_five_align_breaking_moves(current_player, moves_to_complete_five | opponent, &self.patterns);
+            // let potential_five = extract_five_aligned(extract_missing_bit(current_player, opponent, pattern, pattern_size, is_sym) | current_player);
+            // let dilated_potential_five = potential_five + Direction::All;
+            // let potential_five_with_edges = dilated_potential_five & current_player;
+            return result | moves_to_complete_five | breaking_moves;
         }
 
         // Get the moves that threat `player` to be able to play the move before the opponent does.
@@ -337,6 +288,7 @@ impl Algorithm {
             opponent_captures,
             &self.patterns
         );
+        let is_threatened = result.is_any();
 
         // Get the moves that threat `opponent` because those are good move to play.
         result |= extract_threatening_moves_from_player(
@@ -345,7 +297,9 @@ impl Algorithm {
             player_captures,
             &self.patterns
         );
-        result |= extract_capturing_moves(opponent, current_player, &self.patterns);
+        if !is_threatened || opponent_captures >= 3 {
+            result |= extract_capturing_moves(opponent, current_player, &self.patterns);
+        }
         result |= extract_missing_bit(
             current_player,
             opponent,
@@ -403,7 +357,7 @@ impl Algorithm {
         );
         result &= legal_open_cells;
 
-        if result.count_ones() > 2 {
+        if result.count_ones() > 2 || is_threatened {
             return result;
         }
 
@@ -412,7 +366,6 @@ impl Algorithm {
 
     // TODO: We maybe can do better here, self probably doesn't need to be mutable.
     // Maybe we should pass the initial Node directly without passing by the initial property of Algorithm?
-    /// This method is likely to change in a near future because I'm not sure what to return.
     /// For now, it returns a BitBoard that contains the next move to play.
     pub fn get_next_move(&mut self, depth: u32, algo: Algorithms) -> Option<Node> {
         self.compute_initial_threats_for_player();
@@ -425,7 +378,6 @@ impl Algorithm {
             None
         } else {
             Some(next_state)
-            // Some(next_state.get_item().get_player() ^ self.initial.get_item().get_player())
         }
     }
 }

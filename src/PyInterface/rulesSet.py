@@ -147,34 +147,51 @@ class Rules:
         d2Line[y] = color
 
         numberThree = 0
+        line_type = ""
         for i in range(y - 4, y + 1):
-            if hLine[i:i + len(pattern[0])].tolist() == pattern[0]:
+            if line_type != "hLine" and hLine[i:i + len(pattern[0])].tolist() == pattern[0]:
                 numberThree += 1
-            elif hLine[i:i + len(pattern[1])].tolist() == pattern[1]:
+                line_type = "hLine"
+            elif line_type != "hLine" and hLine[i:i + len(pattern[1])].tolist() == pattern[1]:
                 numberThree += 1
-            elif hLine[i:i + len(pattern[2])].tolist() == pattern[2]:
+                line_type = "hLine"
+            elif line_type != "hLine" and hLine[i:i + len(pattern[2])].tolist() == pattern[2]:
                 numberThree += 1
-            if d2Line[i:i + len(pattern[0])].tolist() == pattern[0]:
+                line_type = "hLine"
+            if line_type != "d2Line" and d2Line[i:i + len(pattern[0])].tolist() == pattern[0]:
                 numberThree += 1
-            elif d2Line[i:i + len(pattern[1])].tolist() == pattern[1]:
+                line_type = "d2Line"
+            elif line_type != "d2Line" and d2Line[i:i + len(pattern[1])].tolist() == pattern[1]:
                 numberThree += 1
-            elif d2Line[i:i + len(pattern[2])].tolist() == pattern[2]:
+                line_type = "d2Line"
+            elif line_type != "d2Line" and d2Line[i:i + len(pattern[2])].tolist() == pattern[2]:
                 numberThree += 1
-            if d1Line[i:i + len(pattern[0])].tolist() == pattern[0]:
+                line_type = "d2Line"
+            if line_type != "d1Line" and d1Line[i:i + len(pattern[0])].tolist() == pattern[0]:
                 numberThree += 1
-            elif d1Line[i:i + len(pattern[1])].tolist() == pattern[1]:
+                line_type = "d1Line"
+            elif line_type != "d1Line" and d1Line[i:i + len(pattern[1])].tolist() == pattern[1]:
                 numberThree += 1
-            elif d1Line[i:i + len(pattern[2])].tolist() == pattern[2]:
+                line_type = "d1Line"
+            elif line_type != "d1Line" and d1Line[i:i + len(pattern[2])].tolist() == pattern[2]:
                 numberThree += 1
+                line_type = "d1Line"
+            if numberThree > 1:
+                return numberThree
         for i in range(x - 4, x + 1):
             if vLine[i:i + len(pattern[0])].tolist() == pattern[0]:
                 numberThree += 1
+                break
             elif vLine[i:i + len(pattern[1])].tolist() == pattern[1]:
                 numberThree += 1
+                break
             elif vLine[i:i + len(pattern[2])].tolist() == pattern[2]:
                 numberThree += 1
+                break
             if numberThree > 1:
                 return numberThree
+        if numberThree > 1: #maybe not needed, keeping it in case
+            return numberThree
         return numberThree
 
     def doubleThreeRule(self, board, x, y, color):
