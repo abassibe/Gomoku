@@ -8,6 +8,7 @@ from PyQt5 import uic, QtWidgets
 import buttonEventHandler
 import options
 import rust_ext as rst
+import windowBuilding
 
 window = None
 
