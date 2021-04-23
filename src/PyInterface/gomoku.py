@@ -7,7 +7,7 @@ from PyQt5 import uic, QtWidgets
 
 import buttonEventHandler
 import options
-import windowBuilding
+import rust_ext as rst
 
 window = None
 
@@ -52,9 +52,9 @@ def getOptionsSet(targetedOption=[]):
 
         If targetedOption=None return a list of all options.
 
-        Otherwise, specify wich option you want by sending a list of string. ex getOptionsSet(['langage', 'gameMode']).
+        Otherwise, specify which option you want by sending a list of string. ex getOptionsSet(['langage', 'gameMode']).
         
-        Available options: langage, gameMode, rulesSet.
+        Available options: language, gameMode, rulesSet.
     """
     if targetedOption == []:
         return window.option.langage, window.option.gameMode, window.option.rulesSet

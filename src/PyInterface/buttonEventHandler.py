@@ -76,8 +76,7 @@ def hintEvent(hintButton, window):
         hintButton.setGraphicsEffect(effect)
         hintButton.setGeometry(40, 770, 180, 45)
         _hintButtonBool = True
-        color = None
-        if window.gameManager and window.gameManager.gameRuning == True:
+        if window.gameManager and window.gameManager.gameRuning is True:
             if window.gameManager.isPlayer1Turn:
                 color = window.gameManager.player1.color
             else:

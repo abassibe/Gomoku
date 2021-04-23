@@ -18,7 +18,7 @@ p2Win = "White Win"
 draw = "Draw"
 
 def setFontShadow(window):
-    fontDB = QtGui.QFontDatabase()
+    #fontDB = QtGui.QFontDatabase()
     window.playerTurnEffect.hide()
     window.playerTurnEffect.setStyleSheet("background-color:rgba(0, 0, 0, 0)")
     window.winOrDrawLabel.hide()
@@ -188,7 +188,7 @@ def setRulesList(window, ruleSet):
         window.player2Capture.hide()
 
 
-def updateTimerGame(window, timer, startGameTimer, toUpdate):
+def updateTimerGame(startGameTimer, toUpdate):
     miliSeconds = time() - startGameTimer
     minutes = int(miliSeconds / 60)
     seconds = int(miliSeconds - (minutes * 60))

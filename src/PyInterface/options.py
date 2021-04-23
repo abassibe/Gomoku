@@ -1,6 +1,6 @@
 import windowBuilding
 
-class Options():
+class Options:
     def __init__(self):
         self.langage = "English"
         self.gameMode = "PVE"
