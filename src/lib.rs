@@ -6,7 +6,7 @@ use pyo3::types::PyBool;
 use goban::Goban;
 use node::Node;
 
-use crate::algorithm::{Algorithm, Algorithms};
+use crate::algorithm::Algorithm;
 use crate::bitboard::BitBoard;
 
 mod algorithm;
@@ -14,17 +14,12 @@ mod bitboard;
 mod goban;
 mod node;
 
-// Comment rajouter une fonction python sur rust
-// Simplement rajouter dans le block pymodule une fonction rust avec obligatoirement une instance Python<'_>, et si applicable un PyResult pour le retour
-// Presque n'importe quel type peut etre passé tant que c'est un type natif python/rust (check doc)
-// Pour compiler, maturin develop dans le terminal, qui genere un dylib dans le dossier target/debug qu'il faut mettre dans le dossier root du projet.
-
-const DEPTH: u32 = 7;
+const DEPTH: u32 = 8;
 const WHITE: u8 = 2;
 
 #[pymodule]
-fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
-    #[pyfn(m, "get_next_move")]
+fn rust_ext(_py: Python<'_>, _m: &PyModule) -> PyResult<()> {
+    #[pyfn(_m, "get_next_move")]
     /// Interfacing function.
     /// Takes the Python GIL, the board in the shape of a 19*19 numpy 2d array, the color of the human player, a boolean that indicates if this is a hint request, and the number of captures made by the human and the ai.
     #[allow(unused_variables)]
@@ -46,18 +41,6 @@ fn rust_ext(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         let last_move = last_move_human.or(last_move_ai);
         let ret = launch_ai(goban, (ai_capture / 2) as u8, (human_capture / 2) as u8, last_move);
         Ok(ret)
-    }
-
-    #[pyfn(m, "debug")]
-    fn debug(_py: Python<'_>, goban: &PyArray2<u8>) -> PyResult<u8> {
-        let board = goban.to_vec()?;
-        if board.len() != 361 {
-            return Err(exceptions::PyTypeError::new_err(format!(
-                "Fatal Rust Error: Invalid board size (Expected 361, got {})",
-                board.len()
-            )));
-        }
-        Ok(1u8)
     }
     Ok(())
 }
@@ -97,7 +80,7 @@ fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8, last_move
         BitBoard::empty()
     };
     algorithm.update_initial_state(input, last_move, player_captures, opponent_captures);
-    let ret = algorithm.get_next_move(DEPTH, Algorithms::Minimax).unwrap();
+    let ret = algorithm.get_next_move(DEPTH).unwrap();
 
     get_move_coord(&ret)
 }

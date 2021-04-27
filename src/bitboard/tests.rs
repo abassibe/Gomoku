@@ -1,6 +1,6 @@
-use super::{*, axis::*, direction::*};
+use super::*;
 
-// TODO: This file can/should be splited into several smaller files.
+// TODO: This file can/should be split into several smaller files.
 
 //=======================================
 // Tests for bit shift on struct BitBoard
@@ -106,7 +106,7 @@ fn test_bitshift_left_by_max_on_bitboard() {
 }
 
 // The following test perform no assertion because we just want to verify
-// that no panic occurs regardeless the value passed to the function.
+// that no panic occurs regardless the value passed to the function.
 #[test]
 fn test_bitshift_left_by_any_value() {
     // Arrange
@@ -223,7 +223,7 @@ fn test_bitshift_right_by_max_on_bitboard() {
 }
 
 // The following test perform no assertion because we just want to verify
-// that no panic occurs regardeless the value passed to the function.
+// that no panic occurs regardless the value passed to the function.
 #[test]
 fn test_bitshift_right_by_any_value() {
     // Arrange
@@ -250,11 +250,11 @@ fn test_bitshift_right_by_any_value() {
 #[test]
 fn test_iterate_on_axis_iterator() {
     // Arrange
-    let axises = AxisIterator::new();
+    let axes = AxisIterator::new();
     let expect = vec![Direction::W, Direction::N, Direction::NW, Direction::NE];
 
     // Act
-    let result: Vec<Direction> = axises.collect();
+    let result: Vec<Direction> = axes.collect();
 
     // Assert
     assert_eq!(expect, result);
@@ -269,11 +269,11 @@ fn test_iterate_on_axis_iterator() {
 #[test]
 fn test_into_direction_on_axis() {
     // Arrange
-    let axises = [Axis::Vertical, Axis::Horizontal, Axis::DiagUpLeft, Axis::DiagUpRight];
+    let axes = [Axis::Vertical, Axis::Horizontal, Axis::DiagUpLeft, Axis::DiagUpRight];
     let expected = [Direction::N, Direction::W, Direction::NW, Direction::NE];
 
     // Act
-    let results: [Direction; 4] = [axises[0].into(), axises[1].into(), axises[2].into(), axises[3].into()];
+    let results: [Direction; 4] = [axes[0].into(), axes[1].into(), axes[2].into(), axes[3].into()];
 
     // Assert
     assert_eq!(expected, results);
@@ -1479,7 +1479,7 @@ fn test_equality_on_bitboard_some_bits_set() {
 }
 
 #[test]
-fn test_unequality_on_bitboard_with_full() {
+fn test_inequality_on_bitboard_with_full() {
     // Arrange
     let bitboard = BitBoard::full();
     let eq_with = BitBoard::full();
@@ -1493,7 +1493,7 @@ fn test_unequality_on_bitboard_with_full() {
 }
 
 #[test]
-fn test_unequality_on_bitboard_with_empty() {
+fn test_inequality_on_bitboard_with_empty() {
     // Arrange
     let bitboard = BitBoard::empty();
     let eq_with = BitBoard::empty();
@@ -1507,7 +1507,7 @@ fn test_unequality_on_bitboard_with_empty() {
 }
 
 #[test]
-fn test_unequality_on_bitboard_some_bits_set_with_one_bit_missing() {
+fn test_inequality_on_bitboard_some_bits_set_with_one_bit_missing() {
     // Arrange
     let bitboard = BitBoard {
         b: [
@@ -1533,7 +1533,7 @@ fn test_unequality_on_bitboard_some_bits_set_with_one_bit_missing() {
 }
 
 #[test]
-fn test_unequality_on_bitboard_some_bits_set() {
+fn test_inequality_on_bitboard_some_bits_set() {
     // Arrange
     let bitboard = BitBoard {
         b: [

@@ -9,11 +9,6 @@ mod minimax;
 mod transposition_table;
 mod negamax;
 
-pub enum Algorithms {
-    Negamax,
-    Minimax
-}
-
 #[derive(Default)]
 pub struct Algorithm {
     initial: Node,
@@ -35,7 +30,7 @@ impl Algorithm {
     fn compute_and_set_fscore(&self, node: &mut Node, depth: u32) -> Fscore {
         // If player is threatened in the initial Node then we give more weight to the defense
         // in order to prioritize the defense over the attack.
-        // We do the opposite if there is no immediate threats in inital Node for player.
+        // We do the opposite if there is no immediate threats in initial Node for player.
         // let defense_weight = if self.initial.is_player_threatened() {3f64} else {1.5};
         let defense_weight = 1.5f64;
         let player_score = self.compute_score(node, depth, false);
@@ -106,7 +101,7 @@ impl Algorithm {
             (goban.get_player(), goban.get_enemy(), node.get_player_captures())
         };
         let mut result = 0isize;
-        let is_attack_score = ((player_is_enemy && !node.is_players_last_move()) || (!player_is_enemy && node.is_players_last_move()));
+        let is_attack_score = (player_is_enemy && !node.is_players_last_move()) || (!player_is_enemy && node.is_players_last_move());
 
         if player_captures >= 5 {
             return Fscore::Value(50000000 * depth as isize);
@@ -270,7 +265,7 @@ impl Algorithm {
         ) & illegal_moves_complement;
         if result.is_any() {
             // Those are moves that perform a capture on the opponent's stones.
-            // If one of those moves breaks the threatening alignment we want to concider that move.
+            // If one of those moves breaks the threatening alignment we want to consider that move.
             // let capturing_moves_by_player = extract_capturing_moves(current_player, opponent, &self.patterns);
             let (pattern, pattern_size, is_sym) = self.patterns[PatternName::Five];
             let moves_to_complete_five = extract_missing_bit(opponent, current_player, pattern, pattern_size, is_sym);
@@ -367,13 +362,10 @@ impl Algorithm {
     // TODO: We maybe can do better here, self probably doesn't need to be mutable.
     // Maybe we should pass the initial Node directly without passing by the initial property of Algorithm?
     /// For now, it returns a BitBoard that contains the next move to play.
-    pub fn get_next_move(&mut self, depth: u32, algo: Algorithms) -> Option<Node> {
+    pub fn get_next_move(&mut self, depth: u32) -> Option<Node> {
         self.compute_initial_threats_for_player();
         let mut initial = self.initial.clone();
-        let next_state = match algo {
-            Algorithms::Negamax => self.negamax(&mut initial, depth, Fscore::MIN, Fscore::MAX),
-            Algorithms::Minimax => self.minimax(&mut initial, depth, Fscore::MIN, Fscore::MAX, true)
-        };
+        let next_state = self.minimax(&mut initial, depth, Fscore::MIN, Fscore::MAX, true);
         if next_state == self.initial {
             None
         } else {
