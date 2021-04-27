@@ -1,14 +1,14 @@
-import sys
+import pathlib
+
 import PyQt5
-from PyQt5.QtGui import *
+import rust_ext as rst
+import sys
 from PyQt5 import uic, QtWidgets
-import windowBuilding
+
 import buttonEventHandler
 import options
-import gameManager
-from random import randint
-import time
-import rulesSet
+import rust_ext as rst
+import windowBuilding
 
 window = None
 
@@ -18,10 +18,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.isBlackTurn = True
         self.local = "en_EN"
-        uic.loadUi("../GUI/mainwindow.ui", self)
+        uic.loadUi(str(pathlib.Path("GUI/mainwindow.ui")), self)
         self.option = options.Options()
         windowBuilding.parseTranslationFile()
+        self.setWindowTitle("Gomoku")
         self.gameManager = None
+        self.setFixedSize(self.geometry().width(), self.geometry().height())
 
         self.optionsButton.clicked.connect(lambda x: buttonEventHandler.optionsEvent(self, self.option))
         self.hintButton.clicked.connect(lambda x: buttonEventHandler.hintEvent(self.hintButton, window))
@@ -38,13 +40,12 @@ class MainWindow(QtWidgets.QMainWindow):
         if event.button() == 1:
             y = event.x()
             x = event.y()
-            if (x < 150 or x > 911) or (y < 140 or y > 901):
+            if (x < 87 or x > 716) or (y < 100 or y > 729):
                 return
             if self.gameManager.playerTurn:
                 self.gameManager.player1.endTurn(x, y)
             else:
                 self.gameManager.player2.endTurn(x, y)
-
 
 def getOptionsSet(targetedOption=[]):
     """
@@ -52,9 +53,9 @@ def getOptionsSet(targetedOption=[]):
 
         If targetedOption=None return a list of all options.
 
-        Otherwise, specify wich option you want by sending a list of string. ex getOptionsSet(['langage', 'gameMode']).
+        Otherwise, specify which option you want by sending a list of string. ex getOptionsSet(['langage', 'gameMode']).
         
-        Available options: langage, gameMode, rulesSet.
+        Available options: language, gameMode, rulesSet.
     """
     if targetedOption == []:
         return window.option.langage, window.option.gameMode, window.option.rulesSet
@@ -62,11 +63,10 @@ def getOptionsSet(targetedOption=[]):
         toReturn = []
         for item in targetedOption:
             try:
-                toReturn.append(option.__getattribute__(item))
+                toReturn.append(window.option.__getattribute__(item))
             except:
                 exit("Unknown option: " + item)
         return toReturn
-
 
 def algoSubscribe(func):
     """
@@ -79,19 +79,10 @@ def algoSubscribe(func):
         And the return value must be two integer "x" and "y", representing the position of the move. (0 <= xy <= 19)
     """
     global window
-
     window.algoPointer = func
-
-
-def tmpAlgo(board, color, hint):
-    tmp = window.gameManager.rules.getBasicRule(board, color)
-    if tmp == None:
-        return 9, 9
-    return tmp[randint(0, len(tmp) - 1)]
-
 
 app = PyQt5.QtWidgets.QApplication(sys.argv)
 window = MainWindow()
-algoSubscribe(tmpAlgo)
+algoSubscribe(rst.get_next_move)
 window.show()
 app.exec()

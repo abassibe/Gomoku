@@ -1,0 +1,69 @@
+[config]
+skip_core_tasks = true
+on_error_task = "catch"
+
+[env]
+RUST_LIB_PATH = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "", mapping = { "linux" = "./target/release/librust_ext.so", "macos" = "./target/release/librust_ext.dylib", "windows" = ".\\target\\release\\rust_ext.dll" } }
+RUST_LIB_EXT = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "so", mapping = { "windows" = "pyd" } }
+PYQT_INSTALL = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "pip3 install --user pyqt5", mapping = {"linux" = "sudo apt-get install python3-pyqt5" } }
+
+[tasks.default]
+clear = true
+dependencies = ["all"]
+
+[tasks.all]
+dependencies = ["build", "move", "python_dep"]
+
+[tasks.re]
+dependencies = ["clean", "all"]
+
+[tasks.catch]
+script_runner = "@shell"
+script = '''
+echo "Could not build. If you are using linux you may want to install pyqt5 or run cargo make with sudo"
+'''
+
+[tasks.move]
+script_runner = "@shell"
+script = '''
+echo Detected platform : $CARGO_MAKE_RUST_TARGET_OS.
+echo Moving file to correct folder.
+mv $RUST_LIB_PATH ./src/PyInterface/rust_ext.$RUST_LIB_EXT
+'''
+
+[tasks.python_dep]
+dependencies = ["numpy", "pyqt"]
+
+[tasks.pyqt]
+script_runner = "@shell"
+script = '''
+$PYQT_INSTALL
+'''
+
+[tasks.numpy]
+script_runner = "@shell"
+script = '''
+echo Checking/installing pip requirements.
+pip3 install numpy
+'''
+
+[tasks.build]
+command = "cargo"
+args = ["build", "--release"]
+
+[tasks.test]
+command = "cargo"
+args = ["test"]
+
+[tasks.clean]
+dependencies = ["remove"]
+command = "cargo"
+args = ["clean"]
+
+[tasks.remove]
+ignore_errors = true
+script_runner = "@shell"
+script = '''
+echo Cleaning dynamic library from PyInterface folder.
+rm ./src/PyInterface/rust_ext.$RUST_LIB_EXT
+'''

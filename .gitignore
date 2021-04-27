@@ -5,3 +5,21 @@
 .idea/vcs.xml
 venv/
 srcs/__pycache__
+
+#Added by cargo
+
+/target
+Cargo.lock
+/.idea/encodings.xml
+/rust_ext.pyd
+/.idea/workspace.xml
+rust_ext.so
+src/PyInterface/__pycache__/
+/.idea/shelf/Uncommitted_changes_before_Checkout_at_30_10_2020_12_48_[Default_Changelist]1/shelved.patch
+.idea/shelf/
+/librust_ext.dylib
+/rust_ext.dll
+lib
+/bin/
+/.idea/codeStyles/codeStyleConfig.xml
+/.idea/inspectionProfiles/Project_Default.xml

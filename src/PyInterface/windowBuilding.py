@@ -1,11 +1,16 @@
-from time import time
+import pathlib
+
 from PyQt5 import QtWidgets, QtGui, QtCore
+from time import time
+
 import buttonEventHandler
 
 mainWindow_en_EN = {}
 dialog_en_EN = {}
+howtoplay_en_EN = {}
 mainWindow_fr_FR = {}
 dialog_fr_FR = {}
+howtoplay_fr_FR = {}
 p1Turn = "Player turn"
 p2Turn = ""
 p1Win = "Black Win"
@@ -13,6 +18,7 @@ p2Win = "White Win"
 draw = "Draw"
 
 def setFontShadow(window):
+    #fontDB = QtGui.QFontDatabase()
     window.playerTurnEffect.hide()
     window.playerTurnEffect.setStyleSheet("background-color:rgba(0, 0, 0, 0)")
     window.winOrDrawLabel.hide()
@@ -48,12 +54,6 @@ def setFontShadow(window):
     effect.setBlurRadius(0)
     effect.setColor(QtGui.QColor(60, 17, 3))
     effect.setOffset(3, -3)
-    window.player1StoneCount.setGraphicsEffect(effect)
-
-    effect = QtWidgets.QGraphicsDropShadowEffect()
-    effect.setBlurRadius(0)
-    effect.setColor(QtGui.QColor(60, 17, 3))
-    effect.setOffset(3, -3)
     window.player1Capture.setGraphicsEffect(effect)
     window.player1Capture.hide()
     
@@ -68,12 +68,6 @@ def setFontShadow(window):
     effect.setColor(QtGui.QColor(60, 17, 3))
     effect.setOffset(3, -3)
     window.playerTwoTimer.setGraphicsEffect(effect)
-
-    effect = QtWidgets.QGraphicsDropShadowEffect()
-    effect.setBlurRadius(0)
-    effect.setColor(QtGui.QColor(60, 17, 3))
-    effect.setOffset(3, -3)
-    window.player2StoneCount.setGraphicsEffect(effect)
 
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)
@@ -95,7 +89,7 @@ def setFontShadow(window):
     window.ruleLabel2.setGraphicsEffect(effect)
 
     effect = QtWidgets.QGraphicsDropShadowEffect()
-    effect.setBlurRadius(0)
+    effect.setBlurRadius(1)
     effect.setColor(QtGui.QColor(60, 17, 3))
     effect.setOffset(3, -3)
     window.ruleLabel3.setGraphicsEffect(effect)
@@ -133,7 +127,7 @@ def setFontShadow(window):
     effect = QtWidgets.QGraphicsDropShadowEffect()
     effect.setBlurRadius(0)
     effect.setColor(QtGui.QColor(0, 0, 0, 170))
-    effect.setOffset(-30, 54)
+    effect.setOffset(-30, 41)
     window.infosBackground2.setGraphicsEffect(effect)
 
     effect = QtWidgets.QGraphicsDropShadowEffect()
@@ -153,8 +147,20 @@ def setFontShadow(window):
     effect.setColor(QtGui.QColor(0, 0, 0, 170))
     effect.setOffset(3, -3)
     window.gameTimer.setGraphicsEffect(effect)
-    window.gameTimer.setGeometry(1270, 440, 151, 41)
+    window.gameTimer.setGeometry(960, 330, 151, 41)
     window.gameTimer.setText("00:00")
+    
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(60, 17, 3))
+    effect.setOffset(3, -3)
+    window.turnsLabel.setGraphicsEffect(effect)
+    
+    effect = QtWidgets.QGraphicsDropShadowEffect()
+    effect.setBlurRadius(0)
+    effect.setColor(QtGui.QColor(60, 17, 3))
+    effect.setOffset(3, -3)
+    window.turnsValue.setGraphicsEffect(effect)
 
 
 def setRulesList(window, ruleSet):
@@ -182,7 +188,7 @@ def setRulesList(window, ruleSet):
         window.player2Capture.hide()
 
 
-def updateTimerGame(window, timer, startGameTimer, toUpdate):
+def updateTimerGame(startGameTimer, toUpdate):
     miliSeconds = time() - startGameTimer
     minutes = int(miliSeconds / 60)
     seconds = int(miliSeconds - (minutes * 60))
@@ -198,25 +204,25 @@ def playerTurnEffect(window, playerTurn):
         window.playerTurnEffect.setText(p1Turn)
     else:
         window.playerTurnEffect.setText(p2Turn)
-    newfont1 = QtGui.QFont("SF Wasabi", 12)
+    newfont1 = QtGui.QFont("", 5)
     window.playerTurnEffect.setFont(newfont1)
     QtCore.QTimer.singleShot(50, lambda: window.playerTurnEffect.show())
-    QtCore.QTimer.singleShot(50, lambda: window.playerTurnEffect.setGeometry(460, 120, 141, 51))
-    newfont2 = QtGui.QFont("SF Wasabi", 24)
+    QtCore.QTimer.singleShot(50, lambda: window.playerTurnEffect.setGeometry(320, 0, 160, 30))
+    newfont2 = QtGui.QFont("", 10)
     QtCore.QTimer.singleShot(100, lambda: window.playerTurnEffect.setFont(newfont2))
-    QtCore.QTimer.singleShot(100, lambda: window.playerTurnEffect.setGeometry(420, 110, 221, 71))
-    newfont3 = QtGui.QFont("SF Wasabi", 36)
+    QtCore.QTimer.singleShot(100, lambda: window.playerTurnEffect.setGeometry(295, 0, 216, 46))
+    newfont3 = QtGui.QFont("", 15)
     QtCore.QTimer.singleShot(150, lambda: window.playerTurnEffect.setFont(newfont3))
-    QtCore.QTimer.singleShot(150, lambda: window.playerTurnEffect.setGeometry(380, 100, 301, 91))
-    newfont4 = QtGui.QFont("SF Wasabi", 52)
+    QtCore.QTimer.singleShot(150, lambda: window.playerTurnEffect.setGeometry(270, 0, 272, 62))
+    newfont4 = QtGui.QFont("", 20)
     QtCore.QTimer.singleShot(200, lambda: window.playerTurnEffect.setFont(newfont4))
-    QtCore.QTimer.singleShot(200, lambda: window.playerTurnEffect.setGeometry(340, 90, 381, 111))
-    newfont5 = QtGui.QFont("SF Wasabi", 60)
+    QtCore.QTimer.singleShot(200, lambda: window.playerTurnEffect.setGeometry(245, 0, 328, 78))
+    newfont5 = QtGui.QFont("", 35)
     QtCore.QTimer.singleShot(250, lambda: window.playerTurnEffect.setFont(newfont5))
-    QtCore.QTimer.singleShot(250, lambda: window.playerTurnEffect.setGeometry(300, 80, 461, 131))
-    newfont5 = QtGui.QFont("SF Wasabi", 72)
+    QtCore.QTimer.singleShot(250, lambda: window.playerTurnEffect.setGeometry(220, 0, 384, 94))
+    newfont5 = QtGui.QFont("", 40)
     QtCore.QTimer.singleShot(300, lambda: window.playerTurnEffect.setFont(newfont5))
-    QtCore.QTimer.singleShot(300, lambda: window.playerTurnEffect.setGeometry(260, 70, 541, 151))
+    QtCore.QTimer.singleShot(300, lambda: window.playerTurnEffect.setGeometry(190, 0, 440, 110))
     QtCore.QTimer.singleShot(1000, lambda: window.playerTurnEffect.hide())
 
 
@@ -227,32 +233,32 @@ def winDraw(window, isWin, player):
         window.winOrDrawLabel.setText(p1Win)
     else:
         window.winOrDrawLabel.setText(p2Win)
-    newfont1 = QtGui.QFont("SF Wasabi", 12)
+    newfont1 = QtGui.QFont("", 12)
     window.winOrDrawLabel.setFont(newfont1)
     QtCore.QTimer.singleShot(50, lambda: window.winOrDrawLabel.show())
-    QtCore.QTimer.singleShot(50, lambda: window.winOrDrawLabel.setGeometry(310, 410, 451, 161))
-    newfont2 = QtGui.QFont("SF Wasabi", 24)
+    QtCore.QTimer.singleShot(50, lambda: window.winOrDrawLabel.setGeometry(290, 320, 250, 100))
+    newfont2 = QtGui.QFont("", 24)
     QtCore.QTimer.singleShot(100, lambda: window.winOrDrawLabel.setFont(newfont2))
-    QtCore.QTimer.singleShot(100, lambda: window.winOrDrawLabel.setGeometry(265, 347, 541, 292))
-    newfont3 = QtGui.QFont("SF Wasabi", 36)
+    QtCore.QTimer.singleShot(100, lambda: window.winOrDrawLabel.setGeometry(258, 280, 313, 187))
+    newfont3 = QtGui.QFont("", 36)
     QtCore.QTimer.singleShot(150, lambda: window.winOrDrawLabel.setFont(newfont3))
-    QtCore.QTimer.singleShot(150, lambda: window.winOrDrawLabel.setGeometry(220, 284, 631, 423))
-    newfont4 = QtGui.QFont("SF Wasabi", 52)
+    QtCore.QTimer.singleShot(150, lambda: window.winOrDrawLabel.setGeometry(226, 240, 376, 274))
+    newfont4 = QtGui.QFont("", 52)
     QtCore.QTimer.singleShot(200, lambda: window.winOrDrawLabel.setFont(newfont4))
-    QtCore.QTimer.singleShot(200, lambda: window.winOrDrawLabel.setGeometry(175, 221, 721, 554))
-    newfont5 = QtGui.QFont("SF Wasabi", 60)
+    QtCore.QTimer.singleShot(200, lambda: window.winOrDrawLabel.setGeometry(194, 200, 439, 361))
+    newfont5 = QtGui.QFont("", 60)
     QtCore.QTimer.singleShot(250, lambda: window.winOrDrawLabel.setFont(newfont5))
-    QtCore.QTimer.singleShot(250, lambda: window.winOrDrawLabel.setGeometry(130, 158, 811, 685))
-    newfont5 = QtGui.QFont("SF Wasabi", 72)
+    QtCore.QTimer.singleShot(250, lambda: window.winOrDrawLabel.setGeometry(162, 160, 502, 448))
+    newfont5 = QtGui.QFont("", 72)
     QtCore.QTimer.singleShot(300, lambda: window.winOrDrawLabel.setFont(newfont5))
-    QtCore.QTimer.singleShot(300, lambda: window.winOrDrawLabel.setGeometry(85, 95, 901, 816))
-    newfont5 = QtGui.QFont("SF Wasabi", 72)
+    QtCore.QTimer.singleShot(300, lambda: window.winOrDrawLabel.setGeometry(130, 120, 565, 535))
+    newfont5 = QtGui.QFont("", 72)
     QtCore.QTimer.singleShot(300, lambda: window.winOrDrawLabel.setFont(newfont5))
-    QtCore.QTimer.singleShot(300, lambda: window.winOrDrawLabel.setGeometry(40, 32, 991, 947))
+    QtCore.QTimer.singleShot(300, lambda: window.winOrDrawLabel.setGeometry(95, 85, 630, 624))
 
 
 def parseTranslationFile():
-    f = open("../local/en_EN")
+    f = open(str(pathlib.Path("local/en_EN")))
     tmp = []
     toFill = {}
     for line in f:
@@ -263,15 +269,19 @@ def parseTranslationFile():
         elif line == "#dialog.ui":
             toFill = dialog_en_EN
             continue
+        elif line == "#howtoplay.ui":
+            toFill = howtoplay_en_EN
+            continue
         splited = line.split('=')
         for arg in splited[1:]:
             tmp.append(arg)
         toFill[splited[0]] = tmp
         tmp = []
-    f = open("../local/fr_FR")
+    f = open(str(pathlib.Path("local/fr_FR")))
     tmp = []
     toFill = {}
     for line in f:
+        line = line.replace("\\n", "\n")
         line = line[:-1]
         if line == "#mainwindow.ui":
             toFill = mainWindow_fr_FR
@@ -279,11 +289,29 @@ def parseTranslationFile():
         elif line == "#dialog.ui":
             toFill = dialog_fr_FR
             continue
+        elif line == "#howtoplay.ui":
+            toFill = howtoplay_fr_FR
+            continue
         splited = line.split('=')
         for arg in splited[1:]:
             tmp.append(arg)
         toFill[splited[0]] = tmp
         tmp = []
+
+
+def howtoplayTranslate(option):
+    window = buttonEventHandler.helpDialog
+
+    translationSet = {}
+    if option.langage == "English" or option.langage == "Anglais":
+        translationSet = howtoplay_en_EN
+    else:
+        translationSet = howtoplay_fr_FR
+    for key, value in translationSet.items():
+        try:
+            window.__getattribute__(key).setText(value[0])
+        except:
+            exit("Translation error")
 
 
 def mainWindowTranslate(window, option):
