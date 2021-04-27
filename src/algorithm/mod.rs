@@ -366,7 +366,7 @@ impl Algorithm {
         self.compute_initial_threats_for_player();
         let mut initial = self.initial.clone();
         let next_state = self.minimax(&mut initial, depth, Fscore::MIN, Fscore::MAX, true);
-        if next_state == self.initial {
+        if next_state.get_last_move() == self.initial.get_last_move() {
             None
         } else {
             Some(next_state)
