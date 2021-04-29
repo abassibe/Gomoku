@@ -17,8 +17,8 @@ use crate::goban::fscore::Fscore;
 #[cfg(test)]
 mod tests;
 
-/// This type is an alias for `BinaryHeap<Rc<RefCell<Node>>>`.
-pub type Branches = BinaryHeap<Rc<RefCell<Node>>>;
+/// This type is an alias for `Vec<Rc<RefCell<Node>>>`.
+pub type Branches = Vec<Rc<RefCell<Node>>>;
 
 /// The struct that represent a node in a tree.
 /// ```

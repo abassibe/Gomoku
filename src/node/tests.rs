@@ -113,10 +113,7 @@ fn count_branch_with_3_branches_should_return_3() {
             branches: None
         }))
     );
-    let mut branches = BinaryHeap::new();
-    branches.push(node0);
-    branches.push(node1);
-    branches.push(node2);
+    let branches = vec![node0, node1, node2];
     let node = Node {
         item: Goban::new(bitboards[1], bitboards[1]),
         depth: 0,
@@ -133,30 +130,6 @@ fn count_branch_with_3_branches_should_return_3() {
 
     // Assert
     assert_eq!(nb_branches, 3);
-}
-
-#[test]
-fn add_branch_should_add_a_branch() {
-    // Arrange
-    let bitboards = [BitBoard::full(), BitBoard::empty()];
-    let mut node = Node {
-        item: Goban::new(bitboards[0], bitboards[1]),
-        depth: 0,
-        last_move: BitBoard::empty(),
-        is_players_move: false,
-        player_captures: 0,
-        opponent_captures: 0,
-        is_player_threatened: Some(false),
-        branches: None
-    };
-
-    // Act
-    let new_node = node.add_branch(Goban::new(bitboards[1], bitboards[0]), BitBoard::empty(), false);
-    let nb_branches = node.count_branch();
-
-    // Assert
-    assert_eq!(nb_branches, 1);
-    assert_eq!(node.branches.unwrap().peek().unwrap(), &new_node);
 }
 
 #[test]
