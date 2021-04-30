@@ -381,4 +381,3 @@ fn sort_by_estimate(nodes: &mut Vec<Node>, maximize: bool) {
         nodes.sort_unstable_by(|a, b| a.get_item().get_fscore().partial_cmp(&b.get_item().get_fscore()).unwrap());
     }
 }
-}

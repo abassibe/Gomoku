@@ -1,7 +1,6 @@
 use std::{
     cell::RefCell,
     cmp::{Eq, Ordering},
-    collections::BinaryHeap,
     fmt,
     fmt::Debug,
     hash::{Hash, Hasher},

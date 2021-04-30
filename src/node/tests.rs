@@ -1,6 +1,5 @@
 use std::{
     cell::RefCell,
-    collections::BinaryHeap,
     rc::Rc
 };
 
