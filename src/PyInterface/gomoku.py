@@ -1,14 +1,15 @@
 import pathlib
 
 import PyQt5
-import rust_ext as rst
 import sys
 from PyQt5 import uic, QtWidgets
 
+import os
+sys.path.append(os.getcwd() + '/target/release')
 import buttonEventHandler
-import options
-import rust_ext as rst
 import windowBuilding
+import rust_ext as rst
+import options
 
 window = None
 
