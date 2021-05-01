@@ -28,7 +28,7 @@ script_runner = "@shell"
 script = '''
 echo Detected platform : $CARGO_MAKE_RUST_TARGET_OS.
 echo Moving file to correct folder.
-mv $RUST_LIB_PATH ./src/PyInterface/rust_ext.$RUST_LIB_EXT
+mv $RUST_LIB_PATH ./target/release/rust_ext.$RUST_LIB_EXT
 '''
 
 [tasks.python_dep]
@@ -56,14 +56,5 @@ command = "cargo"
 args = ["test"]
 
 [tasks.clean]
-dependencies = ["remove"]
 command = "cargo"
 args = ["clean"]
-
-[tasks.remove]
-ignore_errors = true
-script_runner = "@shell"
-script = '''
-echo Cleaning dynamic library from PyInterface folder.
-rm ./src/PyInterface/rust_ext.$RUST_LIB_EXT
-'''
