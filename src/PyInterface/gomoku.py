@@ -1,15 +1,34 @@
 import pathlib
 
 import PyQt5
-import rust_ext as rst
 import sys
 from PyQt5 import uic, QtWidgets
 
+import os
+import platform
 import buttonEventHandler
-import options
-import rust_ext as rst
 import windowBuilding
 
+outdir = os.path.join(os.getcwd(), "target", "release")
+sys.path.append(outdir)
+if platform.system().lower() == "darwin":
+    try:
+        os.rename(os.path.join(outdir, "librust_ext.dylib"), os.path.join(outdir, "rust_ext.so"))
+    except FileNotFoundError:
+        pass
+if platform.system().lower() == "linux":
+    try:
+        os.rename(os.path.join(outdir, "librust_ext.so"), os.path.join(outdir, "rust_ext.so"))
+    except FileNotFoundError:
+        pass
+if platform.system().lower() == "windows":
+    try:
+        os.rename(os.path.join(outdir, "rust_ext.dll"), os.path.join(outdir, "rust_ext.pyd"))
+    except FileNotFoundError:
+        pass
+
+import rust_ext as rst
+import options
 window = None
 
 class MainWindow(QtWidgets.QMainWindow):
