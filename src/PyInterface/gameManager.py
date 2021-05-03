@@ -308,25 +308,25 @@ class GameBoard():
             for y in range(19):
                 if self.grid[x][y] != 0:
                     toCompare = self.grid[x][y]
-                    if x < 14:
+                    if x <= 14:
                         for n in range(1, 5):
                             if self.grid[x + n][y] != toCompare:
                                 break
                             if n + 1 == 5:
                                 return (x, y), (x + n, y)
-                    if y < 14:
+                    if y <= 14:
                         for n in range(1, 5):
                             if self.grid[x][y + n] != toCompare:
                                 break
                             if n + 1 == 5:
                                 return (x, y), (x, y + n)
-                    if x < 14 and y < 14:
+                    if x <= 14 and y <= 14:
                         for n in range(1, 5):
                             if self.grid[x + n][y + n] != toCompare:
                                 break
                             if n + 1 == 5:
                                 return (x, y), (x + n, y + n)
-                    if x < 14 and y > 3:
+                    if x <= 14 and y >= 3:
                         for n in range(1, 5):
                             if self.grid[x + n][y - n] != toCompare:
                                 break
