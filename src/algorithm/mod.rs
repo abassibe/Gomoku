@@ -365,8 +365,7 @@ impl Algorithm {
         self.compute_initial_threats_for_player();
         let mut initial = self.initial.clone();
         let next_state = self.minimax(&mut initial, depth, Fscore::MIN, Fscore::MAX, true);
-        println!("Here is the initial state:\n{}", self.initial.get_last_move());
-        println!("Here is the result just before the if in get_next_move(depth: {}):\n{}", next_state.get_depth(), next_state.get_last_move());
+
         next_state
     }
 }
