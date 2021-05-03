@@ -359,7 +359,6 @@ impl Algorithm {
         (result | (current_player + Direction::All)) & legal_open_cells
     }
 
-    // TODO: We maybe can do better here, self probably doesn't need to be mutable.
     // Maybe we should pass the initial Node directly without passing by the initial property of Algorithm?
     /// For now, it returns a BitBoard that contains the next move to play.
     pub fn get_next_move(&mut self, depth: u32) -> Option<Node> {
