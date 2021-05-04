@@ -85,10 +85,10 @@ impl Algorithm {
                             (*parent_player, enemy_with_move, false)
                         }
                     };
-                Node::new(Goban::new(player, enemy), parent.get_depth() + 1, *b, is_players_move, player_captures, enemy_captures)
+                Node::new(Goban::new(player, enemy), parent.get_depth() - 1, *b, is_players_move, player_captures, enemy_captures)
             })
             .collect();
-        sort_by_estimate(&mut ret);
+        sort_by_estimate(&mut ret, maximazing);
         ret
     }
 
@@ -374,6 +374,10 @@ impl Algorithm {
     }
 }
 
-fn sort_by_estimate(nodes: &mut Vec<Node>) {
-    nodes.sort_unstable_by(|a, b| b.get_item().get_fscore().partial_cmp(&a.get_item().get_fscore()).unwrap());
+fn sort_by_estimate(nodes: &mut Vec<Node>, maximize: bool) {
+    if maximize {
+        nodes.sort_unstable_by(|a, b| b.get_item().get_fscore().partial_cmp(&a.get_item().get_fscore()).unwrap());
+    } else {
+        nodes.sort_unstable_by(|a, b| a.get_item().get_fscore().partial_cmp(&b.get_item().get_fscore()).unwrap());
+    }
 }
