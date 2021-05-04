@@ -595,18 +595,14 @@ fn test_algorithm()
     for _ in 0..10 {
         let initial = Goban::new(player, enemy);
         algo.update_initial_state(initial, next_move, result_node.get_player_captures(), result_node.get_opponent_captures());
-        let next_move_opt = algo.get_next_move(2);
-        if next_move_opt.is_none() { break; }
-        result_node = next_move_opt.unwrap();
+        result_node = algo.get_next_move(2);
         next_move = result_node.get_item().get_player() ^ initial.get_player();
         println!("Here is the next move to play for player:\n{}", next_move);
         player |= next_move;
         println!("Player's BitBoard:\n{}", player);
         let initial = Goban::new(enemy, player);
         algo.update_initial_state(initial, next_move, result_node.get_opponent_captures(), result_node.get_player_captures());
-        let next_move_opt = algo.get_next_move(2);
-        if next_move_opt.is_none() { break; }
-        result_node = next_move_opt.unwrap();
+        result_node = algo.get_next_move(2);
         next_move = result_node.get_item().get_player() ^ initial.get_player();
         println!("Here is the next move to play for enemy:\n{}", next_move);
         enemy |= next_move;

@@ -80,7 +80,7 @@ fn launch_ai(input: Goban, player_captures: u8, opponent_captures: u8, last_move
         BitBoard::empty()
     };
     algorithm.update_initial_state(input, last_move, player_captures, opponent_captures);
-    let ret = algorithm.get_next_move(DEPTH).unwrap();
+    let ret = algorithm.get_next_move(DEPTH);
 
     get_move_coord(&ret)
 }
