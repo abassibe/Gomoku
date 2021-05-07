@@ -85,10 +85,10 @@ impl Algorithm {
                             (*parent_player, enemy_with_move, false)
                         }
                     };
-                Node::new(Goban::new(player, enemy), parent.get_depth() + 1, *b, is_players_move, player_captures, enemy_captures)
+                Node::new(Goban::new(player, enemy), parent.get_depth() - 1, *b, is_players_move, player_captures, enemy_captures)
             })
             .collect();
-        sort_by_estimate(&mut ret);
+        sort_by_estimate(&mut ret, maximazing);
         ret
     }
 
@@ -359,21 +359,21 @@ impl Algorithm {
         (result | (current_player + Direction::All)) & legal_open_cells
     }
 
-    // TODO: We maybe can do better here, self probably doesn't need to be mutable.
     // Maybe we should pass the initial Node directly without passing by the initial property of Algorithm?
-    /// For now, it returns a BitBoard that contains the next move to play.
-    pub fn get_next_move(&mut self, depth: u32) -> Option<Node> {
+    /// For now, it returns a Node that contains the next move to play.
+    pub fn get_next_move(&mut self, depth: u32) -> Node {
         self.compute_initial_threats_for_player();
         let mut initial = self.initial.clone();
         let next_state = self.minimax(&mut initial, depth, Fscore::MIN, Fscore::MAX, true);
-        if next_state.get_last_move() == self.initial.get_last_move() {
-            None
-        } else {
-            Some(next_state)
-        }
+
+        next_state
     }
 }
 
-fn sort_by_estimate(nodes: &mut Vec<Node>) {
-    nodes.sort_unstable_by(|a, b| b.get_item().get_fscore().partial_cmp(&a.get_item().get_fscore()).unwrap());
+fn sort_by_estimate(nodes: &mut Vec<Node>, maximize: bool) {
+    if maximize {
+        nodes.sort_unstable_by(|a, b| b.get_item().get_fscore().partial_cmp(&a.get_item().get_fscore()).unwrap());
+    } else {
+        nodes.sort_unstable_by(|a, b| a.get_item().get_fscore().partial_cmp(&b.get_item().get_fscore()).unwrap());
+    }
 }
