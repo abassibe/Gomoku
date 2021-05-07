@@ -283,6 +283,10 @@ impl Algorithm {
             opponent_captures,
             &self.patterns
         );
+        result &= legal_open_cells;
+        if result.is_any() {
+            return result;
+        }
         let is_threatened = result.is_any();
 
         // Get the moves that threat `opponent` because those are good move to play.
